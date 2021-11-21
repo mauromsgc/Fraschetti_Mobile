@@ -1,8 +1,7 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
-import 'package:fraschetti_videocatalogo/view/CatalogoLista.dart';
-import 'package:fraschetti_videocatalogo/view/HomePage.dart';
+import 'package:fraschetti_videocatalogo/utils/router_app.dart';
 import 'package:fraschetti_videocatalogo/view/LoginPage.dart';
 
 
@@ -19,9 +18,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         //primarySwatch: Colors.green,
       ),
-      // home: HomePage(),
-      // home: LoginPage(),
-      home: CatalogoListaPage(),
+
+      onGenerateRoute: RouterApp.generateRoute,
+      //initialRoute: LoginPage.routeName,
+      //onUnknownRoute: (context) => ErrorScreen(),
+
+
     );
   }
 }

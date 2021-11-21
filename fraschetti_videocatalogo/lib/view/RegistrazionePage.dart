@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:fraschetti_videocatalogo/view/CatalogoLista.dart';
+import 'package:fraschetti_videocatalogo/view/LoginPage.dart';
+import 'package:fraschetti_videocatalogo/view/ParametriPage.dart';
 
-import 'ParametriPage.dart';
-
-class LoginPage extends StatefulWidget {
-  LoginPage({Key? key, this.title = 'Login'}) : super(key: key);
-  static const String routeName = 'Login';
-
+class RegistazionePage extends StatefulWidget {
+  RegistazionePage({Key? key, this.title = 'Registrazione'}) : super(key: key);
+  static const String routeName = 'Registrazione';
   final String title;
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _RegistazionePageState createState() => _RegistazionePageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegistazionePageState extends State<RegistazionePage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -45,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: TextField(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Username',
+                      labelText: 'Annulla',
                       icon: Icon(
                         Icons.account_box,
                       ),
@@ -66,11 +64,40 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 Padding(
                   padding: EdgeInsets.all(10),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Conferma Password',
+                      icon: Icon(
+                        Icons.visibility_off,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Codice attivazione',
+                      icon: Icon(
+                        Icons.lock_open,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(10),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(elevation: 2),
-                    onPressed: () => Navigator.of(context)
-                        .pushNamed(CatalogoListaPage.routeName),
-                    child: Text('Login'),
+                    // apertura pagina diretta senza route
+                    // onPressed: () => Navigator.of(context).push(
+                    //     MaterialPageRoute(builder: (context) => LoginPage())),
+                    // apertura chiamando il router app
+                    onPressed: () =>
+                        Navigator.of(context).pushNamed(LoginPage.routeName),
+
+                    child: Text('Registrati'),
                   ),
                 ),
                 Padding(
