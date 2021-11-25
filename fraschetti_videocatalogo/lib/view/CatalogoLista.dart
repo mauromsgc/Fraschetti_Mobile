@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CatalogoListaPage extends StatefulWidget {
-  CatalogoListaPage({Key? key, this.title = 'Catalogo'}) : super(key: key);
+  CatalogoListaPage({Key? key, this.title = 'Catalogo 2'}) : super(key: key);
   static const String routeName = 'CatalogoLista';
 
   final String title;
@@ -24,14 +24,14 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
         ),
         body: Center(
           child: Container(
-            padding: new EdgeInsets.all(10.0),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.orange,
-                width: 2,
-              ),
-            ),
-            width: 600,
+            // padding: new EdgeInsets.all(10.0),
+            // decoration: BoxDecoration(
+            //   border: Border.all(
+            //     color: Colors.orange,
+            //     width: 2,
+            //   ),
+            // ),
+            // width: 600,
             child: Column(
               children: <Widget>[
                 _RicercaWidget(),

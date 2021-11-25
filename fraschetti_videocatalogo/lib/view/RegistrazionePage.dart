@@ -22,14 +22,14 @@ class _RegistazionePageState extends State<RegistazionePage> {
         ),
         body: Center(
           child: Container(
-            padding: new EdgeInsets.all(10.0),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.orange,
-                width: 2,
-              ),
-            ),
-            width: 600,
+            // padding: new EdgeInsets.all(10.0),
+            // decoration: BoxDecoration(
+            //   border: Border.all(
+            //     color: Colors.orange,
+            //     width: 2,
+            //   ),
+            // ),
+            // width: 600,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
