@@ -17,6 +17,7 @@ class _ParametriPageState extends State<ParametriPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
+          centerTitle: true,
         ),
         body: Center(
           child: Container(
@@ -38,7 +39,7 @@ class _ParametriPageState extends State<ParametriPage> {
                 ),
                 Padding(
                   padding: EdgeInsets.all(10),
-                  child: TextField(
+                  child: TextFormField(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Parametri di connessione',

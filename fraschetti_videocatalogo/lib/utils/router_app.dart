@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fraschetti_videocatalogo/view/HomePage.dart';
-import 'package:fraschetti_videocatalogo/view/LoginPage.dart';
-import 'package:fraschetti_videocatalogo/view/CatalogoLista.dart';
-import 'package:fraschetti_videocatalogo/view/ParametriPage.dart';
-import 'package:fraschetti_videocatalogo/view/RegistrazionePage.dart';
+import 'package:fraschetti_videocatalogo/screen/home/HomePage.dart';
+import 'package:fraschetti_videocatalogo/screen/auth/LoginPage.dart';
+import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoLista.dart';
+import 'package:fraschetti_videocatalogo/screen/auth/ParametriPage.dart';
+import 'package:fraschetti_videocatalogo/screen/auth/RegistrazionePage.dart';
 
 class RouterApp {
   static Route<dynamic> generateRoute(RouteSettings settings) {

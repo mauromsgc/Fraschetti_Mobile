@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class CatalogoListaPage extends StatefulWidget {
-  CatalogoListaPage({Key? key, this.title = 'Catalogo 2'}) : super(key: key);
+  CatalogoListaPage({Key? key}) : super(key: key);
   static const String routeName = 'CatalogoLista';
 
-  final String title;
+  final String title = "Catalogo";
 
   @override
   _CatalogoListaPageState createState() => _CatalogoListaPageState();
@@ -17,10 +17,18 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          leading: Icon(
-            Icons.menu,
+          leading: IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.menu),
           ),
           title: Text(widget.title),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.exit_to_app),
+            )
+          ],
         ),
         body: Center(
           child: Container(
@@ -34,10 +42,10 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
             // width: 600,
             child: Column(
               children: <Widget>[
-                _RicercaWidget(),
-                _SelezioniWidget(),
-                _CategorieWidget(),
-                _ListaWidget(),
+                RicercaWidget(),
+                SelezioniWidget(),
+                CategorieWidget(),
+                ListaWidget(),
               ],
             ),
           ),
@@ -46,105 +54,107 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
       ),
     );
   }
-}
 
 // sezione ricerca
-class _RicercaWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget RicercaWidget() {
     return Padding(
-      padding: EdgeInsets.all(10),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            flex: 3,
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                // labelText: 'Descrizione/EAN',
-                // labelText: 'Descrizione',
-                hintText: 'Descrizione',
+      padding: EdgeInsets.all(3),
+      child: SizedBox(
+        height: 40,
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              flex: 5,
+              child: TextFormField(
+                textAlignVertical: TextAlignVertical.bottom,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  // labelText: 'Descrizione/EAN',
+                  // labelText: 'Descrizione',
+                  hintText: 'Descrizione',
+                ),
               ),
             ),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Expanded(
-            flex: 2,
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                // labelText: 'Codice',
-                hintText: 'Codice',
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              flex: 3,
+              child: TextFormField(
+                textAlignVertical: TextAlignVertical.bottom,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  // labelText: 'Codice',
+                  hintText: 'Codice',
+                ),
               ),
             ),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Expanded(
-            flex: 1,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(elevation: 2),
-              onPressed: () {},
-              child: Text('Cerca'),
+            SizedBox(
+              width: 10,
             ),
-          ),
-        ],
+            Expanded(
+              flex: 2,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(elevation: 2),
+                onPressed: () {},
+                child: Text('Cerca'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
-}
 
+
+// da modificare con un pulsante a destra del pulsante menu
+// va messo all'interno del title
 // sezione selezioni
-class _SelezioniWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget SelezioniWidget() {
     return Padding(
-      padding: EdgeInsets.all(10),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            flex: 1,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(elevation: 2),
-              onPressed: () {},
-              child: Text('Assortimenti'),
+      padding: EdgeInsets.all(3),
+      child: SizedBox(
+        height: 40,
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              flex: 1,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(elevation: 2),
+                onPressed: () {},
+                child: Text('Assortimenti'),
+              ),
             ),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Expanded(
-            flex: 1,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(elevation: 2),
-              onPressed: () {},
-              child: Text('Selezioni'),
+            SizedBox(
+              width: 10,
             ),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Expanded(
-            flex: 1,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(elevation: 2),
-              onPressed: () {},
-              child: Text('Tutto'),
+            Expanded(
+              flex: 1,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(elevation: 2),
+                onPressed: () {},
+                child: Text('Selezioni'),
+              ),
             ),
-          ),
-        ],
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              flex: 1,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(elevation: 2),
+                onPressed: () {},
+                child: Text('Tutto'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
-}
 
 // sezione categorie
-class _CategorieWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget CategorieWidget() {
     return Row(
       children: <Widget>[
         Expanded(
@@ -278,12 +288,11 @@ class _CategorieWidget extends StatelessWidget {
       ],
     );
   }
-}
+
+
 
 // riga lista
-class _ListaWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget ListaWidget() {
     return Expanded(
       flex: 1,
       child: ListView(
@@ -309,9 +318,16 @@ class _ListaWidget extends StatelessWidget {
       ),
     );
   }
+
+
+
 }
 
-// app bar
+
+
+
+
+// classe app bar da spostare per usare da altre parti
 class _DemoBottomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -342,3 +358,5 @@ class _DemoBottomAppBar extends StatelessWidget {
     );
   }
 }
+
+
