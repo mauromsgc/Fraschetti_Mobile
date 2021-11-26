@@ -67,7 +67,6 @@ class HttpClient {
     // headers = {"Content-Type": "application/json"};
 
     return headers;
-
   }
 
   Uri buildUri(String url, Map<String, dynamic>? queryParameters) {
@@ -94,21 +93,20 @@ class HttpClient {
   Map<String, String> encodeBody(Map<String, String>? body) {
     // body?.removeWhere((key, value) => value == null);
     // return body.map((key, value) => MapEntry(key, value.toString()));
-    if(body != null){
+    if (body != null) {
       body.removeWhere((key, value) => value == null);
       return body.map((key, value) => MapEntry(key, value.toString()));
-    }else{
+    } else {
       return {};
     }
-
-
   }
 
   Future<http.Response> get(url, {Map<String, dynamic>? queryParameters}) =>
       http.get(buildUri(url, queryParameters), headers: headers());
 
   Future<http.Response> post(url,
-          {Map<String, dynamic>? queryParameters, Map<String, String>? bodyParameters}) =>
+          {Map<String, dynamic>? queryParameters,
+          Map<String, String>? bodyParameters}) =>
       http.post(buildUri(url, queryParameters),
           headers: headers(), body: encodeBody(bodyParameters));
 
@@ -120,8 +118,8 @@ class HttpClient {
   }) async {
     // var request = http.MultipartRequest(
     //     "POST", Uri.parse(buildUri(url, queryParameters ?? {})));
-    var request = http.MultipartRequest(
-        "POST", buildUri(url, queryParameters ?? {}));
+    var request =
+        http.MultipartRequest("POST", buildUri(url, queryParameters ?? {}));
 
     bodyParameters.forEach((key, value) {
       request.fields[key] = value;
@@ -142,28 +140,34 @@ class HttpClient {
 // Future<http.Response> delete(url, {Map? queryParameters}) =>
 //     http.post(buildUri(url, queryParameters), headers: headers());
 
-
-
-
-
-
   Future<Map<String, dynamic>> test(String email, String password) async {
     final response = await this.post(
-        "/api/utenti/login",
-        bodyParameters: {
-      "username": email,
-      "password": password,
-    },
+      "/api/utenti/login",
+      bodyParameters: {
+        "username": email,
+        "password": password,
+      },
     );
     final data = json.decode(response.body);
 
     if (response.statusCode == 200) {
-
       return data["data"];
     }
 
     throw RequestError(data["error"]);
   }
+
+
+  // temporano da implementare in dbRepository
+  Future<bool> utenteRegistrato() async{
+  // bool utenteRegistrato() {
+    bool utenteRegistrato = false;
+
+    utenteRegistrato = true;
+
+    return utenteRegistrato;
+  }
+
 
 
 }

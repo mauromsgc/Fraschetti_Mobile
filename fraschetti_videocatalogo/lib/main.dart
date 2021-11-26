@@ -6,6 +6,7 @@ import 'package:fraschetti_videocatalogo/screen/auth/RegistrazionePage.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/SplashPage.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/LoginPage.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoLista.dart';
+import 'package:fraschetti_videocatalogo/screen/utils/LogPage.dart';
 import 'package:fraschetti_videocatalogo/utils/router_app.dart';
 import 'package:fraschetti_videocatalogo/screen/home/HomePage.dart';
 import 'package:get_it/get_it.dart';
@@ -44,13 +45,14 @@ class MyApp extends StatelessWidget {
 
       // onGenerateRoute: RouterApp.generateRoute,
       //onUnknownRoute: (context) => ErrorScreen(),
-      initialRoute: "/registrazione",
+      initialRoute: "/splash",
       routes: {
         "/splash": (_) => SplashPage(),
         "/login": (_) => LoginPage(),
         "/registrazione": (_) => RegistazionePage(),
         "/home": (_) => HomePage(),
         "/articoli": (_) => CatalogoListaPage(),
+        "/log": (_) => LogPage(),
       },
 
 
