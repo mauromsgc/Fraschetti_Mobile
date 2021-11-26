@@ -20,18 +20,18 @@ class _StatefulWidget extends State<SplashPage> {
     bool utenteRegistrato = false;
 
     SchedulerBinding.instance!.addPostFrameCallback((_) async {
-      await Future.delayed(Duration(seconds: 3));
+      await Future.delayed(Duration(seconds: 5));
       utenteRegistrato =
           await getIt.get<HttpRepository>().http!.utenteRegistrato();
       // await Future.delayed(Duration(seconds: 3));
       if (utenteRegistrato) {
-        Navigator.of(context).pushNamed("/login");
+        // Navigator.of(context).pushNamed("/login");
         // Navigator.pushNamed(context, "/login");
-        // Navigator.popAndPushNamed(context, "/login");
+        Navigator.popAndPushNamed(context, "/login");
       } else {
-        Navigator.of(context).pushNamed("/registrazione");
+        // Navigator.of(context).pushNamed("/registrazione");
         // Navigator.pushNamed(context, "/registrazione");
-        // Navigator.popAndPushNamed(context, "/registrazione");
+        Navigator.popAndPushNamed(context, "/registrazione");
       }
     });
 
