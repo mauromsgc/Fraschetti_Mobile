@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:fraschetti_videocatalogo/models/catalogo.dart';
+import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 
 class ArticoliRepository {
   Future<List<CatalogoModel>> all() async {

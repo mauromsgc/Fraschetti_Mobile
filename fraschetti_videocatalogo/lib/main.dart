@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/RegistrazionePage.dart';
 
 import 'package:fraschetti_videocatalogo/screen/auth/SplashPage.dart';
@@ -7,10 +8,15 @@ import 'package:fraschetti_videocatalogo/screen/auth/LoginPage.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoLista.dart';
 import 'package:fraschetti_videocatalogo/utils/router_app.dart';
 import 'package:fraschetti_videocatalogo/screen/home/HomePage.dart';
+import 'package:get_it/get_it.dart';
 
+final getIt = GetIt.instance;
 
 void main() {
   runApp(MyApp());
+
+  getIt.registerSingleton<HttpRepository>(HttpRepository());
+
 }
 
 class MyApp extends StatelessWidget {

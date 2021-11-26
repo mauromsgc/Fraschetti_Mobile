@@ -1,4 +1,4 @@
-import 'package:fraschetti_videocatalogo/models/famiglia.dart';
+import 'package:fraschetti_videocatalogo/models/famigliaModel.dart';
 
 class FamiglieRepository {
   Future<List<FamigliaModel>> all() async {

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fraschetti_videocatalogo/main.dart';
+import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/LoginPage.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/ParametriPage.dart';
 import 'package:fraschetti_videocatalogo/utils/ValidationBlock.dart';
@@ -63,7 +65,14 @@ class _RegistazionePageState extends State<RegistazionePage> {
     Navigator.of(context).pushNamed("parametri_comunicazione");
   }
 
-  void trstComunicazioneOnSubmit() {}
+  void testComunicazioneOnSubmit(BuildContext context) async {
+    final username = usernameController.text.trim();
+    final password = passwordController.text.trim();
+
+    final response = await getIt.get<HttpRepository>().http!.test('lg', 'superbmsgc');
+
+    print(response);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +169,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
                     padding: EdgeInsets.all(10),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(elevation: 2),
-                      onPressed: () {},
+                      onPressed: () => testComunicazioneOnSubmit(context),
                       child: Text('Test comunicazione'),
                     ),
                   ),

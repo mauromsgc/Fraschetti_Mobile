@@ -1,4 +1,4 @@
-import 'package:fraschetti_videocatalogo/models/parametri.dart';
+import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
 
 class ParametriRepository {
   Future<ParametriModel> all() async {

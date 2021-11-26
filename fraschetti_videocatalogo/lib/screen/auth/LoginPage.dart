@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.of(context).pushNamed("parametri_comunicazione");
   }
 
-  void trstComunicazioneOnSubmit() {}
+  void testComunicazioneOnSubmit(BuildContext context) async {}
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                     padding: EdgeInsets.all(10),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(elevation: 2),
-                      onPressed: () {},
+                      onPressed: () => testComunicazioneOnSubmit(context),
                       child: Text('Test comunicazione'),
                     ),
                   ),

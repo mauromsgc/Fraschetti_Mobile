@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:fraschetti_videocatalogo/models/codice.dart';
+import 'package:fraschetti_videocatalogo/models/codiceModel.dart';
 
 class CatalogoModel {
 
