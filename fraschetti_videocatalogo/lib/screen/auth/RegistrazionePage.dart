@@ -55,7 +55,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
     });
 
     if (valid) {
-      Navigator.of(context).pushNamed("/login");
+      Navigator.pushNamed(context, LoginPage.routeName);
     } else {
       print("Registrazione fallita");
     }

@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (valid) {
       // print("Username $username Password = $password");
-      Navigator.of(context).pushNamed("/articoli");
+      Navigator.pushNamed(context, CatalogoListaPage.routeName);
     } else {
       print("Login fallito");
     }

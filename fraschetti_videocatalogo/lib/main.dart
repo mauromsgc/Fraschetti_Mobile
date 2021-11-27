@@ -43,17 +43,9 @@ class MyApp extends StatelessWidget {
         ),
       ),
 
-      // onGenerateRoute: RouterApp.generateRoute,
-      //onUnknownRoute: (context) => ErrorScreen(),
-      initialRoute: "/splash",
-      routes: {
-        "/splash": (_) => SplashPage(),
-        "/login": (_) => LoginPage(),
-        "/registrazione": (_) => RegistazionePage(),
-        "/home": (_) => HomePage(),
-        "/articoli": (_) => CatalogoListaPage(),
-        "/log": (_) => LogPage(),
-      },
+      onGenerateRoute: RouterApp.generateRoute,
+      // home: SplashPage(), // con il default in onGenerateRoute non serve
+
 
 
     );

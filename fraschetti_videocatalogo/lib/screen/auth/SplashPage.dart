@@ -6,8 +6,12 @@ import 'package:flutter/scheduler.dart';
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 
 import 'package:fraschetti_videocatalogo/main.dart';
+import 'package:fraschetti_videocatalogo/screen/auth/LoginPage.dart';
+import 'package:fraschetti_videocatalogo/screen/auth/RegistrazionePage.dart';
 
 class SplashPage extends StatefulWidget {
+  static const String routeName = 'splash';
+
   @override
   State<StatefulWidget> createState() => new _StatefulWidget();
 }
@@ -20,18 +24,16 @@ class _StatefulWidget extends State<SplashPage> {
     bool utenteRegistrato = false;
 
     SchedulerBinding.instance!.addPostFrameCallback((_) async {
-      await Future.delayed(Duration(seconds: 5));
+      await Future.delayed(Duration(seconds: 3));
       utenteRegistrato =
           await getIt.get<HttpRepository>().http!.utenteRegistrato();
       // await Future.delayed(Duration(seconds: 3));
       if (utenteRegistrato) {
-        // Navigator.of(context).pushNamed("/login");
-        // Navigator.pushNamed(context, "/login");
-        Navigator.popAndPushNamed(context, "/login");
+        // Navigator.of(context).pushNamed(LoginPage.routeName);
+        Navigator.popAndPushNamed(context, LoginPage.routeName);
       } else {
-        // Navigator.of(context).pushNamed("/registrazione");
-        // Navigator.pushNamed(context, "/registrazione");
-        Navigator.popAndPushNamed(context, "/registrazione");
+        // Navigator.of(context).pushNamed(RegistazionePage.routeName);
+        Navigator.popAndPushNamed(context, RegistazionePage.routeName);
       }
     });
 

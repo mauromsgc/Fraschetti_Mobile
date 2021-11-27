@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:fraschetti_videocatalogo/screen/auth/SplashPage.dart';
 import 'package:fraschetti_videocatalogo/screen/home/HomePage.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/LoginPage.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoLista.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/ParametriPage.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/RegistrazionePage.dart';
+import 'package:page_transition/page_transition.dart';
 
 class RouterApp {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     // se non si è loggati si va il LoginPage
     // se non si è registrati si va in RegistrazionePage
     switch (settings.name) {
+      case SplashPage.routeName:
+        return MaterialPageRoute(builder: (context) => SplashPage());
       case LoginPage.routeName:
+        return PageTransition(
+          child: LoginPage(),
+          type: PageTransitionType.rightToLeft,
+          settings: settings,
+        );
         return MaterialPageRoute(builder: (context) => LoginPage());
       case RegistazionePage.routeName:
         return MaterialPageRoute(builder: (context) => RegistazionePage());
@@ -18,9 +27,11 @@ class RouterApp {
         return MaterialPageRoute(builder: (context) => ParametriPage());
       case CatalogoListaPage.routeName:
         return MaterialPageRoute(builder: (context) => CatalogoListaPage());
+      case LoginPage.routeName:
+        return MaterialPageRoute(builder: (context) => LoginPage());
       default:
-        // return MaterialPageRoute(builder: (context) => HomePage());
-        return MaterialPageRoute(builder: (context) => RegistazionePage());
+        return MaterialPageRoute(builder: (context) => SplashPage());
+        // return MaterialPageRoute(builder: (context) => RegistazionePage());
       // return MaterialPageRoute(builder: (context) => LoginPage());
     }
   }

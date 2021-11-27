@@ -5,6 +5,7 @@ import 'package:logger/logger.dart';
 
 class LogPage extends StatefulWidget {
   LogPage({Key? key}) : super(key: key);
+  static const String routeName = 'log';
 
   final String title = "Log";
 
