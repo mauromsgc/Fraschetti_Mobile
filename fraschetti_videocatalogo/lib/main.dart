@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/RegistrazionePage.dart';
 
@@ -10,13 +11,25 @@ import 'package:fraschetti_videocatalogo/screen/utils/LogPage.dart';
 import 'package:fraschetti_videocatalogo/utils/router_app.dart';
 import 'package:fraschetti_videocatalogo/screen/home/HomePage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 final getIt = GetIt.instance;
 
-void main() {
-  runApp(MyApp());
+void main() async{
+  // per attendere che carichi tutte le librerie
+  WidgetsFlutterBinding.ensureInitialized();
+
+  Intl.defaultLocale = 'it_IT';
+  await initializeDateFormatting('it_IT', null);
+
+  final db = await DbRepository.newConnection();
+  GetIt.instance.registerSingleton(db);
 
   getIt.registerSingleton<HttpRepository>(HttpRepository());
+
+  runApp(MyApp());
+
 
 }
 
