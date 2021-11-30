@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class ParametriPage extends StatefulWidget {
-  ParametriPage({Key? key, this.title = 'Parametri'}) : super(key: key);
-  static const String routeName = 'Parametri';
+  ParametriPage({Key? key}) : super(key: key);
+  static const String routeName = "parametri";
 
-  final String title;
+  final String pagina_titolo = "Parametri";
 
   @override
   _ParametriPageState createState() => _ParametriPageState();
@@ -16,7 +16,7 @@ class _ParametriPageState extends State<ParametriPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(widget.title),
+          title: Text(widget.pagina_titolo),
           centerTitle: true,
         ),
         body: Center(

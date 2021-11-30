@@ -7,9 +7,9 @@ import 'package:fraschetti_videocatalogo/utils/ValidationBlock.dart';
 
 class RegistazionePage extends StatefulWidget {
   RegistazionePage({Key? key}) : super(key: key);
-  static const String routeName = 'Registrazione';
+  static const String routeName = "registrazione";
 
-  final String title = "Registrazione";
+  final String pagina_titolo = "Registrazione";
 
   @override
   _RegistazionePageState createState() => _RegistazionePageState();
@@ -79,7 +79,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(widget.title),
+          title: Text(widget.pagina_titolo),
           centerTitle: true,
           automaticallyImplyLeading: false,
         ),

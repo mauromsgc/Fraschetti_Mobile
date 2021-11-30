@@ -1,16 +1,26 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:fraschetti_videocatalogo/models/articoli.dart';
+import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
+import 'package:fraschetti_videocatalogo/screen/catalogo/ArticoloAggiungiPage.dart';
+import 'package:image/image.dart';
+
+import 'CatalogoPage.dart';
 
 class CatalogoListaPage extends StatefulWidget {
   CatalogoListaPage({Key? key}) : super(key: key);
   static const String routeName = 'CatalogoLista';
 
-  final String title = "Catalogo";
+  final String pagina_titolo = "Catalogo";
 
   @override
   _CatalogoListaPageState createState() => _CatalogoListaPageState();
 }
 
 class _CatalogoListaPageState extends State<CatalogoListaPage> {
+  List<CatalogoModel> articoli_lista = ArticoliRepository().all_2();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -21,7 +31,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
             onPressed: () {},
             icon: Icon(Icons.menu),
           ),
-          title: Text(widget.title),
+          title: Text(widget.pagina_titolo),
           centerTitle: true,
           actions: [
             IconButton(
@@ -45,7 +55,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                 RicercaWidget(),
                 SelezioniWidget(),
                 CategorieWidget(),
-                ListaWidget(),
+                ListaWidget(articoli_lista),
               ],
             ),
           ),
@@ -105,7 +115,6 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
       ),
     );
   }
-
 
 // da modificare con un pulsante a destra del pulsante menu
 // va messo all'interno del title
@@ -289,43 +298,63 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
     );
   }
 
-
-
 // riga lista
-  Widget ListaWidget() {
+  Widget ListaWidget(List<CatalogoModel> articoli_lista) {
     return Expanded(
       flex: 1,
-      child: ListView(
-        padding: const EdgeInsets.only(bottom: 88),
-        children: <Widget>[
-          SwitchListTile(
-            title: const Text(
-              'Floating Action Button',
+      child: ListView.builder(
+        itemCount: articoli_lista.length,
+        itemBuilder: (context, index) {
+          return InkWell(
+            onTap: (){
+              Navigator.pushNamed(context, ArticoloAggiungiPage.routeName);
+            },
+            child: Container(
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    width: 10,
+                    height: 40,
+                    // color: Colors.orange,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.orange,
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.orange,
+                        width: 2,
+                      ),
+                      image: DecorationImage(
+                        image: AssetImage("assets/immagini/splash_screen.png"),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      Text("${articoli_lista[index].nome}"),
+                      Text("Riga 22"),
+                    ],
+                  ),
+                ],
+              ),
             ),
-            value: false,
-            onChanged: (bool value) {},
-          ),
-          SwitchListTile(
-            title: const Text('Notch'),
-            value: false,
-            onChanged: (bool value) {},
-          ),
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: Text('Floating action button position'),
-          ),
-        ],
+          );
+          // return ListTile(
+          //   title: Text(articoli_lista[index].toString()),
+          // );
+        },
       ),
     );
   }
-
-
-
 }
-
-
-
-
 
 // classe app bar da spostare per usare da altre parti
 class _DemoBottomAppBar extends StatelessWidget {
@@ -358,5 +387,3 @@ class _DemoBottomAppBar extends StatelessWidget {
     );
   }
 }
-
-

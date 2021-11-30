@@ -6,6 +6,14 @@ class ArticoliRepository {
     await Future.delayed(Duration(seconds: 3));
     return fakeArticoli;
   }
+
+
+
+  List<CatalogoModel> all_2() {
+    return fakeArticoli;
+  }
+
+
 }
 
 final fakeArticoli = [

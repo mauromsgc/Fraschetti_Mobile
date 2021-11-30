@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/SplashPage.dart';
+import 'package:fraschetti_videocatalogo/screen/catalogo/ArticoloAggiungiPage.dart';
+import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoPage.dart';
 import 'package:fraschetti_videocatalogo/screen/home/HomePage.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/LoginPage.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoLista.dart';
@@ -27,8 +29,10 @@ class RouterApp {
         return MaterialPageRoute(builder: (context) => ParametriPage());
       case CatalogoListaPage.routeName:
         return MaterialPageRoute(builder: (context) => CatalogoListaPage());
-      case LoginPage.routeName:
-        return MaterialPageRoute(builder: (context) => LoginPage());
+      case CatalogoPage.routeName:
+        return MaterialPageRoute(builder: (context) => CatalogoPage());
+      case ArticoloAggiungiPage.routeName:
+        return MaterialPageRoute(builder: (context) => ArticoloAggiungiPage());
       default:
         return MaterialPageRoute(builder: (context) => SplashPage());
         // return MaterialPageRoute(builder: (context) => RegistazionePage());

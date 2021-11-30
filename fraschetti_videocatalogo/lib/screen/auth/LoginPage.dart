@@ -8,7 +8,7 @@ class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
   static const String routeName = 'Login';
 
-  final String title = "Login";
+  final String pagina_titolo = "Login";
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -47,18 +47,13 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void parametriOnSubmit(BuildContext context) async {
-    Navigator.of(context).pushNamed("parametri_comunicazione");
-  }
-
-  void testComunicazioneOnSubmit(BuildContext context) async {}
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(widget.title),
+          title: Text(widget.pagina_titolo),
           centerTitle: true,
           automaticallyImplyLeading: false,
         ),
@@ -109,22 +104,6 @@ class _LoginPageState extends State<LoginPage> {
                       style: ElevatedButton.styleFrom(elevation: 2),
                       onPressed: () => loginOnSubmit(context),
                       child: Text('Login'),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(10),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(elevation: 2),
-                      onPressed: () => testComunicazioneOnSubmit(context),
-                      child: Text('Test comunicazione'),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(10),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(elevation: 2),
-                      onPressed: () => parametriOnSubmit(context),
-                      child: Text('Parametri'),
                     ),
                   ),
                 ],

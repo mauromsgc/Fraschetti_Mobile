@@ -7,7 +7,7 @@ class LogPage extends StatefulWidget {
   LogPage({Key? key}) : super(key: key);
   static const String routeName = 'log';
 
-  final String title = "Log";
+  final String pagina_titolo = "Log";
 
   @override
   _LogPageState createState() => _LogPageState();
