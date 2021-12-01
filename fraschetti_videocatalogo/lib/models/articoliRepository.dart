@@ -7,26 +7,22 @@ class ArticoliRepository {
     return fakeArticoli;
   }
 
-
-
   List<CatalogoModel> all_2() {
     return fakeArticoli;
   }
-
-
 }
 
 final fakeArticoli = [
-  CatalogoModel(
-    id: 0,
-    nome: '',
-    descrizione: '',
-    famiglia: 0,
-    nuovo: 0,
-    sospeso: 0,
-    ordinatore: 0,
-    primo_codice: 0,
-  ),
+  // CatalogoModel(
+  //   id: 0,
+  //   nome: '',
+  //   descrizione: '',
+  //   famiglia: 0,
+  //   nuovo: 0,
+  //   sospeso: 0,
+  //   ordinatore: 0,
+  //   primo_codice: 0,
+  // ),
   CatalogoModel(
     id: 2,
     nome: 'Accendigas piezoelettrico Orion     ',

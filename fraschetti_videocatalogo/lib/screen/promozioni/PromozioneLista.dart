@@ -1,25 +1,24 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:fraschetti_videocatalogo/models/articoliRepository.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
+import 'package:fraschetti_videocatalogo/models/promozioneModel.dart';
+import 'package:fraschetti_videocatalogo/models/promozioniRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/LoginPage.dart';
-import 'package:fraschetti_videocatalogo/screen/catalogo/ArticoloAggiungiPage.dart';
-import 'package:image/image.dart';
 
-import 'CatalogoPage.dart';
+import 'PromozionePage.dart';
 
-class CatalogoListaPage extends StatefulWidget {
-  CatalogoListaPage({Key? key}) : super(key: key);
-  static const String routeName = "catalogo_lista";
-  final String pagina_titolo = "Catalogo";
+class PromozioneListaPage extends StatefulWidget {
+  PromozioneListaPage({Key? key}) : super(key: key);
+  static const String routeName = "promozione_lista";
+  final String pagina_titolo = "Promozioni";
 
   @override
-  _CatalogoListaPageState createState() => _CatalogoListaPageState();
+  _PromozioneListaPageState createState() => _PromozioneListaPageState();
 }
 
-class _CatalogoListaPageState extends State<CatalogoListaPage> {
-  List<CatalogoModel> articoli_lista = ArticoliRepository().all_2();
+class _PromozioneListaPageState extends State<PromozioneListaPage> {
+  List<PromozioneModel> promozioni_lista = PromozioniRepository().all_2();
 
   @override
   Widget build(BuildContext context) {
@@ -308,7 +307,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
-              Navigator.pushNamed(context, CatalogoPage.routeName);
+              Navigator.pushNamed(context, PromozionePage.routeName);
             },
             child: Container(
               child: Row(

@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:fraschetti_videocatalogo/models/articoliRepository.dart';
-import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
-import 'package:image/image.dart';
+import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoPage.dart';
 
-import 'ArticoloAggiungiPage.dart';
 
-class CatalogoPage extends StatefulWidget {
-  CatalogoPage({Key? key}) : super(key: key);
-  static const String routeName = "catalogo_page";
+class PromozionePage extends StatefulWidget {
+  PromozionePage({Key? key}) : super(key: key);
+  static const String routeName = 'PromozionePage';
   final String pagina_titolo = "Catalogo";
 
   @override
-  _CatalogoPageState createState() => _CatalogoPageState();
+  _PromozionePageState createState() => _PromozionePageState();
 }
 
-class _CatalogoPageState extends State<CatalogoPage> {
+class _PromozionePageState extends State<PromozionePage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -206,7 +203,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
           itemBuilder: (context, index) {
             return InkWell(
               onTap: () {
-                Navigator.pushNamed(context, ArticoloAggiungiPage.routeName);
+                Navigator.pushNamed(context, CatalogoPage.routeName);
               },
               child: Container(
                 child: Row(

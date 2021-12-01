@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fraschetti_videocatalogo/screen/auth/RegistrazionePage.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoLista.dart';
 import 'package:fraschetti_videocatalogo/utils/ValidationBlock.dart';
 
-import 'ParametriPage.dart';
+import 'ParametriConnesionePage.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -57,17 +58,12 @@ class _LoginPageState extends State<LoginPage> {
           centerTitle: true,
           automaticallyImplyLeading: false,
         ),
-        body: Center(
+        body: Container(
           child: SingleChildScrollView(
             child: Container(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    height: 50.0,
-                  ),
-                  Padding(
+               children: <Widget>[
+                  Container(
                     padding: EdgeInsets.all(10),
                     child: TextFormField(
                       controller: usernameController,
@@ -83,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  Padding(
+                  Container(
                     padding: EdgeInsets.all(10),
                     child: TextFormField(
                       controller: passwordController,
@@ -98,12 +94,25 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  Padding(
+                  Container(
                     padding: EdgeInsets.all(10),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(elevation: 2),
                       onPressed: () => loginOnSubmit(context),
                       child: Text('Login'),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(elevation: 2),
+                      onPressed: () {
+                        Navigator.pushNamed(context, RegistazionePage.routeName);
+                      },
+                      child: Text('Registrazione'),
                     ),
                   ),
                 ],

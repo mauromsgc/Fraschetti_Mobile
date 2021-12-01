@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> {
           title: Text(widget.pagina_titolo),
           centerTitle: true,
         ),
-        body: Center(
+        body: Container(
           child:
           Text('Home page'),
         ),

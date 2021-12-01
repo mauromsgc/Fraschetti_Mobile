@@ -50,7 +50,7 @@ class _LogPageState extends State<LogPage> {
       debugShowCheckedModeBanner: false,
       home: SafeArea(
         child: Scaffold(
-            body: Center(
+            body: Container(
               child: Text("${log_testo}"),
             ),
         ),
