@@ -10,6 +10,11 @@ class ArticoliRepository {
   List<CatalogoModel> all_2() {
     return fakeArticoli;
   }
+
+
+  List<CatalogoModel> all_3() {
+    return fakeArticoli2;
+  }
 }
 
 final fakeArticoli = [
@@ -386,4 +391,82 @@ final fakeArticoli = [
     ordinatore: 770,
     primo_codice: 275120,
   ),
+];
+
+
+final fakeArticoli2 = [
+  CatalogoModel(
+    id: 30,
+    nome: 'Ancoraggi Mottura Art. 300   ',
+    descrizione: 'In acciaio verniciato, per antine fisse ',
+    famiglia: 7,
+    nuovo: 0,
+    sospeso: 0,
+    ordinatore: 723,
+    primo_codice: 507600,
+  ),
+  CatalogoModel(
+    id: 31,
+    nome: 'Tasselli Ancore Fischer KD            ',
+    descrizione:
+    'Con vite, interamente in acciaio tropicalizzato, specifiche per fissaggi su pareti vuote, particolarmente adatte per fissaggi al soffitto.',
+    famiglia: 7,
+    nuovo: 0,
+    sospeso: 0,
+    ordinatore: 198,
+    primo_codice: 525840,
+  ),
+  CatalogoModel(
+    id: 33,
+    nome: 'Anelli per falci                   ',
+    descrizione:
+    'In acciaio zincato, completo di chiave stringiviti. 2 viti  - H.  mm. 30  ',
+    famiglia: 1,
+    nuovo: 0,
+    sospeso: 0,
+    ordinatore: 806,
+    primo_codice: 20035,
+  ),
+  CatalogoModel(
+    id: 34,
+    nome: 'Anelli copritesta per chiavi      ',
+    descrizione: 'In scatola da 200 pezzi in plastica assortita in 8 colori ',
+    famiglia: 7,
+    nuovo: 0,
+    sospeso: 0,
+    ordinatore: 856,
+    primo_codice: 57210,
+  ),
+  CatalogoModel(
+    id: 37,
+    nome: 'Anelli portachiavi    ',
+    descrizione: 'In acciaio, in confezioni da 100 pezzi ',
+    famiglia: 7,
+    nuovo: 0,
+    sospeso: 0,
+    ordinatore: 861,
+    primo_codice: 57230,
+  ),
+  CatalogoModel(
+    id: 39,
+    nome: 'Anelli tubolari in ottone lucido       ',
+    descrizione: 'Per tendine',
+    famiglia: 8,
+    nuovo: 0,
+    sospeso: 0,
+    ordinatore: 89,
+    primo_codice: 68010,
+  ),
+  CatalogoModel(
+    id: 41,
+    nome: 'Montanti scaffalature a bulloni           ',
+    descrizione:
+    'In lamiera verniciata a caldo. Ral 7038. Dimensioni mm. 35x35, spessore 18/10',
+    famiglia: 7,
+    nuovo: 0,
+    sospeso: 0,
+    ordinatore: 285,
+    primo_codice: 275040,
+  ),
+
 ];

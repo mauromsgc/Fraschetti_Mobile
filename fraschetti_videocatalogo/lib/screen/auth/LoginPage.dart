@@ -69,6 +69,7 @@ class _LoginPageState extends State<LoginPage> {
                       controller: usernameController,
                       textCapitalization: TextCapitalization.characters,
                       // keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Username',
@@ -84,6 +85,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: TextFormField(
                       controller: passwordController,
                       obscureText: true,
+                      textInputAction: TextInputAction.done,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Password',

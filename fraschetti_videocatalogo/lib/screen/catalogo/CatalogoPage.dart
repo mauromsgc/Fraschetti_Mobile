@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/models/articoliRepository.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:image/image.dart';
@@ -29,6 +30,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
           title: Text(widget.pagina_titolo),
           centerTitle: true,
         ),
+        bottomNavigationBar: BottomBarWidget(),
         body: Container(
           // height: 400,
           // height: MediaQuery.of(context).size.height/2,
@@ -52,7 +54,6 @@ class _CatalogoPageState extends State<CatalogoPage> {
             ),
           ),
         ),
-        bottomNavigationBar: _DemoBottomAppBar(),
       ),
     );
   }
@@ -96,7 +97,8 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
-                      ),
+                          overflow: TextOverflow.ellipsis,
+                    ),
                     ),
                   ),
                 ),
@@ -133,13 +135,16 @@ class _CatalogoPageState extends State<CatalogoPage> {
           ),
           Row(
             children: [
-              Container(
-                padding: EdgeInsets.all(5),
-                child: Text(
-                  "Articolo Articolo Articolo",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  child: Text(
+                    "Articolo Articolo Articolo",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ),
               ),
@@ -150,7 +155,6 @@ class _CatalogoPageState extends State<CatalogoPage> {
             children: [
               SizedBox(width: 5),
               Expanded(
-                flex: 2,
                 child: Container(
                   padding: EdgeInsets.all(5),
                   height: 500,
@@ -382,34 +386,3 @@ class _CatalogoPageState extends State<CatalogoPage> {
   }
 }
 
-// classe app bar da spostare per usare da altre parti
-class _DemoBottomAppBar extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return BottomAppBar(
-      color: Colors.blue,
-      child: IconTheme(
-        data: IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
-        child: Row(
-          children: <Widget>[
-            IconButton(
-              tooltip: 'Open navigation menu',
-              icon: const Icon(Icons.menu),
-              onPressed: () {},
-            ),
-            IconButton(
-              tooltip: 'Search',
-              icon: const Icon(Icons.search),
-              onPressed: () {},
-            ),
-            IconButton(
-              tooltip: 'Favorite',
-              icon: const Icon(Icons.favorite),
-              onPressed: () {},
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

@@ -1,11 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/models/articoliRepository.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/LoginPage.dart';
-import 'package:fraschetti_videocatalogo/screen/catalogo/ArticoloAggiungiPage.dart';
-import 'package:image/image.dart';
 
 import 'CatalogoPage.dart';
 
@@ -20,6 +19,10 @@ class CatalogoListaPage extends StatefulWidget {
 
 class _CatalogoListaPageState extends State<CatalogoListaPage> {
   List<CatalogoModel> articoli_lista = ArticoliRepository().all_2();
+
+  void listaClick(BuildContext context) {
+    Navigator.pushNamed(context, CatalogoPage.routeName);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +45,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
             )
           ],
         ),
+        bottomNavigationBar: BottomBarWidget(),
         body: Container(
           child: Container(
             // padding: new EdgeInsets.all(10.0),
@@ -62,7 +66,6 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
             ),
           ),
         ),
-        bottomNavigationBar: _DemoBottomAppBar(),
       ),
     );
   }
@@ -308,7 +311,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
-              Navigator.pushNamed(context, CatalogoPage.routeName);
+              listaClick(context);
             },
             child: Container(
               child: Row(
@@ -398,38 +401,6 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
           //   title: Text(articoli_lista[index].toString()),
           // );
         },
-      ),
-    );
-  }
-}
-
-// classe app bar da spostare per usare da altre parti
-class _DemoBottomAppBar extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return BottomAppBar(
-      color: Colors.blue,
-      child: IconTheme(
-        data: IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
-        child: Row(
-          children: <Widget>[
-            IconButton(
-              tooltip: 'Open navigation menu',
-              icon: const Icon(Icons.menu),
-              onPressed: () {},
-            ),
-            IconButton(
-              tooltip: 'Search',
-              icon: const Icon(Icons.search),
-              onPressed: () {},
-            ),
-            IconButton(
-              tooltip: 'Favorite',
-              icon: const Icon(Icons.favorite),
-              onPressed: () {},
-            ),
-          ],
-        ),
       ),
     );
   }

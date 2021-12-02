@@ -219,6 +219,7 @@ class _ArticoloAggiungiPageState extends State<ArticoloAggiungiPage> {
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
                           // initialValue: "",
+                          keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.next,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -266,6 +267,7 @@ class _ArticoloAggiungiPageState extends State<ArticoloAggiungiPage> {
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
                           // initialValue: "",
+                          keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.next,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -284,6 +286,7 @@ class _ArticoloAggiungiPageState extends State<ArticoloAggiungiPage> {
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
                           // initialValue: "",
+                          keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.done,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),

@@ -7,6 +7,8 @@ import 'package:fraschetti_videocatalogo/screen/auth/LoginPage.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoLista.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/ParametriConnesionePage.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/RegistrazionePage.dart';
+import 'package:fraschetti_videocatalogo/screen/promozioni/PromozioneLista.dart';
+import 'package:fraschetti_videocatalogo/screen/promozioni/PromozionePage.dart';
 import 'package:page_transition/page_transition.dart';
 
 class RouterApp {
@@ -33,6 +35,10 @@ class RouterApp {
         return MaterialPageRoute(builder: (context) => CatalogoPage());
       case ArticoloAggiungiPage.routeName:
         return MaterialPageRoute(builder: (context) => ArticoloAggiungiPage());
+      case PromozioneListaPage.routeName:
+        return MaterialPageRoute(builder: (context) => PromozioneListaPage());
+      case PromozionePage.routeName:
+        return MaterialPageRoute(builder: (context) => PromozionePage());
       default:
         return MaterialPageRoute(builder: (context) => SplashPage());
         // return MaterialPageRoute(builder: (context) => RegistazionePage());

@@ -93,6 +93,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
                     child: TextFormField(
                       controller: usernameController,
                       textCapitalization: TextCapitalization.characters,
+                      textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Username',
@@ -108,6 +109,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
                     child: TextFormField(
                       controller: passwordController,
                       obscureText: true,
+                      textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Password',
@@ -123,6 +125,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
                     child: TextFormField(
                       controller: password_verificaController,
                       obscureText: true,
+                      textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Conferma Password',
@@ -138,6 +141,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
                     child: TextFormField(
                       controller: codice_attivazioneController,
                       keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.done,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Codice attivazione',

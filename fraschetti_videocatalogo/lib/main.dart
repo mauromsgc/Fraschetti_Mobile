@@ -1,18 +1,15 @@
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
+
 import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
-import 'package:fraschetti_videocatalogo/screen/auth/RegistrazionePage.dart';
-
-import 'package:fraschetti_videocatalogo/screen/auth/SplashPage.dart';
-import 'package:fraschetti_videocatalogo/screen/auth/LoginPage.dart';
-import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoLista.dart';
-import 'package:fraschetti_videocatalogo/screen/utils/LogPage.dart';
 import 'package:fraschetti_videocatalogo/utils/router_app.dart';
-import 'package:fraschetti_videocatalogo/screen/home/HomePage.dart';
-import 'package:get_it/get_it.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/intl.dart';
+
+import 'models/SessioneModel.dart';
 
 final getIt = GetIt.instance;
 
@@ -28,12 +25,20 @@ void main() async{
 
   getIt.registerSingleton<HttpRepository>(HttpRepository());
 
+
+  // SessioneModel sessione = SessioneModel(bottom_bar_indice: 0);
+  // var test = "Pippo pippo".obs;
+  getIt.registerSingleton<SessioneModel>(SessioneModel(bottom_bar_indice: 0));
+
   runApp(MyApp());
 
 
 }
 
 class MyApp extends StatelessWidget {
+
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

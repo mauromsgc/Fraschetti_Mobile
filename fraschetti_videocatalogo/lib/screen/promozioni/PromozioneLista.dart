@@ -1,11 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
+import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/models/promozioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/promozioniRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/LoginPage.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
+import '../../main.dart';
 import 'PromozionePage.dart';
 
 class PromozioneListaPage extends StatefulWidget {
@@ -20,27 +24,25 @@ class PromozioneListaPage extends StatefulWidget {
 class _PromozioneListaPageState extends State<PromozioneListaPage> {
   List<PromozioneModel> promozioni_lista = PromozioniRepository().all_2();
 
+  void listaClick(BuildContext context) {
+    Navigator.pushNamed(context, PromozionePage.routeName);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false,
-          leading: IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.menu),
-          ),
+          automaticallyImplyLeading: true,
+          // leading: IconButton(
+          //   onPressed: () {},
+          //   icon: Icon(Icons.menu),
+          // ),
+          // title: Text("${getIt.get<SessioneModel>().bottom_bar_indice.toString()} ${widget.pagina_titolo}"),
           title: Text(widget.pagina_titolo),
           centerTitle: true,
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, LoginPage.routeName);
-              },
-              icon: Icon(Icons.exit_to_app),
-            )
-          ],
         ),
+        bottomNavigationBar: BottomBarWidget(),
         body: Container(
           child: Container(
             // padding: new EdgeInsets.all(10.0),
@@ -55,13 +57,11 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
               children: <Widget>[
                 RicercaWidget(),
                 SelezioniWidget(),
-                CategorieWidget(),
-                ListaWidget(articoli_lista),
+                ListaWidget(promozioni_lista),
               ],
             ),
           ),
         ),
-        bottomNavigationBar: _DemoBottomAppBar(),
       ),
     );
   }
@@ -83,20 +83,6 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
                   // labelText: 'Descrizione/EAN',
                   // labelText: 'Descrizione',
                   hintText: 'Descrizione',
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              flex: 3,
-              child: TextFormField(
-                textAlignVertical: TextAlignVertical.bottom,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  // labelText: 'Codice',
-                  hintText: 'Codice',
                 ),
               ),
             ),
@@ -132,7 +118,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
                 onPressed: () {},
-                child: Text('Assortimenti'),
+                child: Text('Tour intero'),
               ),
             ),
             SizedBox(
@@ -143,18 +129,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
                 onPressed: () {},
-                child: Text('Selezioni'),
-              ),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              flex: 1,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(elevation: 2),
-                onPressed: () {},
-                child: Text('Tutto'),
+                child: Text('Tour singolo'),
               ),
             ),
           ],
@@ -163,166 +138,19 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
     );
   }
 
-// sezione categorie
-  Widget CategorieWidget() {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          flex: 1,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              textStyle: TextStyle(
-                fontSize: 10.0, // insert your font size here
-              ),
-              primary: Colors.red,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(0))),
-            ),
-            onPressed: () {},
-            child: Text('Edilizia'),
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              textStyle: TextStyle(
-                fontSize: 10.0, // insert your font size here
-              ),
-              primary: Colors.red,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(0))),
-            ),
-            onPressed: () {},
-            child: Text('Ut. mano'),
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              textStyle: TextStyle(
-                fontSize: 10.0, // insert your font size here
-              ),
-              primary: Colors.red,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(0))),
-            ),
-            onPressed: () {},
-            child: Text('Ferram.'),
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              textStyle: TextStyle(
-                fontSize: 10.0, // insert your font size here
-              ),
-              primary: Colors.red,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(0))),
-            ),
-            onPressed: () {},
-            child: Text('Giardin.'),
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              textStyle: TextStyle(
-                fontSize: 10.0, // insert your font size here
-              ),
-              primary: Colors.red,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(0))),
-            ),
-            onPressed: () {},
-            child: Text('Ut. elet.'),
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              textStyle: TextStyle(
-                fontSize: 10.0, // insert your font size here
-              ),
-              primary: Colors.red,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(0))),
-            ),
-            onPressed: () {},
-            child: Text('Idraulica'),
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              textStyle: TextStyle(
-                fontSize: 10.0, // insert your font size here
-              ),
-              primary: Colors.red,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(0))),
-            ),
-            onPressed: () {},
-            child: Text('Siderurg.'),
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              textStyle: TextStyle(
-                fontSize: 10.0, // insert your font size here
-              ),
-              primary: Colors.red,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(0))),
-            ),
-            onPressed: () {},
-            child: Text('Domo ut.'),
-          ),
-        ),
-      ],
-    );
-  }
-
 // riga lista
-  Widget ListaWidget(List<CatalogoModel> articoli_lista) {
+  Widget ListaWidget(List<PromozioneModel> promozioni_lista) {
     return Expanded(
       child: ListView.builder(
-        itemCount: articoli_lista.length,
+        itemCount: promozioni_lista.length,
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
-              Navigator.pushNamed(context, PromozionePage.routeName);
+              listaClick(context);
             },
             child: Container(
               child: Row(
                 children: <Widget>[
-                  Container(
-                    width: 10,
-                    height: 40,
-                    // color: Colors.orange,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.orange,
-                        width: 2,
-                      ),
-                    ),
-                  ),
                   Container(
                     width: 40,
                     height: 40,
@@ -350,42 +178,14 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "${articoli_lista[index].nome}",
+                            "${promozioni_lista[index].nome}",
                             style: TextStyle(
                                 fontSize: 18.0,
                                 overflow: TextOverflow.ellipsis),
                           ),
-                          // Text("${articoli_lista[index].nome}"),
+                          // Text("${promozioni_lista[index].nome}"),
                           // Text("Riga 22"),
                         ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 60,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.orange,
-                        width: 2,
-                      ),
-                      image: DecorationImage(
-                        image: AssetImage("assets/immagini/splash_screen.png"),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 60,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.orange,
-                        width: 2,
-                      ),
-                      image: DecorationImage(
-                        image: AssetImage("assets/immagini/splash_screen.png"),
-                        fit: BoxFit.contain,
                       ),
                     ),
                   ),
@@ -394,41 +194,9 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
             ),
           );
           // return ListTile(
-          //   title: Text(articoli_lista[index].toString()),
+          //   title: Text(promozioni_lista[index].toString()),
           // );
         },
-      ),
-    );
-  }
-}
-
-// classe app bar da spostare per usare da altre parti
-class _DemoBottomAppBar extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return BottomAppBar(
-      color: Colors.blue,
-      child: IconTheme(
-        data: IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
-        child: Row(
-          children: <Widget>[
-            IconButton(
-              tooltip: 'Open navigation menu',
-              icon: const Icon(Icons.menu),
-              onPressed: () {},
-            ),
-            IconButton(
-              tooltip: 'Search',
-              icon: const Icon(Icons.search),
-              onPressed: () {},
-            ),
-            IconButton(
-              tooltip: 'Favorite',
-              icon: const Icon(Icons.favorite),
-              onPressed: () {},
-            ),
-          ],
-        ),
       ),
     );
   }
