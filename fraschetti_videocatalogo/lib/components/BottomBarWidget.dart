@@ -1,11 +1,13 @@
-// classe app bar da spostare per usare da altre parti
+// app bar generale
 import 'package:flutter/material.dart';
+import 'package:fraschetti_videocatalogo/screen/ordine/OrdineLista.dart';
+import 'package:fraschetti_videocatalogo/screen/promozioni/PromozioneLista.dart';
+import 'package:get_it/get_it.dart';
+
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoLista.dart';
-import 'package:fraschetti_videocatalogo/screen/promozioni/PromozioneLista.dart';
-import 'package:fraschetti_videocatalogo/screen/promozioni/PromozionePage.dart';
+import 'package:fraschetti_videocatalogo/screen/comunicazioni/ComunicazioneLista.dart';
 
-import '../main.dart';
 
 class BottomBarWidget extends StatefulWidget {
   BottomBarWidget({Key? key}) : super(key: key);
@@ -24,7 +26,7 @@ class _BottomBarWidgetState extends State<BottomBarWidget> {
 
   int _selectedIndex = 0;
 
-  var _sessione = getIt.get<SessioneModel>();
+  var _sessione = GetIt.instance<SessioneModel>();
 
   @override
   void initState() {
@@ -40,18 +42,18 @@ class _BottomBarWidgetState extends State<BottomBarWidget> {
   void _pagina_apri(int index) {
     switch (index) {
       case 0:
-        Navigator.pushNamed(context, CatalogoListaPage.routeName);
+        Navigator.popAndPushNamed(context, CatalogoListaPage.routeName);
         return;
       // break;
       case 1:
-        Navigator.pushNamed(context, PromozioneListaPage.routeName);
+        Navigator.popAndPushNamed(context, PromozioneListaPage.routeName);
         return;
       // break;
       case 2:
-        // Navigator.pushNamed(context, ComunicazioneListaPage.routeName);
+        Navigator.popAndPushNamed(context, ComunicazioneListaPage.routeName);
         break;
       case 3:
-        // Navigator.pushNamed(context, OrdineListaPage.routeName);
+        Navigator.popAndPushNamed(context, OrdineLista.routeName);
         break;
       case 4:
         // Navigator.pushNamed(context, TrasmissionePage.routeName);
@@ -60,11 +62,11 @@ class _BottomBarWidgetState extends State<BottomBarWidget> {
         // Navigator.pushNamed(context, AltroPage.routeName);
         break;
       default:
-        Navigator.pushNamed(context, CatalogoListaPage.routeName);
+        Navigator.popAndPushNamed(context, CatalogoListaPage.routeName);
         break;
     }
   }
-
+  //
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class ArticoloAggiungiPage extends StatefulWidget {
-  ArticoloAggiungiPage({Key? key}) : super(key: key);
-  static const String routeName = "articolo_aggiungi";
-  final String pagina_titolo = "Articolo aggiungi";
+class ResoArticoloAggiungiPage extends StatefulWidget {
+  ResoArticoloAggiungiPage({Key? key}) : super(key: key);
+  static const String routeName = "reso_articolo_aggiungi";
+  final String pagina_titolo = "Reso articolo aggiungi";
 
   @override
-  _ArticoloAggiungiPageState createState() => _ArticoloAggiungiPageState();
+  _ResoArticoloAggiungiPageState createState() => _ResoArticoloAggiungiPageState();
 }
 
-class _ArticoloAggiungiPageState extends State<ArticoloAggiungiPage> {
+class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
   void savalOnSubmit(BuildContext context) async {
     // final username = usernameController.text.trim();
     // final password = passwordController.text.trim();
@@ -37,10 +37,13 @@ class _ArticoloAggiungiPageState extends State<ArticoloAggiungiPage> {
     // });
     //
     // if (valid) {
-    //   Navigator.pushNamed(context, LoginPage.routeName);
+    //       Navigator.of(context).pop();
     // } else {
     //   print("Registrazione fallita");
     // }
+
+    Navigator.of(context).pop();
+
   }
 
   void successivoOnSubmit(BuildContext context) async {

@@ -7,28 +7,23 @@ import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/comunicazioniRepository.dart';
-import 'package:fraschetti_videocatalogo/screen/ordine/OrdineLista.dart';
-import 'package:get_it/get_it.dart';
 
 
-class ClienteLista extends StatefulWidget {
-  ClienteLista({Key? key}) : super(key: key);
-  static const String routeName = "ordini_clienti_lista";
-  final String pagina_titolo = "Clienti";
+class OrdineResiLista extends StatefulWidget {
+  OrdineResiLista({Key? key}) : super(key: key);
+  static const String routeName = "ordini_resi_clienti";
+  final String pagina_titolo = "Reso cliente";
 
   @override
-  _ClienteListaState createState() => _ClienteListaState();
+  _OrdineResiListaState createState() => _OrdineResiListaState();
 }
 
-class _ClienteListaState extends State<ClienteLista> {
+class _OrdineResiListaState extends State<OrdineResiLista> {
   List<ComunicazioneModel> comunicazioni_lista =
   ComunicazioniRepository().all_2();
 
   void listaClick(BuildContext context) {
-    // selezione al cliente e va in ordine
-    GetIt.instance<SessioneModel>().ordine_top_menu_indice = 1;
-
-    Navigator.popAndPushNamed(context, OrdineLista.routeName);
+    // Navigator.pushNamed(context, ClientiLista.routeName);
   }
 
   @override
@@ -84,7 +79,7 @@ class _ClienteListaState extends State<ClienteLista> {
                 textAlignVertical: TextAlignVertical.bottom,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: 'Nominativo',
+                  hintText: 'Oggetto',
                 ),
               ),
             ),
@@ -98,7 +93,7 @@ class _ClienteListaState extends State<ClienteLista> {
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: 'Codice',
+                  hintText: 'ID',
                 ),
               ),
             ),
@@ -134,7 +129,7 @@ class _ClienteListaState extends State<ClienteLista> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
                 onPressed: () {},
-                child: Text('Clienti con ordini'),
+                child: Text('Da leggere'),
               ),
             ),
             SizedBox(
@@ -145,7 +140,7 @@ class _ClienteListaState extends State<ClienteLista> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
                 onPressed: () {},
-                child: Text('Tutti'),
+                child: Text('Lette'),
               ),
             ),
           ],
@@ -168,7 +163,7 @@ class _ClienteListaState extends State<ClienteLista> {
               child: Row(
                 children: <Widget>[
                   Container(
-                    width: 80,
+                    width: 100,
                     height: 40,
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -176,14 +171,22 @@ class _ClienteListaState extends State<ClienteLista> {
                         width: 2,
                       ),
                     ),
-                    child:
+                    child: Column(
+                      children: [
                         Text(
                           "${comunicazioni_lista[index].id}",
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 12,
                           ),
                         ),
-
+                        Text(
+                          "${comunicazioni_lista[index].data}",
+                          style: TextStyle(
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   Expanded(
                     child: Container(
@@ -203,12 +206,8 @@ class _ClienteListaState extends State<ClienteLista> {
                                 fontSize: 18.0,
                                 overflow: TextOverflow.ellipsis),
                           ),
-                          Text(
-                            "${comunicazioni_lista[index].oggetto}",
-                            style: TextStyle(
-                                fontSize: 10.0,
-                                overflow: TextOverflow.ellipsis),
-                          ),
+                          // Text("${comunicazioni_lista[index].nome}"),
+                          // Text("Riga 22"),
                         ],
                       ),
                     ),
@@ -217,6 +216,9 @@ class _ClienteListaState extends State<ClienteLista> {
               ),
             ),
           );
+          // return ListTile(
+          //   title: Text(comunicazioni_lista[index].toString()),
+          // );
         },
       ),
     );

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
-import 'package:fraschetti_videocatalogo/models/articoliRepository.dart';
+import 'package:fraschetti_videocatalogo/repositories/articoliRepository.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:image/image.dart';
 
-import 'ArticoloAggiungiPage.dart';
+import '../ordine/OrdineArticoloAggiungiPage.dart';
 
 class CatalogoPage extends StatefulWidget {
   CatalogoPage({Key? key}) : super(key: key);
@@ -70,7 +70,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
-                  color: Colors.red,
+                  color: Theme.of(context).primaryColor,
                   width: 2,
                 ),
               ),
@@ -97,8 +97,8 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
-                          overflow: TextOverflow.ellipsis,
-                    ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ),
                 ),
@@ -155,10 +155,13 @@ class _CatalogoPageState extends State<CatalogoPage> {
             children: [
               SizedBox(width: 5),
               Expanded(
+                flex: 2,
                 child: Container(
                   padding: EdgeInsets.all(5),
-                  height: 500,
+                  // height: 400,
                   // width: 100,
+                  // height: double.infinity,
+
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: Colors.orange,
@@ -166,30 +169,35 @@ class _CatalogoPageState extends State<CatalogoPage> {
                     ),
                   ),
                   child: SingleChildScrollView(
-                  child: Text(
-                    "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.",
-                    // "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, ",
-                    // style: TextStyle(fontSize: 12.0),
-                  ),
+                    child: Text(
+                      "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.",
+                      // "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, ",
+                      // style: TextStyle(fontSize: 12.0),
+                    ),
                   ),
                 ),
               ),
               SizedBox(width: 5),
               Expanded(
                 flex: 5,
-                child: Container(
-                  height: 500,
-                  // width: 400,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.orange,
-                      width: 2,
-                    ),
-                    image: DecorationImage(
-                      image: AssetImage("assets/immagini/splash_screen.png"),
-                      fit: BoxFit.contain,
-                    ),
-                  ),
+                child: LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints) {
+                    return Container(
+                      height: constraints.minWidth,
+                      // width: 500,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.orange,
+                          width: 2,
+                        ),
+                        image: DecorationImage(
+                          image:
+                              AssetImage("assets/immagini/splash_screen.png"),
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
               SizedBox(width: 5),
@@ -210,7 +218,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
           itemBuilder: (context, index) {
             return InkWell(
               onTap: () {
-                Navigator.pushNamed(context, ArticoloAggiungiPage.routeName);
+                Navigator.pushNamed(context, OrdineArticoloAggiungiPage.routeName);
               },
               child: Container(
                 child: Row(
@@ -279,12 +287,10 @@ class _CatalogoPageState extends State<CatalogoPage> {
                           ),
                         ),
                         child: Text(
-                              "Codice Codice Codice Codice Codice Codice",
-                              style: TextStyle(
-                                  fontSize: 18.0,
-                                  overflow: TextOverflow.ellipsis),
-                            ),
-
+                          "Codice Codice Codice Codice Codice Codice",
+                          style: TextStyle(
+                              fontSize: 18.0, overflow: TextOverflow.ellipsis),
+                        ),
                       ),
                     ),
                     Container(
@@ -385,4 +391,3 @@ class _CatalogoPageState extends State<CatalogoPage> {
     );
   }
 }
-

@@ -2,14 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
+import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
-import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/models/promozioneModel.dart';
-import 'package:fraschetti_videocatalogo/models/promozioniRepository.dart';
-import 'package:fraschetti_videocatalogo/screen/auth/LoginPage.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:fraschetti_videocatalogo/repositories/promozioniRepository.dart';
 
-import '../../main.dart';
 import 'PromozionePage.dart';
 
 class PromozioneListaPage extends StatefulWidget {

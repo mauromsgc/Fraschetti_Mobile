@@ -26,9 +26,9 @@ void main() async{
   getIt.registerSingleton<HttpRepository>(HttpRepository());
 
 
-  // SessioneModel sessione = SessioneModel(bottom_bar_indice: 0);
+  // SessioneModel sessione = SessioneModel();
   // var test = "Pippo pippo".obs;
-  getIt.registerSingleton<SessioneModel>(SessioneModel(bottom_bar_indice: 0));
+  getIt.registerSingleton<SessioneModel>(SessioneModel());
 
   runApp(MyApp());
 

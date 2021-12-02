@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
-import 'package:fraschetti_videocatalogo/models/articoliRepository.dart';
+import 'package:fraschetti_videocatalogo/repositories/articoliRepository.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/LoginPage.dart';
 
@@ -84,8 +84,6 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                 textAlignVertical: TextAlignVertical.bottom,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  // labelText: 'Descrizione/EAN',
-                  // labelText: 'Descrizione',
                   hintText: 'Descrizione',
                 ),
               ),
@@ -97,9 +95,9 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
               flex: 3,
               child: TextFormField(
                 textAlignVertical: TextAlignVertical.bottom,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  // labelText: 'Codice',
                   hintText: 'Codice',
                 ),
               ),

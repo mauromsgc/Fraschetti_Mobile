@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
-import 'package:fraschetti_videocatalogo/models/articoliRepository.dart';
+import 'package:fraschetti_videocatalogo/repositories/articoliRepository.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoPage.dart';
 
