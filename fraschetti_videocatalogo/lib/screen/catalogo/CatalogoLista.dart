@@ -79,10 +79,10 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
         child: Row(
           children: <Widget>[
             Expanded(
-              flex: 5,
+              flex: 6,
               child: TextFormField(
-                textAlignVertical: TextAlignVertical.bottom,
                 decoration: InputDecoration(
+                  contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
                   hintText: 'Descrizione',
                 ),
@@ -92,11 +92,11 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
               width: 10,
             ),
             Expanded(
-              flex: 3,
+              flex: 2,
               child: TextFormField(
-                textAlignVertical: TextAlignVertical.bottom,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
+                  contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
                   hintText: 'Codice',
                 ),
@@ -312,6 +312,14 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
               listaClick(context);
             },
             child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Theme.of(context).primaryColor,
+                    width: 2,
+                  ),
+                ),
+              ),
               child: Row(
                 children: <Widget>[
                   Container(
@@ -319,10 +327,8 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                     height: 40,
                     // color: Colors.orange,
                     decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.orange,
-                        width: 2,
-                      ),
+                      color: Colors.orange,
+                        // "${articoli_lista[index].nome}"
                     ),
                   ),
                   Container(
@@ -353,8 +359,9 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                         children: [
                           Text(
                             "${articoli_lista[index].nome}",
+                            maxLines: 2,
                             style: TextStyle(
-                                fontSize: 18.0,
+                                fontSize: 15.0,
                                 overflow: TextOverflow.ellipsis),
                           ),
                           // Text("${articoli_lista[index].nome}"),
@@ -365,7 +372,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   ),
                   Container(
                     width: 60,
-                    height: 50,
+                    height: 40,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: Colors.orange,
@@ -379,7 +386,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   ),
                   Container(
                     width: 60,
-                    height: 50,
+                    height: 40,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: Colors.orange,
@@ -395,9 +402,6 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
               ),
             ),
           );
-          // return ListTile(
-          //   title: Text(articoli_lista[index].toString()),
-          // );
         },
       ),
     );

@@ -80,8 +80,8 @@ class _OrdineListaState extends State<OrdineLista> {
             Expanded(
               flex: 5,
               child: TextFormField(
-                textAlignVertical: TextAlignVertical.bottom,
                 decoration: InputDecoration(
+                  contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
                   hintText: 'Oggetto',
                 ),
@@ -93,9 +93,9 @@ class _OrdineListaState extends State<OrdineLista> {
             Expanded(
               flex: 3,
               child: TextFormField(
-                textAlignVertical: TextAlignVertical.bottom,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
+                  contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
                   hintText: 'ID',
                 ),
@@ -220,9 +220,6 @@ class _OrdineListaState extends State<OrdineLista> {
               ),
             ),
           );
-          // return ListTile(
-          //   title: Text(comunicazioni_lista[index].toString()),
-          // );
         },
       ),
     );

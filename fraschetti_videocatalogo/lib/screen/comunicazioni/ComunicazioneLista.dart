@@ -75,8 +75,8 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
             Expanded(
               flex: 5,
               child: TextFormField(
-                textAlignVertical: TextAlignVertical.bottom,
                 decoration: InputDecoration(
+                  contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
                   hintText: 'Oggetto',
                 ),
@@ -88,9 +88,9 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
             Expanded(
               flex: 3,
               child: TextFormField(
-                textAlignVertical: TextAlignVertical.bottom,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
+                  contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
                   hintText: 'ID',
                 ),
@@ -159,6 +159,14 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
               listaClick(context);
             },
             child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Theme.of(context).primaryColor,
+                    width: 2,
+                  ),
+                ),
+              ),
               child: Row(
                 children: <Widget>[
                   Container(
@@ -215,9 +223,6 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
               ),
             ),
           );
-          // return ListTile(
-          //   title: Text(comunicazioni_lista[index].toString()),
-          // );
         },
       ),
     );

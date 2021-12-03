@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class OrdineArticoloAggiungiPage extends StatefulWidget {
   OrdineArticoloAggiungiPage({Key? key}) : super(key: key);
@@ -67,8 +68,8 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
           child: SingleChildScrollView(
             child: Container(
               padding: EdgeInsets.only(
-                left: 30,
-                right: 30,
+                left: 10,
+                right: 10,
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -84,6 +85,7 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey.shade200,
+                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                         border: OutlineInputBorder(),
                         labelText: "Cliente",
                       ),
@@ -100,6 +102,7 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey.shade200,
+                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                         border: OutlineInputBorder(),
                         labelText: "Codice",
                       ),
@@ -115,6 +118,7 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey.shade200,
+                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                         border: OutlineInputBorder(),
                         labelText: "Articolo",
                       ),
@@ -130,6 +134,7 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey.shade200,
+                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                         border: OutlineInputBorder(),
                         labelText: "Descrizione codice",
                       ),
@@ -148,13 +153,14 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.grey.shade200,
+                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(),
                             labelText: "U.M.",
                           ),
                         ),
                       ),
                       SizedBox(
-                        width: 50,
+                        width: 10,
                       ),
                       Container(
                         // prezzo base
@@ -167,6 +173,7 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.grey.shade200,
+                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(),
                             labelText: "Prezzo base",
                           ),
@@ -187,13 +194,14 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.grey.shade200,
+                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(),
                             labelText: "Apribile",
                           ),
                         ),
                       ),
                       SizedBox(
-                        width: 50,
+                        width: 10,
                       ),
                       Container(
                         // confezione
@@ -206,6 +214,7 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.grey.shade200,
+                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(),
                             labelText: "Confezione",
                           ),
@@ -225,13 +234,14 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.next,
                           decoration: InputDecoration(
+                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(),
                             labelText: "Quantità",
                           ),
                         ),
                       ),
                       SizedBox(
-                        width: 50,
+                        width: 10,
                       ),
                       Container(
                         // quantità già presente
@@ -247,6 +257,7 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.red.shade100,
+                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: Colors.red,
@@ -273,6 +284,7 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.next,
                           decoration: InputDecoration(
+                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(),
                             labelText: "Sconto",
                           ),
@@ -292,13 +304,14 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.done,
                           decoration: InputDecoration(
+                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(),
                             labelText: "Prezzo",
                           ),
                         ),
                       ),
                       SizedBox(
-                        width: 50,
+                        width: 10,
                       ),
                       Container(
                         // confezione
@@ -314,6 +327,7 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.red.shade100,
+                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: Colors.red,

@@ -127,6 +127,14 @@ class _PromozionePageState extends State<PromozionePage> {
                 listaClick(context);
               },
               child: Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Theme.of(context).primaryColor,
+                      width: 2,
+                    ),
+                  ),
+                ),
                 child: Row(
                   children: <Widget>[
                     Container(
@@ -134,10 +142,8 @@ class _PromozionePageState extends State<PromozionePage> {
                       height: 40,
                       // color: Colors.orange,
                       decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
+                        color: Colors.orange,
+                        // "${articoli_lista[index].nome}"
                       ),
                     ),
                     Container(
@@ -168,8 +174,9 @@ class _PromozionePageState extends State<PromozionePage> {
                           children: [
                             Text(
                               "${articoli_lista[index].nome}",
+                              maxLines: 2,
                               style: TextStyle(
-                                  fontSize: 18.0,
+                                  fontSize: 15.0,
                                   overflow: TextOverflow.ellipsis),
                             ),
                             // Text("${articoli_lista[index].nome}"),
@@ -180,7 +187,7 @@ class _PromozionePageState extends State<PromozionePage> {
                     ),
                     Container(
                       width: 60,
-                      height: 50,
+                      height: 40,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.orange,
@@ -194,7 +201,7 @@ class _PromozionePageState extends State<PromozionePage> {
                     ),
                     Container(
                       width: 60,
-                      height: 50,
+                      height: 40,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.orange,
@@ -210,9 +217,6 @@ class _PromozionePageState extends State<PromozionePage> {
                 ),
               ),
             );
-            // return ListTile(
-            //   title: Text(articoli_lista[index].toString()),
-            // );
           },
         ),
       ),

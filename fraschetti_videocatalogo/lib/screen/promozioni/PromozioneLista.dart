@@ -74,8 +74,8 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
             Expanded(
               flex: 5,
               child: TextFormField(
-                textAlignVertical: TextAlignVertical.bottom,
                 decoration: InputDecoration(
+                  contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
                   // labelText: 'Descrizione/EAN',
                   // labelText: 'Descrizione',
@@ -146,6 +146,14 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
               listaClick(context);
             },
             child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Theme.of(context).primaryColor,
+                    width: 2,
+                  ),
+                ),
+              ),
               child: Row(
                 children: <Widget>[
                   Container(
@@ -190,9 +198,6 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
               ),
             ),
           );
-          // return ListTile(
-          //   title: Text(promozioni_lista[index].toString()),
-          // );
         },
       ),
     );

@@ -79,10 +79,10 @@ class _ClienteListaState extends State<ClienteLista> {
         child: Row(
           children: <Widget>[
             Expanded(
-              flex: 5,
+              flex: 6,
               child: TextFormField(
-                textAlignVertical: TextAlignVertical.bottom,
                 decoration: InputDecoration(
+                  contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
                   hintText: 'Nominativo',
                 ),
@@ -92,11 +92,11 @@ class _ClienteListaState extends State<ClienteLista> {
               width: 10,
             ),
             Expanded(
-              flex: 3,
+              flex: 2,
               child: TextFormField(
-                textAlignVertical: TextAlignVertical.bottom,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
+                  contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
                   hintText: 'Codice',
                 ),
@@ -165,10 +165,19 @@ class _ClienteListaState extends State<ClienteLista> {
               listaClick(context);
             },
             child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Theme.of(context).primaryColor,
+                    width: 2,
+                  ),
+                ),
+              ),
               child: Row(
                 children: <Widget>[
                   Container(
-                    width: 80,
+                    alignment: Alignment(0.0, 0.0),
+                    width: 60,
                     height: 40,
                     decoration: BoxDecoration(
                       border: Border.all(

@@ -69,6 +69,7 @@ class _ParametriConnesionePageState extends State<ParametriConnesionePage> {
                     child: TextFormField(
                       controller: parametriController,
                       decoration: InputDecoration(
+                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                         border: OutlineInputBorder(),
                         labelText: 'Parametri di connessione',
                         errorText: (parametriError == "") ? null : parametriError,

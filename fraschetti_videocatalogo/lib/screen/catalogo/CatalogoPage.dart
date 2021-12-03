@@ -155,7 +155,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
             children: [
               SizedBox(width: 5),
               Expanded(
-                flex: 2,
+                flex: 1,
                 child: Container(
                   padding: EdgeInsets.all(5),
                   // height: 400,
@@ -168,18 +168,22 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       width: 2,
                     ),
                   ),
-                  child: SingleChildScrollView(
-                    child: Text(
-                      "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.",
-                      // "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, ",
-                      // style: TextStyle(fontSize: 12.0),
+                  child: SizedBox(
+                    height: 300,
+                    child: SingleChildScrollView(
+                      child: Text(
+                        "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.",
+                        // "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, ",
+                        textAlign: TextAlign.justify,
+                        // style: TextStyle(fontSize: 12.0),
+                      ),
                     ),
                   ),
                 ),
               ),
               SizedBox(width: 5),
               Expanded(
-                flex: 5,
+                flex: 2,
                 child: LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
                     return Container(
@@ -221,6 +225,14 @@ class _CatalogoPageState extends State<CatalogoPage> {
                 Navigator.pushNamed(context, OrdineArticoloAggiungiPage.routeName);
               },
               child: Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Theme.of(context).primaryColor,
+                      width: 2,
+                    ),
+                  ),
+                ),
                 child: Row(
                   children: <Widget>[
                     Container(
@@ -382,9 +394,6 @@ class _CatalogoPageState extends State<CatalogoPage> {
                 ),
               ),
             );
-            // return ListTile(
-            //   title: Text(articoli_lista[index].toString()),
-            // );
           },
         ),
       ),

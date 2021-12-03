@@ -95,6 +95,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
                       textCapitalization: TextCapitalization.characters,
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
+                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                         border: OutlineInputBorder(),
                         labelText: 'Username',
                         errorText: (usernameError == "") ? null : usernameError,
@@ -111,6 +112,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
                       obscureText: true,
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
+                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                         border: OutlineInputBorder(),
                         labelText: 'Password',
                         errorText: (passwordError == "") ? null : passwordError,
@@ -127,6 +129,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
                       obscureText: true,
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
+                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                         border: OutlineInputBorder(),
                         labelText: 'Conferma Password',
                         errorText: (password_verificaError == "") ? null : password_verificaError,
@@ -143,6 +146,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.done,
                       decoration: InputDecoration(
+                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                         border: OutlineInputBorder(),
                         labelText: 'Codice attivazione',
                         errorText: (codice_attivazioneError == "") ? null : codice_attivazioneError,

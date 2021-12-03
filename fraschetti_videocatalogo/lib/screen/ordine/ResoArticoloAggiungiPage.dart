@@ -67,8 +67,8 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
           child: SingleChildScrollView(
             child: Container(
               padding: EdgeInsets.only(
-                left: 30,
-                right: 30,
+                left: 10,
+                right: 10,
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -84,6 +84,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey.shade200,
+                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                         border: OutlineInputBorder(),
                         labelText: "Cliente",
                       ),
@@ -100,6 +101,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey.shade200,
+                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                         border: OutlineInputBorder(),
                         labelText: "Codice",
                       ),
@@ -115,6 +117,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey.shade200,
+                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                         border: OutlineInputBorder(),
                         labelText: "Articolo",
                       ),
@@ -130,6 +133,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey.shade200,
+                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                         border: OutlineInputBorder(),
                         labelText: "Descrizione codice",
                       ),
@@ -148,6 +152,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.grey.shade200,
+                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(),
                             labelText: "U.M.",
                           ),
@@ -167,6 +172,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.grey.shade200,
+                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(),
                             labelText: "Prezzo base",
                           ),
@@ -187,6 +193,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.grey.shade200,
+                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(),
                             labelText: "Apribile",
                           ),
@@ -206,6 +213,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.grey.shade200,
+                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(),
                             labelText: "Confezione",
                           ),
@@ -225,6 +233,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.next,
                           decoration: InputDecoration(
+                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(),
                             labelText: "Quantità",
                           ),
@@ -247,6 +256,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.red.shade100,
+                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: Colors.red,
@@ -273,6 +283,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.next,
                           decoration: InputDecoration(
+                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(),
                             labelText: "Sconto",
                           ),
@@ -292,6 +303,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.done,
                           decoration: InputDecoration(
+                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(),
                             labelText: "Prezzo",
                           ),
@@ -314,6 +326,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.red.shade100,
+                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: Colors.red,
