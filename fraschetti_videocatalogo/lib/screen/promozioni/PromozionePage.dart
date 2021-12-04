@@ -127,6 +127,7 @@ class _PromozionePageState extends State<PromozionePage> {
                 listaClick(context);
               },
               child: Container(
+                height: 40,
                 decoration: BoxDecoration(
                   border: Border(
                     bottom: BorderSide(
@@ -139,8 +140,6 @@ class _PromozionePageState extends State<PromozionePage> {
                   children: <Widget>[
                     Container(
                       width: 10,
-                      height: 40,
-                      // color: Colors.orange,
                       decoration: BoxDecoration(
                         color: Colors.orange,
                         // "${articoli_lista[index].nome}"
@@ -148,67 +147,60 @@ class _PromozionePageState extends State<PromozionePage> {
                     ),
                     Container(
                       width: 40,
-                      height: 40,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.orange,
                           width: 2,
                         ),
                         image: DecorationImage(
-                          image: AssetImage("assets/immagini/splash_screen.png"),
+                          image:
+                              AssetImage("assets/immagini/splash_screen.png"),
                           fit: BoxFit.contain,
                         ),
                       ),
                     ),
                     Expanded(
                       child: Container(
+                        alignment: Alignment(-1.0, 0.0),
+                        padding: EdgeInsets.all(5.0),
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: Colors.orange,
                             width: 2,
                           ),
                         ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "${articoli_lista[index].nome}",
-                              maxLines: 2,
-                              style: TextStyle(
-                                  fontSize: 15.0,
-                                  overflow: TextOverflow.ellipsis),
-                            ),
-                            // Text("${articoli_lista[index].nome}"),
-                            // Text("Riga 22"),
-                          ],
+                        child: Text(
+                          "${articoli_lista[index].nome}",
+                          maxLines: 2,
+                          style: TextStyle(
+                              fontSize: 15.0, overflow: TextOverflow.ellipsis),
                         ),
                       ),
                     ),
                     Container(
                       width: 60,
-                      height: 40,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.orange,
                           width: 2,
                         ),
                         image: DecorationImage(
-                          image: AssetImage("assets/immagini/splash_screen.png"),
+                          image:
+                              AssetImage("assets/immagini/splash_screen.png"),
                           fit: BoxFit.contain,
                         ),
                       ),
                     ),
                     Container(
                       width: 60,
-                      height: 40,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.orange,
                           width: 2,
                         ),
                         image: DecorationImage(
-                          image: AssetImage("assets/immagini/splash_screen.png"),
+                          image:
+                              AssetImage("assets/immagini/splash_screen.png"),
                           fit: BoxFit.contain,
                         ),
                       ),

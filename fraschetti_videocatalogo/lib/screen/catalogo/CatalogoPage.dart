@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/repositories/articoliRepository.dart';
@@ -95,7 +96,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                     child: Text(
                       "Categoria Categoria",
                       style: TextStyle(
-                        fontSize: 30,
+                        fontSize: 22 ,
                         fontWeight: FontWeight.bold,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -141,7 +142,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                   child: Text(
                     "Articolo Articolo Articolo",
                     style: TextStyle(
-                      fontSize: 30,
+                      fontSize: 22,
                       fontWeight: FontWeight.bold,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -215,6 +216,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
 // riga lista codici
   Widget CodiciWidget() {
     return Container(
+      // height: double.infinity,
       height: 300,
       child: Expanded(
         child: ListView.builder(
@@ -224,7 +226,21 @@ class _CatalogoPageState extends State<CatalogoPage> {
               onTap: () {
                 Navigator.pushNamed(context, OrdineArticoloAggiungiPage.routeName);
               },
+              onLongPress: () => showDialog<String>(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  title: const Text('Disponibilità'),
+                  content: const Text('Verrà mostrata la disponibilità'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ),
+              ),
               child: Container(
+                height: 40,
                 decoration: BoxDecoration(
                   border: Border(
                     bottom: BorderSide(
@@ -236,28 +252,9 @@ class _CatalogoPageState extends State<CatalogoPage> {
                 child: Row(
                   children: <Widget>[
                     Container(
-                      // consegna
-                      alignment: Alignment(0.0, 0.0),
-                      width: 20,
-                      height: 50,
-                      // color: Colors.orange,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
-                      child: Text(
-                        "X",
-                        style: TextStyle(fontSize: 18.0),
-                      ),
-                    ),
-                    Container(
                       // venduto
                       alignment: Alignment(0.0, 0.0),
                       width: 20,
-                      height: 50,
-                      // color: Colors.orange,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.orange,
@@ -272,8 +269,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                     Container(
                       // codice
                       alignment: Alignment(0.0, 0.0),
-                      width: 80,
-                      height: 50,
+                      width: 65,
                       // color: Colors.orange,
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -283,15 +279,15 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       ),
                       child: Text(
                         "000000",
-                        style: TextStyle(fontSize: 18.0),
+                        // style: TextStyle(fontSize: 14.0),
                       ),
                     ),
                     Expanded(
                       // descrizione
                       flex: 1,
                       child: Container(
+                        padding: EdgeInsets.all(5),
                         alignment: Alignment(-1.0, 0.0),
-                        height: 50,
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: Colors.orange,
@@ -301,16 +297,17 @@ class _CatalogoPageState extends State<CatalogoPage> {
                         child: Text(
                           "Codice Codice Codice Codice Codice Codice",
                           style: TextStyle(
-                              fontSize: 18.0, overflow: TextOverflow.ellipsis),
+                              // fontSize: 14.0,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ),
                     ),
                     Container(
                       // quantità
+                      padding: EdgeInsets.all(5),
                       alignment: Alignment(1.0, 0.0),
                       width: 50,
-                      height: 50,
-                      // color: Colors.orange,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.orange,
@@ -319,15 +316,13 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       ),
                       child: Text(
                         "1500",
-                        style: TextStyle(fontSize: 18.0),
+                        // style: TextStyle(fontSize: 18.0),
                       ),
                     ),
                     Container(
                       // apribile
                       alignment: Alignment(0.0, 0.0),
                       width: 20,
-                      height: 50,
-                      // color: Colors.orange,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.orange,
@@ -343,8 +338,6 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       // unità di misura
                       alignment: Alignment(0.0, 0.0),
                       width: 40,
-                      height: 50,
-                      // color: Colors.orange,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.orange,
@@ -353,15 +346,14 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       ),
                       child: Text(
                         "XC",
-                        style: TextStyle(fontSize: 18.0),
+                        // style: TextStyle(fontSize: 18.0),
                       ),
                     ),
                     Container(
                       // prezzo
+                      padding: EdgeInsets.all(5),
                       alignment: Alignment(1.0, 0.0),
-                      width: 90,
-                      height: 50,
-                      // color: Colors.orange,
+                      width: 85,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.orange,
@@ -369,16 +361,14 @@ class _CatalogoPageState extends State<CatalogoPage> {
                         ),
                       ),
                       child: Text(
-                        "1500,00",
-                        style: TextStyle(fontSize: 18.0),
+                        "99999,00",
+                        // style: TextStyle(fontSize: 18.0),
                       ),
                     ),
                     Container(
                       // iva
                       alignment: Alignment(0.0, 0.0),
                       width: 30,
-                      height: 50,
-                      // color: Colors.orange,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.orange,
@@ -387,7 +377,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       ),
                       child: Text(
                         "22",
-                        style: TextStyle(fontSize: 18.0),
+                        // style: TextStyle(fontSize: 18.0),
                       ),
                     ),
                   ],

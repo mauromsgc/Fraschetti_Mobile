@@ -65,7 +65,7 @@ class _ParametriConnesionePageState extends State<ParametriConnesionePage> {
               child: Column(
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(5),
                     child: TextFormField(
                       controller: parametriController,
                       decoration: InputDecoration(
@@ -80,7 +80,7 @@ class _ParametriConnesionePageState extends State<ParametriConnesionePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Container(
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(5),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(elevation: 2),
                           onPressed: () => Navigator.pop(context),
@@ -88,7 +88,7 @@ class _ParametriConnesionePageState extends State<ParametriConnesionePage> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(5),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(elevation: 2),
                           // dovrebbe salvare e poi tornare indietro
@@ -102,7 +102,7 @@ class _ParametriConnesionePageState extends State<ParametriConnesionePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Container(
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(5),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(elevation: 2),
                           onPressed: () => parametri_defaultOnSubmit(),
@@ -115,7 +115,7 @@ class _ParametriConnesionePageState extends State<ParametriConnesionePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Container(
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(5),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(elevation: 2),
                           onPressed: () {},

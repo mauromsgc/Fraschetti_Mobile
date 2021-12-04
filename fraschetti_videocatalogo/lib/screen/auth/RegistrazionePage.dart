@@ -89,7 +89,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
               child: Column(
                 children: <Widget>[
                   Container(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(5),
                     child: TextFormField(
                       controller: usernameController,
                       textCapitalization: TextCapitalization.characters,
@@ -106,7 +106,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(5),
                     child: TextFormField(
                       controller: passwordController,
                       obscureText: true,
@@ -123,7 +123,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(5),
                     child: TextFormField(
                       controller: password_verificaController,
                       obscureText: true,
@@ -140,7 +140,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(5),
                     child: TextFormField(
                       controller: codice_attivazioneController,
                       keyboardType: TextInputType.number,
@@ -157,7 +157,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(5),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(elevation: 2),
                       onPressed: () => registrazioneOnSubmit(context),
@@ -165,7 +165,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(5),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(elevation: 2),
                       onPressed: () => testComunicazioneOnSubmit(context),
@@ -173,7 +173,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(5),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(elevation: 2),
                       onPressed: () => parametriOnSubmit(context),

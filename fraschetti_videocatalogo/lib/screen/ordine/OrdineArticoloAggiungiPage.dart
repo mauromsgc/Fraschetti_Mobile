@@ -68,6 +68,7 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
           child: SingleChildScrollView(
             child: Container(
               padding: EdgeInsets.only(
+                top: 10,
                 left: 10,
                 right: 10,
               ),
@@ -77,7 +78,7 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                 children: [
                   Container(
                     // cliente nominativo
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(5),
                     child: TextFormField(
                       // readOnly: true,
                       enabled: false,
@@ -92,25 +93,8 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                     ),
                   ),
                   Container(
-                    // articolo codice
-                    width: 120,
-                    padding: EdgeInsets.all(10),
-                    child: TextFormField(
-                      // readOnly: true,
-                      enabled: false,
-                      initialValue: "000000",
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey.shade200,
-                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                        border: OutlineInputBorder(),
-                        labelText: "Codice",
-                      ),
-                    ),
-                  ),
-                  Container(
                     // articolo descrizione
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(5),
                     child: TextFormField(
                       // readOnly: true,
                       enabled: false,
@@ -124,69 +108,54 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                       ),
                     ),
                   ),
-                  Container(
-                    // articolo codice descrizione
-                    padding: EdgeInsets.all(10),
-                    child: TextFormField(
-                      // readOnly: true,
-                      enabled: false,
-                      initialValue: "Codice descrizione Codice descrizione",
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey.shade200,
-                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                        border: OutlineInputBorder(),
-                        labelText: "Descrizione codice",
-                      ),
-                    ),
-                  ),
                   Row(
                     children: [
                       Container(
-                        // unità di misura
-                        width: 120  ,
-                        padding: EdgeInsets.all(10),
+                        // articolo codice
+                        width: 100,
+                        padding: EdgeInsets.all(5),
                         child: TextFormField(
                           // readOnly: true,
                           enabled: false,
-                          initialValue: "PZ",
+                          initialValue: "000000",
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.grey.shade200,
                             contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(),
-                            labelText: "U.M.",
+                            labelText: "Codice",
                           ),
                         ),
                       ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Container(
-                        // prezzo base
-                        width: 150,
-                        padding: EdgeInsets.all(10),
-                        child: TextFormField(
-                          // readOnly: true,
-                          enabled: false,
-                          initialValue: "1500,36",
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.grey.shade200,
-                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                            border: OutlineInputBorder(),
-                            labelText: "Prezzo base",
+                      Expanded(
+                        child:
+                        Container(
+                          // articolo codice descrizione
+                          padding: EdgeInsets.all(5),
+                          child: TextFormField(
+                            // readOnly: true,
+                            enabled: false,
+                            initialValue: "Codice descrizione Codice descrizione",
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.grey.shade200,
+                              contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                              border: OutlineInputBorder(),
+                              labelText: "Descrizione",
+                            ),
                           ),
                         ),
+
                       ),
                     ],
                   ),
+
                   Row(
                     children: [
                       Container(
                         // apribile
-                        width: 120  ,
-                        padding: EdgeInsets.all(10),
+                        width: 60  ,
+                        padding: EdgeInsets.all(5),
                         child: TextFormField(
                           // readOnly: true,
                           enabled: false,
@@ -200,17 +169,32 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                           ),
                         ),
                       ),
-                      SizedBox(
-                        width: 10,
+                      Container(
+                        // unità di misura
+                        width: 70,
+                        padding: EdgeInsets.all(5),
+                        child: TextFormField(
+                          // readOnly: true,
+                          enabled: false,
+                          initialValue: "PZ",
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.grey.shade200,
+                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                            border: OutlineInputBorder(),
+                            labelText: "U.M.",
+                          ),
+                        ),
                       ),
                       Container(
                         // confezione
-                        width: 120,
-                        padding: EdgeInsets.all(10),
+                        width: 80,
+                        padding: EdgeInsets.all(5),
                         child: TextFormField(
                           // readOnly: true,
                           enabled: false,
                           initialValue: "4",
+                          textAlign: TextAlign.right,
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.grey.shade200,
@@ -220,19 +204,38 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                           ),
                         ),
                       ),
-                    ],
+                      Container(
+                        // prezzo base
+                        width: 120,
+                        padding: EdgeInsets.all(5),
+                        child: TextFormField(
+                          // readOnly: true,
+                          enabled: false,
+                          initialValue: "99999,99",
+                          textAlign: TextAlign.right,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.grey.shade200,
+                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                            border: OutlineInputBorder(),
+                            labelText: "Prezzo base",
+                          ),
+                        ),
+                      ),
+                ],
                   ),
 
                   Row(
                     children: [
                       Container(
                         // Quantità
-                        width: 120  ,
-                        padding: EdgeInsets.all(10),
+                        width: 100  ,
+                        padding: EdgeInsets.all(5),
                         child: TextFormField(
                           // initialValue: "",
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.next,
+                          textAlign: TextAlign.right,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(),
@@ -240,13 +243,10 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                           ),
                         ),
                       ),
-                      SizedBox(
-                        width: 10,
-                      ),
                       Container(
                         // quantità già presente
-                        width: 120,
-                        padding: EdgeInsets.all(10),
+                        width: 100,
+                        padding: EdgeInsets.all(5),
                         child: TextFormField(
                           // readOnly: true,
                           enabled: false,
@@ -254,6 +254,7 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                           style: TextStyle(
                             color: Colors.red,
                           ),
+                          textAlign: TextAlign.right,
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.red.shade100,
@@ -277,12 +278,13 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                     children: [
                       Container(
                         // sconto
-                        width: 120  ,
-                        padding: EdgeInsets.all(10),
+                        width: 80  ,
+                        padding: EdgeInsets.all(5),
                         child: TextFormField(
                           // initialValue: "",
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.next,
+                          textAlign: TextAlign.right,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(),
@@ -297,12 +299,13 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                     children: [
                       Container(
                         // prezzo
-                        width: 150  ,
-                        padding: EdgeInsets.all(10),
+                        width: 120  ,
+                        padding: EdgeInsets.all(5),
                         child: TextFormField(
                           // initialValue: "",
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.done,
+                          textAlign: TextAlign.right,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(),
@@ -310,20 +313,18 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                           ),
                         ),
                       ),
-                      SizedBox(
-                        width: 10,
-                      ),
                       Container(
                         // confezione
-                        width: 150,
-                        padding: EdgeInsets.all(10),
+                        width: 120,
+                        padding: EdgeInsets.all(5),
                         child: TextFormField(
                           // readOnly: true,
                           enabled: false,
-                          initialValue: "135,00",
+                          initialValue: "99999,99",
                           style: TextStyle(
                             color: Colors.red,
                           ),
+                          textAlign: TextAlign.right,
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.red.shade100,
@@ -333,7 +334,7 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                                 color: Colors.red,
                               ),
                             ),
-                            labelText: "Prezzo presente",
+                            labelText: "Prezzo pres.",
                             labelStyle: TextStyle(
                               color: Colors.red,
                             ),
@@ -348,7 +349,7 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                       Expanded(
                         flex: 1,
                         child: Padding(
-                          padding: EdgeInsets.all(10),
+                          padding: EdgeInsets.all(5),
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(elevation: 2),
                             onPressed: () => annullaOnSubmit(context),
@@ -359,7 +360,7 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                       Expanded(
                         flex: 1,
                         child: Padding(
-                          padding: EdgeInsets.all(10),
+                          padding: EdgeInsets.all(5),
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(elevation: 2),
                             onPressed: () => successivoOnSubmit(context),
@@ -370,7 +371,7 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                       Expanded(
                         flex: 1,
                         child: Padding(
-                          padding: EdgeInsets.all(10),
+                          padding: EdgeInsets.all(5),
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(elevation: 2),
                             onPressed: () => savalOnSubmit(context),

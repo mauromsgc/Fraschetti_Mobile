@@ -76,7 +76,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                 children: [
                   Container(
                     // cliente nominativo
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(5),
                     child: TextFormField(
                       // readOnly: true,
                       enabled: false,
@@ -93,7 +93,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                   Container(
                     // articolo codice
                     width: 120,
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(5),
                     child: TextFormField(
                       // readOnly: true,
                       enabled: false,
@@ -109,7 +109,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                   ),
                   Container(
                     // articolo descrizione
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(5),
                     child: TextFormField(
                       // readOnly: true,
                       enabled: false,
@@ -125,7 +125,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                   ),
                   Container(
                     // articolo codice descrizione
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(5),
                     child: TextFormField(
                       // readOnly: true,
                       enabled: false,
@@ -144,7 +144,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                       Container(
                         // unità di misura
                         width: 120  ,
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(5),
                         child: TextFormField(
                           // readOnly: true,
                           enabled: false,
@@ -164,7 +164,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                       Container(
                         // prezzo base
                         width: 150,
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(5),
                         child: TextFormField(
                           // readOnly: true,
                           enabled: false,
@@ -185,7 +185,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                       Container(
                         // apribile
                         width: 120  ,
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(5),
                         child: TextFormField(
                           // readOnly: true,
                           enabled: false,
@@ -205,7 +205,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                       Container(
                         // confezione
                         width: 120,
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(5),
                         child: TextFormField(
                           // readOnly: true,
                           enabled: false,
@@ -227,7 +227,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                       Container(
                         // Quantità
                         width: 120  ,
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(5),
                         child: TextFormField(
                           // initialValue: "",
                           keyboardType: TextInputType.number,
@@ -245,7 +245,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                       Container(
                         // quantità già presente
                         width: 120,
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(5),
                         child: TextFormField(
                           // readOnly: true,
                           enabled: false,
@@ -277,7 +277,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                       Container(
                         // sconto
                         width: 120  ,
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(5),
                         child: TextFormField(
                           // initialValue: "",
                           keyboardType: TextInputType.number,
@@ -297,7 +297,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                       Container(
                         // prezzo
                         width: 150  ,
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(5),
                         child: TextFormField(
                           // initialValue: "",
                           keyboardType: TextInputType.number,
@@ -315,7 +315,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                       Container(
                         // confezione
                         width: 150,
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(5),
                         child: TextFormField(
                           // readOnly: true,
                           enabled: false,
@@ -347,7 +347,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                       Expanded(
                         flex: 1,
                         child: Padding(
-                          padding: EdgeInsets.all(10),
+                          padding: EdgeInsets.all(5),
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(elevation: 2),
                             onPressed: () => annullaOnSubmit(context),
@@ -358,7 +358,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                       Expanded(
                         flex: 1,
                         child: Padding(
-                          padding: EdgeInsets.all(10),
+                          padding: EdgeInsets.all(5),
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(elevation: 2),
                             onPressed: () => successivoOnSubmit(context),
@@ -369,7 +369,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                       Expanded(
                         flex: 1,
                         child: Padding(
-                          padding: EdgeInsets.all(10),
+                          padding: EdgeInsets.all(5),
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(elevation: 2),
                             onPressed: () => savalOnSubmit(context),

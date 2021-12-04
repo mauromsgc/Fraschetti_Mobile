@@ -312,6 +312,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
               listaClick(context);
             },
             child: Container(
+              height: 40,
               decoration: BoxDecoration(
                 border: Border(
                   bottom: BorderSide(
@@ -324,8 +325,6 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                 children: <Widget>[
                   Container(
                     width: 10,
-                    height: 40,
-                    // color: Colors.orange,
                     decoration: BoxDecoration(
                       color: Colors.orange,
                         // "${articoli_lista[index].nome}"
@@ -333,7 +332,6 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   ),
                   Container(
                     width: 40,
-                    height: 40,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: Colors.orange,
@@ -347,32 +345,25 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   ),
                   Expanded(
                     child: Container(
+                      alignment: Alignment(-1.0, 0.0),
+                      padding: EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.orange,
                           width: 2,
                         ),
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
+                      child: Text(
                             "${articoli_lista[index].nome}",
                             maxLines: 2,
                             style: TextStyle(
                                 fontSize: 15.0,
                                 overflow: TextOverflow.ellipsis),
                           ),
-                          // Text("${articoli_lista[index].nome}"),
-                          // Text("Riga 22"),
-                        ],
-                      ),
                     ),
                   ),
                   Container(
                     width: 60,
-                    height: 40,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: Colors.orange,
@@ -386,7 +377,6 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   ),
                   Container(
                     width: 60,
-                    height: 40,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: Colors.orange,

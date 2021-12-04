@@ -146,6 +146,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
               listaClick(context);
             },
             child: Container(
+              height: 40,
               decoration: BoxDecoration(
                 border: Border(
                   bottom: BorderSide(
@@ -158,7 +159,6 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
                 children: <Widget>[
                   Container(
                     width: 40,
-                    height: 40,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: Colors.orange,
@@ -178,19 +178,11 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
                           width: 2,
                         ),
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${promozioni_lista[index].nome}",
-                            style: TextStyle(
-                                fontSize: 18.0,
-                                overflow: TextOverflow.ellipsis),
-                          ),
-                          // Text("${promozioni_lista[index].nome}"),
-                          // Text("Riga 22"),
-                        ],
+                      alignment: Alignment(-1.0, 0.0),
+                      child: Text(
+                        "${promozioni_lista[index].nome}",
+                        style: TextStyle(
+                            fontSize: 18.0, overflow: TextOverflow.ellipsis),
                       ),
                     ),
                   ),

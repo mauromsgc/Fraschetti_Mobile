@@ -48,7 +48,6 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -62,16 +61,20 @@ class _LoginPageState extends State<LoginPage> {
           child: SingleChildScrollView(
             child: Container(
               child: Column(
-               children: <Widget>[
+                children: <Widget>[
+                  SizedBox(
+                    height: 10,
+                  ),
                   Container(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(5),
                     child: TextFormField(
                       controller: usernameController,
                       textCapitalization: TextCapitalization.characters,
                       // keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                        contentPadding:
+                            EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                         border: OutlineInputBorder(),
                         labelText: 'Username',
                         errorText: (usernameError == "") ? null : usernameError,
@@ -82,13 +85,14 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(5),
                     child: TextFormField(
                       controller: passwordController,
                       // obscureText: true,
                       textInputAction: TextInputAction.done,
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                        contentPadding:
+                            EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                         border: OutlineInputBorder(),
                         labelText: 'Password',
                         errorText: (passwordError == "") ? null : passwordError,
@@ -99,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(5),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(elevation: 2),
                       onPressed: () => loginOnSubmit(context),
@@ -110,11 +114,12 @@ class _LoginPageState extends State<LoginPage> {
                     height: 20,
                   ),
                   Container(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(5),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(elevation: 2),
                       onPressed: () {
-                        Navigator.pushNamed(context, RegistazionePage.routeName);
+                        Navigator.pushNamed(
+                            context, RegistazionePage.routeName);
                       },
                       child: Text('Registrazione'),
                     ),

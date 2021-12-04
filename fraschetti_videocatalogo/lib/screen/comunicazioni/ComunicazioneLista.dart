@@ -159,6 +159,7 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
               listaClick(context);
             },
             child: Container(
+              height: 40,
               decoration: BoxDecoration(
                 border: Border(
                   bottom: BorderSide(
@@ -171,7 +172,6 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
                 children: <Widget>[
                   Container(
                     width: 100,
-                    height: 40,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: Colors.orange,
@@ -179,17 +179,19 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
                       ),
                     ),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
                           "${comunicazioni_lista[index].id}",
                           style: TextStyle(
-                            fontSize: 12,
+                            // fontSize: 12,
                           ),
                         ),
                         Text(
                           "${comunicazioni_lista[index].data}",
                           style: TextStyle(
-                            fontSize: 12,
+                            // fontSize: 12,
                           ),
                         ),
                       ],
@@ -197,26 +199,21 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
                   ),
                   Expanded(
                     child: Container(
+                      alignment: Alignment(-1.0, 0.0),
+                      padding: EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.orange,
                           width: 2,
                         ),
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
+                      child: Text(
                             "${comunicazioni_lista[index].oggetto}",
                             style: TextStyle(
-                                fontSize: 18.0,
+                                // fontSize: 18.0,
                                 overflow: TextOverflow.ellipsis),
                           ),
-                          // Text("${comunicazioni_lista[index].nome}"),
-                          // Text("Riga 22"),
-                        ],
-                      ),
+
                     ),
                   ),
                 ],

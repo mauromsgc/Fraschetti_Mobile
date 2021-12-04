@@ -21,12 +21,13 @@ class ClienteLista extends StatefulWidget {
 }
 
 class _ClienteListaState extends State<ClienteLista> {
-  List<ComunicazioneModel> comunicazioni_lista =
+  List<ComunicazioneModel> clienti_lista =
   ComunicazioniRepository().all_2();
 
-  void listaClick(BuildContext context) {
+  void listaClick(BuildContext context, int index) {
     // selezione al cliente e va in ordine
     GetIt.instance<SessioneModel>().ordine_top_menu_indice = 1;
+    GetIt.instance<SessioneModel>().cliente_id = index;
 
     Navigator.popAndPushNamed(context, OrdineLista.routeName);
   }
@@ -61,7 +62,7 @@ class _ClienteListaState extends State<ClienteLista> {
                 OrdineTopMenu(),
                 RicercaWidget(),
                 SelezioniWidget(),
-                ListaWidget(comunicazioni_lista),
+                ListaWidget(clienti_lista),
               ],
             ),
           ),
@@ -155,16 +156,17 @@ class _ClienteListaState extends State<ClienteLista> {
   }
 
 // riga lista
-  Widget ListaWidget(List<ComunicazioneModel> comunicazioni_lista) {
+  Widget ListaWidget(List<ComunicazioneModel> clienti_lista) {
     return Expanded(
       child: ListView.builder(
-        itemCount: comunicazioni_lista.length,
+        itemCount: clienti_lista.length,
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
-              listaClick(context);
+              listaClick(context, index);
             },
             child: Container(
+              height: 40,
               decoration: BoxDecoration(
                 border: Border(
                   bottom: BorderSide(
@@ -178,7 +180,6 @@ class _ClienteListaState extends State<ClienteLista> {
                   Container(
                     alignment: Alignment(0.0, 0.0),
                     width: 60,
-                    height: 40,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: Colors.orange,
@@ -187,7 +188,7 @@ class _ClienteListaState extends State<ClienteLista> {
                     ),
                     child:
                         Text(
-                          "${comunicazioni_lista[index].id}",
+                          "${clienti_lista[index].id}",
                           style: TextStyle(
                             fontSize: 18,
                           ),
@@ -207,13 +208,13 @@ class _ClienteListaState extends State<ClienteLista> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "${comunicazioni_lista[index].oggetto}",
+                            "${clienti_lista[index].oggetto}",
                             style: TextStyle(
                                 fontSize: 18.0,
                                 overflow: TextOverflow.ellipsis),
                           ),
                           Text(
-                            "${comunicazioni_lista[index].oggetto}",
+                            "${clienti_lista[index].oggetto}",
                             style: TextStyle(
                                 fontSize: 10.0,
                                 overflow: TextOverflow.ellipsis),

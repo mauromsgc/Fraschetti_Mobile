@@ -4,9 +4,11 @@ class SessioneModel {
   SessioneModel({
     this.bottom_bar_indice = 0,
     this.ordine_top_menu_indice = 0,
+    this.cliente_id = 0,
   });
 
   int bottom_bar_indice = 0;
   int ordine_top_menu_indice = 0;
+  int cliente_id = 0;
 
 }

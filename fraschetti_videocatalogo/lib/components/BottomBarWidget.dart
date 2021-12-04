@@ -1,5 +1,6 @@
 // app bar generale
 import 'package:flutter/material.dart';
+import 'package:fraschetti_videocatalogo/screen/ordine/ClientiLista.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineLista.dart';
 import 'package:fraschetti_videocatalogo/screen/promozioni/PromozioneLista.dart';
 import 'package:get_it/get_it.dart';
@@ -7,7 +8,6 @@ import 'package:get_it/get_it.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoLista.dart';
 import 'package:fraschetti_videocatalogo/screen/comunicazioni/ComunicazioneLista.dart';
-
 
 class BottomBarWidget extends StatefulWidget {
   BottomBarWidget({Key? key}) : super(key: key);
@@ -53,7 +53,15 @@ class _BottomBarWidgetState extends State<BottomBarWidget> {
         Navigator.popAndPushNamed(context, ComunicazioneListaPage.routeName);
         break;
       case 3:
-        Navigator.popAndPushNamed(context, OrdineLista.routeName);
+        if (GetIt.instance<SessioneModel>().cliente_id == 0) {
+          // se il cliente NON è selezionato va in elenco clienti
+          GetIt.instance<SessioneModel>().ordine_top_menu_indice = 0;
+          Navigator.popAndPushNamed(context, ClienteLista.routeName);
+        } else {
+          // se il cliente è già selezionato va in ordine
+          GetIt.instance<SessioneModel>().ordine_top_menu_indice = 1;
+          Navigator.popAndPushNamed(context, OrdineLista.routeName);
+        }
         break;
       case 4:
         // Navigator.pushNamed(context, TrasmissionePage.routeName);
@@ -66,6 +74,7 @@ class _BottomBarWidgetState extends State<BottomBarWidget> {
         break;
     }
   }
+
   //
   @override
   Widget build(BuildContext context) {
