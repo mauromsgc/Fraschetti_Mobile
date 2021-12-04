@@ -204,7 +204,7 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
                             "${comunicazioni_lista[index].oggetto}",
                             style: TextStyle(
                                 fontSize: 18.0,
-                                overflow: TextOverflow.ellipsis),
+                                overflow: TextOverflow.ellipsis,),
                           ),
                           // Text("${comunicazioni_lista[index].nome}"),
                           // Text("Riga 22"),

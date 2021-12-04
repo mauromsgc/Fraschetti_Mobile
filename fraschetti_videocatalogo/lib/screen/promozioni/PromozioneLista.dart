@@ -172,17 +172,20 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
                   ),
                   Expanded(
                     child: Container(
+                      alignment: Alignment(-1.0, 0.0),
+                      padding: EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.orange,
                           width: 2,
                         ),
                       ),
-                      alignment: Alignment(-1.0, 0.0),
                       child: Text(
                         "${promozioni_lista[index].nome}",
                         style: TextStyle(
-                            fontSize: 18.0, overflow: TextOverflow.ellipsis),
+                            fontSize: 18.0,
+                            overflow: TextOverflow.ellipsis
+                        ),
                       ),
                     ),
                   ),

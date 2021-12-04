@@ -173,7 +173,7 @@ class _PromozionePageState extends State<PromozionePage> {
                           "${articoli_lista[index].nome}",
                           maxLines: 2,
                           style: TextStyle(
-                              fontSize: 15.0, overflow: TextOverflow.ellipsis),
+                              fontSize: 15.0, overflow: TextOverflow.ellipsis,),
                         ),
                       ),
                     ),

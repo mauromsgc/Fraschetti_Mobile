@@ -210,8 +210,9 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
                       child: Text(
                             "${comunicazioni_lista[index].oggetto}",
                             style: TextStyle(
-                                // fontSize: 18.0,
-                                overflow: TextOverflow.ellipsis),
+                                fontSize: 18.0,
+                                overflow: TextOverflow.ellipsis
+                            ),
                           ),
 
                     ),

@@ -7,7 +7,7 @@ import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/comunicazioniRepository.dart';
-
+import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
 
 class OrdineCodiceCercaPage extends StatefulWidget {
   OrdineCodiceCercaPage({Key? key}) : super(key: key);
@@ -19,11 +19,26 @@ class OrdineCodiceCercaPage extends StatefulWidget {
 }
 
 class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
-  List<ComunicazioneModel> comunicazioni_lista =
-  ComunicazioniRepository().all_2();
+  List<ComunicazioneModel> codici_lista = ComunicazioniRepository().all_2();
 
   void listaClick(BuildContext context) {
-    // Navigator.pushNamed(context, ClientiLista.routeName);
+    Navigator.pushNamed(context, OrdineArticoloAggiungiPage.routeName);
+  }
+
+  void articolo_disponibilita_mostra(BuildContext context) {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('Disponibilità'),
+        content: const Text('Verrà mostrata la disponibilità'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -54,9 +69,9 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
             child: Column(
               children: <Widget>[
                 OrdineTopMenu(),
+                ClienteIntestazioneWidget(),
                 RicercaWidget(),
-                SelezioniWidget(),
-                ListaWidget(comunicazioni_lista),
+                ListaWidget(codici_lista),
               ],
             ),
           ),
@@ -65,7 +80,34 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
     );
   }
 
-// sezione ricerca
+  Widget ClienteIntestazioneWidget() {
+    return Container(
+      padding: EdgeInsets.all(3),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            // cliente nominativo
+            // padding: EdgeInsets.all(5),
+            child: TextFormField(
+              enabled: false,
+              initialValue: "0000 Cliente Cliente Cliente",
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.grey.shade200,
+                contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                border: OutlineInputBorder(),
+                labelText: "Cliente",
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // sezione ricerca
   Widget RicercaWidget() {
     return Padding(
       padding: EdgeInsets.all(3),
@@ -74,12 +116,13 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
         child: Row(
           children: <Widget>[
             Expanded(
-              flex: 5,
+              flex: 2,
               child: TextFormField(
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
-                  hintText: 'Oggetto',
+                  hintText: 'Codice',
                 ),
               ),
             ),
@@ -87,13 +130,12 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
               width: 10,
             ),
             Expanded(
-              flex: 3,
+              flex: 6,
               child: TextFormField(
-                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
-                  hintText: 'ID',
+                  hintText: 'Descrizione',
                 ),
               ),
             ),
@@ -114,103 +156,161 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
     );
   }
 
-// da modificare con un pulsante a destra del pulsante menu
-// va messo all'interno del title
-// sezione selezioni
-  Widget SelezioniWidget() {
-    return Padding(
-      padding: EdgeInsets.all(3),
-      child: SizedBox(
-        height: 40,
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(elevation: 2),
-                onPressed: () {},
-                child: Text('Da leggere'),
-              ),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              flex: 1,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(elevation: 2),
-                onPressed: () {},
-                child: Text('Lette'),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
 // riga lista
-  Widget ListaWidget(List<ComunicazioneModel> comunicazioni_lista) {
+  Widget ListaWidget(List<ComunicazioneModel> codici_lista) {
     return Expanded(
       child: ListView.builder(
-        itemCount: comunicazioni_lista.length,
+        // itemCount: codici_lista.length,
+        itemCount: 10,
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
               listaClick(context);
             },
+            onLongPress: () {
+              articolo_disponibilita_mostra(context);
+            },
             child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Theme.of(context).primaryColor,
+                    width: 2,
+                  ),
+                ),
+              ),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Container(
-                    width: 100,
+                    width: 40,
                     height: 40,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: Colors.orange,
                         width: 2,
                       ),
+                      image: DecorationImage(
+                        image: AssetImage("assets/immagini/splash_screen.png"),
+                        fit: BoxFit.contain,
+                      ),
                     ),
+                  ),
+                  Expanded(
                     child: Column(
                       children: [
-                        Text(
-                          "${comunicazioni_lista[index].id}",
-                          style: TextStyle(
-                            fontSize: 12,
-                          ),
+                        Row(
+                          children: [
+                            Container(
+                              // codice
+                              padding: EdgeInsets.all(2),
+                              alignment: Alignment(0.0, 0.0),
+                              width: 60,
+                              // color: Colors.orange,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.orange,
+                                  width: 2,
+                                ),
+                              ),
+                              child: Text(
+                                "000000",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  // fontSize: 18.0,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              // descrizione
+                              flex: 1,
+                              child: Container(
+                                padding: EdgeInsets.all(2),
+                                alignment: Alignment(-1.0, 0.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.orange,
+                                    width: 2,
+                                  ),
+                                ),
+                                child: Text(
+                                  "Articolo Articolo Articolo Articolo Articolo Articolo Articolo Articolo",
+                                  style: TextStyle(
+                                    // fontSize: 14.0,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              // prezzo
+                              padding: EdgeInsets.all(3),
+                              alignment: Alignment(1.0, 0.0),
+                              width: 75,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.orange,
+                                  width: 2,
+                                ),
+                              ),
+                              child: Text(
+                                "99999,99",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  // fontSize: 18.0,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          "${comunicazioni_lista[index].data}",
-                          style: TextStyle(
-                            fontSize: 12,
+                        Container(
+                          padding: EdgeInsets.all(2),
+                          alignment: Alignment(-1.0, 0.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.orange,
+                              width: 2,
+                            ),
+                          ),
+                          child: Text(
+                            "Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice",
+                            maxLines: 3,
+                            style: TextStyle(
+                              // fontSize: 14.0,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${comunicazioni_lista[index].oggetto}",
-                            style: TextStyle(
-                                fontSize: 18.0,
-                                overflow: TextOverflow.ellipsis),
-                          ),
-                          // Text("${comunicazioni_lista[index].nome}"),
-                          // Text("Riga 22"),
-                        ],
-                      ),
-                    ),
+
+                    // Column(
+                    //   children: [
+                    //
+                    //     Expanded(
+                    //       // descrizione
+                    //       flex: 1,
+                    //       child: Container(
+                    //         padding: EdgeInsets.all(2),
+                    //         alignment: Alignment(-1.0, 0.0),
+                    //         decoration: BoxDecoration(
+                    //           border: Border.all(
+                    //             color: Colors.orange,
+                    //             width: 2,
+                    //           ),
+                    //         ),
+                    //         child: Text(
+                    //           "Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice",
+                    //           style: TextStyle(
+                    //             // fontSize: 14.0,
+                    //             overflow: TextOverflow.ellipsis,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //
+                    //   ],
+                    // ),
                   ),
                 ],
               ),

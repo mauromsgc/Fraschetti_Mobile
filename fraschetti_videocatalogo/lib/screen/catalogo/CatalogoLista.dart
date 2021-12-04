@@ -355,10 +355,10 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                       ),
                       child: Text(
                             "${articoli_lista[index].nome}",
-                            maxLines: 2,
                             style: TextStyle(
                                 fontSize: 15.0,
-                                overflow: TextOverflow.ellipsis),
+                                overflow: TextOverflow.ellipsis
+                            ),
                           ),
                     ),
                   ),

@@ -10,7 +10,6 @@ import 'package:fraschetti_videocatalogo/repositories/comunicazioniRepository.da
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineLista.dart';
 import 'package:get_it/get_it.dart';
 
-
 class ClienteLista extends StatefulWidget {
   ClienteLista({Key? key}) : super(key: key);
   static const String routeName = "ordini_clienti_lista";
@@ -21,8 +20,7 @@ class ClienteLista extends StatefulWidget {
 }
 
 class _ClienteListaState extends State<ClienteLista> {
-  List<ComunicazioneModel> clienti_lista =
-  ComunicazioniRepository().all_2();
+  List<ComunicazioneModel> clienti_lista = ComunicazioniRepository().all_2();
 
   void listaClick(BuildContext context, int index) {
     // selezione al cliente e va in ordine
@@ -186,17 +184,16 @@ class _ClienteListaState extends State<ClienteLista> {
                         width: 2,
                       ),
                     ),
-                    child:
-                        Text(
-                          "${clienti_lista[index].id}",
-                          style: TextStyle(
-                            fontSize: 18,
-                          ),
-                        ),
-
+                    child: Text(
+                      "${clienti_lista[index].id}",
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
                   ),
                   Expanded(
                     child: Container(
+                      padding: EdgeInsets.only(left: 5.0, right: 5.0),
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.orange,
@@ -211,13 +208,13 @@ class _ClienteListaState extends State<ClienteLista> {
                             "${clienti_lista[index].oggetto}",
                             style: TextStyle(
                                 fontSize: 18.0,
-                                overflow: TextOverflow.ellipsis),
+                                overflow: TextOverflow.ellipsis,),
                           ),
                           Text(
                             "${clienti_lista[index].oggetto}",
                             style: TextStyle(
                                 fontSize: 10.0,
-                                overflow: TextOverflow.ellipsis),
+                                overflow: TextOverflow.ellipsis,),
                           ),
                         ],
                       ),
