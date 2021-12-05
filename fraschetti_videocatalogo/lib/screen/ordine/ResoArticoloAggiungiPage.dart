@@ -6,10 +6,14 @@ class ResoArticoloAggiungiPage extends StatefulWidget {
   final String pagina_titolo = "Reso articolo aggiungi";
 
   @override
-  _ResoArticoloAggiungiPageState createState() => _ResoArticoloAggiungiPageState();
+  _ResoArticoloAggiungiPageState createState() =>
+      _ResoArticoloAggiungiPageState();
 }
 
 class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
+  List<String> _reso_causale_lista = ['Causale 1', 'Causale 2', 'Causale 3', 'Causale 4'];
+  String _reso_causale_selezionata = "Causale 1";
+
   void savalOnSubmit(BuildContext context) async {
     // final username = usernameController.text.trim();
     // final password = passwordController.text.trim();
@@ -43,7 +47,6 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
     // }
 
     Navigator.of(context).pop();
-
   }
 
   void successivoOnSubmit(BuildContext context) async {
@@ -75,38 +78,134 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    // cliente nominativo
+                    // reso causale
                     padding: EdgeInsets.all(5),
-                    child: TextFormField(
-                      // readOnly: true,
-                      enabled: false,
-                      initialValue: "0000 Cliente Cliente Cliente",
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey.shade200,
-                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                        border: OutlineInputBorder(),
-                        labelText: "Cliente",
-                      ),
+                    child: DropdownButton(
+                      hint: Text('Seleziona la causale'), // Not necessary for Option 1
+                      value: _reso_causale_selezionata,
+                      onChanged: (newValue) {
+                        setState(() {
+                          // _reso_causale_selezionata = newValue;
+                        });
+                      },
+                      items: _reso_causale_lista.map((location) {
+                        return DropdownMenuItem(
+                          child: new Text(location),
+                          value: location,
+                        );
+                      }).toList(),
                     ),
                   ),
-                  Container(
-                    // articolo codice
-                    width: 120,
-                    padding: EdgeInsets.all(5),
-                    child: TextFormField(
-                      // readOnly: true,
-                      enabled: false,
-                      initialValue: "000000",
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey.shade200,
-                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                        border: OutlineInputBorder(),
-                        labelText: "Codice",
+
+
+                  Row(
+                    children: [
+                      Container(
+                        // fattura numero
+                        width: 200 ,
+                        padding: EdgeInsets.all(5),
+                        child: TextFormField(
+                          // initialValue: "",
+                          keyboardType: TextInputType.number,
+                          textInputAction: TextInputAction.continueAction,
+                          decoration: InputDecoration(
+                            contentPadding:
+                            EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                            border: OutlineInputBorder(),
+                            labelText: "Fattura numero",
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
+
+
+                  Row(
+                    children: [
+                      Container(
+                        // fattura data
+                        width: 150,
+                        padding: EdgeInsets.all(5),
+                        child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          textInputAction: TextInputAction.continueAction,
+                          decoration: InputDecoration(
+                            contentPadding:
+                            EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                            border: OutlineInputBorder(),
+                            labelText: "Fattura data",
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        // confezione
+                        child: Text("Formato data GGMMAA"),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        // articolo codice
+                        width: 120,
+                        padding: EdgeInsets.all(5),
+                        child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          textInputAction: TextInputAction.continueAction,
+                          decoration: InputDecoration(
+                            contentPadding:
+                            EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                            border: OutlineInputBorder(),
+                            labelText: "Codice",
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Container(
+                        // unità di misura
+                        width: 60,
+                        padding: EdgeInsets.all(5),
+                        child: TextFormField(
+                          // readOnly: true,
+                          enabled: false,
+                          initialValue: "PZ",
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.grey.shade200,
+                            contentPadding:
+                            EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                            border: OutlineInputBorder(),
+                            labelText: "U.M.",
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Container(
+                        // Quantità
+                        width: 120,
+                        padding: EdgeInsets.all(5),
+                        child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          textInputAction: TextInputAction.next,
+                          decoration: InputDecoration(
+                            contentPadding:
+                            EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                            border: OutlineInputBorder(),
+                            labelText: "Quantità",
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+
                   Container(
                     // articolo descrizione
                     padding: EdgeInsets.all(5),
@@ -117,7 +216,8 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey.shade200,
-                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                        contentPadding:
+                            EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                         border: OutlineInputBorder(),
                         labelText: "Articolo",
                       ),
@@ -133,214 +233,33 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey.shade200,
-                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                        contentPadding:
+                            EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                         border: OutlineInputBorder(),
                         labelText: "Descrizione codice",
                       ),
                     ),
                   ),
-                  Row(
-                    children: [
-                      Container(
-                        // unità di misura
-                        width: 120  ,
-                        padding: EdgeInsets.all(5),
-                        child: TextFormField(
-                          // readOnly: true,
-                          enabled: false,
-                          initialValue: "PZ",
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.grey.shade200,
-                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                            border: OutlineInputBorder(),
-                            labelText: "U.M.",
-                          ),
-                        ),
+                  Container(
+                    // reso note
+                    padding: EdgeInsets.all(5),
+                    child: TextFormField(
+
+                      minLines: 6,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      // keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.done,
+                      decoration: InputDecoration(
+                        // contentPadding: EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 0.0),
+                        border: OutlineInputBorder(),
+                        labelText: "Note reso",
                       ),
-                      SizedBox(
-                        width: 50,
-                      ),
-                      Container(
-                        // prezzo base
-                        width: 150,
-                        padding: EdgeInsets.all(5),
-                        child: TextFormField(
-                          // readOnly: true,
-                          enabled: false,
-                          initialValue: "1500,36",
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.grey.shade200,
-                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                            border: OutlineInputBorder(),
-                            labelText: "Prezzo base",
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        // apribile
-                        width: 120  ,
-                        padding: EdgeInsets.all(5),
-                        child: TextFormField(
-                          // readOnly: true,
-                          enabled: false,
-                          initialValue: "*",
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.grey.shade200,
-                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                            border: OutlineInputBorder(),
-                            labelText: "Apribile",
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 50,
-                      ),
-                      Container(
-                        // confezione
-                        width: 120,
-                        padding: EdgeInsets.all(5),
-                        child: TextFormField(
-                          // readOnly: true,
-                          enabled: false,
-                          initialValue: "4",
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.grey.shade200,
-                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                            border: OutlineInputBorder(),
-                            labelText: "Confezione",
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
 
-                  Row(
-                    children: [
-                      Container(
-                        // Quantità
-                        width: 120  ,
-                        padding: EdgeInsets.all(5),
-                        child: TextFormField(
-                          // initialValue: "",
-                          keyboardType: TextInputType.number,
-                          textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                            border: OutlineInputBorder(),
-                            labelText: "Quantità",
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 50,
-                      ),
-                      Container(
-                        // quantità già presente
-                        width: 120,
-                        padding: EdgeInsets.all(5),
-                        child: TextFormField(
-                          // readOnly: true,
-                          enabled: false,
-                          initialValue: "4",
-                          style: TextStyle(
-                            color: Colors.red,
-                          ),
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.red.shade100,
-                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.red,
-                              ),
-                            ),
-                            labelText: "Qt. presente",
-                            labelStyle: TextStyle(
-                              color: Colors.red,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
 
-                  Row(
-                    children: [
-                      Container(
-                        // sconto
-                        width: 120  ,
-                        padding: EdgeInsets.all(5),
-                        child: TextFormField(
-                          // initialValue: "",
-                          keyboardType: TextInputType.number,
-                          textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                            border: OutlineInputBorder(),
-                            labelText: "Sconto",
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
 
-                  Row(
-                    children: [
-                      Container(
-                        // prezzo
-                        width: 150  ,
-                        padding: EdgeInsets.all(5),
-                        child: TextFormField(
-                          // initialValue: "",
-                          keyboardType: TextInputType.number,
-                          textInputAction: TextInputAction.done,
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                            border: OutlineInputBorder(),
-                            labelText: "Prezzo",
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 50,
-                      ),
-                      Container(
-                        // confezione
-                        width: 150,
-                        padding: EdgeInsets.all(5),
-                        child: TextFormField(
-                          // readOnly: true,
-                          enabled: false,
-                          initialValue: "135,00",
-                          style: TextStyle(
-                            color: Colors.red,
-                          ),
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.red.shade100,
-                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.red,
-                              ),
-                            ),
-                            labelText: "Prezzo presente",
-                            labelStyle: TextStyle(
-                              color: Colors.red,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
 
                   Row(
                     children: [

@@ -31,6 +31,22 @@ class _OrdineListaState extends State<OrdineLista> {
     Navigator.pushNamed(context, OrdineArticoloAggiungiPage.routeName);
   }
 
+  void articolo_disponibilita_mostra(BuildContext context) {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('Disponibilità'),
+        content: const Text('Verrà mostrata la disponibilità'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
   void lista_elemento_elimina(BuildContext context) {
     showDialog<String>(
       context: context,
@@ -174,10 +190,10 @@ class _OrdineListaState extends State<OrdineLista> {
             onTap: () {
               listaClick(context);
             },
-            onTapCancel: () {
-              lista_elemento_elimina(context);
-            },
             onLongPress: () {
+              articolo_disponibilita_mostra(context);
+            },
+            onTapCancel: () {
               lista_elemento_elimina(context);
             },
             child: Container(
@@ -278,7 +294,7 @@ class _OrdineListaState extends State<OrdineLista> {
                     // prezzo
                     padding: EdgeInsets.all(2),
                     alignment: Alignment(1.0, 0.0),
-                    width: 70,
+                    width: 75,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: Colors.orange,
@@ -294,7 +310,7 @@ class _OrdineListaState extends State<OrdineLista> {
                     // totale
                     padding: EdgeInsets.all(2),
                     alignment: Alignment(1.0, 0.0),
-                    width: 75,
+                    width: 80,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: Colors.orange,

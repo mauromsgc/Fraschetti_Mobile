@@ -7,7 +7,8 @@ import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/comunicazioniRepository.dart';
-
+import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
+import 'package:fraschetti_videocatalogo/screen/ordine/ResoArticoloAggiungiPage.dart';
 
 class OrdineResiLista extends StatefulWidget {
   OrdineResiLista({Key? key}) : super(key: key);
@@ -19,11 +20,50 @@ class OrdineResiLista extends StatefulWidget {
 }
 
 class _OrdineResiListaState extends State<OrdineResiLista> {
-  List<ComunicazioneModel> comunicazioni_lista =
-  ComunicazioniRepository().all_2();
+  List<ComunicazioneModel> reso_righe_lista = ComunicazioniRepository().all_2();
 
   void listaClick(BuildContext context) {
-    // Navigator.pushNamed(context, ClientiLista.routeName);
+    Navigator.pushNamed(context, ResoArticoloAggiungiPage.routeName);
+  }
+
+  void articolo_disponibilita_mostra(BuildContext context) {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('Disponibilità'),
+        content: const Text('Verrà mostrata la disponibilità'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void lista_elemento_elimina(BuildContext context) {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('Elimina riga ordine'),
+        content: const Text('Eliminare la riga ordine?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Elimna'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Annulla'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void reso_numeroOnSubmit(BuildContext context) {
+    return;
   }
 
   @override
@@ -54,9 +94,8 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
             child: Column(
               children: <Widget>[
                 OrdineTopMenu(),
-                RicercaWidget(),
-                SelezioniWidget(),
-                ListaWidget(comunicazioni_lista),
+                OrdineIntestazioneWidget(),
+                ListaWidget(reso_righe_lista),
               ],
             ),
           ),
@@ -65,83 +104,73 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
     );
   }
 
-// sezione ricerca
-  Widget RicercaWidget() {
+  Widget OrdineIntestazioneWidget() {
     return Padding(
       padding: EdgeInsets.all(3),
-      child: SizedBox(
-        height: 40,
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              flex: 5,
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              // cliente nominativo
+              // padding: EdgeInsets.all(3),
               child: TextFormField(
+                enabled: false,
+                initialValue: "0000 Cliente Cliente Cliente",
                 decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.grey.shade200,
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
-                  hintText: 'Oggetto',
+                  labelText: "Cliente",
                 ),
               ),
             ),
             SizedBox(
-              width: 10,
+              height: 10,
             ),
-            Expanded(
-              flex: 3,
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                  border: OutlineInputBorder(),
-                  hintText: 'ID',
+            Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                    // articolo codice
+                    width: 100,
+                    // padding: EdgeInsets.all(5),
+                    child: TextFormField(
+                      // readOnly: true,
+                      enabled: false,
+                      initialValue: "Località cliente cliente",
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.grey.shade200,
+                        contentPadding:
+                            EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                        border: OutlineInputBorder(),
+                        labelText: "Località",
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              flex: 2,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(elevation: 2),
-                onPressed: () {},
-                child: Text('Cerca'),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-// da modificare con un pulsante a destra del pulsante menu
-// va messo all'interno del title
-// sezione selezioni
-  Widget SelezioniWidget() {
-    return Padding(
-      padding: EdgeInsets.all(3),
-      child: SizedBox(
-        height: 40,
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(elevation: 2),
-                onPressed: () {},
-                child: Text('Da leggere'),
-              ),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              flex: 1,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(elevation: 2),
-                onPressed: () {},
-                child: Text('Lette'),
-              ),
+                SizedBox(
+                  width: 5,
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                    // padding: EdgeInsets.all(5),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(elevation: 2),
+                      onPressed: () => reso_numeroOnSubmit(context),
+                      child: Text('Reso numero X'),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -150,67 +179,170 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
   }
 
 // riga lista
-  Widget ListaWidget(List<ComunicazioneModel> comunicazioni_lista) {
+  Widget ListaWidget(List<ComunicazioneModel> reso_righe_lista) {
     return Expanded(
       child: ListView.builder(
-        itemCount: comunicazioni_lista.length,
+        // itemCount: reso_righe_lista.length,
+        itemCount: 10,
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
               listaClick(context);
             },
+            onLongPress: () {
+              articolo_disponibilita_mostra(context);
+            },
+            onTapCancel: () {
+              lista_elemento_elimina(context);
+            },
             child: Container(
-              child: Row(
+              // height: 80,
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Theme.of(context).primaryColor,
+                    width: 2,
+                  ),
+                ),
+              ),
+              child: Column(
                 children: <Widget>[
                   Container(
-                    width: 100,
-                    height: 40,
+                    padding: EdgeInsets.all(2),
+                    alignment: Alignment(-1.0, 0.0),
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: Colors.orange,
                         width: 2,
                       ),
                     ),
-                    child: Column(
-                      children: [
-                        Text(
-                          "${comunicazioni_lista[index].id}",
-                          style: TextStyle(
-                            fontSize: 12,
-                          ),
-                        ),
-                        Text(
-                          "${comunicazioni_lista[index].data}",
-                          style: TextStyle(
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      "X - reso causale rso causale",
+                      maxLines: 2,
+                      style: TextStyle(
+                        // fontSize: 12,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+
+                      Container(
+                        // codice
+                        alignment: Alignment(0.0, 1.0),
+                        width: 60,
+                        // color: Colors.orange,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.orange,
+                            width: 2,
+                          ),
+                        ),
+                        child: Text(
+                          "000000",
+                          // style: TextStyle(fontSize: 14.0),
                         ),
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${comunicazioni_lista[index].oggetto}",
-                            style: TextStyle(
-                                fontSize: 18.0,
-                                overflow: TextOverflow.ellipsis,),
+                      Expanded(
+                        // descrizione
+                        flex: 1,
+                        child: Container(
+                          padding: EdgeInsets.all(2),
+                          alignment: Alignment(-1.0, 0.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.orange,
+                              width: 2,
+                            ),
                           ),
-                          // Text("${comunicazioni_lista[index].nome}"),
-                          // Text("Riga 22"),
-                        ],
+                          child: Column(
+                            children: [
+                              Text(
+                                "Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione",
+                                maxLines: 1,
+                                style: TextStyle(
+                                  // fontSize: 12,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              Text(
+                                "Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione ",
+                                maxLines: 2,
+                                style: TextStyle(
+                                  // fontSize: 12,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
+                      Container(
+                        // unità di misura
+                        alignment: Alignment(0.0, 0.0),
+                        width: 25,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.orange,
+                            width: 2,
+                          ),
+                        ),
+                        child: Text(
+                          "XC",
+                          // style: TextStyle(fontSize: 18.0),
+                        ),
+                      ),
+                      Container(
+                        // quantità
+                        padding: EdgeInsets.all(2),
+                        alignment: Alignment(1.0, 0.0),
+                        width: 45,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.orange,
+                            width: 2,
+                          ),
+                        ),
+                        child: Text(
+                          "1500",
+                          // style: TextStyle(fontSize: 18.0),
+                        ),
+                      ),
+                      Container(
+                        // prezzo
+                        padding: EdgeInsets.all(2),
+                        alignment: Alignment(1.0, 0.0),
+                        width: 75,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.orange,
+                            width: 2,
+                          ),
+                        ),
+                        child: Text(
+                          "99999,00",
+                          // style: TextStyle(fontSize: 18.0),
+                        ),
+                      ),
+                      Container(
+                        // totale
+                        padding: EdgeInsets.all(2),
+                        alignment: Alignment(1.0, 0.0),
+                        width: 80,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.orange,
+                            width: 2,
+                          ),
+                        ),
+                        child: Text(
+                          "999999,00",
+                          // style: TextStyle(fontSize: 18.0),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

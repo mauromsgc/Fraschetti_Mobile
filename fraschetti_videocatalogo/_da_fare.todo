@@ -1,0 +1,41 @@
+
+- per ordini e resi dialogo con nuovo e numero ordine/reso su pulsante
+
+- per ordini menu per
+    Chiudi ordine
+    Elimina ordine
+    Totale ordine
+
+    Invio email di ordine cone e senz prezzi
+
+- per resi menu con
+    Chiudi reso
+    Elimina reso
+
+- per trasmissioni con pulsati con azioni
+    Trasmetti ordini
+    Agiorna da server
+    Trasmissioni esito lista
+    Trasmissioni esito page
+
+- fare pagine trasmissioni lista e pagina
+
+- pagina altro/impostazioni
+    Parametri di connessione
+    Test trsmissione
+    Versioni aggiornamento
+    Versione videocatalogo
+    Aggiorna immagini non presenti
+    Modifica password
+    Disinstallare videocatalogo
+
+- pagina/widget per mostrare disponibilità
+
+- chiedere se fare pagine moduli
+
+- pagina per mostrare e inviare log
+    mostrare log
+    eliminae log
+    azzerare parametri aggiornamenti
+    svuotare log
+    attivare e disattivare ulteriori log

@@ -200,6 +200,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
                     child: Column(
                       children: [
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
                               // codice
@@ -246,7 +247,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
                               // prezzo
                               padding: EdgeInsets.all(3),
                               alignment: Alignment(1.0, 0.0),
-                              width: 75,
+                              width: 80,
                               decoration: BoxDecoration(
                                 border: Border.all(
                                   color: Colors.orange,

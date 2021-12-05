@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/repositories/articoliRepository.dart';
@@ -17,7 +16,6 @@ class CatalogoPage extends StatefulWidget {
 }
 
 class _CatalogoPageState extends State<CatalogoPage> {
-
   void listaClick(BuildContext context) {
     Navigator.pushNamed(context, OrdineArticoloAggiungiPage.routeName);
   }
@@ -37,7 +35,6 @@ class _CatalogoPageState extends State<CatalogoPage> {
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +67,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
               child: Column(
                 children: <Widget>[
                   ArticoloWidget(),
-                  SizedBox(height: 5),
+                  // SizedBox(height: 5),
                   CodiciWidget(),
                 ],
               ),
@@ -118,7 +115,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                     child: Text(
                       "Categoria Categoria",
                       style: TextStyle(
-                        fontSize: 22 ,
+                        fontSize: 22,
                         fontWeight: FontWeight.bold,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -235,10 +232,23 @@ class _CatalogoPageState extends State<CatalogoPage> {
     );
   }
 
+  Widget CodiciWidget_2() {
+    return Container(
+      width: double.maxFinite,
+      height: MediaQuery.of(context).size.height,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.orange,
+          width: 2,
+        ),
+      ),
+      child: Text("ciao"),
+    );
+  }
+
 // riga lista codici
   Widget CodiciWidget() {
-    return Container(
-      // height: double.infinity,
+    return SizedBox(
       height: 300,
       child: Expanded(
         child: ListView.builder(
@@ -266,7 +276,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                     Container(
                       // venduto
                       alignment: Alignment(0.0, 0.0),
-                      width: 15 ,
+                      width: 15,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.orange,
@@ -296,7 +306,6 @@ class _CatalogoPageState extends State<CatalogoPage> {
                     ),
                     Expanded(
                       // descrizione
-                      flex: 1,
                       child: Container(
                         padding: EdgeInsets.all(2),
                         alignment: Alignment(-1.0, 0.0),
@@ -309,7 +318,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                         child: Text(
                           "Codice Codice Codice Codice Codice Codice",
                           style: TextStyle(
-                              // fontSize: 14.0,
+                            // fontSize: 14.0,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -365,7 +374,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       // prezzo
                       padding: EdgeInsets.all(3),
                       alignment: Alignment(1.0, 0.0),
-                    width: 75,
+                      width: 80,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.orange,
