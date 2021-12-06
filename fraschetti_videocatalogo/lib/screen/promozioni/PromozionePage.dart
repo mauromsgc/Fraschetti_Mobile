@@ -52,6 +52,11 @@ class _PromozionePageState extends State<PromozionePage> {
                 children: <Widget>[
                   PromozioneWidget(),
                   SizedBox(height: 5),
+                  Divider(
+                    height: 5,
+                    thickness: 2,
+                    // color: Theme.of(context).primaryColor,
+                  ),
                   ListaWidget(articoli_lista),
                 ],
               ),
@@ -119,7 +124,12 @@ class _PromozionePageState extends State<PromozionePage> {
     return Container(
       height: 300,
       child: Expanded(
-        child: ListView.builder(
+        child: ListView.separated(
+          separatorBuilder: (context, index) => Divider(
+            height: 5,
+            thickness: 2,
+            color: Theme.of(context).primaryColor,
+          ),
           itemCount: articoli_lista.length,
           itemBuilder: (context, index) {
             return InkWell(
@@ -128,85 +138,83 @@ class _PromozionePageState extends State<PromozionePage> {
               },
               child: Container(
                 height: 40,
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: Theme.of(context).primaryColor,
-                      width: 2,
-                    ),
-                  ),
-                ),
+                // decoration: BoxDecoration(
+                //   border: Border.all(
+                //     color: Colors.orange,
+                //     width: 2,
+                //   ),
+                // ),
                 child: Row(
-                  children: <Widget>[
-                    Container(
-                      width: 10,
-                      decoration: BoxDecoration(
-                        color: Colors.orange,
-                        // "${articoli_lista[index].nome}"
-                      ),
-                    ),
-                    Container(
-                      width: 40,
-                      decoration: BoxDecoration(
-                        border: Border.all(
+                    children: <Widget>[
+                      Container(
+                        width: 10,
+                        decoration: BoxDecoration(
                           color: Colors.orange,
-                          width: 2,
-                        ),
-                        image: DecorationImage(
-                          image:
-                              AssetImage("assets/immagini/splash_screen.png"),
-                          fit: BoxFit.contain,
+                          // "${articoli_lista[index].nome}"
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        alignment: Alignment(-1.0, 0.0),
-                        padding: EdgeInsets.all(5.0),
+                      Container(
+                        width: 40,
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: Colors.orange,
                             width: 2,
                           ),
-                        ),
-                        child: Text(
-                          "${articoli_lista[index].nome}",
-                          maxLines: 2,
-                          style: TextStyle(
-                              fontSize: 15.0, overflow: TextOverflow.ellipsis,),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 60,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                        image: DecorationImage(
-                          image:
-                              AssetImage("assets/immagini/splash_screen.png"),
-                          fit: BoxFit.contain,
+                          image: DecorationImage(
+                            image:
+                                AssetImage("assets/immagini/splash_screen.png"),
+                            fit: BoxFit.contain,
+                          ),
                         ),
                       ),
-                    ),
-                    Container(
-                      width: 60,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                        image: DecorationImage(
-                          image:
-                              AssetImage("assets/immagini/splash_screen.png"),
-                          fit: BoxFit.contain,
+                      Expanded(
+                        child: Container(
+                          alignment: Alignment(-1.0, 0.0),
+                          padding: EdgeInsets.all(5.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.orange,
+                              width: 2,
+                            ),
+                          ),
+                          child: Text(
+                            "${articoli_lista[index].nome}",
+                            maxLines: 2,
+                            style: TextStyle(
+                                fontSize: 15.0, overflow: TextOverflow.ellipsis,),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                      Container(
+                        width: 60,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.orange,
+                            width: 2,
+                          ),
+                          image: DecorationImage(
+                            image:
+                                AssetImage("assets/immagini/splash_screen.png"),
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 60,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.orange,
+                            width: 2,
+                          ),
+                          image: DecorationImage(
+                            image:
+                                AssetImage("assets/immagini/splash_screen.png"),
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
               ),
             );
           },

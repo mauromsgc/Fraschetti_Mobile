@@ -70,6 +70,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
           child: SingleChildScrollView(
             child: Container(
               padding: EdgeInsets.only(
+                top: 10,
                 left: 10,
                 right: 10,
               ),
@@ -78,9 +79,8 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    // reso causale
                     padding: EdgeInsets.all(5),
-                    child: DropdownButton(
+                    child: DropdownButtonFormField(
                       hint: Text('Seleziona la causale'), // Not necessary for Option 1
                       value: _reso_causale_selezionata,
                       onChanged: (newValue) {
@@ -88,16 +88,20 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                           // _reso_causale_selezionata = newValue;
                         });
                       },
-                      items: _reso_causale_lista.map((location) {
+                      items: _reso_causale_lista.map((elemento) {
                         return DropdownMenuItem(
-                          child: new Text(location),
-                          value: location,
+                          child: new Text(elemento),
+                          value: elemento,
                         );
                       }).toList(),
+                      decoration: InputDecoration(
+                        contentPadding:
+                        EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                        border: OutlineInputBorder(),
+                        labelText: "Causale reso",
+                      ),
                     ),
                   ),
-
-
                   Row(
                     children: [
                       Container(

@@ -48,7 +48,7 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
   }
 
   void successivoOnSubmit(BuildContext context) async {
-    // vadio al campo successivo
+    // vado al campo successivo
   }
 
   void annullaOnSubmit(BuildContext context) async {

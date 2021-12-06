@@ -251,7 +251,12 @@ class _CatalogoPageState extends State<CatalogoPage> {
     return SizedBox(
       height: 300,
       child: Expanded(
-        child: ListView.builder(
+        child: ListView.separated(
+          separatorBuilder: (context, index) => Divider(
+            height: 5,
+            thickness: 2,
+            color: Theme.of(context).primaryColor,
+          ),
           itemCount: 15,
           itemBuilder: (context, index) {
             return InkWell(

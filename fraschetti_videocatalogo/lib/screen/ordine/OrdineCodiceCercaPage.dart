@@ -71,6 +71,11 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
                 OrdineTopMenu(),
                 ClienteIntestazioneWidget(),
                 RicercaWidget(),
+                Divider(
+                  height: 5,
+                  thickness: 2,
+                  // color: Theme.of(context).primaryColor,
+                ),
                 ListaWidget(codici_lista),
               ],
             ),
@@ -159,7 +164,12 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
 // riga lista
   Widget ListaWidget(List<ComunicazioneModel> codici_lista) {
     return Expanded(
-      child: ListView.builder(
+      child: ListView.separated(
+        separatorBuilder: (context, index) => Divider(
+          height: 5,
+          thickness: 2,
+          color: Theme.of(context).primaryColor,
+        ),
         // itemCount: codici_lista.length,
         itemCount: 10,
         itemBuilder: (context, index) {
@@ -171,63 +181,35 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
               articolo_disponibilita_mostra(context);
             },
             child: Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Theme.of(context).primaryColor,
-                    width: 2,
-                  ),
-                ),
-              ),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.orange,
-                        width: 2,
-                      ),
-                      image: DecorationImage(
-                        image: AssetImage("assets/immagini/splash_screen.png"),
-                        fit: BoxFit.contain,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.orange,
+                          width: 2,
+                        ),
+                        image: DecorationImage(
+                          image: AssetImage("assets/immagini/splash_screen.png"),
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              // codice
-                              padding: EdgeInsets.all(2),
-                              alignment: Alignment(0.0, 0.0),
-                              width: 60,
-                              // color: Colors.orange,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.orange,
-                                  width: 2,
-                                ),
-                              ),
-                              child: Text(
-                                "000000",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  // fontSize: 18.0,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              // descrizione
-                              flex: 1,
-                              child: Container(
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                // codice
                                 padding: EdgeInsets.all(2),
-                                alignment: Alignment(-1.0, 0.0),
+                                alignment: Alignment(0.0, 0.0),
+                                width: 60,
+                                // color: Colors.orange,
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                     color: Colors.orange,
@@ -235,86 +217,106 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
                                   ),
                                 ),
                                 child: Text(
-                                  "Articolo Articolo Articolo Articolo Articolo Articolo Articolo Articolo",
+                                  "000000",
                                   style: TextStyle(
-                                    // fontSize: 14.0,
-                                    overflow: TextOverflow.ellipsis,
+                                    fontWeight: FontWeight.bold,
+                                    // fontSize: 18.0,
                                   ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              // prezzo
-                              padding: EdgeInsets.all(3),
-                              alignment: Alignment(1.0, 0.0),
-                              width: 80,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.orange,
-                                  width: 2,
+                              Expanded(
+                                // descrizione
+                                flex: 1,
+                                child: Container(
+                                  padding: EdgeInsets.all(2),
+                                  alignment: Alignment(-1.0, 0.0),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.orange,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    "Articolo Articolo Articolo Articolo Articolo Articolo Articolo Articolo",
+                                    style: TextStyle(
+                                      // fontSize: 14.0,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
                                 ),
                               ),
-                              child: Text(
-                                "99999,99",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  // fontSize: 18.0,
+                              Container(
+                                // prezzo
+                                padding: EdgeInsets.all(3),
+                                alignment: Alignment(1.0, 0.0),
+                                width: 80,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.orange,
+                                    width: 2,
+                                  ),
+                                ),
+                                child: Text(
+                                  "99999,99",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    // fontSize: 18.0,
+                                  ),
                                 ),
                               ),
+                            ],
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(2),
+                            alignment: Alignment(-1.0, 0.0),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.orange,
+                                width: 2,
+                              ),
                             ),
-                          ],
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(2),
-                          alignment: Alignment(-1.0, 0.0),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.orange,
-                              width: 2,
+                            child: Text(
+                              "Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice",
+                              maxLines: 3,
+                              style: TextStyle(
+                                // fontSize: 14.0,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ),
-                          child: Text(
-                            "Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice",
-                            maxLines: 3,
-                            style: TextStyle(
-                              // fontSize: 14.0,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
 
-                    // Column(
-                    //   children: [
-                    //
-                    //     Expanded(
-                    //       // descrizione
-                    //       flex: 1,
-                    //       child: Container(
-                    //         padding: EdgeInsets.all(2),
-                    //         alignment: Alignment(-1.0, 0.0),
-                    //         decoration: BoxDecoration(
-                    //           border: Border.all(
-                    //             color: Colors.orange,
-                    //             width: 2,
-                    //           ),
-                    //         ),
-                    //         child: Text(
-                    //           "Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice",
-                    //           style: TextStyle(
-                    //             // fontSize: 14.0,
-                    //             overflow: TextOverflow.ellipsis,
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //
-                    //   ],
-                    // ),
-                  ),
-                ],
-              ),
+                      // Column(
+                      //   children: [
+                      //
+                      //     Expanded(
+                      //       // descrizione
+                      //       flex: 1,
+                      //       child: Container(
+                      //         padding: EdgeInsets.all(2),
+                      //         alignment: Alignment(-1.0, 0.0),
+                      //         decoration: BoxDecoration(
+                      //           border: Border.all(
+                      //             color: Colors.orange,
+                      //             width: 2,
+                      //           ),
+                      //         ),
+                      //         child: Text(
+                      //           "Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice Codice",
+                      //           style: TextStyle(
+                      //             // fontSize: 14.0,
+                      //             overflow: TextOverflow.ellipsis,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //
+                      //   ],
+                      // ),
+                    ),
+                  ],
+                ),
             ),
           );
         },

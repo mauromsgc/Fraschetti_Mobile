@@ -54,6 +54,11 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
               children: <Widget>[
                 RicercaWidget(),
                 SelezioniWidget(),
+                Divider(
+                  height: 5,
+                  thickness: 2,
+                  // color: Theme.of(context).primaryColor,
+                ),
                 ListaWidget(promozioni_lista),
               ],
             ),
@@ -138,7 +143,12 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
 // riga lista
   Widget ListaWidget(List<PromozioneModel> promozioni_lista) {
     return Expanded(
-      child: ListView.builder(
+      child: ListView.separated(
+        separatorBuilder: (context, index) => Divider(
+          height: 5,
+          thickness: 2,
+          color: Theme.of(context).primaryColor,
+        ),
         itemCount: promozioni_lista.length,
         itemBuilder: (context, index) {
           return InkWell(
@@ -147,50 +157,48 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
             },
             child: Container(
               height: 40,
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Theme.of(context).primaryColor,
-                    width: 2,
-                  ),
-                ),
-              ),
+              // decoration: BoxDecoration(
+              //   border: Border.all(
+              //     color: Colors.orange,
+              //     width: 2,
+              //   ),
+              // ),
               child: Row(
-                children: <Widget>[
-                  Container(
-                    width: 40,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.orange,
-                        width: 2,
-                      ),
-                      image: DecorationImage(
-                        image: AssetImage("assets/immagini/splash_screen.png"),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      alignment: Alignment(-1.0, 0.0),
-                      padding: EdgeInsets.all(5.0),
+                  children: <Widget>[
+                    Container(
+                      width: 40,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.orange,
                           width: 2,
                         ),
-                      ),
-                      child: Text(
-                        "${promozioni_lista[index].nome}",
-                        style: TextStyle(
-                            fontSize: 18.0,
-                            overflow: TextOverflow.ellipsis
+                        image: DecorationImage(
+                          image: AssetImage("assets/immagini/splash_screen.png"),
+                          fit: BoxFit.contain,
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
+                    Expanded(
+                      child: Container(
+                        alignment: Alignment(-1.0, 0.0),
+                        padding: EdgeInsets.all(5.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.orange,
+                            width: 2,
+                          ),
+                        ),
+                        child: Text(
+                          "${promozioni_lista[index].nome}",
+                          style: TextStyle(
+                              fontSize: 18.0,
+                              overflow: TextOverflow.ellipsis
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
             ),
           );
         },

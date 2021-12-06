@@ -60,6 +60,11 @@ class _ClienteListaState extends State<ClienteLista> {
                 OrdineTopMenu(),
                 RicercaWidget(),
                 SelezioniWidget(),
+                Divider(
+                  height: 5,
+                  thickness: 2,
+                  // color: Theme.of(context).primaryColor,
+                ),
                 ListaWidget(clienti_lista),
               ],
             ),
@@ -156,7 +161,12 @@ class _ClienteListaState extends State<ClienteLista> {
 // riga lista
   Widget ListaWidget(List<ComunicazioneModel> clienti_lista) {
     return Expanded(
-      child: ListView.builder(
+      child: ListView.separated(
+        separatorBuilder: (context, index) => Divider(
+          height: 5,
+          thickness: 2,
+          color: Theme.of(context).primaryColor,
+        ),
         itemCount: clienti_lista.length,
         itemBuilder: (context, index) {
           return InkWell(
@@ -165,63 +175,61 @@ class _ClienteListaState extends State<ClienteLista> {
             },
             child: Container(
               height: 40,
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Theme.of(context).primaryColor,
-                    width: 2,
-                  ),
-                ),
-              ),
+              // decoration: BoxDecoration(
+              //   border: Border.all(
+              //     color: Colors.orange,
+              //     width: 2,
+              //   ),
+              // ),
               child: Row(
-                children: <Widget>[
-                  Container(
-                    alignment: Alignment(0.0, 0.0),
-                    width: 60,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.orange,
-                        width: 2,
-                      ),
-                    ),
-                    child: Text(
-                      "${clienti_lista[index].id}",
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment(0.0, 0.0),
+                      width: 60,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.orange,
                           width: 2,
                         ),
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${clienti_lista[index].oggetto}",
-                            style: TextStyle(
-                                fontSize: 18.0,
-                                overflow: TextOverflow.ellipsis,),
-                          ),
-                          Text(
-                            "${clienti_lista[index].oggetto}",
-                            style: TextStyle(
-                                fontSize: 10.0,
-                                overflow: TextOverflow.ellipsis,),
-                          ),
-                        ],
+                      child: Text(
+                        "${clienti_lista[index].id}",
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.orange,
+                            width: 2,
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "${clienti_lista[index].oggetto}",
+                              style: TextStyle(
+                                  fontSize: 18.0,
+                                  overflow: TextOverflow.ellipsis,),
+                            ),
+                            Text(
+                              "${clienti_lista[index].oggetto}",
+                              style: TextStyle(
+                                  fontSize: 10.0,
+                                  overflow: TextOverflow.ellipsis,),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
             ),
           );
         },

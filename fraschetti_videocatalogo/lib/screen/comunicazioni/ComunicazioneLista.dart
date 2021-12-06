@@ -55,6 +55,11 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
               children: <Widget>[
                 RicercaWidget(),
                 SelezioniWidget(),
+                Divider(
+                  height: 5,
+                  thickness: 2,
+                  // color: Theme.of(context).primaryColor,
+                ),
                 ListaWidget(comunicazioni_lista),
               ],
             ),
@@ -151,7 +156,12 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
 // riga lista
   Widget ListaWidget(List<ComunicazioneModel> comunicazioni_lista) {
     return Expanded(
-      child: ListView.builder(
+      child: ListView.separated(
+        separatorBuilder: (context, index) => Divider(
+          height: 5,
+          thickness: 2,
+          color: Theme.of(context).primaryColor,
+        ),
         itemCount: comunicazioni_lista.length,
         itemBuilder: (context, index) {
           return InkWell(
@@ -160,65 +170,63 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
             },
             child: Container(
               height: 40,
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Theme.of(context).primaryColor,
-                    width: 2,
-                  ),
-                ),
-              ),
+              // decoration: BoxDecoration(
+              //   border: Border.all(
+              //     color: Colors.orange,
+              //     width: 2,
+              //   ),
+              // ),
               child: Row(
-                children: <Widget>[
-                  Container(
-                    width: 100,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.orange,
-                        width: 2,
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "${comunicazioni_lista[index].id}",
-                          style: TextStyle(
-                            // fontSize: 12,
-                          ),
-                        ),
-                        Text(
-                          "${comunicazioni_lista[index].data}",
-                          style: TextStyle(
-                            // fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      alignment: Alignment(-1.0, 0.0),
-                      padding: EdgeInsets.all(5.0),
+                  children: <Widget>[
+                    Container(
+                      width: 100,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.orange,
                           width: 2,
                         ),
                       ),
-                      child: Text(
-                            "${comunicazioni_lista[index].oggetto}",
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "${comunicazioni_lista[index].id}",
                             style: TextStyle(
-                                fontSize: 18.0,
-                                overflow: TextOverflow.ellipsis
+                              // fontSize: 12,
                             ),
                           ),
-
+                          Text(
+                            "${comunicazioni_lista[index].data}",
+                            style: TextStyle(
+                              // fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                    Expanded(
+                      child: Container(
+                        alignment: Alignment(-1.0, 0.0),
+                        padding: EdgeInsets.all(5.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.orange,
+                            width: 2,
+                          ),
+                        ),
+                        child: Text(
+                              "${comunicazioni_lista[index].oggetto}",
+                              style: TextStyle(
+                                  fontSize: 18.0,
+                                  overflow: TextOverflow.ellipsis
+                              ),
+                            ),
+
+                      ),
+                    ),
+                  ],
+                ),
             ),
           );
         },

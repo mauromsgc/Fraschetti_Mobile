@@ -17,12 +17,42 @@ class CatalogoListaPage extends StatefulWidget {
   _CatalogoListaPageState createState() => _CatalogoListaPageState();
 }
 
+class ListItem {
+  int codice = 0;
+  String valore = "";
+
+  ListItem(this.codice, this.valore);
+}
+
 class _CatalogoListaPageState extends State<CatalogoListaPage> {
   List<CatalogoModel> articoli_lista = ArticoliRepository().all_2();
+
+  List<ListItem> _assortimento_lista = [
+    ListItem(1, "assortimento 1"),
+    ListItem(2, "assortimento 2"),
+    ListItem(3, "assortimento 3"),
+    ListItem(4, "assortimento 4")
+  ];
+  String _assortimento_selezionato = "assortimento 1";
+  String _assortimento_descrizione = "Assortimenti";
+
+  // List<String> _selezione_lista = [
+  //   'selezione 1',
+  //   'selezione 2',
+  //   'selezione 3',
+  //   'selezione 4'
+  // ];
+  String _selezione_selezionato = "selezione 1";
 
   void listaClick(BuildContext context) {
     Navigator.pushNamed(context, CatalogoPage.routeName);
   }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +91,11 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                 RicercaWidget(),
                 SelezioniWidget(),
                 CategorieWidget(),
+                Divider(
+                  height: 5,
+                  thickness: 2,
+                  // color: Theme.of(context).primaryColor,
+                ),
                 ListaWidget(articoli_lista),
               ],
             ),
@@ -137,6 +172,49 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                 child: Text('Assortimenti'),
               ),
             ),
+            // Container(
+            //   padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+            //   // decoration: BoxDecoration(
+            //   //     borderRadius: BorderRadius.circular(10.0),
+            //   //     color: Colors.cyan,
+            //   //     border: Border.all()),
+            //   // child: DropdownButtonHideUnderline(
+            //     child: DropdownButton(
+            //         // value: _assortimento_descrizione,
+            //         // items: _assortimento_lista.map((elemento) {
+            //         //   return DropdownMenuItem(
+            //         //     child: Text(elemento.valore),
+            //         //     value: elemento.codice,
+            //         //   );
+            //         // }).toList(),
+            //
+            //         items: [
+            //           DropdownMenuItem(
+            //             child: Text("First Item"),
+            //             value: 1,
+            //           ),
+            //           DropdownMenuItem(
+            //             child: Text("Second Item"),
+            //             value: 2,
+            //           ),
+            //           DropdownMenuItem(
+            //               child: Text("Third Item"),
+            //               value: 3
+            //           ),
+            //           DropdownMenuItem(
+            //               child: Text("Fourth Item"),
+            //               value: 4
+            //           )
+            //         ],
+            //
+            //         onChanged: (value) {
+            //           setState(() {
+            //             // _assortimento_selezionato = value.toString();
+            //           });
+            //         }
+            //       ),
+            //   // ),
+            // ),
             SizedBox(
               width: 10,
             ),
@@ -304,7 +382,12 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
 // riga lista
   Widget ListaWidget(List<CatalogoModel> articoli_lista) {
     return Expanded(
-      child: ListView.builder(
+      child: ListView.separated(
+        separatorBuilder: (context, index) => Divider(
+          height: 5,
+          thickness: 2,
+          color: Theme.of(context).primaryColor,
+        ),
         itemCount: articoli_lista.length,
         itemBuilder: (context, index) {
           return InkWell(
@@ -313,21 +396,19 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
             },
             child: Container(
               height: 40,
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Theme.of(context).primaryColor,
-                    width: 2,
-                  ),
-                ),
-              ),
+              // decoration: BoxDecoration(
+              //   border: Border.all(
+              //     color: Colors.orange,
+              //     width: 2,
+              //   ),
+              // ),
               child: Row(
                 children: <Widget>[
                   Container(
                     width: 10,
                     decoration: BoxDecoration(
                       color: Colors.orange,
-                        // "${articoli_lista[index].nome}"
+                      // "${articoli_lista[index].nome}"
                     ),
                   ),
                   Container(
@@ -354,12 +435,10 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                         ),
                       ),
                       child: Text(
-                            "${articoli_lista[index].nome}",
-                            style: TextStyle(
-                                fontSize: 15.0,
-                                overflow: TextOverflow.ellipsis
-                            ),
-                          ),
+                        "${articoli_lista[index].nome}",
+                        style: TextStyle(
+                            fontSize: 15.0, overflow: TextOverflow.ellipsis),
+                      ),
                     ),
                   ),
                   Container(

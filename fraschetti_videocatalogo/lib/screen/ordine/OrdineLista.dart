@@ -73,6 +73,107 @@ class _OrdineListaState extends State<OrdineLista> {
     return;
   }
 
+  void ordine_azioni_mostra(){
+
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text("Seleziona un'azione"),
+        content: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: 40,
+                // width: double.maxFinite,
+                width: 300,
+                padding: EdgeInsets.all(5),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(elevation: 2),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Ordine chiudi'),
+                ),
+              ),
+              Container(
+                height: 40,
+                // width: double.maxFinite,
+                width: 300,
+                padding: EdgeInsets.all(5),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(elevation: 2),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Ordine elimina'),
+                ),
+              ),
+
+              Container(
+                // solo per agenti
+                height: 40,
+                // width: double.maxFinite,
+                width: 300,
+                padding: EdgeInsets.all(5),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(elevation: 2),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Totale ordine'),
+                ),
+              ),
+
+              Container(
+                // lo fa già il server
+                height: 40,
+                // width: double.maxFinite,
+                width: 300,
+                padding: EdgeInsets.all(5),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(elevation: 2),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Invia email con prezzi'),
+                ),
+              ),
+
+              Container(
+                // lo fa già il server
+                height: 40,
+                // width: double.maxFinite,
+                width: 300,
+                padding: EdgeInsets.all(5),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(elevation: 2),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Invia email senza prezzi'),
+                ),
+              ),
+
+
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Chiudi'),
+          ),
+        ],
+      ),
+    );
+
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -85,8 +186,14 @@ class _OrdineListaState extends State<OrdineLista> {
           // ),
           title: Text(widget.pagina_titolo),
           centerTitle: true,
-          // bottom: OrdineTopMenu(context),
-        ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                ordine_azioni_mostra();
+              },
+              icon: Icon(Icons.more_vert),
+            )
+          ],        ),
         bottomNavigationBar: BottomBarWidget(),
         body: Container(
           child: Container(
@@ -102,6 +209,11 @@ class _OrdineListaState extends State<OrdineLista> {
               children: <Widget>[
                 OrdineTopMenu(),
                 OrdineIntestazioneWidget(),
+                Divider(
+                  height: 5,
+                  thickness: 2,
+                  // color: Theme.of(context).primaryColor,
+                ),
                 ListaWidget(ordine_righe_lista),
               ],
             ),
@@ -182,149 +294,196 @@ class _OrdineListaState extends State<OrdineLista> {
 // riga lista
   Widget ListaWidget(List<ComunicazioneModel> ordine_righe_lista) {
     return Expanded(
-      child: ListView.builder(
+      child: ListView.separated(
+        separatorBuilder: (context, index) => Divider(
+          height: 5,
+          thickness: 2,
+          color: Theme.of(context).primaryColor,
+        ),
         // itemCount: ordine_righe_lista.length,
         itemCount: 10,
         itemBuilder: (context, index) {
-          return InkWell(
+          return Dismissible(
+            key: Key("${index}"),
+            background: Container(
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                // child: Icon(Icons.favorite, color: Colors.white),
+              ),
+            ),
+            secondaryBackground: Container(
+              color: Colors.red,
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Icon(Icons.delete, color: Colors.white),
+                    Text('Elimina', style: TextStyle(color: Colors.white)),
+                  ],
+                ),
+              ),
+            ),
+            confirmDismiss: (DismissDirection direction) async {
+              return await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text("Attenzione"),
+                    content: const Text("Eliminara la riga corrente?"),
+                    actions: <Widget>[
+                      ElevatedButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: const Text("Annulla"),
+                      ),
+                      ElevatedButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          child: const Text("Elimina")),
+                    ],
+                  );
+                },
+              );
+            },
+            onDismissed: (DismissDirection direction) {
+              if (direction == DismissDirection.startToEnd) {
+                print("Add to favorite");
+              } else {
+                print('Remove item');
+              }
+
+              setState(() {
+                ordine_righe_lista.removeAt(index);
+                lista_elemento_elimina(context);
+              });
+            },
+            child: InkWell(
             onTap: () {
               listaClick(context);
             },
             onLongPress: () {
               articolo_disponibilita_mostra(context);
             },
-            onTapCancel: () {
-              lista_elemento_elimina(context);
-            },
             child: Container(
-              // height: 80,
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Theme.of(context).primaryColor,
-                    width: 2,
-                  ),
-                ),
-              ),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    // codice
-                    alignment: Alignment(0.0, 1.0),
-                    width: 60,
-                    // color: Colors.orange,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.orange,
-                        width: 2,
-                      ),
-                    ),
-                    child: Text(
-                      "000000",
-                      // style: TextStyle(fontSize: 14.0),
-                    ),
-                  ),
-                  Expanded(
-                    // descrizione
-                    flex: 1,
-                    child: Container(
-                      padding: EdgeInsets.all(2),
-                      alignment: Alignment(-1.0, 0.0),
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      // codice
+                      alignment: Alignment(0.0, 1.0),
+                      width: 60,
+                      // color: Colors.orange,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.orange,
                           width: 2,
                         ),
                       ),
-                      child: Column(
-                        children: [
-                          Text(
-                            "Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione",
-                            maxLines: 1,
-                            style: TextStyle(
-                              // fontSize: 12,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                      child: Text(
+                        "000000",
+                        // style: TextStyle(fontSize: 14.0),
+                      ),
+                    ),
+                    Expanded(
+                      // descrizione
+                      flex: 1,
+                      child: Container(
+                        padding: EdgeInsets.all(2),
+                        alignment: Alignment(-1.0, 0.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.orange,
+                            width: 2,
                           ),
-                          Text(
-                            "Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione ",
-                            maxLines: 2,
-                            style: TextStyle(
-                              // fontSize: 12,
-                              overflow: TextOverflow.ellipsis,
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              "Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione",
+                              maxLines: 1,
+                              style: TextStyle(
+                                // fontSize: 12,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                          ),
-                        ],
+                            Text(
+                              "Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione ",
+                              maxLines: 2,
+                              style: TextStyle(
+                                // fontSize: 12,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    // unità di misura
-                    alignment: Alignment(0.0, 0.0),
-                    width: 25,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.orange,
-                        width: 2,
+                    Container(
+                      // unità di misura
+                      alignment: Alignment(0.0, 0.0),
+                      width: 25,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.orange,
+                          width: 2,
+                        ),
+                      ),
+                      child: Text(
+                        "XC",
+                        // style: TextStyle(fontSize: 18.0),
                       ),
                     ),
-                    child: Text(
-                      "XC",
-                      // style: TextStyle(fontSize: 18.0),
-                    ),
-                  ),
-                  Container(
-                    // quantità
-                    padding: EdgeInsets.all(2),
-                    alignment: Alignment(1.0, 0.0),
-                    width: 45,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.orange,
-                        width: 2,
+                    Container(
+                      // quantità
+                      padding: EdgeInsets.all(2),
+                      alignment: Alignment(1.0, 0.0),
+                      width: 45,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.orange,
+                          width: 2,
+                        ),
+                      ),
+                      child: Text(
+                        "1500",
+                        // style: TextStyle(fontSize: 18.0),
                       ),
                     ),
-                    child: Text(
-                      "1500",
-                      // style: TextStyle(fontSize: 18.0),
-                    ),
-                  ),
-                  Container(
-                    // prezzo
-                    padding: EdgeInsets.all(2),
-                    alignment: Alignment(1.0, 0.0),
-                    width: 75,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.orange,
-                        width: 2,
+                    Container(
+                      // prezzo
+                      padding: EdgeInsets.all(2),
+                      alignment: Alignment(1.0, 0.0),
+                      width: 75,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.orange,
+                          width: 2,
+                        ),
+                      ),
+                      child: Text(
+                        "99999,00",
+                        // style: TextStyle(fontSize: 18.0),
                       ),
                     ),
-                    child: Text(
-                      "99999,00",
-                      // style: TextStyle(fontSize: 18.0),
-                    ),
-                  ),
-                  Container(
-                    // totale
-                    padding: EdgeInsets.all(2),
-                    alignment: Alignment(1.0, 0.0),
-                    width: 80,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.orange,
-                        width: 2,
+                    Container(
+                      // totale
+                      padding: EdgeInsets.all(2),
+                      alignment: Alignment(1.0, 0.0),
+                      width: 80,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.orange,
+                          width: 2,
+                        ),
+                      ),
+                      child: Text(
+                        "999999,00",
+                        // style: TextStyle(fontSize: 18.0),
                       ),
                     ),
-                    child: Text(
-                      "999999,00",
-                      // style: TextStyle(fontSize: 18.0),
-                    ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
             ),
+          ),
           );
         },
       ),
