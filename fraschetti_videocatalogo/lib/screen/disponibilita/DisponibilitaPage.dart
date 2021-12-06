@@ -1,33 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
-import 'package:fraschetti_videocatalogo/repositories/articoliRepository.dart';
-import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
-import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaPage.dart';
-import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaWidget.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
 import 'package:image/image.dart';
 
-
-class CatalogoPage extends StatefulWidget {
-  CatalogoPage({Key? key}) : super(key: key);
-  static const String routeName = "catalogo_page";
-  final String pagina_titolo = "Catalogo";
+class DisponibilitaPage extends StatefulWidget {
+  DisponibilitaPage({Key? key}) : super(key: key);
+  static const String routeName = "disponibilita_page";
+  final String pagina_titolo = "Disponibilità";
 
   @override
-  _CatalogoPageState createState() => _CatalogoPageState();
+  _DisponibilitaPageState createState() => _DisponibilitaPageState();
 }
 
-class _CatalogoPageState extends State<CatalogoPage> {
-  void listaClick(BuildContext context) {
+class _DisponibilitaPageState extends State<DisponibilitaPage> {
+  void aggiungi_ad_ordine(BuildContext context) {
     Navigator.pushNamed(context, OrdineArticoloAggiungiPage.routeName);
-  }
-
-  void articolo_disponibilita_mostra(BuildContext context) {
-    // Navigator.pushNamed(context, DisponibilitaPage.routeName);
-    showDialog(
-      context: context,
-      builder: DisponibilitaDialogWidget(codice_id: 1, returnValue: true),
-    );
   }
 
   @override
@@ -60,9 +47,10 @@ class _CatalogoPageState extends State<CatalogoPage> {
               // width: 600,
               child: Column(
                 children: <Widget>[
+                  SizedBox(height: 5),
+                  DisponibilitaWidget(),
+                  SizedBox(height: 5),
                   ArticoloWidget(),
-                  // SizedBox(height: 5),
-                  CodiciWidget(),
                 ],
               ),
             ),
@@ -83,6 +71,10 @@ class _CatalogoPageState extends State<CatalogoPage> {
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
               border: Border(
+                top: BorderSide(
+                  color: Theme.of(context).primaryColor,
+                  width: 2,
+                ),
                 bottom: BorderSide(
                   color: Theme.of(context).primaryColor,
                   width: 2,
@@ -221,192 +213,143 @@ class _CatalogoPageState extends State<CatalogoPage> {
               SizedBox(width: 5),
             ],
           ),
+          Divider(),
+          Container(
+            padding: EdgeInsets.all(5),
+            child: Text(
+              "Avvertenze",
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+          Divider(),
+          Container(
+            padding: EdgeInsets.all(5),
+            // height: 400,
+            // width: 100,
+            // height: double.infinity,
+
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.orange,
+                width: 2,
+              ),
+            ),
+            child: SizedBox(
+              height: 300,
+              child: SingleChildScrollView(
+                child: Text(
+                  "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.",
+                  // "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, ",
+                  textAlign: TextAlign.justify,
+                  // style: TextStyle(fontSize: 12.0),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget CodiciWidget_2() {
-    return Container(
-      width: double.maxFinite,
-      height: MediaQuery.of(context).size.height,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.orange,
-          width: 2,
-        ),
-      ),
-      child: Text("ciao"),
-    );
-  }
-
-// riga lista codici
-  Widget CodiciWidget() {
-    return SizedBox(
-      height: 300,
-      child: Expanded(
-        child: ListView.separated(
-          separatorBuilder: (context, index) => Divider(
-            height: 5,
-            thickness: 2,
-            color: Theme.of(context).primaryColor,
-          ),
-          itemCount: 15,
-          itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () {
-                listaClick(context);
-              },
-              onLongPress: () {
-                articolo_disponibilita_mostra(context);
-              },
-              child: Container(
-                height: 40,
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: Theme.of(context).primaryColor,
-                      width: 2,
-                    ),
-                  ),
-                ),
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      // venduto
-                      alignment: Alignment(0.0, 0.0),
-                      width: 15,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
-                      child: Text(
-                        "•",
-                        style: TextStyle(fontSize: 18.0),
-                      ),
-                    ),
-                    Container(
-                      // codice
-                      alignment: Alignment(0.0, 0.0),
-                      width: 60,
-                      // color: Colors.orange,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
-                      child: Text(
-                        "000000",
-                        // style: TextStyle(fontSize: 14.0),
-                      ),
-                    ),
-                    Expanded(
-                      // descrizione
-                      child: Container(
-                        padding: EdgeInsets.all(2),
-                        alignment: Alignment(-1.0, 0.0),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.orange,
-                            width: 2,
-                          ),
-                        ),
-                        child: Text(
-                          "Codice Codice Codice Codice Codice Codice",
-                          style: TextStyle(
-                            // fontSize: 14.0,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      // quantità
-                      padding: EdgeInsets.all(2),
-                      alignment: Alignment(1.0, 0.0),
-                      width: 50,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
-                      child: Text(
-                        "1500",
-                        // style: TextStyle(fontSize: 18.0),
-                      ),
-                    ),
-                    Container(
-                      // apribile
-                      alignment: Alignment(0.0, 0.0),
-                      width: 20,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
-                      child: Text(
-                        "*",
-                        style: TextStyle(fontSize: 18.0),
-                      ),
-                    ),
-                    Container(
-                      // unità di misura
-                      alignment: Alignment(0.0, 0.0),
-                      width: 25,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
-                      child: Text(
-                        "XC",
-                        // style: TextStyle(fontSize: 18.0),
-                      ),
-                    ),
-                    Container(
-                      // prezzo
-                      padding: EdgeInsets.all(3),
-                      alignment: Alignment(1.0, 0.0),
-                      width: 80,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
-                      child: Text(
-                        "99999,99",
-                        // style: TextStyle(fontSize: 18.0),
-                      ),
-                    ),
-                    Container(
-                      // iva
-                      alignment: Alignment(0.0, 0.0),
-                      width: 25,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
-                      child: Text(
-                        "22",
-                        // style: TextStyle(fontSize: 18.0),
-                      ),
-                    ),
-                  ],
+  Widget DisponibilitaWidget() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              // Articolo codice
+              width: 120,
+              padding: EdgeInsets.all(5),
+              child: TextFormField(
+                // readOnly: true,
+                textAlign: TextAlign.end,
+                enabled: false,
+                initialValue: "000000",
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.grey.shade200,
+                  contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                  border: OutlineInputBorder(),
+                  labelText: "Articolo codice",
                 ),
               ),
-            );
-          },
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            // Expanded(
+            //   child:
+            Container(
+              // descrizione codice
+              padding: EdgeInsets.all(5),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(elevation: 2),
+                onPressed: () {
+                  aggiungi_ad_ordine(context);
+                },
+                child: Text("Aggiungi all'ordine"),
+              ),
+            ),
+            // ),
+          ],
         ),
-      ),
+        Container(
+          // codic e descrizione
+          padding: EdgeInsets.all(5),
+          child: TextFormField(
+            // readOnly: true,
+            enabled: false,
+            initialValue: "Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione",
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.grey.shade200,
+              contentPadding:
+              EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+              border: OutlineInputBorder(),
+              labelText: "Codice descrizione",
+            ),
+          ),
+        ),
+          Container(
+            // stato disponibilità
+            padding: EdgeInsets.all(5),
+            child: TextFormField(
+              // readOnly: true,
+              enabled: false,
+              initialValue: "non disponibile",
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.grey.shade200,
+                contentPadding:
+                EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                border: OutlineInputBorder(),
+                labelText: "Stato",
+              ),
+            ),
+          ),
+        Container(
+          // unità di misura
+          padding: EdgeInsets.all(5),
+          child: TextFormField(
+            // readOnly: true,
+            enabled: false,
+            initialValue: "00/00/0000",
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.grey.shade200,
+              contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+              border: OutlineInputBorder(),
+              labelText: "Data arrivo prevista",
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

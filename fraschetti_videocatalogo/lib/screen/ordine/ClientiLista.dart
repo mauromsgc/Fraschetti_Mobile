@@ -58,6 +58,7 @@ class _ClienteListaState extends State<ClienteLista> {
             child: Column(
               children: <Widget>[
                 OrdineTopMenu(),
+                Divider(),
                 RicercaWidget(),
                 SelezioniWidget(),
                 Divider(

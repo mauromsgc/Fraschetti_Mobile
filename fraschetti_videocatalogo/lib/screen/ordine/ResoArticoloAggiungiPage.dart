@@ -122,8 +122,6 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                       ),
                     ],
                   ),
-
-
                   Row(
                     children: [
                       Container(
@@ -208,8 +206,6 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                       ),
                     ],
                   ),
-
-
                   Container(
                     // articolo descrizione
                     padding: EdgeInsets.all(5),
@@ -261,10 +257,6 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                       ),
                     ),
                   ),
-
-
-
-
                   Row(
                     children: [
                       Expanded(

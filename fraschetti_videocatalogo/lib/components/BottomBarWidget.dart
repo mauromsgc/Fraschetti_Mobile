@@ -1,8 +1,10 @@
 // app bar generale
 import 'package:flutter/material.dart';
+import 'package:fraschetti_videocatalogo/screen/altro/AltroMenuPage.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/ClientiLista.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineLista.dart';
 import 'package:fraschetti_videocatalogo/screen/promozioni/PromozioneLista.dart';
+import 'package:fraschetti_videocatalogo/screen/trasmissioni/TrasmissioniMenuPage.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
@@ -64,10 +66,10 @@ class _BottomBarWidgetState extends State<BottomBarWidget> {
         }
         break;
       case 4:
-        // Navigator.pushNamed(context, TrasmissionePage.routeName);
+        Navigator.pushNamed(context, TrasmissioniMenuLista.routeName);
         break;
       case 5:
-        // Navigator.pushNamed(context, AltroPage.routeName);
+        Navigator.pushNamed(context, AltroMenuLista.routeName);
         break;
       default:
         Navigator.popAndPushNamed(context, CatalogoListaPage.routeName);

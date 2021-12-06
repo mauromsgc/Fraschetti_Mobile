@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fraschetti_videocatalogo/screen/altro/AltroMenuPage.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/SplashPage.dart';
+import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaPage.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/ClientiLista.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoPage.dart';
@@ -17,6 +19,9 @@ import 'package:fraschetti_videocatalogo/screen/ordine/OrdineResiLista.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/ResoArticoloAggiungiPage.dart';
 import 'package:fraschetti_videocatalogo/screen/promozioni/PromozioneLista.dart';
 import 'package:fraschetti_videocatalogo/screen/promozioni/PromozionePage.dart';
+import 'package:fraschetti_videocatalogo/screen/trasmissioni/TrasmissioneLista.dart';
+import 'package:fraschetti_videocatalogo/screen/trasmissioni/TrasmissionePage.dart';
+import 'package:fraschetti_videocatalogo/screen/trasmissioni/TrasmissioniMenuPage.dart';
 import 'package:page_transition/page_transition.dart';
 
 class RouterApp {
@@ -64,6 +69,19 @@ class RouterApp {
         return MaterialPageRoute(builder: (context) => OrdineResiLista());
       case ResoArticoloAggiungiPage.routeName:
         return MaterialPageRoute(builder: (context) => ResoArticoloAggiungiPage());
+
+      case TrasmissioniMenuLista.routeName:
+        return MaterialPageRoute(builder: (context) => TrasmissioniMenuLista());
+      case TrasmissioneLista.routeName:
+        return MaterialPageRoute(builder: (context) => TrasmissioneLista());
+      case TrasmissionePage.routeName:
+        return MaterialPageRoute(builder: (context) => TrasmissionePage());
+
+      case AltroMenuLista.routeName:
+        return MaterialPageRoute(builder: (context) => AltroMenuLista());
+
+      case DisponibilitaPage.routeName:
+        return MaterialPageRoute(builder: (context) => DisponibilitaPage());
 
       default:
         return MaterialPageRoute(builder: (context) => SplashPage());

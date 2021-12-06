@@ -7,6 +7,7 @@ import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/comunicazioniRepository.dart';
+import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaPage.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/ResoArticoloAggiungiPage.dart';
 
@@ -27,19 +28,7 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
   }
 
   void articolo_disponibilita_mostra(BuildContext context) {
-    showDialog<String>(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: const Text('Disponibilità'),
-        content: const Text('Verrà mostrata la disponibilità'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
+    Navigator.pushNamed(context, DisponibilitaPage.routeName);
   }
 
   void lista_elemento_elimina(BuildContext context) {
@@ -155,6 +144,7 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
             child: Column(
               children: <Widget>[
                 OrdineTopMenu(),
+                Divider(),
                 OrdineIntestazioneWidget(),
                 Divider(
                   height: 5,

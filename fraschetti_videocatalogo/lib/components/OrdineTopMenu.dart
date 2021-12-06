@@ -87,13 +87,13 @@ class _OrdineTopMenuState extends State<OrdineTopMenu>
     return PreferredSize(
       preferredSize: Size.fromHeight(100.0), // here the desired height
       child: TabBar(
-        //Theme.of(context).primaryColor,
+        indicatorColor: Colors.red,
         indicator: BoxDecoration(
           color: Colors.grey.shade400 //_indicator_colore,
         ),
-        // labelColor: Theme.of(context).primaryColor,
+        labelColor: Colors.white,
         labelStyle: TextStyle(
-          color: Theme.of(context).primaryColor,
+          color: Colors.white,
           fontWeight: FontWeight.bold,
         ),
         unselectedLabelColor: Colors.grey,
@@ -121,6 +121,7 @@ class _OrdineTopMenuState extends State<OrdineTopMenu>
           ),
         ],
       ),
+
     );
   }
 }

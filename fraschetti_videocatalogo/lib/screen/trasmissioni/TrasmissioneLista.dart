@@ -7,23 +7,24 @@ import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/comunicazioniRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/comunicazioni/ComunicazionePage.dart';
+import 'package:fraschetti_videocatalogo/screen/trasmissioni/TrasmissionePage.dart';
 
 
-class ComunicazioneListaPage extends StatefulWidget {
-  ComunicazioneListaPage({Key? key}) : super(key: key);
-  static const String routeName = "comunicazione_lista";
-  final String pagina_titolo = "Comunicazioni";
+class TrasmissioneLista extends StatefulWidget {
+  TrasmissioneLista({Key? key}) : super(key: key);
+  static const String routeName = "trasmissione_lista";
+  final String pagina_titolo = "Trasmissioni";
 
   @override
-  _ComunicazioneListaPageState createState() => _ComunicazioneListaPageState();
+  _TrasmissioneListaState createState() => _TrasmissioneListaState();
 }
 
-class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
-  List<ComunicazioneModel> comunicazioni_lista =
-      ComunicazioniRepository().all_2();
+class _TrasmissioneListaState extends State<TrasmissioneLista> {
+  List<ComunicazioneModel> trasmissioni_lista =
+  ComunicazioniRepository().all_2();
 
   void listaClick(BuildContext context) {
-    Navigator.pushNamed(context, ComunicazionePage.routeName);
+    Navigator.pushNamed(context, TrasmissionePage.routeName);
   }
 
   @override
@@ -60,7 +61,7 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
                   thickness: 2,
                   // color: Theme.of(context).primaryColor,
                 ),
-                ListaWidget(comunicazioni_lista),
+                ListaWidget(trasmissioni_lista),
               ],
             ),
           ),
@@ -78,26 +79,12 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
         child: Row(
           children: <Widget>[
             Expanded(
-              flex: 5,
+              flex: 8,
               child: TextFormField(
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
-                  hintText: 'Oggetto',
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              flex: 3,
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                  border: OutlineInputBorder(),
-                  hintText: 'ID',
+                  hintText: 'Trasmissione id',
                 ),
               ),
             ),
@@ -133,7 +120,7 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
                 onPressed: () {},
-                child: Text('Da leggere'),
+                child: Text('Mostra tutto'),
               ),
             ),
             SizedBox(
@@ -144,7 +131,18 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
                 onPressed: () {},
-                child: Text('Lette'),
+                child: Text('Inviate'),
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              flex: 1,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(elevation: 2),
+                onPressed: () {},
+                child: Text('Non inviate'),
               ),
             ),
           ],
@@ -154,7 +152,7 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
   }
 
 // riga lista
-  Widget ListaWidget(List<ComunicazioneModel> comunicazioni_lista) {
+  Widget ListaWidget(List<ComunicazioneModel> trasmissioni_lista) {
     return Expanded(
       child: ListView.separated(
         separatorBuilder: (context, index) => Divider(
@@ -162,7 +160,7 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
           thickness: 2,
           color: Theme.of(context).primaryColor,
         ),
-        itemCount: comunicazioni_lista.length,
+        itemCount: trasmissioni_lista.length,
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
@@ -177,56 +175,103 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
               //   ),
               // ),
               child: Row(
-                  children: <Widget>[
-                    Container(
-                      width: 100,
+                children: <Widget>[
+                  Container(
+                    width: 70,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.orange,
+                        width: 2,
+                      ),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      "00000",
+                      style: TextStyle(
+                          fontSize: 18.0,
+                          overflow: TextOverflow.ellipsis
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      // alignment: Alignment(-1.0, 0.0),
+                      padding: EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.orange,
                           width: 2,
                         ),
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "${comunicazioni_lista[index].id}",
-                            style: TextStyle(
-                              // fontSize: 12,
-                            ),
-                          ),
-                          Text(
-                            "${comunicazioni_lista[index].data}",
-                            style: TextStyle(
-                              // fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        alignment: Alignment(-1.0, 0.0),
-                        padding: EdgeInsets.all(5.0),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.orange,
-                            width: 2,
-                          ),
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        "55555555",
+                        style: TextStyle(
+                            fontSize: 18.0,
+                            overflow: TextOverflow.ellipsis
                         ),
-                        child: Text(
-                              "${comunicazioni_lista[index].oggetto}",
-                              style: TextStyle(
-                                  fontSize: 18.0,
-                                  overflow: TextOverflow.ellipsis
-                              ),
-                            ),
+                      ),
 
+                    ),
+                  ),
+                  Container(
+                    width: 120,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.orange,
+                        width: 2,
                       ),
                     ),
-                  ],
-                ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      "00/00/0000",
+                      style: TextStyle(
+                          fontSize: 18.0,
+                          overflow: TextOverflow.ellipsis
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 50,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.orange,
+                        width: 2,
+                      ),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      "000",
+                      style: TextStyle(
+                          fontSize: 18.0,
+                          overflow: TextOverflow.ellipsis
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 50,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.orange,
+                        width: 2,
+                      ),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      "000",
+                      style: TextStyle(
+                          fontSize: 18.0,
+                          overflow: TextOverflow.ellipsis
+                      ),
+                    ),
+                  ),
+
+
+
+
+
+                ],
+              ),
             ),
           );
         },
