@@ -38,140 +38,133 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
         body: Container(
           child: SingleChildScrollView(
             child: Container(
+              alignment: Alignment.center,
               padding: EdgeInsets.only(
                 top: 5,
               ),
-
-              alignment: Alignment.center,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 50,
-                    // width: double.maxFinite,
-                    width: 300,
-                    padding: EdgeInsets.all(5),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(elevation: 2),
-                      onPressed: () {
-                        Navigator.pushNamed(context, ParametriConnesionePage.routeName);
-                      },
-                      child: Text('Parametri di connessione'),
+              child: Container(
+                width: 300,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 50,
+                      width: double.maxFinite,
+                      padding: EdgeInsets.all(5),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(elevation: 2),
+                        onPressed: () {
+                          Navigator.pushNamed(context, ParametriConnesionePage.routeName);
+                        },
+                        child: Text('Parametri di connessione'),
+                      ),
                     ),
-                  ),
-                  Container(
-                    height: 50,
-                    // width: double.maxFinite,
-                    width: 300,
-                    padding: EdgeInsets.all(5),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(elevation: 2),
-                      onPressed: () {
-                        // Navigator.of(context).pop();
-                      },
-                      child: Text('Test trasmissione'),
+                    Container(
+                      height: 50,
+                      width: double.maxFinite,
+                      padding: EdgeInsets.all(5),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(elevation: 2),
+                        onPressed: () {
+                          // Navigator.of(context).pop();
+                        },
+                        child: Text('Test trasmissione'),
+                      ),
                     ),
-                  ),
-                  Container(
-                    // lo fa già il server
-                    height: 50,
-                    // width: double.maxFinite,
-                    width: 300,
-                    // padding: EdgeInsets.all(5),
-                    // child: ElevatedButton(
-                    //   style: ElevatedButton.styleFrom(elevation: 2),
-                    //   onPressed: () {
-                    //     Navigator.of(context).pop();
-                    //   },
-                    //   child: Text('Invia email senza prezzi'),
-                    // ),
-                  ),
-                  Container(
-                    // solo per agenti
-                    height: 50,
-                    // width: double.maxFinite,
-                    width: 300,
-                    padding: EdgeInsets.all(5),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(elevation: 2),
-                      onPressed: () {
-                        // Navigator.of(context).pop();
-                      },
-                      child: Text('Versioni aggiornamento'),
+                    Container(
+                      // lo fa già il server
+                      height: 50,
+                      width: double.maxFinite,
+                      // padding: EdgeInsets.all(5),
+                      // child: ElevatedButton(
+                      //   style: ElevatedButton.styleFrom(elevation: 2),
+                      //   onPressed: () {
+                      //     Navigator.of(context).pop();
+                      //   },
+                      //   child: Text('Invia email senza prezzi'),
+                      // ),
                     ),
-                  ),
-                  Container(
-                    // lo fa già il server
-                    height: 50,
-                    // width: double.maxFinite,
-                    width: 300,
-                    padding: EdgeInsets.all(5),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(elevation: 2),
-                      onPressed: () {
-                        // Navigator.of(context).pop();
-                      },
-                      child: Text('Versione videocatalogo'),
+                    Container(
+                      // solo per agenti
+                      height: 50,
+                      width: double.maxFinite,
+                      padding: EdgeInsets.all(5),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(elevation: 2),
+                        onPressed: () {
+                          // Navigator.of(context).pop();
+                        },
+                        child: Text('Versioni aggiornamento'),
+                      ),
                     ),
-                  ),
-                  Container(
-                    // lo fa già il server
-                    height: 50,
-                    // width: double.maxFinite,
-                    width: 300,
-                    padding: EdgeInsets.all(5),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(elevation: 2),
-                      onPressed: () {
-                        // Navigator.of(context).pop();
-                      },
-                      child: Text('Aggiorna immagini non presenti'),
+                    Container(
+                      // lo fa già il server
+                      height: 50,
+                      width: double.maxFinite,
+                      padding: EdgeInsets.all(5),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(elevation: 2),
+                        onPressed: () {
+                          // Navigator.of(context).pop();
+                        },
+                        child: Text('Versione videocatalogo'),
+                      ),
                     ),
-                  ),
-                  Container(
-                    // lo fa già il server
-                    height: 50,
-                    // width: double.maxFinite,
-                    width: 300,
-                    // padding: EdgeInsets.all(5),
-                    // child: ElevatedButton(
-                    //   style: ElevatedButton.styleFrom(elevation: 2),
-                    //   onPressed: () {
-                    //     Navigator.of(context).pop();
-                    //   },
-                    //   child: Text('Invia email senza prezzi'),
-                    // ),
-                  ),
-                  Container(
-                    // solo per agenti
-                    height: 50,
-                    // width: double.maxFinite,
-                    width: 300,
-                    padding: EdgeInsets.all(5),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(elevation: 2),
-                      onPressed: () {
-                        // Navigator.of(context).pop();
-                      },
-                      child: Text('Modifica password'),
+                    Container(
+                      // lo fa già il server
+                      height: 50,
+                      width: double.maxFinite,
+                      padding: EdgeInsets.all(5),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(elevation: 2),
+                        onPressed: () {
+                          // Navigator.of(context).pop();
+                        },
+                        child: Text('Aggiorna immagini non presenti'),
+                      ),
                     ),
-                  ),
-                  Container(
-                    // lo fa già il server
-                    height: 50,
-                    // width: double.maxFinite,
-                    width: 300,
-                    padding: EdgeInsets.all(5),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(elevation: 2),
-                      onPressed: () {
-                        // Navigator.of(context).pop();
-                      },
-                      child: Text('Disinstallare videocatalogo'),
+                    Container(
+                      // lo fa già il server
+                      height: 50,
+                      width: double.maxFinite,
+                      // padding: EdgeInsets.all(5),
+                      // child: ElevatedButton(
+                      //   style: ElevatedButton.styleFrom(elevation: 2),
+                      //   onPressed: () {
+                      //     Navigator.of(context).pop();
+                      //   },
+                      //   child: Text('Invia email senza prezzi'),
+                      // ),
                     ),
-                  ),
-                ],
+                    Container(
+                      // solo per agenti
+                      height: 50,
+                      width: double.maxFinite,
+                      padding: EdgeInsets.all(5),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(elevation: 2),
+                        onPressed: () {
+                          // Navigator.of(context).pop();
+                        },
+                        child: Text('Modifica password'),
+                      ),
+                    ),
+                    Container(
+                      // lo fa già il server
+                      height: 50,
+                      width: double.maxFinite,
+                      padding: EdgeInsets.all(5),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(elevation: 2),
+                        onPressed: () {
+                          // Navigator.of(context).pop();
+                        },
+                        child: Text('Disinstallare videocatalogo'),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

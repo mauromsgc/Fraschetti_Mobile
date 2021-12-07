@@ -67,6 +67,7 @@ class _OrdineNoteAggiungiPageState extends State<OrdineNoteAggiungiPage> {
           child: SingleChildScrollView(
             child: Container(
               padding: EdgeInsets.only(
+                top: 10,
                 left: 10,
                 right: 10,
               ),
@@ -75,271 +76,24 @@ class _OrdineNoteAggiungiPageState extends State<OrdineNoteAggiungiPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    // cliente nominativo
+                    // reso note
                     padding: EdgeInsets.all(5),
                     child: TextFormField(
-                      // readOnly: true,
-                      enabled: false,
-                      initialValue: "0000 Cliente Cliente Cliente",
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey.shade200,
-                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                        border: OutlineInputBorder(),
-                        labelText: "Cliente",
-                      ),
-                    ),
-                  ),
-                  Container(
-                    // articolo codice
-                    width: 120,
-                    padding: EdgeInsets.all(5),
-                    child: TextFormField(
-                      // readOnly: true,
-                      enabled: false,
-                      initialValue: "000000",
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey.shade200,
-                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                        border: OutlineInputBorder(),
-                        labelText: "Codice",
-                      ),
-                    ),
-                  ),
-                  Container(
-                    // articolo descrizione
-                    padding: EdgeInsets.all(5),
-                    child: TextFormField(
-                      // readOnly: true,
-                      enabled: false,
-                      initialValue: "Catalogo Catalogo Catalogo",
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey.shade200,
-                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                        border: OutlineInputBorder(),
-                        labelText: "Articolo",
-                      ),
-                    ),
-                  ),
-                  Container(
-                    // articolo codice descrizione
-                    padding: EdgeInsets.all(5),
-                    child: TextFormField(
-                      // readOnly: true,
-                      enabled: false,
-                      initialValue: "Codice descrizione Codice descrizione",
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey.shade200,
-                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                        border: OutlineInputBorder(),
-                        labelText: "Descrizione codice",
-                      ),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        // unità di misura
-                        width: 120  ,
-                        padding: EdgeInsets.all(5),
-                        child: TextFormField(
-                          // readOnly: true,
-                          enabled: false,
-                          initialValue: "PZ",
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.grey.shade200,
-                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                            border: OutlineInputBorder(),
-                            labelText: "U.M.",
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 50,
-                      ),
-                      Container(
-                        // prezzo base
-                        width: 150,
-                        padding: EdgeInsets.all(5),
-                        child: TextFormField(
-                          // readOnly: true,
-                          enabled: false,
-                          initialValue: "1500,36",
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.grey.shade200,
-                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                            border: OutlineInputBorder(),
-                            labelText: "Prezzo base",
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        // apribile
-                        width: 120  ,
-                        padding: EdgeInsets.all(5),
-                        child: TextFormField(
-                          // readOnly: true,
-                          enabled: false,
-                          initialValue: "*",
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.grey.shade200,
-                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                            border: OutlineInputBorder(),
-                            labelText: "Apribile",
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 50,
-                      ),
-                      Container(
-                        // confezione
-                        width: 120,
-                        padding: EdgeInsets.all(5),
-                        child: TextFormField(
-                          // readOnly: true,
-                          enabled: false,
-                          initialValue: "4",
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.grey.shade200,
-                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                            border: OutlineInputBorder(),
-                            labelText: "Confezione",
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                      onEditingComplete: () {
+                        savalOnSubmit(context);
+                      },
 
-                  Row(
-                    children: [
-                      Container(
-                        // Quantità
-                        width: 120  ,
-                        padding: EdgeInsets.all(5),
-                        child: TextFormField(
-                          // initialValue: "",
-                          keyboardType: TextInputType.number,
-                          textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                            border: OutlineInputBorder(),
-                            labelText: "Quantità",
-                          ),
-                        ),
+                      minLines: 6,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      // keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.done,
+                      decoration: InputDecoration(
+                        // contentPadding: EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 0.0),
+                        border: OutlineInputBorder(),
+                        labelText: "Note ordine",
                       ),
-                      SizedBox(
-                        width: 50,
-                      ),
-                      Container(
-                        // quantità già presente
-                        width: 120,
-                        padding: EdgeInsets.all(5),
-                        child: TextFormField(
-                          // readOnly: true,
-                          enabled: false,
-                          initialValue: "4",
-                          style: TextStyle(
-                            color: Colors.red,
-                          ),
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.red.shade100,
-                              contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.red,
-                              ),
-                            ),
-                            labelText: "Qt. presente",
-                            labelStyle: TextStyle(
-                              color: Colors.red,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  Row(
-                    children: [
-                      Container(
-                        // sconto
-                        width: 120  ,
-                        padding: EdgeInsets.all(5),
-                        child: TextFormField(
-                          // initialValue: "",
-                          keyboardType: TextInputType.number,
-                          textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                            border: OutlineInputBorder(),
-                            labelText: "Sconto",
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  Row(
-                    children: [
-                      Container(
-                        // prezzo
-                        width: 150  ,
-                        padding: EdgeInsets.all(5),
-                        child: TextFormField(
-                          // initialValue: "",
-                          keyboardType: TextInputType.number,
-                          textInputAction: TextInputAction.done,
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                            border: OutlineInputBorder(),
-                            labelText: "Prezzo",
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 50,
-                      ),
-                      Container(
-                        // confezione
-                        width: 150,
-                        padding: EdgeInsets.all(5),
-                        child: TextFormField(
-                          // readOnly: true,
-                          enabled: false,
-                          initialValue: "135,00",
-                          style: TextStyle(
-                            color: Colors.red,
-                          ),
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.red.shade100,
-                            contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.red,
-                              ),
-                            ),
-                            labelText: "Prezzo presente",
-                            labelStyle: TextStyle(
-                              color: Colors.red,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
 
                   Row(
@@ -357,14 +111,7 @@ class _OrdineNoteAggiungiPageState extends State<OrdineNoteAggiungiPage> {
                       ),
                       Expanded(
                         flex: 1,
-                        child: Padding(
-                          padding: EdgeInsets.all(5),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(elevation: 2),
-                            onPressed: () => successivoOnSubmit(context),
-                            child: Text('Successivo'),
-                          ),
-                        ),
+                        child: Container(),
                       ),
                       Expanded(
                         flex: 1,

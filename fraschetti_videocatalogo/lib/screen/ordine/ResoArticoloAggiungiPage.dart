@@ -275,7 +275,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                       ),
                       Expanded(
                         flex: 1,
-                        child: Padding(
+                        child: Container(
                           padding: EdgeInsets.all(5),
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(elevation: 2),

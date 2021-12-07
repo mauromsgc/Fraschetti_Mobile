@@ -9,6 +9,7 @@ import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/comunicazioniRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaPage.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
+import 'package:fraschetti_videocatalogo/screen/ordine/OrdineNoteAggiungiPage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 
 class OrdineLista extends StatefulWidget {
@@ -35,6 +36,10 @@ class _OrdineListaState extends State<OrdineLista> {
 
   void articolo_disponibilita_mostra(BuildContext context) {
     Navigator.pushNamed(context, DisponibilitaPage.routeName);
+  }
+
+  void ordine_note_aggiungi(BuildContext context) {
+    Navigator.pushNamed(context, OrdineNoteAggiungiPage.routeName);
   }
 
   void lista_elemento_elimina(BuildContext context) {
@@ -179,11 +184,18 @@ class _OrdineListaState extends State<OrdineLista> {
           actions: [
             IconButton(
               onPressed: () {
+                ordine_note_aggiungi(context);
+              },
+              icon: Icon(Icons.note_add),
+            ),
+            IconButton(
+              onPressed: () {
                 ordine_azioni_mostra();
               },
               icon: Icon(Icons.more_vert),
-            )
-          ],        ),
+            ),
+          ],
+        ),
         bottomNavigationBar: BottomBarWidget(),
         body: Container(
           child: Container(

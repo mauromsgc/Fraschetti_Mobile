@@ -28,6 +28,10 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
     Navigator.pushNamed(context, ResoArticoloAggiungiPage.routeName);
   }
 
+  void _reso_aggiungi(BuildContext context) {
+    Navigator.pushNamed(context, ResoArticoloAggiungiPage.routeName);
+  }
+
   void articolo_disponibilita_mostra(BuildContext context) {
     Navigator.pushNamed(context, DisponibilitaPage.routeName);
   }
@@ -57,13 +61,14 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
   }
 
 
-  void resi_azioni_mostra(){
+  void resi_azioni_mostra(BuildContext context){
 
     showDialog<String>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
         title: const Text("Seleziona un'azione"),
         content: Container(
+          width: 200,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -71,8 +76,7 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
             children: [
               Container(
                 height: 40,
-                // width: double.maxFinite,
-                width: 200,
+                width: double.maxFinite,
                 padding: EdgeInsets.all(5),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(elevation: 2),
@@ -84,8 +88,7 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
               ),
               Container(
                 height: 40,
-                // width: double.maxFinite,
-                width: 200,
+                width: double.maxFinite,
                 padding: EdgeInsets.all(5),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(elevation: 2),
@@ -126,12 +129,20 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
           actions: [
             IconButton(
               onPressed: () {
-                resi_azioni_mostra();
+                resi_azioni_mostra(context);
               },
               icon: Icon(Icons.more_vert),
             )
           ],        ),
         bottomNavigationBar: BottomBarWidget(),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            _reso_aggiungi(context);
+          },
+          label: const Text('Reso'),
+          icon: const Icon(Icons.add),
+          backgroundColor: Colors.red,
+        ),
         body: Container(
           child: Container(
             // padding: new EdgeInsets.all(10.0),

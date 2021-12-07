@@ -168,6 +168,56 @@ class HttpClient {
     return utenteRegistrato;
   }
 
+  void mac_address_leggi () {
+    // legge i mac address
+    // DA VERIFICARE SE POSSIBILE SU MOBILE
+
+  }
+
+  void intestazione_trasmissione () {
+    // prepara la prima parte dei dati da trasmettre
+    // versioni protoccolli e videocatalogo,
+    // dati utente e dati installazione
+    // altri dati comuni
+
+  }
+
+  void trasmissione_test () {
+    // effettua un test di trasmissione
+
+  }
+
+  void aggiornamenti_verifica () {
+    // verifica se ci sono aggiornamenti da scaricare
+
+  }
+
+  void videocatalogo_registra () {
+    // effettua la registrazione del videocatalogo
+
+  }
+
+  void videocatalogo_disinstalla () {
+    // disinstalla il videocatalogo
+
+  }
+
+  void aggiornamenti_scarica () {
+    // scarica gli aggiornamenti
+    // da idvidere in base al tipo di dati da scaricare
+
+  }
+
+  void anagrafica_aggiorna () {
+    // aggiorna l'anagrafica agente e cliente
+
+  }
+
+  void ordini_trasmetti () {
+    // trasmette gli ordini
+
+  }
+
 
 
 }

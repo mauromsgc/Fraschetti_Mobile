@@ -364,6 +364,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
             children: <Widget>[
               Container(
                 // venduto
+                padding: EdgeInsets.all(2),
                 alignment: Alignment.center,
                 width: 15,
                 decoration: MyBoxDecoration().MyBox(),
@@ -396,8 +397,8 @@ class _CatalogoPageState extends State<CatalogoPage> {
                 // descrizione
                 child: Container(
                   padding: EdgeInsets.all(2),
-                  alignment: Alignment(-1.0, 0.0),
-                  // decoration: MyBoxDecoration().MyBox(),
+                  alignment: Alignment.centerLeft,
+                  decoration: MyBoxDecoration().MyBox(),
                   child: Text(
                     "Descrizione",
                     style: TextStyle(
@@ -417,9 +418,9 @@ class _CatalogoPageState extends State<CatalogoPage> {
               Container(
                 // quantità
                 padding: EdgeInsets.all(2),
-                alignment: Alignment(1.0, 0.0),
+                alignment: Alignment.centerRight,
                 width: 50,
-                // decoration: MyBoxDecoration().MyBox(),
+                decoration: MyBoxDecoration().MyBox(),
                 child: Text(
                   "Mas.",
                   style: TextStyle(
@@ -433,11 +434,9 @@ class _CatalogoPageState extends State<CatalogoPage> {
               Container(
                 // quantità
                 padding: EdgeInsets.all(2),
-                alignment: Alignment(1.0, 0.0),
+                alignment: Alignment.centerRight,
                 width: 50,
-                // decoration: BoxDecoration(
-                // border: MyBorder().MyBorderOrange(),
-                // ),
+                decoration: MyBoxDecoration().MyBox(),
                 child: Text(
                   "Qt.",
                   style: TextStyle(
@@ -449,9 +448,10 @@ class _CatalogoPageState extends State<CatalogoPage> {
               ),
               Container(
                 // apribile
-                alignment: Alignment(0.0, 0.0),
-                width: 20,
-                // decoration: MyBoxDecoration().MyBox(),
+                padding: EdgeInsets.all(2),
+                alignment: Alignment.center,
+                width: 25,
+                decoration: MyBoxDecoration().MyBox(),
                 child: Text(
                   "Ap.",
                   style: TextStyle(
@@ -463,9 +463,10 @@ class _CatalogoPageState extends State<CatalogoPage> {
               ),
               Container(
                 // unità di misura
-                alignment: Alignment(0.0, 0.0),
+                padding: EdgeInsets.all(2),
+                alignment: Alignment.center,
                 width: 35,
-                // decoration: MyBoxDecoration().MyBox(),
+                decoration: MyBoxDecoration().MyBox(),
                 child: Text(
                   "U.M.",
                   style: TextStyle(
@@ -477,10 +478,10 @@ class _CatalogoPageState extends State<CatalogoPage> {
               ),
               Container(
                 // prezzo
-                padding: EdgeInsets.all(3),
-                alignment: Alignment(1.0, 0.0),
+                padding: EdgeInsets.all(2),
+                alignment: Alignment.centerRight,
                 width: 75,
-                // decoration: MyBoxDecoration().MyBox(),
+                decoration: MyBoxDecoration().MyBox(),
                 child: Text(
                   "Prezzo",
                   style: TextStyle(
@@ -492,11 +493,12 @@ class _CatalogoPageState extends State<CatalogoPage> {
               ),
               Container(
                 // iva
-                alignment: Alignment(0.0, 0.0),
+                padding: EdgeInsets.all(2),
+                alignment: Alignment.center,
                 width: 25,
-                // decoration: MyBoxDecoration().MyBox(),
+                decoration: MyBoxDecoration().MyBox(),
                 child: Text(
-                  "22",
+                  "Iva",
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -547,12 +549,13 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       children: <Widget>[
                         Container(
                           // venduto
+                          padding: EdgeInsets.all(2),
                           alignment: Alignment.center,
                           width: 15,
                           decoration: MyBoxDecoration().MyBox(),
                           child: Text(
                             "•",
-                            style: TextStyle(fontSize: 18.0),
+                            // style: TextStyle(fontSize: 18.0),
                           ),
                         ),
                         Container(
@@ -571,7 +574,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                           // descrizione
                           child: Container(
                             padding: EdgeInsets.all(2),
-                            alignment: Alignment(-1.0, 0.0),
+                            alignment: Alignment.centerLeft,
                             decoration: MyBoxDecoration().MyBox(),
                             child: Text(
                               "Codice Codice Codice Codice Codice Codice",
@@ -590,7 +593,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                         Container(
                           // quantità
                           padding: EdgeInsets.all(2),
-                          alignment: Alignment(1.0, 0.0),
+                          alignment: Alignment.centerRight,
                           width: 50,
                           decoration: MyBoxDecoration().MyBox(),
                           child: Text(
@@ -602,7 +605,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                         Container(
                           // quantità
                           padding: EdgeInsets.all(2),
-                          alignment: Alignment(1.0, 0.0),
+                          alignment: Alignment.centerRight,
                           width: 50,
                           decoration: MyBoxDecoration().MyBox(),
                           child: Text(
@@ -612,18 +615,20 @@ class _CatalogoPageState extends State<CatalogoPage> {
                         ),
                         Container(
                           // apribile
-                          alignment: Alignment(0.0, 0.0),
+                          padding: EdgeInsets.all(2),
+                          alignment: Alignment.center,
                           width: 20,
                           decoration: MyBoxDecoration().MyBox(),
                           child: Text(
                             "*",
-                            style: TextStyle(fontSize: 18.0),
+                            // style: TextStyle(fontSize: 18.0),
                           ),
                         ),
                         Container(
                           // unità di misura
-                          alignment: Alignment(0.0, 0.0),
-                          width: 25,
+                          padding: EdgeInsets.all(2),
+                          alignment: Alignment.center,
+                          width: 30,
                           decoration: MyBoxDecoration().MyBox(),
                           child: Text(
                             "XC",
@@ -632,8 +637,8 @@ class _CatalogoPageState extends State<CatalogoPage> {
                         ),
                         Container(
                           // prezzo
-                          padding: EdgeInsets.all(3),
-                          alignment: Alignment(1.0, 0.0),
+                          padding: EdgeInsets.all(2),
+                          alignment: Alignment.centerRight,
                           width: 80,
                           decoration: MyBoxDecoration().MyBox(),
                           child: Text(
@@ -643,7 +648,8 @@ class _CatalogoPageState extends State<CatalogoPage> {
                         ),
                         Container(
                           // iva
-                          alignment: Alignment(0.0, 0.0),
+                          padding: EdgeInsets.all(2),
+                          alignment: Alignment.center,
                           width: 25,
                           decoration: MyBoxDecoration().MyBox(),
                           child: Text(
