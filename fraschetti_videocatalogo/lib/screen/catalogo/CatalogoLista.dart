@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
+import 'package:fraschetti_videocatalogo/models/famigliaModel.dart';
+import 'package:fraschetti_videocatalogo/repositories/famiglieRepository.dart';
 import 'package:fraschetti_videocatalogo/repositories/articoliRepository.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/LoginPage.dart';
@@ -26,6 +28,7 @@ class ListItem {
 
 class _CatalogoListaPageState extends State<CatalogoListaPage> {
   List<CatalogoModel> articoli_lista = ArticoliRepository().all_2();
+  List<FamigliaModel> famiglie = FamiglieRepository().all_2();
 
   List<ListItem> _assortimento_lista = [
     ListItem(1, "assortimento 1"),
@@ -90,7 +93,8 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
               children: <Widget>[
                 RicercaWidget(),
                 SelezioniWidget(),
-                CategorieWidget(),
+                CategorieWidget_2(),
+                // CategorieWidget(),
                 Divider(
                   height: 5,
                   thickness: 2,
@@ -243,7 +247,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
     );
   }
 
-// sezione categorie
+  // sezione categorie
   Widget CategorieWidget() {
     return Row(
       children: <Widget>[
@@ -376,6 +380,202 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
           ),
         ),
       ],
+    );
+  }
+
+
+
+// sezione categorie
+  Widget CategorieWidget_2() {
+    return Row(
+      children: famiglie.map((elemento) {
+      return Expanded(
+        flex: 1,
+        child: InkWell(
+          hoverColor: Color(int.parse(elemento.colore)).withAlpha(50),
+          highlightColor: Color(int.parse(elemento.colore)).withAlpha(200),
+          splashColor:  Colors.grey.shade600,
+          focusColor: Color(int.parse(elemento.colore)).withAlpha(125),
+          onTap: () {
+            print(elemento.descrizione);
+          },
+          child: Container(
+            padding: EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              // color: Color(0xFF009900),
+              border: Border(
+                top: BorderSide(
+                  color: Color(int.parse(elemento.colore)),
+                  width: 5,
+                ),
+                bottom: BorderSide(
+                  color: Color(int.parse(elemento.colore)),
+                  width: 5,
+                ),
+              ),
+            ),
+            child: Text(elemento.abbreviazione,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              // color: Colors.white,
+            ),),
+          ),
+        ),
+      );
+
+
+        // Expanded(
+        //       flex: 1,
+        //       child: ElevatedButton(
+        //         style: ElevatedButton.styleFrom(
+        //           textStyle: TextStyle(
+        //             fontSize: 10.0, // insert your font size here
+        //           ),
+        //           primary: Color(0xFF009900),
+        //           elevation: 2,
+        //           shape: RoundedRectangleBorder(
+        //               borderRadius: BorderRadius.all(
+        //                 Radius.circular(0),
+        //               ),
+        //           ),
+        //         ),
+        //         onPressed: () {},
+        //         child: Text(elemento.abbreviazione),
+        //       ),
+        //     );
+    }).toList(),
+
+
+      // children: <Widget>[
+      //   Expanded(
+      //     flex: 1,
+      //     child: ElevatedButton(
+      //       style: ElevatedButton.styleFrom(
+      //         textStyle: TextStyle(
+      //           fontSize: 10.0, // insert your font size here
+      //         ),
+      //         primary: Colors.red,
+      //         elevation: 2,
+      //         shape: RoundedRectangleBorder(
+      //             borderRadius: BorderRadius.all(Radius.circular(0))),
+      //       ),
+      //       onPressed: () {},
+      //       child: Text('Edilizia'),
+      //     ),
+      //   ),
+      //   Expanded(
+      //     flex: 1,
+      //     child: ElevatedButton(
+      //       style: ElevatedButton.styleFrom(
+      //         textStyle: TextStyle(
+      //           fontSize: 10.0, // insert your font size here
+      //         ),
+      //         primary: Colors.red,
+      //         elevation: 2,
+      //         shape: RoundedRectangleBorder(
+      //             borderRadius: BorderRadius.all(Radius.circular(0))),
+      //       ),
+      //       onPressed: () {},
+      //       child: Text('Ut. mano'),
+      //     ),
+      //   ),
+      //   Expanded(
+      //     flex: 1,
+      //     child: ElevatedButton(
+      //       style: ElevatedButton.styleFrom(
+      //         textStyle: TextStyle(
+      //           fontSize: 10.0, // insert your font size here
+      //         ),
+      //         primary: Colors.red,
+      //         elevation: 2,
+      //         shape: RoundedRectangleBorder(
+      //             borderRadius: BorderRadius.all(Radius.circular(0))),
+      //       ),
+      //       onPressed: () {},
+      //       child: Text('Ferram.'),
+      //     ),
+      //   ),
+      //   Expanded(
+      //     flex: 1,
+      //     child: ElevatedButton(
+      //       style: ElevatedButton.styleFrom(
+      //         textStyle: TextStyle(
+      //           fontSize: 10.0, // insert your font size here
+      //         ),
+      //         primary: Colors.red,
+      //         elevation: 2,
+      //         shape: RoundedRectangleBorder(
+      //             borderRadius: BorderRadius.all(Radius.circular(0))),
+      //       ),
+      //       onPressed: () {},
+      //       child: Text('Giardin.'),
+      //     ),
+      //   ),
+      //   Expanded(
+      //     flex: 1,
+      //     child: ElevatedButton(
+      //       style: ElevatedButton.styleFrom(
+      //         textStyle: TextStyle(
+      //           fontSize: 10.0, // insert your font size here
+      //         ),
+      //         primary: Colors.red,
+      //         elevation: 2,
+      //         shape: RoundedRectangleBorder(
+      //             borderRadius: BorderRadius.all(Radius.circular(0))),
+      //       ),
+      //       onPressed: () {},
+      //       child: Text('Ut. elet.'),
+      //     ),
+      //   ),
+      //   Expanded(
+      //     flex: 1,
+      //     child: ElevatedButton(
+      //       style: ElevatedButton.styleFrom(
+      //         textStyle: TextStyle(
+      //           fontSize: 10.0, // insert your font size here
+      //         ),
+      //         primary: Colors.red,
+      //         elevation: 2,
+      //         shape: RoundedRectangleBorder(
+      //             borderRadius: BorderRadius.all(Radius.circular(0))),
+      //       ),
+      //       onPressed: () {},
+      //       child: Text('Idraulica'),
+      //     ),
+      //   ),
+      //   Expanded(
+      //     flex: 1,
+      //     child: ElevatedButton(
+      //       style: ElevatedButton.styleFrom(
+      //         textStyle: TextStyle(
+      //           fontSize: 10.0, // insert your font size here
+      //         ),
+      //         primary: Colors.red,
+      //         elevation: 2,
+      //         shape: RoundedRectangleBorder(
+      //             borderRadius: BorderRadius.all(Radius.circular(0))),
+      //       ),
+      //       onPressed: () {},
+      //       child: Text('Siderurg.'),
+      //     ),
+      //   ),
+      //   Expanded(
+      //     flex: 1,
+      //     child: ElevatedButton(
+      //       style: ElevatedButton.styleFrom(
+      //         textStyle: TextStyle(
+      //           fontSize: 10.0, // insert your font size here
+      //         ),
+      //         primary: Colors.red,
+      //         elevation: 2,
+      //         shape: RoundedRectangleBorder(
+      //             borderRadius: BorderRadius.all(Radius.circular(0))),
+      //       ),
+      //       onPressed: () {},
+      //       child: Text('Domo ut.'),
+      //     ),
+      //   ),
+      // ],
     );
   }
 

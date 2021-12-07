@@ -415,22 +415,6 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
                           // prezzo
                           padding: EdgeInsets.all(2),
                           alignment: Alignment(1.0, 0.0),
-                          width: 75,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.orange,
-                              width: 2,
-                            ),
-                          ),
-                          child: Text(
-                            "99999,00",
-                            // style: TextStyle(fontSize: 18.0),
-                          ),
-                        ),
-                        Container(
-                          // totale
-                          padding: EdgeInsets.all(2),
-                          alignment: Alignment(1.0, 0.0),
                           width: 80,
                           decoration: BoxDecoration(
                             border: Border.all(
@@ -439,7 +423,23 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
                             ),
                           ),
                           child: Text(
-                            "999999,00",
+                            "00000000",
+                            // style: TextStyle(fontSize: 18.0),
+                          ),
+                        ),
+                        Container(
+                          // totale
+                          padding: EdgeInsets.all(2),
+                          alignment: Alignment(1.0, 0.0),
+                          width: 70,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.orange,
+                              width: 2,
+                            ),
+                          ),
+                          child: Text(
+                            "00/00/21",
                             // style: TextStyle(fontSize: 18.0),
                           ),
                         ),

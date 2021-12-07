@@ -198,7 +198,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
                                 // codice
                                 padding: EdgeInsets.all(2),
                                 alignment: Alignment(0.0, 0.0),
-                                width: 60,
+                                width: 70,
                                 // color: Colors.orange,
                                 decoration: BoxDecoration(
                                   border: Border.all(
@@ -239,7 +239,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
                                 // prezzo
                                 padding: EdgeInsets.all(3),
                                 alignment: Alignment(1.0, 0.0),
-                                width: 80,
+                                width: 85,
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                     color: Colors.orange,
