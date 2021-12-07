@@ -5,8 +5,8 @@ import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaPage.dart';
 import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaWidget.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
+import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 import 'package:image/image.dart';
-
 
 class CatalogoPage extends StatefulWidget {
   CatalogoPage({Key? key}) : super(key: key);
@@ -51,17 +51,23 @@ class _CatalogoPageState extends State<CatalogoPage> {
           child: SingleChildScrollView(
             child: Container(
               // padding: new EdgeInsets.all(10.0),
-              // decoration: BoxDecoration(
-              //   border: Border.all(
-              //     color: Colors.orange,
-              //     width: 2,
-              //   ),
-              // ),
+              // decoration: MyBoxDecoration().MyBox(),
               // width: 600,
               child: Column(
                 children: <Widget>[
                   ArticoloWidget(),
                   // SizedBox(height: 5),
+                  Divider(
+                    height: 5,
+                    thickness: 2,
+                    // color: Theme.of(context).primaryColor,
+                  ),
+                  CodiciIntestazioneWidget_2(),
+                  Divider(
+                    height: 5,
+                    thickness: 2,
+                    // color: Theme.of(context).primaryColor,
+                  ),
                   // CodiciWidget(),
                   CodiciWidget_2(),
                 ],
@@ -101,12 +107,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                 Expanded(
                   flex: 1,
                   child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.orange,
-                        width: 2,
-                      ),
-                    ),
+                    decoration: MyBoxDecoration().MyBox(),
                     child: Text(
                       "Categoria Categoria",
                       style: TextStyle(
@@ -121,10 +122,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                   width: 60,
                   height: 50,
                   decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.orange,
-                      width: 2,
-                    ),
+                    border: MyBorder().MyBorderOrange(),
                     image: DecorationImage(
                       image: AssetImage("assets/immagini/splash_screen.png"),
                       fit: BoxFit.contain,
@@ -135,10 +133,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                   width: 60,
                   height: 50,
                   decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.orange,
-                      width: 2,
-                    ),
+                    border: MyBorder().MyBorderOrange(),
                     image: DecorationImage(
                       image: AssetImage("assets/immagini/splash_screen.png"),
                       fit: BoxFit.contain,
@@ -177,12 +172,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                   // width: 100,
                   // height: double.infinity,
 
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.orange,
-                      width: 2,
-                    ),
-                  ),
+                  decoration: MyBoxDecoration().MyBox(),
                   child: SizedBox(
                     height: 300,
                     child: SingleChildScrollView(
@@ -205,10 +195,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       height: constraints.minWidth,
                       // width: 500,
                       decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
+                        border: MyBorder().MyBorderOrange(),
                         image: DecorationImage(
                           image:
                               AssetImage("assets/immagini/splash_screen.png"),
@@ -263,12 +250,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       // venduto
                       alignment: Alignment(0.0, 0.0),
                       width: 15,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
+                      decoration: MyBoxDecoration().MyBox(),
                       child: Text(
                         "•",
                         style: TextStyle(fontSize: 18.0),
@@ -279,12 +261,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       alignment: Alignment(0.0, 0.0),
                       width: 60,
                       // color: Colors.orange,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
+                      decoration: MyBoxDecoration().MyBox(),
                       child: Text(
                         "000000",
                         // style: TextStyle(fontSize: 14.0),
@@ -295,12 +272,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       child: Container(
                         padding: EdgeInsets.all(2),
                         alignment: Alignment(-1.0, 0.0),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.orange,
-                            width: 2,
-                          ),
-                        ),
+                        decoration: MyBoxDecoration().MyBox(),
                         child: Text(
                           "Codice Codice Codice Codice Codice Codice",
                           style: TextStyle(
@@ -315,12 +287,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       padding: EdgeInsets.all(2),
                       alignment: Alignment(1.0, 0.0),
                       width: 50,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
+                      decoration: MyBoxDecoration().MyBox(),
                       child: Text(
                         "1500",
                         // style: TextStyle(fontSize: 18.0),
@@ -330,12 +297,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       // apribile
                       alignment: Alignment(0.0, 0.0),
                       width: 20,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
+                      decoration: MyBoxDecoration().MyBox(),
                       child: Text(
                         "*",
                         style: TextStyle(fontSize: 18.0),
@@ -345,12 +307,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       // unità di misura
                       alignment: Alignment(0.0, 0.0),
                       width: 25,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
+                      decoration: MyBoxDecoration().MyBox(),
                       child: Text(
                         "XC",
                         // style: TextStyle(fontSize: 18.0),
@@ -361,12 +318,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       padding: EdgeInsets.all(3),
                       alignment: Alignment(1.0, 0.0),
                       width: 80,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
+                      decoration: MyBoxDecoration().MyBox(),
                       child: Text(
                         "99999,99",
                         // style: TextStyle(fontSize: 18.0),
@@ -376,12 +328,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       // iva
                       alignment: Alignment(0.0, 0.0),
                       width: 25,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
+                      decoration: MyBoxDecoration().MyBox(),
                       child: Text(
                         "22",
                         // style: TextStyle(fontSize: 18.0),
@@ -397,6 +344,172 @@ class _CatalogoPageState extends State<CatalogoPage> {
     );
   }
 
+// riga lista codici
+  Widget CodiciIntestazioneWidget_2() {
+    return Container(
+      // height: 40,
+      // decoration: BoxDecoration(
+      //   border: Border(
+      //     bottom: BorderSide(
+      //       color: Theme.of(context).primaryColor,
+      //       width: 2,
+      //     ),
+      //   ),
+      // ),
+      // color: Colors.grey.shade400,
+      color: Colors.blue.shade400,
+      child: Column(
+        children: [
+          Row(
+            children: <Widget>[
+              Container(
+                // venduto
+                alignment: Alignment.center,
+                width: 15,
+                decoration: MyBoxDecoration().MyBox(),
+                child: Text(
+                  " ",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10.0,
+                  ),
+                ),
+              ),
+              Container(
+                // codice
+                padding: EdgeInsets.all(2),
+                alignment: Alignment.center,
+                width: 70,
+                // color: Colors.orange,
+                decoration: MyBoxDecoration().MyBox(),
+                child: Text(
+                  "Codice",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10.0,
+                  ),
+                ),
+              ),
+              Expanded(
+                // descrizione
+                child: Container(
+                  padding: EdgeInsets.all(2),
+                  alignment: Alignment(-1.0, 0.0),
+                  // decoration: MyBoxDecoration().MyBox(),
+                  child: Text(
+                    "Descrizione",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 10.0,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Container(
+                // quantità
+                padding: EdgeInsets.all(2),
+                alignment: Alignment(1.0, 0.0),
+                width: 50,
+                // decoration: MyBoxDecoration().MyBox(),
+                child: Text(
+                  "Mas.",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10.0,
+                  ),
+                ),
+              ),
+              Text("   "),
+              Container(
+                // quantità
+                padding: EdgeInsets.all(2),
+                alignment: Alignment(1.0, 0.0),
+                width: 50,
+                // decoration: BoxDecoration(
+                // border: MyBorder().MyBorderOrange(),
+                // ),
+                child: Text(
+                  "Qt.",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10.0,
+                  ),
+                ),
+              ),
+              Container(
+                // apribile
+                alignment: Alignment(0.0, 0.0),
+                width: 20,
+                // decoration: MyBoxDecoration().MyBox(),
+                child: Text(
+                  "Ap.",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10.0,
+                  ),
+                ),
+              ),
+              Container(
+                // unità di misura
+                alignment: Alignment(0.0, 0.0),
+                width: 35,
+                // decoration: MyBoxDecoration().MyBox(),
+                child: Text(
+                  "U.M.",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10.0,
+                  ),
+                ),
+              ),
+              Container(
+                // prezzo
+                padding: EdgeInsets.all(3),
+                alignment: Alignment(1.0, 0.0),
+                width: 75,
+                // decoration: MyBoxDecoration().MyBox(),
+                child: Text(
+                  "Prezzo",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10.0,
+                  ),
+                ),
+              ),
+              Container(
+                // iva
+                alignment: Alignment(0.0, 0.0),
+                width: 25,
+                // decoration: MyBoxDecoration().MyBox(),
+                child: Text(
+                  "22",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10.0,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
 // riga lista codici
   Widget CodiciWidget_2() {
@@ -420,74 +533,57 @@ class _CatalogoPageState extends State<CatalogoPage> {
               },
               child: Container(
                 // height: 40,
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: Theme.of(context).primaryColor,
-                      width: 2,
-                    ),
-                  ),
-                ),
+                // decoration: BoxDecoration(
+                //   border: Border(
+                //     bottom: BorderSide(
+                //       color: Theme.of(context).primaryColor,
+                //       width: 2,
+                //     ),
+                //   ),
+                // ),
                 child: Column(
                   children: [
                     Row(
-                    children: <Widget>[
-                      Container(
-                        // venduto
-                        alignment: Alignment.center,
-                        width: 15,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.orange,
-                            width: 2,
-                          ),
-                        ),
-                        child: Text(
-                          "•",
-                          style: TextStyle(fontSize: 18.0),
-                        ),
-                      ),
-                      Container(
-                        // codice
-                        padding: EdgeInsets.all(2),
-                        alignment: Alignment.center,
-                        width: 70,
-                        // color: Colors.orange,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.orange,
-                            width: 2,
-                          ),
-                        ),
-                        child: Text(
-                          "000000",
-                          // style: TextStyle(fontSize: 14.0),
-                        ),
-                      ),
-                      Expanded(
-                        // descrizione
-                        child: Container(
-                          padding: EdgeInsets.all(2),
-                          alignment: Alignment(-1.0, 0.0),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.orange,
-                              width: 2,
-                            ),
-                          ),
+                      children: <Widget>[
+                        Container(
+                          // venduto
+                          alignment: Alignment.center,
+                          width: 15,
+                          decoration: MyBoxDecoration().MyBox(),
                           child: Text(
-                            "Codice Codice Codice Codice Codice Codice",
-                            style: TextStyle(
-                              // fontSize: 14.0,
-                              overflow: TextOverflow.ellipsis,
+                            "•",
+                            style: TextStyle(fontSize: 18.0),
+                          ),
+                        ),
+                        Container(
+                          // codice
+                          padding: EdgeInsets.all(2),
+                          alignment: Alignment.center,
+                          width: 70,
+                          // color: Colors.orange,
+                          decoration: MyBoxDecoration().MyBox(),
+                          child: Text(
+                            "000000",
+                            // style: TextStyle(fontSize: 14.0),
+                          ),
+                        ),
+                        Expanded(
+                          // descrizione
+                          child: Container(
+                            padding: EdgeInsets.all(2),
+                            alignment: Alignment(-1.0, 0.0),
+                            decoration: MyBoxDecoration().MyBox(),
+                            child: Text(
+                              "Codice Codice Codice Codice Codice Codice",
+                              style: TextStyle(
+                                // fontSize: 14.0,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-
-
+                      ],
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
@@ -496,12 +592,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                           padding: EdgeInsets.all(2),
                           alignment: Alignment(1.0, 0.0),
                           width: 50,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.orange,
-                              width: 2,
-                            ),
-                          ),
+                          decoration: MyBoxDecoration().MyBox(),
                           child: Text(
                             "1500",
                             // style: TextStyle(fontSize: 18.0),
@@ -513,12 +604,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                           padding: EdgeInsets.all(2),
                           alignment: Alignment(1.0, 0.0),
                           width: 50,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.orange,
-                              width: 2,
-                            ),
-                          ),
+                          decoration: MyBoxDecoration().MyBox(),
                           child: Text(
                             "1500",
                             // style: TextStyle(fontSize: 18.0),
@@ -528,12 +614,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                           // apribile
                           alignment: Alignment(0.0, 0.0),
                           width: 20,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.orange,
-                              width: 2,
-                            ),
-                          ),
+                          decoration: MyBoxDecoration().MyBox(),
                           child: Text(
                             "*",
                             style: TextStyle(fontSize: 18.0),
@@ -543,12 +624,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                           // unità di misura
                           alignment: Alignment(0.0, 0.0),
                           width: 25,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.orange,
-                              width: 2,
-                            ),
-                          ),
+                          decoration: MyBoxDecoration().MyBox(),
                           child: Text(
                             "XC",
                             // style: TextStyle(fontSize: 18.0),
@@ -559,12 +635,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                           padding: EdgeInsets.all(3),
                           alignment: Alignment(1.0, 0.0),
                           width: 80,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.orange,
-                              width: 2,
-                            ),
-                          ),
+                          decoration: MyBoxDecoration().MyBox(),
                           child: Text(
                             "99999,99",
                             // style: TextStyle(fontSize: 18.0),
@@ -574,12 +645,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                           // iva
                           alignment: Alignment(0.0, 0.0),
                           width: 25,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.orange,
-                              width: 2,
-                            ),
-                          ),
+                          decoration: MyBoxDecoration().MyBox(),
                           child: Text(
                             "22",
                             // style: TextStyle(fontSize: 18.0),
@@ -587,8 +653,6 @@ class _CatalogoPageState extends State<CatalogoPage> {
                         ),
                       ],
                     ),
-
-
                   ],
                 ),
               ),
@@ -598,6 +662,4 @@ class _CatalogoPageState extends State<CatalogoPage> {
       ),
     );
   }
-
-
 }

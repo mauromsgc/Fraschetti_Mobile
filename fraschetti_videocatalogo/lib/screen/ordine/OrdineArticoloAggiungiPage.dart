@@ -303,6 +303,9 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                         padding: EdgeInsets.all(5),
                         child: TextFormField(
                           // initialValue: "",
+                          onEditingComplete: () {
+                            savalOnSubmit(context);
+                          },
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.done,
                           textAlign: TextAlign.right,
@@ -319,6 +322,7 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                         padding: EdgeInsets.all(5),
                         child: TextFormField(
                           // readOnly: true,
+
                           enabled: false,
                           initialValue: "99999,99",
                           style: TextStyle(

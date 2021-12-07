@@ -244,6 +244,9 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                     // reso note
                     padding: EdgeInsets.all(5),
                     child: TextFormField(
+                      onEditingComplete: () {
+                        savalOnSubmit(context);
+                      },
 
                       minLines: 6,
                       keyboardType: TextInputType.multiline,

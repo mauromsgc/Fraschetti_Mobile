@@ -7,6 +7,7 @@ import 'package:fraschetti_videocatalogo/repositories/famiglieRepository.dart';
 import 'package:fraschetti_videocatalogo/repositories/articoliRepository.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/LoginPage.dart';
+import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 
 import 'CatalogoPage.dart';
 
@@ -82,19 +83,13 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
         body: Container(
           child: Container(
             // padding: new EdgeInsets.all(10.0),
-            // decoration: BoxDecoration(
-            //   border: Border.all(
-            //     color: Colors.orange,
-            //     width: 2,
-            //   ),
-            // ),
+            // decoration: MyBoxDecoration().MyBox(),
             // width: 600,
             child: Column(
               children: <Widget>[
                 RicercaWidget(),
                 SelezioniWidget(),
-                CategorieWidget_2(),
-                // CategorieWidget(),
+                CategorieWidget(),
                 Divider(
                   height: 5,
                   thickness: 2,
@@ -120,6 +115,22 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
             Expanded(
               flex: 6,
               child: TextFormField(
+                onEditingComplete: () {
+                  showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                    title: const Text('Avviare ricerca'),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('ok'),
+                      ),
+                    ],
+                  ),
+                  );
+                },
+                textInputAction: TextInputAction.done,
+                keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
@@ -133,6 +144,21 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
             Expanded(
               flex: 2,
               child: TextFormField(
+                onEditingComplete: () {
+                  showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text('Avviare ricerca'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('ok'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
@@ -247,146 +273,9 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
     );
   }
 
-  // sezione categorie
-  Widget CategorieWidget() {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          flex: 1,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              textStyle: TextStyle(
-                fontSize: 10.0, // insert your font size here
-              ),
-              primary: Colors.red,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(0))),
-            ),
-            onPressed: () {},
-            child: Text('Edilizia'),
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              textStyle: TextStyle(
-                fontSize: 10.0, // insert your font size here
-              ),
-              primary: Colors.red,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(0))),
-            ),
-            onPressed: () {},
-            child: Text('Ut. mano'),
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              textStyle: TextStyle(
-                fontSize: 10.0, // insert your font size here
-              ),
-              primary: Colors.red,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(0))),
-            ),
-            onPressed: () {},
-            child: Text('Ferram.'),
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              textStyle: TextStyle(
-                fontSize: 10.0, // insert your font size here
-              ),
-              primary: Colors.red,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(0))),
-            ),
-            onPressed: () {},
-            child: Text('Giardin.'),
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              textStyle: TextStyle(
-                fontSize: 10.0, // insert your font size here
-              ),
-              primary: Colors.red,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(0))),
-            ),
-            onPressed: () {},
-            child: Text('Ut. elet.'),
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              textStyle: TextStyle(
-                fontSize: 10.0, // insert your font size here
-              ),
-              primary: Colors.red,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(0))),
-            ),
-            onPressed: () {},
-            child: Text('Idraulica'),
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              textStyle: TextStyle(
-                fontSize: 10.0, // insert your font size here
-              ),
-              primary: Colors.red,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(0))),
-            ),
-            onPressed: () {},
-            child: Text('Siderurg.'),
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              textStyle: TextStyle(
-                fontSize: 10.0, // insert your font size here
-              ),
-              primary: Colors.red,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(0))),
-            ),
-            onPressed: () {},
-            child: Text('Domo ut.'),
-          ),
-        ),
-      ],
-    );
-  }
-
-
 
 // sezione categorie
-  Widget CategorieWidget_2() {
+  Widget CategorieWidget() {
     return Row(
       children: famiglie.map((elemento) {
       return Expanded(
@@ -422,160 +311,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
           ),
         ),
       );
-
-
-        // Expanded(
-        //       flex: 1,
-        //       child: ElevatedButton(
-        //         style: ElevatedButton.styleFrom(
-        //           textStyle: TextStyle(
-        //             fontSize: 10.0, // insert your font size here
-        //           ),
-        //           primary: Color(0xFF009900),
-        //           elevation: 2,
-        //           shape: RoundedRectangleBorder(
-        //               borderRadius: BorderRadius.all(
-        //                 Radius.circular(0),
-        //               ),
-        //           ),
-        //         ),
-        //         onPressed: () {},
-        //         child: Text(elemento.abbreviazione),
-        //       ),
-        //     );
     }).toList(),
-
-
-      // children: <Widget>[
-      //   Expanded(
-      //     flex: 1,
-      //     child: ElevatedButton(
-      //       style: ElevatedButton.styleFrom(
-      //         textStyle: TextStyle(
-      //           fontSize: 10.0, // insert your font size here
-      //         ),
-      //         primary: Colors.red,
-      //         elevation: 2,
-      //         shape: RoundedRectangleBorder(
-      //             borderRadius: BorderRadius.all(Radius.circular(0))),
-      //       ),
-      //       onPressed: () {},
-      //       child: Text('Edilizia'),
-      //     ),
-      //   ),
-      //   Expanded(
-      //     flex: 1,
-      //     child: ElevatedButton(
-      //       style: ElevatedButton.styleFrom(
-      //         textStyle: TextStyle(
-      //           fontSize: 10.0, // insert your font size here
-      //         ),
-      //         primary: Colors.red,
-      //         elevation: 2,
-      //         shape: RoundedRectangleBorder(
-      //             borderRadius: BorderRadius.all(Radius.circular(0))),
-      //       ),
-      //       onPressed: () {},
-      //       child: Text('Ut. mano'),
-      //     ),
-      //   ),
-      //   Expanded(
-      //     flex: 1,
-      //     child: ElevatedButton(
-      //       style: ElevatedButton.styleFrom(
-      //         textStyle: TextStyle(
-      //           fontSize: 10.0, // insert your font size here
-      //         ),
-      //         primary: Colors.red,
-      //         elevation: 2,
-      //         shape: RoundedRectangleBorder(
-      //             borderRadius: BorderRadius.all(Radius.circular(0))),
-      //       ),
-      //       onPressed: () {},
-      //       child: Text('Ferram.'),
-      //     ),
-      //   ),
-      //   Expanded(
-      //     flex: 1,
-      //     child: ElevatedButton(
-      //       style: ElevatedButton.styleFrom(
-      //         textStyle: TextStyle(
-      //           fontSize: 10.0, // insert your font size here
-      //         ),
-      //         primary: Colors.red,
-      //         elevation: 2,
-      //         shape: RoundedRectangleBorder(
-      //             borderRadius: BorderRadius.all(Radius.circular(0))),
-      //       ),
-      //       onPressed: () {},
-      //       child: Text('Giardin.'),
-      //     ),
-      //   ),
-      //   Expanded(
-      //     flex: 1,
-      //     child: ElevatedButton(
-      //       style: ElevatedButton.styleFrom(
-      //         textStyle: TextStyle(
-      //           fontSize: 10.0, // insert your font size here
-      //         ),
-      //         primary: Colors.red,
-      //         elevation: 2,
-      //         shape: RoundedRectangleBorder(
-      //             borderRadius: BorderRadius.all(Radius.circular(0))),
-      //       ),
-      //       onPressed: () {},
-      //       child: Text('Ut. elet.'),
-      //     ),
-      //   ),
-      //   Expanded(
-      //     flex: 1,
-      //     child: ElevatedButton(
-      //       style: ElevatedButton.styleFrom(
-      //         textStyle: TextStyle(
-      //           fontSize: 10.0, // insert your font size here
-      //         ),
-      //         primary: Colors.red,
-      //         elevation: 2,
-      //         shape: RoundedRectangleBorder(
-      //             borderRadius: BorderRadius.all(Radius.circular(0))),
-      //       ),
-      //       onPressed: () {},
-      //       child: Text('Idraulica'),
-      //     ),
-      //   ),
-      //   Expanded(
-      //     flex: 1,
-      //     child: ElevatedButton(
-      //       style: ElevatedButton.styleFrom(
-      //         textStyle: TextStyle(
-      //           fontSize: 10.0, // insert your font size here
-      //         ),
-      //         primary: Colors.red,
-      //         elevation: 2,
-      //         shape: RoundedRectangleBorder(
-      //             borderRadius: BorderRadius.all(Radius.circular(0))),
-      //       ),
-      //       onPressed: () {},
-      //       child: Text('Siderurg.'),
-      //     ),
-      //   ),
-      //   Expanded(
-      //     flex: 1,
-      //     child: ElevatedButton(
-      //       style: ElevatedButton.styleFrom(
-      //         textStyle: TextStyle(
-      //           fontSize: 10.0, // insert your font size here
-      //         ),
-      //         primary: Colors.red,
-      //         elevation: 2,
-      //         shape: RoundedRectangleBorder(
-      //             borderRadius: BorderRadius.all(Radius.circular(0))),
-      //       ),
-      //       onPressed: () {},
-      //       child: Text('Domo ut.'),
-      //     ),
-      //   ),
-      // ],
     );
   }
 
@@ -596,12 +332,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
             },
             child: Container(
               height: 40,
-              // decoration: BoxDecoration(
-              //   border: Border.all(
-              //     color: Colors.orange,
-              //     width: 2,
-              //   ),
-              // ),
+              // decoration: MyBoxDecoration().MyBox(),
               child: Row(
                 children: <Widget>[
                   Container(
@@ -614,10 +345,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   Container(
                     width: 40,
                     decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.orange,
-                        width: 2,
-                      ),
+                      border: MyBorder().MyBorderOrange(),
                       image: DecorationImage(
                         image: AssetImage("assets/immagini/splash_screen.png"),
                         fit: BoxFit.contain,
@@ -628,12 +356,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                     child: Container(
                       alignment: Alignment(-1.0, 0.0),
                       padding: EdgeInsets.all(5.0),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
+                      decoration: MyBoxDecoration().MyBox(),
                       child: Text(
                         "${articoli_lista[index].nome}",
                         style: TextStyle(
@@ -644,10 +367,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   Container(
                     width: 60,
                     decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.orange,
-                        width: 2,
-                      ),
+                      border: MyBorder().MyBorderOrange(),
                       image: DecorationImage(
                         image: AssetImage("assets/immagini/splash_screen.png"),
                         fit: BoxFit.contain,
@@ -657,10 +377,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   Container(
                     width: 60,
                     decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.orange,
-                        width: 2,
-                      ),
+                      border: MyBorder().MyBorderOrange(),
                       image: DecorationImage(
                         image: AssetImage("assets/immagini/splash_screen.png"),
                         fit: BoxFit.contain,

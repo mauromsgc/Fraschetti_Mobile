@@ -3,6 +3,7 @@ import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/repositories/articoliRepository.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoPage.dart';
+import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 
 class ComunicazionePage extends StatefulWidget {
   ComunicazionePage({Key? key}) : super(key: key);
@@ -41,12 +42,7 @@ class _ComunicazionePageState extends State<ComunicazionePage> {
           child: SingleChildScrollView(
             child: Container(
               // padding: new EdgeInsets.all(10.0),
-              // decoration: BoxDecoration(
-              //   border: Border.all(
-              //     color: Colors.orange,
-              //     width: 2,
-              //   ),
-              // ),
+              // decoration: MyBoxDecoration().MyBox(),
               // width: 600,
               child: Column(
                 children: <Widget>[
@@ -93,10 +89,7 @@ class _ComunicazionePageState extends State<ComunicazionePage> {
                   height: 500,
                   // width: 400,
                   decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.orange,
-                      width: 2,
-                    ),
+                    border: MyBorder().MyBorderOrange(),
                     image: DecorationImage(
                       image: AssetImage("assets/immagini/splash_screen.png"),
                       fit: BoxFit.contain,

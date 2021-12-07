@@ -142,6 +142,9 @@ class _RegistazionePageState extends State<RegistazionePage> {
                   Container(
                     padding: EdgeInsets.all(5),
                     child: TextFormField(
+                      onEditingComplete: () {
+                        registrazioneOnSubmit(context);
+                      },
                       controller: codice_attivazioneController,
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.done,

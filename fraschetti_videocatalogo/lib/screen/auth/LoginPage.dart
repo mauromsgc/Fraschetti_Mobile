@@ -87,6 +87,9 @@ class _LoginPageState extends State<LoginPage> {
                   Container(
                     padding: EdgeInsets.all(5),
                     child: TextFormField(
+                      onEditingComplete: () {
+                        loginOnSubmit(context);
+                      },
                       controller: passwordController,
                       obscureText: true,
                       textInputAction: TextInputAction.done,

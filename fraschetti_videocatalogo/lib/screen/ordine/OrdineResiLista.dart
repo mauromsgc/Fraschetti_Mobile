@@ -10,6 +10,7 @@ import 'package:fraschetti_videocatalogo/repositories/comunicazioniRepository.da
 import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaPage.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/ResoArticoloAggiungiPage.dart';
+import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 
 class OrdineResiLista extends StatefulWidget {
   OrdineResiLista({Key? key}) : super(key: key);
@@ -134,12 +135,7 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
         body: Container(
           child: Container(
             // padding: new EdgeInsets.all(10.0),
-            // decoration: BoxDecoration(
-            //   border: Border.all(
-            //     color: Colors.orange,
-            //     width: 2,
-            //   ),
-            // ),
+            // decoration: MyBoxDecoration().MyBox(),
             // width: 600,
             child: Column(
               children: <Widget>[
@@ -312,12 +308,7 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
                     Container(
                       padding: EdgeInsets.all(2),
                       alignment: Alignment(-1.0, 0.0),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
+                      decoration: MyBoxDecoration().MyBox(),
                       child: Text(
                         "X - reso causale rso causale",
                         maxLines: 2,
@@ -335,12 +326,7 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
                           alignment: Alignment(0.0, 1.0),
                           width: 60,
                           // color: Colors.orange,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.orange,
-                              width: 2,
-                            ),
-                          ),
+                          decoration: MyBoxDecoration().MyBox(),
                           child: Text(
                             "000000",
                             // style: TextStyle(fontSize: 14.0),
@@ -352,12 +338,7 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
                           child: Container(
                             padding: EdgeInsets.all(2),
                             alignment: Alignment(-1.0, 0.0),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.orange,
-                                width: 2,
-                              ),
-                            ),
+                            decoration: MyBoxDecoration().MyBox(),
                             child: Column(
                               children: [
                                 Text(
@@ -384,12 +365,7 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
                           // unità di misura
                           alignment: Alignment(0.0, 0.0),
                           width: 25,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.orange,
-                              width: 2,
-                            ),
-                          ),
+                          decoration: MyBoxDecoration().MyBox(),
                           child: Text(
                             "XC",
                             // style: TextStyle(fontSize: 18.0),
@@ -400,12 +376,7 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
                           padding: EdgeInsets.all(2),
                           alignment: Alignment(1.0, 0.0),
                           width: 45,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.orange,
-                              width: 2,
-                            ),
-                          ),
+                          decoration: MyBoxDecoration().MyBox(),
                           child: Text(
                             "1500",
                             // style: TextStyle(fontSize: 18.0),
@@ -416,12 +387,7 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
                           padding: EdgeInsets.all(2),
                           alignment: Alignment(1.0, 0.0),
                           width: 80,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.orange,
-                              width: 2,
-                            ),
-                          ),
+                          decoration: MyBoxDecoration().MyBox(),
                           child: Text(
                             "00000000",
                             // style: TextStyle(fontSize: 18.0),
@@ -432,12 +398,7 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
                           padding: EdgeInsets.all(2),
                           alignment: Alignment(1.0, 0.0),
                           width: 70,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.orange,
-                              width: 2,
-                            ),
-                          ),
+                          decoration: MyBoxDecoration().MyBox(),
                           child: Text(
                             "00/00/21",
                             // style: TextStyle(fontSize: 18.0),

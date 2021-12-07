@@ -8,6 +8,7 @@ import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/comunicazioniRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineLista.dart';
+import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 import 'package:get_it/get_it.dart';
 
 class ClienteLista extends StatefulWidget {
@@ -48,12 +49,7 @@ class _ClienteListaState extends State<ClienteLista> {
         body: Container(
           child: Container(
             // padding: new EdgeInsets.all(10.0),
-            // decoration: BoxDecoration(
-            //   border: Border.all(
-            //     color: Colors.orange,
-            //     width: 2,
-            //   ),
-            // ),
+            // decoration: MyBoxDecoration().MyBox(),
             // width: 600,
             child: Column(
               children: <Widget>[
@@ -86,6 +82,22 @@ class _ClienteListaState extends State<ClienteLista> {
             Expanded(
               flex: 6,
               child: TextFormField(
+                onEditingComplete: () {
+                  showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text('Avviare ricerca'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('ok'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                textInputAction: TextInputAction.done,
+                keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
@@ -99,6 +111,21 @@ class _ClienteListaState extends State<ClienteLista> {
             Expanded(
               flex: 2,
               child: TextFormField(
+                onEditingComplete: () {
+                  showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text('Avviare ricerca'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('ok'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
@@ -176,23 +203,13 @@ class _ClienteListaState extends State<ClienteLista> {
             },
             child: Container(
               height: 40,
-              // decoration: BoxDecoration(
-              //   border: Border.all(
-              //     color: Colors.orange,
-              //     width: 2,
-              //   ),
-              // ),
+              // decoration: MyBoxDecoration().MyBox(),
               child: Row(
                   children: <Widget>[
                     Container(
                       alignment: Alignment(0.0, 0.0),
                       width: 60,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
+                      decoration: MyBoxDecoration().MyBox(),
                       child: Text(
                         "${clienti_lista[index].id}",
                         style: TextStyle(
@@ -203,12 +220,7 @@ class _ClienteListaState extends State<ClienteLista> {
                     Expanded(
                       child: Container(
                         padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.orange,
-                            width: 2,
-                          ),
-                        ),
+                        decoration: MyBoxDecoration().MyBox(),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,

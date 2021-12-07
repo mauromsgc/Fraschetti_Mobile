@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
+import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 import 'package:image/image.dart';
 
 class DisponibilitaPage extends StatefulWidget {
@@ -38,12 +39,7 @@ class _DisponibilitaPageState extends State<DisponibilitaPage> {
           child: SingleChildScrollView(
             child: Container(
               // padding: new EdgeInsets.all(10.0),
-              // decoration: BoxDecoration(
-              //   border: Border.all(
-              //     color: Colors.orange,
-              //     width: 2,
-              //   ),
-              // ),
+              // decoration: MyBoxDecoration().MyBox(),
               // width: 600,
               child: Column(
                 children: <Widget>[
@@ -92,12 +88,7 @@ class _DisponibilitaPageState extends State<DisponibilitaPage> {
                 Expanded(
                   flex: 1,
                   child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.orange,
-                        width: 2,
-                      ),
-                    ),
+                    decoration: MyBoxDecoration().MyBox(),
                     child: Text(
                       "Categoria Categoria",
                       style: TextStyle(
@@ -112,10 +103,7 @@ class _DisponibilitaPageState extends State<DisponibilitaPage> {
                   width: 60,
                   height: 50,
                   decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.orange,
-                      width: 2,
-                    ),
+                    border: MyBorder().MyBorderOrange(),
                     image: DecorationImage(
                       image: AssetImage("assets/immagini/splash_screen.png"),
                       fit: BoxFit.contain,
@@ -126,10 +114,7 @@ class _DisponibilitaPageState extends State<DisponibilitaPage> {
                   width: 60,
                   height: 50,
                   decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.orange,
-                      width: 2,
-                    ),
+                    border: MyBorder().MyBorderOrange(),
                     image: DecorationImage(
                       image: AssetImage("assets/immagini/splash_screen.png"),
                       fit: BoxFit.contain,
@@ -168,12 +153,7 @@ class _DisponibilitaPageState extends State<DisponibilitaPage> {
                   // width: 100,
                   // height: double.infinity,
 
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.orange,
-                      width: 2,
-                    ),
-                  ),
+                  decoration: MyBoxDecoration().MyBox(),
                   child: SizedBox(
                     height: 300,
                     child: SingleChildScrollView(
@@ -196,10 +176,7 @@ class _DisponibilitaPageState extends State<DisponibilitaPage> {
                       height: constraints.minWidth,
                       // width: 500,
                       decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
+                        border: MyBorder().MyBorderOrange(),
                         image: DecorationImage(
                           image:
                               AssetImage("assets/immagini/splash_screen.png"),
@@ -232,12 +209,7 @@ class _DisponibilitaPageState extends State<DisponibilitaPage> {
             // width: 100,
             // height: double.infinity,
 
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.orange,
-                width: 2,
-              ),
-            ),
+            decoration: MyBoxDecoration().MyBox(),
             child: SizedBox(
               height: 300,
               child: SingleChildScrollView(

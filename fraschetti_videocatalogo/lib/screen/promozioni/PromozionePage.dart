@@ -3,6 +3,7 @@ import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/repositories/articoliRepository.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoPage.dart';
+import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 
 class PromozionePage extends StatefulWidget {
   PromozionePage({Key? key}) : super(key: key);
@@ -41,12 +42,7 @@ class _PromozionePageState extends State<PromozionePage> {
           child: SingleChildScrollView(
             child: Container(
               // padding: new EdgeInsets.all(10.0),
-              // decoration: BoxDecoration(
-              //   border: Border.all(
-              //     color: Colors.orange,
-              //     width: 2,
-              //   ),
-              // ),
+              // decoration: MyBoxDecoration().MyBox(),
               // width: 600,
               child: Column(
                 children: <Widget>[
@@ -100,10 +96,7 @@ class _PromozionePageState extends State<PromozionePage> {
                   height: 500,
                   // width: 400,
                   decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.orange,
-                      width: 2,
-                    ),
+                    border: MyBorder().MyBorderOrange(),
                     image: DecorationImage(
                       image: AssetImage("assets/immagini/splash_screen.png"),
                       fit: BoxFit.contain,
@@ -138,12 +131,7 @@ class _PromozionePageState extends State<PromozionePage> {
               },
               child: Container(
                 height: 40,
-                // decoration: BoxDecoration(
-                //   border: Border.all(
-                //     color: Colors.orange,
-                //     width: 2,
-                //   ),
-                // ),
+                // decoration: MyBoxDecoration().MyBox(),
                 child: Row(
                     children: <Widget>[
                       Container(
@@ -156,10 +144,7 @@ class _PromozionePageState extends State<PromozionePage> {
                       Container(
                         width: 40,
                         decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.orange,
-                            width: 2,
-                          ),
+                          border: MyBorder().MyBorderOrange(),
                           image: DecorationImage(
                             image:
                                 AssetImage("assets/immagini/splash_screen.png"),
@@ -171,12 +156,7 @@ class _PromozionePageState extends State<PromozionePage> {
                         child: Container(
                           alignment: Alignment(-1.0, 0.0),
                           padding: EdgeInsets.all(5.0),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.orange,
-                              width: 2,
-                            ),
-                          ),
+                          decoration: MyBoxDecoration().MyBox(),
                           child: Text(
                             "${articoli_lista[index].nome}",
                             maxLines: 2,
@@ -188,10 +168,7 @@ class _PromozionePageState extends State<PromozionePage> {
                       Container(
                         width: 60,
                         decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.orange,
-                            width: 2,
-                          ),
+                          border: MyBorder().MyBorderOrange(),
                           image: DecorationImage(
                             image:
                                 AssetImage("assets/immagini/splash_screen.png"),
@@ -202,10 +179,7 @@ class _PromozionePageState extends State<PromozionePage> {
                       Container(
                         width: 60,
                         decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.orange,
-                            width: 2,
-                          ),
+                          border: MyBorder().MyBorderOrange(),
                           image: DecorationImage(
                             image:
                                 AssetImage("assets/immagini/splash_screen.png"),

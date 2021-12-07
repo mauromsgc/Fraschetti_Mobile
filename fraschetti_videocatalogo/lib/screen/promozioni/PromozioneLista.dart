@@ -6,6 +6,7 @@ import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/promozioneModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/promozioniRepository.dart';
+import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 
 import 'PromozionePage.dart';
 
@@ -43,12 +44,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
         body: Container(
           child: Container(
             // padding: new EdgeInsets.all(10.0),
-            // decoration: BoxDecoration(
-            //   border: Border.all(
-            //     color: Colors.orange,
-            //     width: 2,
-            //   ),
-            // ),
+            // decoration: MyBoxDecoration().MyBox(),
             // width: 600,
             child: Column(
               children: <Widget>[
@@ -79,6 +75,22 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
             Expanded(
               flex: 5,
               child: TextFormField(
+                onEditingComplete: () {
+                  showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text('Avviare ricerca'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('ok'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                textInputAction: TextInputAction.done,
+                keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
@@ -157,21 +169,13 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
             },
             child: Container(
               height: 40,
-              // decoration: BoxDecoration(
-              //   border: Border.all(
-              //     color: Colors.orange,
-              //     width: 2,
-              //   ),
-              // ),
+              // decoration: MyBoxDecoration().MyBox(),
               child: Row(
                   children: <Widget>[
                     Container(
                       width: 40,
                       decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
+                        border: MyBorder().MyBorderOrange(),
                         image: DecorationImage(
                           image: AssetImage("assets/immagini/splash_screen.png"),
                           fit: BoxFit.contain,
@@ -183,10 +187,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
                         alignment: Alignment(-1.0, 0.0),
                         padding: EdgeInsets.all(5.0),
                         decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.orange,
-                            width: 2,
-                          ),
+                          border: MyBorder().MyBorderOrange(),
                         ),
                         child: Text(
                           "${promozioni_lista[index].nome}",

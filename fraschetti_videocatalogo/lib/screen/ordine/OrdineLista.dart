@@ -9,6 +9,7 @@ import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/comunicazioniRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaPage.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
+import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 
 class OrdineLista extends StatefulWidget {
   OrdineLista({Key? key}) : super(key: key);
@@ -187,12 +188,7 @@ class _OrdineListaState extends State<OrdineLista> {
         body: Container(
           child: Container(
             // padding: new EdgeInsets.all(10.0),
-            // decoration: BoxDecoration(
-            //   border: Border.all(
-            //     color: Colors.orange,
-            //     width: 2,
-            //   ),
-            // ),
+            // decoration: MyBoxDecoration().MyBox(),
             // width: 600,
             child: Column(
               children: <Widget>[
@@ -362,12 +358,7 @@ class _OrdineListaState extends State<OrdineLista> {
                       alignment: Alignment(0.0, 1.0),
                       width: 60,
                       // color: Colors.orange,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
+                      decoration: MyBoxDecoration().MyBox(),
                       child: Text(
                         "000000",
                         // style: TextStyle(fontSize: 14.0),
@@ -379,12 +370,7 @@ class _OrdineListaState extends State<OrdineLista> {
                       child: Container(
                         padding: EdgeInsets.all(2),
                         alignment: Alignment(-1.0, 0.0),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.orange,
-                            width: 2,
-                          ),
-                        ),
+                        decoration: MyBoxDecoration().MyBox(),
                         child: Column(
                           children: [
                             Text(
@@ -411,12 +397,7 @@ class _OrdineListaState extends State<OrdineLista> {
                       // unità di misura
                       alignment: Alignment(0.0, 0.0),
                       width: 25,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
+                      decoration: MyBoxDecoration().MyBox(),
                       child: Text(
                         "XC",
                         // style: TextStyle(fontSize: 18.0),
@@ -427,12 +408,7 @@ class _OrdineListaState extends State<OrdineLista> {
                       padding: EdgeInsets.all(2),
                       alignment: Alignment(1.0, 0.0),
                       width: 45,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
+                      decoration: MyBoxDecoration().MyBox(),
                       child: Text(
                         "1500",
                         // style: TextStyle(fontSize: 18.0),
@@ -443,12 +419,7 @@ class _OrdineListaState extends State<OrdineLista> {
                       padding: EdgeInsets.all(2),
                       alignment: Alignment(1.0, 0.0),
                       width: 75,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
+                      decoration: MyBoxDecoration().MyBox(),
                       child: Text(
                         "99999,00",
                         // style: TextStyle(fontSize: 18.0),
@@ -459,12 +430,7 @@ class _OrdineListaState extends State<OrdineLista> {
                       padding: EdgeInsets.all(2),
                       alignment: Alignment(1.0, 0.0),
                       width: 80,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
+                      decoration: MyBoxDecoration().MyBox(),
                       child: Text(
                         "999999,00",
                         // style: TextStyle(fontSize: 18.0),

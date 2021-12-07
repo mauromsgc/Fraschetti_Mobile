@@ -8,6 +8,7 @@ import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/comunicazioniRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/comunicazioni/ComunicazionePage.dart';
 import 'package:fraschetti_videocatalogo/screen/trasmissioni/TrasmissionePage.dart';
+import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 
 
 class TrasmissioneLista extends StatefulWidget {
@@ -45,12 +46,7 @@ class _TrasmissioneListaState extends State<TrasmissioneLista> {
         body: Container(
           child: Container(
             // padding: new EdgeInsets.all(10.0),
-            // decoration: BoxDecoration(
-            //   border: Border.all(
-            //     color: Colors.orange,
-            //     width: 2,
-            //   ),
-            // ),
+            // decoration: MyBoxDecoration().MyBox(),
             // width: 600,
             child: Column(
               children: <Widget>[
@@ -81,6 +77,22 @@ class _TrasmissioneListaState extends State<TrasmissioneLista> {
             Expanded(
               flex: 8,
               child: TextFormField(
+                onEditingComplete: () {
+                  showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text('Avviare ricerca'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('ok'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                textInputAction: TextInputAction.done,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
@@ -151,6 +163,7 @@ class _TrasmissioneListaState extends State<TrasmissioneLista> {
     );
   }
 
+
 // riga lista
   Widget ListaWidget(List<ComunicazioneModel> trasmissioni_lista) {
     return Expanded(
@@ -168,22 +181,12 @@ class _TrasmissioneListaState extends State<TrasmissioneLista> {
             },
             child: Container(
               height: 40,
-              // decoration: BoxDecoration(
-              //   border: Border.all(
-              //     color: Colors.orange,
-              //     width: 2,
-              //   ),
-              // ),
+              // decoration: MyBoxDecoration().MyBox(),
               child: Row(
                 children: <Widget>[
                   Container(
                     width: 70,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.orange,
-                        width: 2,
-                      ),
-                    ),
+                    decoration: MyBoxDecoration().MyBox(),
                     alignment: Alignment.center,
                     child: Text(
                       "00000",
@@ -197,12 +200,7 @@ class _TrasmissioneListaState extends State<TrasmissioneLista> {
                     child: Container(
                       // alignment: Alignment(-1.0, 0.0),
                       padding: EdgeInsets.all(5.0),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
+                      decoration: MyBoxDecoration().MyBox(),
                       alignment: Alignment.centerRight,
                       child: Text(
                         "55555555",
@@ -216,12 +214,7 @@ class _TrasmissioneListaState extends State<TrasmissioneLista> {
                   ),
                   Container(
                     width: 120,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.orange,
-                        width: 2,
-                      ),
-                    ),
+                    decoration: MyBoxDecoration().MyBox(),
                     alignment: Alignment.center,
                     child: Text(
                       "00/00/0000",
@@ -233,12 +226,7 @@ class _TrasmissioneListaState extends State<TrasmissioneLista> {
                   ),
                   Container(
                     width: 50,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.orange,
-                        width: 2,
-                      ),
-                    ),
+                    decoration: MyBoxDecoration().MyBox(),
                     alignment: Alignment.center,
                     child: Text(
                       "000",
@@ -250,12 +238,7 @@ class _TrasmissioneListaState extends State<TrasmissioneLista> {
                   ),
                   Container(
                     width: 50,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.orange,
-                        width: 2,
-                      ),
-                    ),
+                    decoration: MyBoxDecoration().MyBox(),
                     alignment: Alignment.center,
                     child: Text(
                       "000",
@@ -278,4 +261,7 @@ class _TrasmissioneListaState extends State<TrasmissioneLista> {
       ),
     );
   }
+
+
+
 }

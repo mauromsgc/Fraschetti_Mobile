@@ -7,6 +7,7 @@ import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/comunicazioniRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/comunicazioni/ComunicazionePage.dart';
+import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 
 
 class ComunicazioneListaPage extends StatefulWidget {
@@ -44,12 +45,7 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
         body: Container(
           child: Container(
             // padding: new EdgeInsets.all(10.0),
-            // decoration: BoxDecoration(
-            //   border: Border.all(
-            //     color: Colors.orange,
-            //     width: 2,
-            //   ),
-            // ),
+            // decoration: MyBoxDecoration().MyBox(),
             // width: 600,
             child: Column(
               children: <Widget>[
@@ -80,6 +76,22 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
             Expanded(
               flex: 5,
               child: TextFormField(
+                onEditingComplete: () {
+                  showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text('Avviare ricerca'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('ok'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                textInputAction: TextInputAction.done,
+                keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
@@ -93,6 +105,21 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
             Expanded(
               flex: 3,
               child: TextFormField(
+                onEditingComplete: () {
+                  showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text('Avviare ricerca'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('ok'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
@@ -170,22 +197,12 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
             },
             child: Container(
               height: 40,
-              // decoration: BoxDecoration(
-              //   border: Border.all(
-              //     color: Colors.orange,
-              //     width: 2,
-              //   ),
-              // ),
+              // decoration: MyBoxDecoration().MyBox(),
               child: Row(
                   children: <Widget>[
                     Container(
                       width: 100,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.orange,
-                          width: 2,
-                        ),
-                      ),
+                      decoration: MyBoxDecoration().MyBox(),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -209,12 +226,7 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
                       child: Container(
                         alignment: Alignment(-1.0, 0.0),
                         padding: EdgeInsets.all(5.0),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.orange,
-                            width: 2,
-                          ),
-                        ),
+                        decoration: MyBoxDecoration().MyBox(),
                         child: Text(
                               "${comunicazioni_lista[index].oggetto}",
                               style: TextStyle(
