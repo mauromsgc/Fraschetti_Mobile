@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
@@ -9,7 +10,6 @@ import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:fraschetti_videocatalogo/utils/router_app.dart';
 
-import 'models/SessioneModel.dart';
 
 final getIt = GetIt.instance;
 
@@ -20,8 +20,8 @@ void main() async{
   Intl.defaultLocale = 'it_IT';
   await initializeDateFormatting('it_IT', null);
 
-  final db = await DbRepository.newConnection();
-  GetIt.instance.registerSingleton(db);
+  // final db = await DbRepository.newConnection();
+  // GetIt.instance.registerSingleton(db);
 
   getIt.registerSingleton<HttpRepository>(HttpRepository());
 

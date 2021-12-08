@@ -1,4 +1,14 @@
 
+
+- due repository da rendere globali/singleton
+- RepositoryDb gestione database locale
+- RepositoryHttp gestione connessioni con server
+
+
+- flutter_bloc per la gestione dello stato???
+
+
+
 - per ordini e resi dialogo con nuovo e numero ordine/reso su pulsante
 
 - per ordini menu per
@@ -14,7 +24,7 @@
 
 - per trasmissioni con pulsati con azioni
     Trasmetti ordini
-    Agiorna da server
+    Aggiorna da server
     Trasmissioni esito lista
     Trasmissioni esito page
 

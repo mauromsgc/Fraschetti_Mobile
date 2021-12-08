@@ -12,7 +12,20 @@ import 'package:http/http.dart' as http;
 // const String HOST = "https://tmpserver.vercel.app";
 // const String HOST = "diventa.local:8888";
 // const String HOST = "diventa.local";
-const String HOST = "dev.centridiventa.com";
+// const String HOST = "dev.centridiventa.com";
+// const String HOST = "192.168.1.78:8080";
+
+// const int? HTTP_PORT = null;
+// // const String? HTTP_SCHEME = "https";
+// const String? HTTP_SCHEME = "http";
+// const String HTTP_HOST = "office.centridiventa.com";
+
+
+const int? HTTP_PORT = 8080;
+// const? String HTTP_SCHEME = "https";
+const String? HTTP_SCHEME = "http";
+const String HTTP_HOST = "192.168.1.78";
+
 
 // Questa è una delle classi più importanti di tutta l'applicazione.
 //
@@ -71,10 +84,9 @@ class HttpClient {
 
   Uri buildUri(String url, Map<String, dynamic>? queryParameters) {
     final Uri test = Uri(
-      // scheme: "http",
-      // port: 8888,
-      scheme: "https",
-      host: HOST,
+      port: HTTP_PORT,
+      scheme: HTTP_SCHEME,
+      host: HTTP_HOST,
       path: url,
       queryParameters: queryParameters,
     );
@@ -90,7 +102,7 @@ class HttpClient {
   //   return "$HOST/api/v2$url?${params.toString()}";
   // }
 
-  Map<String, String> encodeBody(Map<String, String>? body) {
+  Map<String, String> encodeBody(Map<String, dynamic>? body) {
     // body?.removeWhere((key, value) => value == null);
     // return body.map((key, value) => MapEntry(key, value.toString()));
     if (body != null) {
@@ -106,7 +118,7 @@ class HttpClient {
 
   Future<http.Response> post(url,
           {Map<String, dynamic>? queryParameters,
-          Map<String, String>? bodyParameters}) =>
+          Map<String, dynamic>? bodyParameters}) =>
       http.post(buildUri(url, queryParameters),
           headers: headers(), body: encodeBody(bodyParameters));
 
@@ -141,13 +153,17 @@ class HttpClient {
 //     http.post(buildUri(url, queryParameters), headers: headers());
 
   Future<Map<String, dynamic>> test(String email, String password) async {
-    final response = await this.post(
-      "/api/utenti/login",
-      bodyParameters: {
-        "username": email,
-        "password": password,
-      },
-    );
+    // final response = await this.post(
+    //   "/api/utenti/login",
+    //   bodyParameters: {
+    //     "username": email,
+    //     "password": password,
+    //   },
+    // );
+
+    var url = Uri.parse('https://office.centridiventa.com/api/utenti/login');
+    var response = await http.post(url, body: {'username': email, 'password': password});
+
     final data = json.decode(response.body);
 
     if (response.statusCode == 200) {
@@ -168,6 +184,36 @@ class HttpClient {
     return utenteRegistrato;
   }
 
+
+
+  Future<Map<String, dynamic>> trasmissione_test() async {
+    // effettua un test di trasmissione
+    final response = await this.post(
+      "/4daction/Post_mv1_ConnessioneTest",
+      bodyParameters: {
+        "data": "test",
+      },
+      // bodyParameters: {
+      //   "data": {
+      //     "test": "trasmissione",
+      //     "versione": 1,
+      //   },
+      // },
+    );
+
+    print(response.body);
+    print(response.statusCode);
+    final data = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      return data["data"];
+    }
+
+
+    throw RequestError(data["error"]);
+  }
+
+
   void mac_address_leggi () {
     // legge i mac address
     // DA VERIFICARE SE POSSIBILE SU MOBILE
@@ -182,10 +228,6 @@ class HttpClient {
 
   }
 
-  void trasmissione_test () {
-    // effettua un test di trasmissione
-
-  }
 
   void aggiornamenti_verifica () {
     // verifica se ci sono aggiornamenti da scaricare

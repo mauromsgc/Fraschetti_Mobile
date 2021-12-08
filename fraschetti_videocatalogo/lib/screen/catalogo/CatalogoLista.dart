@@ -10,9 +10,9 @@ import 'package:fraschetti_videocatalogo/repositories/famiglieRepository.dart';
 import 'package:fraschetti_videocatalogo/repositories/articoliRepository.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/LoginPage.dart';
+import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoPage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 
-import 'CatalogoPage.dart';
 
 class CatalogoListaPage extends StatefulWidget {
   CatalogoListaPage({Key? key}) : super(key: key);

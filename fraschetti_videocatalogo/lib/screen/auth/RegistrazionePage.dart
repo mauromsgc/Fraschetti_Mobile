@@ -69,7 +69,10 @@ class _RegistazionePageState extends State<RegistazionePage> {
     final username = usernameController.text.trim();
     final password = passwordController.text.trim();
 
-    final response = await getIt.get<HttpRepository>().http!.test('lg', 'superbmsgc');
+    // final response = await getIt.get<HttpRepository>().http!.test('lg', 'superbmsgc');
+
+
+    final response = await getIt.get<HttpRepository>().http!.trasmissione_test();
 
     print(response);
   }

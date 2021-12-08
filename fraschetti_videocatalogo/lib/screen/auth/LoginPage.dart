@@ -3,7 +3,6 @@ import 'package:fraschetti_videocatalogo/screen/auth/RegistrazionePage.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoLista.dart';
 import 'package:fraschetti_videocatalogo/utils/ValidationBlock.dart';
 
-import 'ParametriConnesionePage.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
