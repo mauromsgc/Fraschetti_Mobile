@@ -1,5 +1,18 @@
 
 
+- in oggetto utente corrente
+    - creare funzione che carica i dati dell'utente dal database
+    - funzione controlla se esite utente e porta al logon o a registrazione
+    - funzione registrazione
+    - funzione login
+    - funzione aggiornamenti dati db
+    - funzione caricamento da db
+        - dati utente
+        - dati agente
+        - per cliente dati cliente
+    - aggiornamento cliente selezionato
+
+
 - due repository da rendere globali/singleton
 - RepositoryDb gestione database locale
 - RepositoryHttp gestione connessioni con server

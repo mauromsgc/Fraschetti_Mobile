@@ -4,31 +4,41 @@ class ParametriModel {
 
   // il costruttore con tutti i parametri lo uso solo per creare i record fake
   ParametriModel({
-    this.agente_id = 0,
+    this.id = 0,
+    this.agg_dati_id = 0,
+    this.agg_immagini_id = 0,
+    this.agg_comunicazioni_id = 0,
+    this.agg_codici_ean_id = 0,
+    this.agg_script_id = 0,
+    this.agg_sql_id = 0,
+    this.aggiornamento_obbligatorio = 0,
+    this.anagrafica_aggiornamento = 0,
+    this.promozioni_attivazione = 0,
+    this.sql_versione = 0,
+    this.host_server = '',
+    this.codice_macchina = '',
+    this.username = '',
+    this.password = '',
+    this.videocatalogo_uid = '',
     this.log_attivo = 0,
-    this.offerte_disattivate = 0,
-    this.sospesi_mostra = 0,
-    this.user_id = 0,
-    this.user_in_attivita = 0,
-    this.user_sede_codice = '',
-    this.user_sede_sigla = '',
-    this.user_tipo = '',
-    this.user_tipo_interno = '',
-    this.user_username = '',
-    this.note = '',
   });
 
-  int agente_id = 0;
+  int id = 0;
+  int agg_dati_id = 0;
+  int agg_immagini_id = 0;
+  int agg_comunicazioni_id = 0;
+  int agg_codici_ean_id = 0;
+  int agg_script_id = 0;
+  int agg_sql_id = 0;
+  int aggiornamento_obbligatorio = 0;
+  int anagrafica_aggiornamento = 0;
+  int promozioni_attivazione = 0;
+  int sql_versione = 0;
+  String host_server = '';
+  String codice_macchina = '';
+  String username = '';
+  String password = '';
+  String videocatalogo_uid = '';
   int log_attivo = 0;
-  int offerte_disattivate = 0;
-  int sospesi_mostra = 0;
-  int user_id = 0;
-  int user_in_attivita = 0;
-  String user_sede_codice = '';
-  String user_sede_sigla = '';
-  String user_tipo = '';
-  String user_tipo_interno = '';
-  String user_username = '';
-  String note = '';
 
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 
@@ -17,16 +18,18 @@ class SplashPage extends StatefulWidget {
 }
 
 class _StatefulWidget extends State<SplashPage> {
+  bool utenteRegistrato = false;
+
   @override
   void initState() {
     super.initState();
 
-    bool utenteRegistrato = false;
-
     SchedulerBinding.instance!.addPostFrameCallback((_) async {
       await Future.delayed(Duration(seconds: 3));
       utenteRegistrato =
-          await getIt.get<HttpRepository>().http!.utenteRegistrato();
+      await getIt.get<DbRepository>().utente_egistrato();
+      // utenteRegistrato =
+      //     await getIt.get<HttpRepository>().http!.utenteRegistrato();
       // await Future.delayed(Duration(seconds: 3));
       if (utenteRegistrato) {
         // Navigator.of(context).pushNamed(LoginPage.routeName);
@@ -36,8 +39,9 @@ class _StatefulWidget extends State<SplashPage> {
         Navigator.popAndPushNamed(context, RegistazionePage.routeName);
       }
     });
-
   }
+
+
 
   @override
   Widget build(BuildContext context) {

@@ -7,18 +7,22 @@ class ParametriRepository {
   }
 }
 
-final fakeParametri =
-  ParametriModel(
-    agente_id: 0,
-    log_attivo: 0,
-    offerte_disattivate: 0,
-    sospesi_mostra: 0,
-    user_id: 0,
-    user_in_attivita: 0,
-    user_sede_codice: '',
-    user_sede_sigla: '',
-    user_tipo: '',
-    user_tipo_interno: '',
-    user_username: '',
-    note: '',
-  );
+final fakeParametri = ParametriModel(
+  id: 0,
+  agg_dati_id: 0,
+  agg_immagini_id: 0,
+  agg_comunicazioni_id: 0,
+  agg_codici_ean_id: 0,
+  agg_script_id: 0,
+  agg_sql_id: 0,
+  aggiornamento_obbligatorio: 0,
+  anagrafica_aggiornamento: 0,
+  promozioni_attivazione: 0,
+  sql_versione: 0,
+  host_server: '',
+  codice_macchina: '',
+  username: '',
+  password: '',
+  videocatalogo_uid: '',
+  log_attivo: 0,
+);

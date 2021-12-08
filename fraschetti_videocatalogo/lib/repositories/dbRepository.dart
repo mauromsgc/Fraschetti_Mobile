@@ -1,3 +1,4 @@
+import 'package:fraschetti_videocatalogo/utils/Utility.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as path;
 
@@ -10,11 +11,50 @@ class DbRepository {
     final databasesPath = await getDatabasesPath();
     final databasePath = path.join(databasesPath, "videocatalogo.db");
 
+    // macOS database path
+    // Users/poto/Library/Containers/it.msgc.fraschettiVideocatalogo/Data/Documents/videocatalogo.db
+    print(databasePath);
+
     final int db_versione = 1;
     final database = await openDatabase(
       databasePath,
       version: db_versione,
       onCreate: (Database db, int version) async {
+
+        await db.execute("DROP TABLE IF EXISTS parametri");
+        await db.execute("""
+CREATE TABLE parametri ( 
+id integer NOT NULL PRIMARY KEY AUTOINCREMENT, 
+agg_dati_id INTEGER, 
+agg_immagini_id INTEGER, 
+agg_comunicazioni_id INTEGER,
+agg_codici_ean_id INTEGER, 
+agg_script_id INTEGER, 
+agg_sql_id INTEGER, 
+aggiornamento_obbligatorio INTEGER, 
+anagrafica_aggiornamento INTEGER, 
+promozioni_attivazione INTEGER, 
+sql_versione INTEGER, 
+host_server text(255,0), 
+codice_macchina text(255,0), 
+username text(255,0), 
+password text(255,0), 
+videocatalogo_uid text(255,0), 
+log_attivo INTEGER
+)""");
+
+        await db.execute("insert into parametri (id, agg_dati_id, agg_immagini_id, agg_comunicazioni_id, agg_codici_ean_id, agg_script_id, agg_sql_id, aggiornamento_obbligatorio, anagrafica_aggiornamento, promozioni_attivazione, sql_versione, host_server, codice_macchina, username, password, videocatalogo_uid, log_attivo )  values (  1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 'http://www.fraschetti.com:8080', '', '', '', '', 0 );");
+
+// aggiornamento_dati_id - aggiornamento di tutto,
+// in caso imposta anagrafica_aggiornamento e promozioni_attivazione a 1
+// per ricaricare i dati dell'anagrafica e attivare le promozioni
+
+// aggiornamento_img_id solo per aggiornamento immagini
+
+
+
+
+
         await db.execute("DROP TABLE IF EXISTS agenti");
         await db.execute("""
 CREATE TABLE agenti ( 
@@ -127,9 +167,20 @@ CREATE TABLE famiglie (
 id integer NOT NULL PRIMARY KEY AUTOINCREMENT, 
 codice integer, 
 descrizione text(50,0), 
-colore text(10,0), 
+colore text(15,0), 
 abbreviazione text(3,0)
 )""");
+
+        await db.execute("insert into famiglie ( codice, descrizione, colore, abbreviazione) values ( 1, 'Giardinaggio', '0xFF009900', 'Gia');");
+        await db.execute("insert into famiglie ( codice, descrizione, colore, abbreviazione) values ( 2, 'Edilizia', '0xFF0099FF', 'Edi');");
+        await db.execute("insert into famiglie ( codice, descrizione, colore, abbreviazione) values ( 3, 'Utensili a mano', '0xFFEE0000', 'Ute');");
+        await db.execute("insert into famiglie ( codice, descrizione, colore, abbreviazione) values ( 4, 'Utensili elettrici', '0xFFFFDD00', 'Ele');");
+        await db.execute("insert into famiglie ( codice, descrizione, colore, abbreviazione) values ( 5, 'Idraulica', '0xFFFF0099', 'Idr');");
+        await db.execute("insert into famiglie ( codice, descrizione, colore, abbreviazione) values ( 6, 'Siderurgia', '0xFF663300', 'Sid');");
+        await db.execute("insert into famiglie ( codice, descrizione, colore, abbreviazione) values ( 7, 'Ferramenta', '0xFF000099', 'Fer');");
+        await db.execute("insert into famiglie ( codice, descrizione, colore, abbreviazione) values ( 8, 'Domo utility', '0xFFFF6600', 'Dom');");
+
+
 
         await db.execute("DROP TABLE IF EXISTS invio");
         await db.execute("""
@@ -189,14 +240,6 @@ prezzo REAL,
 prezzoordine REAL
 )""");
 
-        await db.execute("DROP TABLE IF EXISTS parametri");
-        await db.execute("""
-CREATE TABLE parametri ( 
-id integer NOT NULL PRIMARY KEY AUTOINCREMENT, 
-parametro text(50,0), 
-valore text
-)""");
-
         await db.execute("DROP TABLE IF EXISTS promozioni");
         await db.execute("""
 CREATE TABLE promozioni ( 
@@ -248,6 +291,40 @@ fattura_numero CHAR(10,0),
 note TEXT
 )""");
 
+        await db.execute("DROP TABLE IF EXISTS codici_ean");
+        await db.execute("""
+CREATE TABLE codici_ean ( 
+id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+codice_articolo CHAR(6,0), 
+codice_ean CHAR(20,0)
+)""");
+
+        await db.execute("CREATE INDEX codice_ean_codice_articolo_indice ON codici_ean (codice_articolo ASC)");
+        await db.execute("CREATE INDEX codice_ean_codice_ean_indice ON codici_ean (codice_ean ASC)");
+
+
+        await db.execute("DROP TABLE IF EXISTS referenze_agenti");
+        await db.execute("""
+CREATE TABLE referenze_agenti ( 
+id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+codice_articolo CHAR(6,0)
+)""");
+
+        await db.execute("CREATE INDEX referenze_agenti_codice_articolo_indice ON referenze_agenti (codice_articolo ASC)");
+
+
+        await db.execute("DROP TABLE IF EXISTS schede");
+        await db.execute("""
+CREATE TABLE schede ( 
+id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+catalogo_id INTEGER, 
+tipo CHAR(20,0),
+file_nome CHAR(255,0)
+)""");
+
+        await db.execute("CREATE INDEX schede_catalogo_id_indice ON schede (catalogo_id ASC)");
+
+
         await db.execute("CREATE INDEX agenti_codice_indice ON agenti (codice ASC)");
         await db.execute("CREATE INDEX agenti_sede_indice ON agenti (sede ASC)");
         await db.execute("CREATE INDEX assortimenti_descrizione_indice ON assortimenti (descrizione ASC)");
@@ -275,7 +352,6 @@ note TEXT
         await db.execute("CREATE INDEX ordini_agente_id_indice ON ordini (agente_id ASC)");
         await db.execute("CREATE INDEX ordini_ordini_numero_indice ON ordini (ordini_numero ASC)");
         await db.execute("CREATE INDEX ordini_articolo_codice_indice ON ordini (articolo_codice ASC)");
-        await db.execute("CREATE INDEX parametri_parametro_indice ON parametri (parametro ASC)");
         await db.execute("CREATE INDEX promozioni_nome_indice ON promozioni (nome ASC)");
         await db.execute("CREATE INDEX promozioni_codici_promozione_id_indice ON promozioni_codici (promozione_id ASC)");
         await db.execute("CREATE INDEX resi_cliente_id_indice ON resi (cliente_id ASC)");
@@ -290,6 +366,24 @@ note TEXT
 
     return DbRepository(database);
   }
+
+
+  // controlla se l'utente è registrato
+  // controlla se è già presente un utente
+  // legge il mac address lo verifica con i parametri
+  //
+
+  Future<bool> utente_egistrato() async {
+    // bool utenteRegistrato() {
+    String _codice_macchina = "";
+    bool utenteRegistrato = false;
+
+    utenteRegistrato = true;
+
+
+    return utenteRegistrato;
+  }
+
 
 
 }

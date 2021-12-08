@@ -6,26 +6,7 @@ import 'package:http/http.dart' as http;
 // import 'package:focus_login_sessioni_utente/repositories/SessionRepository.dart';
 // import 'package:focus_login_sessioni_utente/repositories/UserRepository.dart';
 
-// L'URL attuale punta ad un mini-server che ho creato ed hostato personalmente su Vercel affinche
-// l'applicazioni funzioni con un server reale, e non con richieste "false" (mockup).
-// Naturalmente si prega di non farlo esplodere :)
-// const String HOST = "https://tmpserver.vercel.app";
-// const String HOST = "diventa.local:8888";
-// const String HOST = "diventa.local";
-// const String HOST = "dev.centridiventa.com";
-// const String HOST = "192.168.1.78:8080";
-
-// const int? HTTP_PORT = null;
-// // const String? HTTP_SCHEME = "https";
-// const String? HTTP_SCHEME = "http";
-// const String HTTP_HOST = "office.centridiventa.com";
-
-
-const int? HTTP_PORT = 8080;
-// const? String HTTP_SCHEME = "https";
-const String? HTTP_SCHEME = "http";
-const String HTTP_HOST = "192.168.1.78";
-
+const String HTTP_HOST = "http://192.168.1.78:8080";
 
 // Questa è una delle classi più importanti di tutta l'applicazione.
 //
@@ -35,13 +16,6 @@ const String HTTP_HOST = "192.168.1.78";
 // Il vantaggio dell'avere questa classe "base", attraverso cui passano tutte le richieste HTTP verso l'esterno è
 // che centralizza in un singolo file tutte le configurazioni e formattazioni fatte per una chiamata prima che vada verso l'esterno.
 //
-// Tra queste possiamo trovare:
-// - URL del server impostato dinamicamente, e modificabile in una singola riga (riga 9).
-// - JWT Token impostato dinamicamente nella Header della chiamata nel caso sia presente nella sessione attiva.
-// - Formattazione di tutti i vari argomenti, che siano Query o Body, cosiche come definizione di metodi personalizzati per richieste Multipart (richieste con file).
-//
-// In particolare, questa classe è stata concetualizzata e sviluppata da me (Gabriel Gatu) nel corso di varie applicazioni,
-// non so se sia il metodo migliore ma sicuramente nel corso degli ultimi 2 anni ha dato veramente tante soddifazioni.
 class HttpRepository {
   HttpClient? http;
 
@@ -67,102 +41,10 @@ class HttpClient {
     client = http.Client();
   }
 
-  Map<String, String> headers() {
-    // if (http_repository.session.jwt != null)
-    //   return {
-    //     "Authorization": "Bearer ${http_repository.session.jwt}",
-    //   };
-    // else
-
-    // return {};
-
-    Map<String, String> headers = {};
-    // headers = {"Content-Type": "application/json"};
-
-    return headers;
-  }
-
-  Uri buildUri(String url, Map<String, dynamic>? queryParameters) {
-    final Uri test = Uri(
-      port: HTTP_PORT,
-      scheme: HTTP_SCHEME,
-      host: HTTP_HOST,
-      path: url,
-      queryParameters: queryParameters,
-    );
-    // var url = Uri.https('www.googleapis.com', '/books/v1/volumes', {'q': '{http}'});
-    return test;
-  }
-
-  // String buildUrl(String url, Map queryParameters) {
-  //   final params = URLQueryParams();
-  //   queryParameters?.removeWhere((key, value) => value == null);
-  //   queryParameters?.forEach((key, value) => params.append(key, value));
-  //
-  //   return "$HOST/api/v2$url?${params.toString()}";
-  // }
-
-  Map<String, String> encodeBody(Map<String, dynamic>? body) {
-    // body?.removeWhere((key, value) => value == null);
-    // return body.map((key, value) => MapEntry(key, value.toString()));
-    if (body != null) {
-      body.removeWhere((key, value) => value == null);
-      return body.map((key, value) => MapEntry(key, value.toString()));
-    } else {
-      return {};
-    }
-  }
-
-  Future<http.Response> get(url, {Map<String, dynamic>? queryParameters}) =>
-      http.get(buildUri(url, queryParameters), headers: headers());
-
-  Future<http.Response> post(url,
-          {Map<String, dynamic>? queryParameters,
-          Map<String, dynamic>? bodyParameters}) =>
-      http.post(buildUri(url, queryParameters),
-          headers: headers(), body: encodeBody(bodyParameters));
-
-  Future<http.Response> postMultipart(
-    url, {
-    Map<String, dynamic>? queryParameters,
-    Map<String, dynamic> bodyParameters = const {},
-    Map<String, File> fileParameters = const {},
-  }) async {
-    // var request = http.MultipartRequest(
-    //     "POST", Uri.parse(buildUri(url, queryParameters ?? {})));
-    var request =
-        http.MultipartRequest("POST", buildUri(url, queryParameters ?? {}));
-
-    bodyParameters.forEach((key, value) {
-      request.fields[key] = value;
-    });
-
-    fileParameters.forEach((key, file) async {
-      var requestFile = await http.MultipartFile.fromPath(key, file.path);
-      request.files.add(requestFile);
-    });
-
-    var response = await request.send();
-    return http.Response.fromStream(response);
-  }
-
-// Future<http.Response> patch(url, {Map? queryParameters, Map<String, dynamic>? bodyParameters}) =>
-//     http.patch(buildUri(url, queryParameters), headers: headers(), body: encodeBody(bodyParameters));
-//
-// Future<http.Response> delete(url, {Map? queryParameters}) =>
-//     http.post(buildUri(url, queryParameters), headers: headers());
-
   Future<Map<String, dynamic>> test(String email, String password) async {
-    // final response = await this.post(
-    //   "/api/utenti/login",
-    //   bodyParameters: {
-    //     "username": email,
-    //     "password": password,
-    //   },
-    // );
-
     var url = Uri.parse('https://office.centridiventa.com/api/utenti/login');
-    var response = await http.post(url, body: {'username': email, 'password': password});
+    var response =
+        await http.post(url, body: {'username': email, 'password': password});
 
     final data = json.decode(response.body);
 
@@ -173,10 +55,9 @@ class HttpClient {
     throw RequestError(data["error"]);
   }
 
-
   // temporano da implementare in dbRepository
-  Future<bool> utenteRegistrato() async{
-  // bool utenteRegistrato() {
+  Future<bool> utenteRegistrato() async {
+    // bool utenteRegistrato() {
     bool utenteRegistrato = false;
 
     utenteRegistrato = true;
@@ -184,84 +65,95 @@ class HttpClient {
     return utenteRegistrato;
   }
 
-
-
   Future<Map<String, dynamic>> trasmissione_test() async {
     // effettua un test di trasmissione
-    final response = await this.post(
-      "/4daction/Post_mv1_ConnessioneTest",
-      bodyParameters: {
-        "data": "test",
-      },
-      // bodyParameters: {
-      //   "data": {
-      //     "test": "trasmissione",
-      //     "versione": 1,
-      //   },
-      // },
-    );
+
+    final String _api = "/4daction/Post_mv1_ConnessioneTest";
+    var url = Uri.parse(HTTP_HOST + _api);
+
+    Map _body_data = {
+      "data": "test",
+    };
+
+    var response = await http.post(url, body: _body_data);
 
     print(response.body);
     print(response.statusCode);
+
     final data = json.decode(response.body);
+    print(data);
 
     if (response.statusCode == 200) {
-      return data["data"];
+      return data;
     }
-
 
     throw RequestError(data["error"]);
   }
 
 
-  void mac_address_leggi () {
-    // legge i mac address
-    // DA VERIFICARE SE POSSIBILE SU MOBILE
 
+  Future<Map<String, dynamic>> trasmissione_test_2() async {
+    // effettua un test di trasmissione
+
+    final String _api = "/4daction/Post_mv1_ConnessioneTest";
+    var url = Uri.parse(HTTP_HOST + _api);
+
+    Map _body_data = {
+      "data": "test",
+    };
+
+    var response = await http.post(url, body: _body_data);
+
+    print(response.body);
+    print(response.statusCode);
+
+    final data = json.decode(response.body);
+    print(data);
+
+    if (response.statusCode == 200) {
+      return data;
+    }
+
+    throw RequestError(data["error"]);
   }
 
-  void intestazione_trasmissione () {
+
+  void mac_address_leggi() {
+    // legge i mac address
+    // DA VERIFICARE SE POSSIBILE SU MOBILE
+  }
+
+  void intestazione_trasmissione() {
     // prepara la prima parte dei dati da trasmettre
     // versioni protoccolli e videocatalogo,
     // dati utente e dati installazione
     // altri dati comuni
-
   }
 
-
-  void aggiornamenti_verifica () {
+  void aggiornamenti_verifica() {
     // verifica se ci sono aggiornamenti da scaricare
-
   }
 
-  void videocatalogo_registra () {
+  void videocatalogo_registra() {
     // effettua la registrazione del videocatalogo
-
   }
 
-  void videocatalogo_disinstalla () {
+  void videocatalogo_disinstalla() {
     // disinstalla il videocatalogo
-
   }
 
-  void aggiornamenti_scarica () {
+  void aggiornamenti_scarica() {
     // scarica gli aggiornamenti
     // da idvidere in base al tipo di dati da scaricare
-
   }
 
-  void anagrafica_aggiorna () {
+  void anagrafica_aggiorna() {
     // aggiorna l'anagrafica agente e cliente
-
   }
 
-  void ordini_trasmetti () {
+  void ordini_trasmetti() {
     // trasmette gli ordini
-
   }
-
-
-
 }
 
 class RequestError implements Exception {

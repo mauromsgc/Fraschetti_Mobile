@@ -23,7 +23,8 @@ void main() async{
   final db = await DbRepository.newConnection();
   GetIt.instance.registerSingleton(db);
 
-  getIt.registerSingleton<HttpRepository>(HttpRepository());
+  GetIt.instance.registerSingleton(HttpRepository());
+  // getIt.registerSingleton<HttpRepository>(HttpRepository());
 
 
   // SessioneModel sessione = SessioneModel();
