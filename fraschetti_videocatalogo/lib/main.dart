@@ -20,8 +20,8 @@ void main() async{
   Intl.defaultLocale = 'it_IT';
   await initializeDateFormatting('it_IT', null);
 
-  // final db = await DbRepository.newConnection();
-  // GetIt.instance.registerSingleton(db);
+  final db = await DbRepository.newConnection();
+  GetIt.instance.registerSingleton(db);
 
   getIt.registerSingleton<HttpRepository>(HttpRepository());
 
