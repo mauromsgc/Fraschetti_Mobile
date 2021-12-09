@@ -3,7 +3,7 @@ import 'package:fraschetti_videocatalogo/models/assortimentoModel.dart';
 
 class AssortimentiRepository  {
   Future<List<AssortimentoModel>> all() async {
-    await Future.delayed(Duration(seconds: 3));
+    // await Future.delayed(Duration(seconds: 3));
     return fakeAssortimenti;
   }
 

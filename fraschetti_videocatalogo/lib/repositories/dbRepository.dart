@@ -1,3 +1,4 @@
+import 'package:fraschetti_videocatalogo/models/famigliaModel.dart';
 import 'package:fraschetti_videocatalogo/utils/Utility.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as path;
@@ -7,6 +8,11 @@ class DbRepository {
 
   DbRepository(this.database);
 
+
+  _onConfigure(Database db) async {
+    // Add support for cascade delete
+    await db.execute("PRAGMA foreign_keys = ON");
+  }
   static Future<DbRepository> newConnection() async {
     final databasesPath = await getDatabasesPath();
     final databasePath = path.join(databasesPath, "videocatalogo.db");
@@ -19,6 +25,10 @@ class DbRepository {
     final database = await openDatabase(
       databasePath,
       version: db_versione,
+  //     onConfigure: (Database db) async {
+  //         // Add support for cascade delete
+  //         await db.execute("PRAGMA foreign_keys = ON");
+  // },
       onCreate: (Database db, int version) async {
 
         await db.execute("DROP TABLE IF EXISTS parametri");
@@ -365,6 +375,11 @@ file_nome CHAR(255,0)
     );
 
     return DbRepository(database);
+  }
+
+  Future<List<FamigliaModel>> famiglie_lista() async {
+    final rows = await database.query("famiglie");
+    return rows.map((row) => FamigliaModel.fromMap(row)).toList();
   }
 
 

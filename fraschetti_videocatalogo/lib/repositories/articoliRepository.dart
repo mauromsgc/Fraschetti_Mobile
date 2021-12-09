@@ -3,9 +3,15 @@ import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 
 class ArticoliRepository {
   Future<List<CatalogoModel>> all() async {
-    await Future.delayed(Duration(seconds: 3));
+    // await Future.delayed(Duration(seconds: 3));
     return fakeArticoli;
   }
+
+  Future<List<CatalogoModel>> all_sub() async {
+    // await Future.delayed(Duration(seconds: 3));
+    return fakeArticoli2;
+  }
+
 
   List<CatalogoModel> all_2() {
     return fakeArticoli;

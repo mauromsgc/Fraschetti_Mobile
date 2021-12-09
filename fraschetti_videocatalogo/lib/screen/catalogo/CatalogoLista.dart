@@ -3,15 +3,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/models/assortimentoModel.dart';
-import 'package:fraschetti_videocatalogo/models/assortimentoModel.dart';
 import 'package:fraschetti_videocatalogo/models/famigliaModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/assortimentiRepository.dart';
-import 'package:fraschetti_videocatalogo/repositories/famiglieRepository.dart';
+import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:fraschetti_videocatalogo/repositories/articoliRepository.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/LoginPage.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoPage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
+import 'package:get_it/get_it.dart';
+import 'package:get/get.dart';
 
 
 class CatalogoListaPage extends StatefulWidget {
@@ -23,22 +24,80 @@ class CatalogoListaPage extends StatefulWidget {
   _CatalogoListaPageState createState() => _CatalogoListaPageState();
 }
 
-class ListItem {
-  int codice = 0;
-  String valore = "";
+final pageStato = PageStore().obs;
+class PageStore {
+  List<FamigliaModel> famiglie_lista = [];
+  List<AssortimentoModel> assortimenti_lista = [];
+  List<CatalogoModel> articoli_lista = [];
 
-  ListItem(this.codice, this.valore);
+  PageStore(){
+    print("PageStore inizializza ");
+    inizializza();
+  }
+
+  void inizializza () async {
+    _famiglie_lista_carica();
+    _assortimenti_lista_carica();
+    _articoli_lista_carica();
+  }
+
+  Future<void> _famiglie_lista_carica () async {
+      famiglie_lista = await GetIt.instance<DbRepository>().famiglie_lista();
+      print("famiglie_lista: "+famiglie_lista.toString());
+      pageStato.refresh();
+  }
+
+  Future<void> _assortimenti_lista_carica () async {
+    assortimenti_lista = await AssortimentiRepository().all();
+    // print("assortimenti_lista: "+assortimenti_lista.toString());
+    // assortimenti_lista = await GetIt.instance<DbRepository>().famiglie_lista();
+    pageStato.refresh();
+  }
+
+  Future<void> _articoli_lista_carica () async {
+    articoli_lista = await ArticoliRepository().all();
+    print("articoli_lista: "+articoli_lista.length.toString());
+// print("articoli_lista: "+articoli_lista.toString());
+// articoli_lista = await GetIt.instance<DbRepository>().famiglie_lista();
+    pageStato.refresh();
+  }
+
+  Future<void> _articoli_lista_test () async {
+    articoli_lista = await ArticoliRepository().all_sub();
+    print("articoli_lista: "+articoli_lista.length.toString());
+// print("articoli_lista: "+articoli_lista.toString());
+// articoli_lista = await GetIt.instance<DbRepository>().famiglie_lista();
+    pageStato.refresh();
+  }
+
+  void articoli_cerca () async {
+    _articoli_lista_test();
+  }
+  void articoli_tutti () async {
+    _articoli_lista_carica();
+  }
+
 }
 
 class _CatalogoListaPageState extends State<CatalogoListaPage> {
-  List<CatalogoModel> articoli_lista = ArticoliRepository().all_2();
-  List<FamigliaModel> famiglie = FamiglieRepository().all_2();
-  List<AssortimentoModel> _assortimenti_lista = AssortimentiRepository()
-      .all_2();
+
+  // List<CatalogoModel> articoli_lista = ArticoliRepository().all_2();
+  // List<AssortimentoModel> _assortimenti_lista = AssortimentiRepository()
+  //     .all_2();
+  //
+  // List<FamigliaModel> famiglie_lista = [];
+  //
+  // void _famiglie_lista_carica () async {
+  //   setState(() async{
+  //         famiglie_lista = await GetIt.instance<DbRepository>().famiglie_lista();
+  //   });
+  // }
 
   @override
   void initState() {
     super.initState();
+    // _famiglie_lista_carica();
+
   }
 
   void listaClick(BuildContext context) {
@@ -60,7 +119,8 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   mainAxisSize: MainAxisSize.min,
                   children:
 
-                  _assortimenti_lista.map((elemento) {
+
+                  pageStato.value.assortimenti_lista.map((elemento) {
                     return Container(
                       height: 40,
                       width: double.maxFinite,
@@ -261,7 +321,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   thickness: 2,
                   // color: Theme.of(context).primaryColor,
                 ),
-                ListaWidget(articoli_lista),
+                Obx(() => ListaWidget(pageStato.value.articoli_lista),),
               ],
             ),
           ),
@@ -342,7 +402,9 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
               flex: 2,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
-                onPressed: () {},
+                onPressed: () {
+                  pageStato.value.articoli_cerca();
+                },
                 child: Text('Cerca'),
               ),
             ),
@@ -393,7 +455,9 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
               flex: 1,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
-                onPressed: () {},
+                onPressed: () {
+                  pageStato.value.articoli_tutti();
+                },
                 child: Text('Tutto'),
               ),
             ),
@@ -405,9 +469,9 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
 
 
 // sezione categorie
-  Widget CategorieWidget() {
-    return Row(
-      children: famiglie.map((elemento) {
+  Widget CategorieWidget() => Obx(
+        () => Row(
+      children: pageStato.value.famiglie_lista.map((elemento) {
         return Expanded(
           flex: 1,
           child: InkWell(
@@ -442,11 +506,92 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
           ),
         );
       }).toList(),
+    ),
+    );
+
+  // riga lista
+  Widget ListaWidget(List<CatalogoModel> articoli_lista) {
+    return Expanded(
+      child: ListView.separated(
+        separatorBuilder: (context, index) =>
+            Divider(
+              height: 5,
+              thickness: 2,
+              color: Theme
+                  .of(context)
+                  .primaryColor,
+            ),
+        itemCount: articoli_lista.length,
+        itemBuilder: (context, index) {
+          return InkWell(
+            onTap: () {
+              listaClick(context);
+            },
+            child: Container(
+              height: 40,
+              // decoration: MyBoxDecoration().MyBox(),
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    width: 10,
+                    decoration: BoxDecoration(
+                      color: Colors.orange,
+                      // "${articoli_lista[index].nome}"
+                    ),
+                  ),
+                  Container(
+                    width: 40,
+                    decoration: BoxDecoration(
+                      border: MyBorder().MyBorderOrange(),
+                      image: DecorationImage(
+                        image: AssetImage("assets/immagini/splash_screen.png"),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment(-1.0, 0.0),
+                      padding: EdgeInsets.all(5.0),
+                      decoration: MyBoxDecoration().MyBox(),
+                      child: Text(
+                        "${articoli_lista[index].nome}",
+                        style: TextStyle(
+                            fontSize: 15.0, overflow: TextOverflow.ellipsis),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 60,
+                    decoration: BoxDecoration(
+                      border: MyBorder().MyBorderOrange(),
+                      image: DecorationImage(
+                        image: AssetImage("assets/immagini/splash_screen.png"),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 60,
+                    decoration: BoxDecoration(
+                      border: MyBorder().MyBorderOrange(),
+                      image: DecorationImage(
+                        image: AssetImage("assets/immagini/splash_screen.png"),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 
 // riga lista
-  Widget ListaWidget(List<CatalogoModel> articoli_lista) {
+  Widget ListaWidget_old(List<CatalogoModel> articoli_lista) {
     return Expanded(
       child: ListView.separated(
         separatorBuilder: (context, index) =>
