@@ -47,7 +47,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
         bottomNavigationBar: BottomBarWidget(),
         body: Container(
           // height: 400,
-          // height: MediaQuery.of(context).size.height/2,
+          height: MediaQuery.of(context).size.height,
           child: SingleChildScrollView(
             child: Container(
               // padding: new EdgeInsets.all(10.0),
@@ -516,156 +516,157 @@ class _CatalogoPageState extends State<CatalogoPage> {
 // riga lista codici
   Widget CodiciWidget_2() {
     return SizedBox(
+      // height: MediaQuery.of(context).size.height/2,
       height: 300,
       child: Expanded(
         child: ListView.separated(
-          separatorBuilder: (context, index) => Divider(
-            height: 5,
-            thickness: 2,
-            color: Theme.of(context).primaryColor,
-          ),
-          itemCount: 15,
-          itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () {
-                listaClick(context);
-              },
-              onLongPress: () {
-                articolo_disponibilita_mostra(context);
-              },
-              child: Container(
-                // height: 40,
-                // decoration: BoxDecoration(
-                //   border: Border(
-                //     bottom: BorderSide(
-                //       color: Theme.of(context).primaryColor,
-                //       width: 2,
-                //     ),
-                //   ),
-                // ),
-                child: Column(
-                  children: [
-                    Row(
-                      children: <Widget>[
-                        Container(
-                          // venduto
-                          padding: EdgeInsets.all(2),
-                          alignment: Alignment.center,
-                          width: 15,
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text(
-                            "•",
-                            // style: TextStyle(fontSize: 18.0),
-                          ),
-                        ),
-                        Container(
-                          // codice
-                          padding: EdgeInsets.all(2),
-                          alignment: Alignment.center,
-                          width: 70,
-                          // color: Colors.orange,
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text(
-                            "000000",
-                            // style: TextStyle(fontSize: 14.0),
-                          ),
-                        ),
-                        Expanded(
-                          // descrizione
-                          child: Container(
+            separatorBuilder: (context, index) => Divider(
+              height: 5,
+              thickness: 2,
+              color: Theme.of(context).primaryColor,
+            ),
+            itemCount: 15,
+            itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () {
+                  listaClick(context);
+                },
+                onLongPress: () {
+                  articolo_disponibilita_mostra(context);
+                },
+                child: Container(
+                  // height: 40,
+                  // decoration: BoxDecoration(
+                  //   border: Border(
+                  //     bottom: BorderSide(
+                  //       color: Theme.of(context).primaryColor,
+                  //       width: 2,
+                  //     ),
+                  //   ),
+                  // ),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            // venduto
                             padding: EdgeInsets.all(2),
-                            alignment: Alignment.centerLeft,
+                            alignment: Alignment.center,
+                            width: 15,
                             decoration: MyBoxDecoration().MyBox(),
                             child: Text(
-                              "Codice Codice Codice Codice Codice Codice",
-                              style: TextStyle(
-                                // fontSize: 14.0,
-                                overflow: TextOverflow.ellipsis,
+                              "•",
+                              // style: TextStyle(fontSize: 18.0),
+                            ),
+                          ),
+                          Container(
+                            // codice
+                            padding: EdgeInsets.all(2),
+                            alignment: Alignment.center,
+                            width: 70,
+                            // color: Colors.orange,
+                            decoration: MyBoxDecoration().MyBox(),
+                            child: Text(
+                              "000000",
+                              // style: TextStyle(fontSize: 14.0),
+                            ),
+                          ),
+                          Expanded(
+                            // descrizione
+                            child: Container(
+                              padding: EdgeInsets.all(2),
+                              alignment: Alignment.centerLeft,
+                              decoration: MyBoxDecoration().MyBox(),
+                              child: Text(
+                                "Codice Codice Codice Codice Codice Codice",
+                                style: TextStyle(
+                                  // fontSize: 14.0,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Container(
-                          // quantità
-                          padding: EdgeInsets.all(2),
-                          alignment: Alignment.centerRight,
-                          width: 50,
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text(
-                            "1500",
-                            // style: TextStyle(fontSize: 18.0),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Container(
+                            // quantità
+                            padding: EdgeInsets.all(2),
+                            alignment: Alignment.centerRight,
+                            width: 50,
+                            decoration: MyBoxDecoration().MyBox(),
+                            child: Text(
+                              "1500",
+                              // style: TextStyle(fontSize: 18.0),
+                            ),
                           ),
-                        ),
-                        Text(" x "),
-                        Container(
-                          // quantità
-                          padding: EdgeInsets.all(2),
-                          alignment: Alignment.centerRight,
-                          width: 50,
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text(
-                            "1500",
-                            // style: TextStyle(fontSize: 18.0),
+                          Text(" x "),
+                          Container(
+                            // quantità
+                            padding: EdgeInsets.all(2),
+                            alignment: Alignment.centerRight,
+                            width: 50,
+                            decoration: MyBoxDecoration().MyBox(),
+                            child: Text(
+                              "1500",
+                              // style: TextStyle(fontSize: 18.0),
+                            ),
                           ),
-                        ),
-                        Container(
-                          // apribile
-                          padding: EdgeInsets.all(2),
-                          alignment: Alignment.center,
-                          width: 20,
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text(
-                            "*",
-                            // style: TextStyle(fontSize: 18.0),
+                          Container(
+                            // apribile
+                            padding: EdgeInsets.all(2),
+                            alignment: Alignment.center,
+                            width: 20,
+                            decoration: MyBoxDecoration().MyBox(),
+                            child: Text(
+                              "*",
+                              // style: TextStyle(fontSize: 18.0),
+                            ),
                           ),
-                        ),
-                        Container(
-                          // unità di misura
-                          padding: EdgeInsets.all(2),
-                          alignment: Alignment.center,
-                          width: 30,
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text(
-                            "XC",
-                            // style: TextStyle(fontSize: 18.0),
+                          Container(
+                            // unità di misura
+                            padding: EdgeInsets.all(2),
+                            alignment: Alignment.center,
+                            width: 30,
+                            decoration: MyBoxDecoration().MyBox(),
+                            child: Text(
+                              "XC",
+                              // style: TextStyle(fontSize: 18.0),
+                            ),
                           ),
-                        ),
-                        Container(
-                          // prezzo
-                          padding: EdgeInsets.all(2),
-                          alignment: Alignment.centerRight,
-                          width: 80,
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text(
-                            "99999,99",
-                            // style: TextStyle(fontSize: 18.0),
+                          Container(
+                            // prezzo
+                            padding: EdgeInsets.all(2),
+                            alignment: Alignment.centerRight,
+                            width: 80,
+                            decoration: MyBoxDecoration().MyBox(),
+                            child: Text(
+                              "99999,99",
+                              // style: TextStyle(fontSize: 18.0),
+                            ),
                           ),
-                        ),
-                        Container(
-                          // iva
-                          padding: EdgeInsets.all(2),
-                          alignment: Alignment.center,
-                          width: 25,
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text(
-                            "22",
-                            // style: TextStyle(fontSize: 18.0),
+                          Container(
+                            // iva
+                            padding: EdgeInsets.all(2),
+                            alignment: Alignment.center,
+                            width: 25,
+                            decoration: MyBoxDecoration().MyBox(),
+                            child: Text(
+                              "22",
+                              // style: TextStyle(fontSize: 18.0),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
-      ),
     );
   }
 }

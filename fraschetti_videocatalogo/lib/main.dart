@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
+import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
+import 'package:fraschetti_videocatalogo/models/utenteCorrenteModel.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
@@ -11,26 +13,41 @@ import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:fraschetti_videocatalogo/utils/router_app.dart';
 
 
+
 final getIt = GetIt.instance;
 
 void main() async{
+  print("main 0");
   // per attendere che carichi tutte le librerie
   WidgetsFlutterBinding.ensureInitialized();
 
   Intl.defaultLocale = 'it_IT';
   await initializeDateFormatting('it_IT', null);
+  print("main 1");
 
+  print("main 2");
   final db = await DbRepository.newConnection();
   GetIt.instance.registerSingleton(db);
 
+  print("main 3");
   GetIt.instance.registerSingleton(HttpRepository());
   // getIt.registerSingleton<HttpRepository>(HttpRepository());
 
 
   // SessioneModel sessione = SessioneModel();
   // var test = "Pippo pippo".obs;
+  print("main 4");
   getIt.registerSingleton<SessioneModel>(SessioneModel());
 
+  print("main 5");
+  getIt.registerSingleton<ParametriModel>(ParametriModel());
+  print("main 6");
+  getIt.registerSingleton<UtenteCorrenteModel>(UtenteCorrenteModel());
+
+  print("main 5");
+  await GetIt.instance<DbRepository>().famiglie_lista();
+
+  print("main 10");
   runApp(MyApp());
 
 
@@ -39,6 +56,12 @@ void main() async{
 class MyApp extends StatelessWidget {
 
 
+  @override
+  void dispose() {
+    // chiudo la connessione al database
+    GetIt.instance<DbRepository>().database.close();
+
+  }
 
   @override
   Widget build(BuildContext context) {

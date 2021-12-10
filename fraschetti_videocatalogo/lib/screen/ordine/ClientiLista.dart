@@ -26,7 +26,8 @@ class _ClienteListaState extends State<ClienteLista> {
   void listaClick(BuildContext context, int index) {
     // selezione al cliente e va in ordine
     GetIt.instance<SessioneModel>().ordine_top_menu_indice = 1;
-    GetIt.instance<SessioneModel>().cliente_id = index;
+    // poi spostarlo un utente corrente
+    GetIt.instance<SessioneModel>().cliente_id_selezionato = index;
 
     Navigator.popAndPushNamed(context, OrdineLista.routeName);
   }

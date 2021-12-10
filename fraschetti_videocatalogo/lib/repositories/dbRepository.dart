@@ -76,7 +76,17 @@ sede CHAR(1,0),
 codice CHAR(2,0), 
 stato INTEGER, 
 vendite INTEGER, 
-acquisti INTEGER
+acquisti INTEGER,
+preventivi_abilitati INTEGER,
+listino_id INTEGER,
+offerte_disattivate INTEGER,
+comunicazioni_disattivate INTEGER,
+ordini_dasattivati INTEGER,
+servizi_disattivati INTEGER,
+disponibilita_disattivate INTEGER,
+prezzi_non_visibili INTEGER,
+moduli_disattivati INTEGER,
+giacenze_disattivate INTEGER
 )""");
 
         await db.execute("DROP TABLE IF EXISTS assortimenti");
@@ -106,7 +116,7 @@ famiglia INTEGER,
 nuovo INTEGER, 
 sospeso INTEGER, 
 ordinatore INTEGER, 
-primo_codice integer
+primo_codice INTEGER
 )""");
 
 
@@ -122,6 +132,7 @@ immagine_preview TEXT
         await db.execute("""
 CREATE TABLE clienti ( 
 id INTEGER NOT NULL PRIMARY KEY, 
+agente_id INTEGER,
 ragione_sociale CHAR(50,0), 
 localita CHAR(40,0), 
 indirizzo TEXT, 
@@ -130,8 +141,13 @@ sede CHAR(1,0),
 codice CHAR(4,0), 
 stato INTEGER, 
 videocatalogo_disattivato INTEGER, 
-offerte_disattivate INTEGER, 
-agente_id INTEGER
+offerte_disattivate INTEGER,
+comunicazioni_disattivate INTEGER,
+ordini_dasattivati INTEGER,
+servizi_disattivati INTEGER,
+disponibilita_disattivate INTEGER,
+prezzi_non_visibili INTEGER,
+giacenze_disattivate INTEGER
 )""");
 
         await db.execute("DROP TABLE IF EXISTS codici");
