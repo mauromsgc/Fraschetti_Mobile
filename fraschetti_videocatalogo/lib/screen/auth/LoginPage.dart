@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/RegistrazionePage.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoLista.dart';
 import 'package:fraschetti_videocatalogo/utils/ValidationBlock.dart';
+import 'package:get_it/get_it.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -20,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
 
   // variabili per errori
-  String usernameError = "";
+  String usernameError = GetIt.instance<ParametriModel>().username;
   String passwordError = "";
 
   void loginOnSubmit(BuildContext context) async {

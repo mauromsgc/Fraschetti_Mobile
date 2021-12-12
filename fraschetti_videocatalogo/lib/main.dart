@@ -13,7 +13,6 @@ import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:fraschetti_videocatalogo/utils/router_app.dart';
 
 
-
 final getIt = GetIt.instance;
 
 void main() async{
@@ -41,6 +40,7 @@ void main() async{
 
   print("main 5");
   getIt.registerSingleton<ParametriModel>(ParametriModel());
+  await GetIt.instance<ParametriModel>().inizializza();
   print("main 6");
   getIt.registerSingleton<UtenteCorrenteModel>(UtenteCorrenteModel());
 

@@ -26,7 +26,7 @@ import 'package:page_transition/page_transition.dart';
 
 class RouterApp {
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    // se non si è loggati si va il LoginPage
+    // se non si è loggati si va a LoginPage
     // se non si è registrati si va in RegistrazionePage
     switch (settings.name) {
       case SplashPage.routeName:

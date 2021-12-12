@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
@@ -9,6 +10,7 @@ import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/LoginPage.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/RegistrazionePage.dart';
+import 'package:get_it/get_it.dart';
 
 class SplashPage extends StatefulWidget {
   static const String routeName = 'splash';
@@ -25,9 +27,8 @@ class _StatefulWidget extends State<SplashPage> {
     super.initState();
 
     SchedulerBinding.instance!.addPostFrameCallback((_) async {
-      await Future.delayed(Duration(seconds: 3));
-      utenteRegistrato =
-      await getIt.get<DbRepository>().utente_egistrato();
+      utenteRegistrato = GetIt.instance<ParametriModel>().utente_registrato();
+
       // utenteRegistrato =
       //     await getIt.get<HttpRepository>().http!.utenteRegistrato();
       // await Future.delayed(Duration(seconds: 3));

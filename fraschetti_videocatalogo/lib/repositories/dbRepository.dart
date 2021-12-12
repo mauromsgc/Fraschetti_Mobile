@@ -1,4 +1,7 @@
+import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/models/famigliaModel.dart';
+import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
+import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:fraschetti_videocatalogo/utils/Utility.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as path;
@@ -8,11 +11,11 @@ class DbRepository {
 
   DbRepository(this.database);
 
-
   _onConfigure(Database db) async {
     // Add support for cascade delete
     await db.execute("PRAGMA foreign_keys = ON");
   }
+
   static Future<DbRepository> newConnection() async {
     final databasesPath = await getDatabasesPath();
     final databasePath = path.join(databasesPath, "videocatalogo.db");
@@ -25,12 +28,11 @@ class DbRepository {
     final database = await openDatabase(
       databasePath,
       version: db_versione,
-  //     onConfigure: (Database db) async {
-  //         // Add support for cascade delete
-  //         await db.execute("PRAGMA foreign_keys = ON");
-  // },
+      //     onConfigure: (Database db) async {
+      //         // Add support for cascade delete
+      //         await db.execute("PRAGMA foreign_keys = ON");
+      // },
       onCreate: (Database db, int version) async {
-
         await db.execute("DROP TABLE IF EXISTS parametri");
         await db.execute("""
 CREATE TABLE parametri ( 
@@ -53,17 +55,14 @@ videocatalogo_uid text(255,0),
 log_attivo INTEGER
 )""");
 
-        await db.execute("insert into parametri (id, agg_dati_id, agg_immagini_id, agg_comunicazioni_id, agg_codici_ean_id, agg_script_id, agg_sql_id, aggiornamento_obbligatorio, anagrafica_aggiornamento, promozioni_attivazione, sql_versione, host_server, codice_macchina, username, password, videocatalogo_uid, log_attivo )  values (  1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 'http://www.fraschetti.com:8080', '', '', '', '', 0 );");
+        await db.execute(
+            "insert into parametri (id, agg_dati_id, agg_immagini_id, agg_comunicazioni_id, agg_codici_ean_id, agg_script_id, agg_sql_id, aggiornamento_obbligatorio, anagrafica_aggiornamento, promozioni_attivazione, sql_versione, host_server, codice_macchina, username, password, videocatalogo_uid, log_attivo )  values (  1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 'http://www.fraschetti.com:8080', '', '', '', '', 0 );");
 
 // aggiornamento_dati_id - aggiornamento di tutto,
 // in caso imposta anagrafica_aggiornamento e promozioni_attivazione a 1
 // per ricaricare i dati dell'anagrafica e attivare le promozioni
 
 // aggiornamento_img_id solo per aggiornamento immagini
-
-
-
-
 
         await db.execute("DROP TABLE IF EXISTS agenti");
         await db.execute("""
@@ -105,7 +104,6 @@ catalogo_id integer,
 ordinatore integer
 )""");
 
-
         await db.execute("DROP TABLE IF EXISTS catalogo");
         await db.execute("""
 CREATE TABLE catalogo ( 
@@ -118,7 +116,6 @@ sospeso INTEGER,
 ordinatore INTEGER, 
 primo_codice INTEGER
 )""");
-
 
         await db.execute("DROP TABLE IF EXISTS catalogo_img");
         await db.execute("""
@@ -197,16 +194,22 @@ colore text(15,0),
 abbreviazione text(3,0)
 )""");
 
-        await db.execute("insert into famiglie ( codice, descrizione, colore, abbreviazione) values ( 1, 'Giardinaggio', '0xFF009900', 'Gia');");
-        await db.execute("insert into famiglie ( codice, descrizione, colore, abbreviazione) values ( 2, 'Edilizia', '0xFF0099FF', 'Edi');");
-        await db.execute("insert into famiglie ( codice, descrizione, colore, abbreviazione) values ( 3, 'Utensili a mano', '0xFFEE0000', 'Ute');");
-        await db.execute("insert into famiglie ( codice, descrizione, colore, abbreviazione) values ( 4, 'Utensili elettrici', '0xFFFFDD00', 'Ele');");
-        await db.execute("insert into famiglie ( codice, descrizione, colore, abbreviazione) values ( 5, 'Idraulica', '0xFFFF0099', 'Idr');");
-        await db.execute("insert into famiglie ( codice, descrizione, colore, abbreviazione) values ( 6, 'Siderurgia', '0xFF663300', 'Sid');");
-        await db.execute("insert into famiglie ( codice, descrizione, colore, abbreviazione) values ( 7, 'Ferramenta', '0xFF000099', 'Fer');");
-        await db.execute("insert into famiglie ( codice, descrizione, colore, abbreviazione) values ( 8, 'Domo utility', '0xFFFF6600', 'Dom');");
-
-
+        await db.execute(
+            "insert into famiglie ( codice, descrizione, colore, abbreviazione) values ( 1, 'Giardinaggio', '0xFF009900', 'Gia');");
+        await db.execute(
+            "insert into famiglie ( codice, descrizione, colore, abbreviazione) values ( 2, 'Edilizia', '0xFF0099FF', 'Edi');");
+        await db.execute(
+            "insert into famiglie ( codice, descrizione, colore, abbreviazione) values ( 3, 'Utensili a mano', '0xFFEE0000', 'Ute');");
+        await db.execute(
+            "insert into famiglie ( codice, descrizione, colore, abbreviazione) values ( 4, 'Utensili elettrici', '0xFFFFDD00', 'Ele');");
+        await db.execute(
+            "insert into famiglie ( codice, descrizione, colore, abbreviazione) values ( 5, 'Idraulica', '0xFFFF0099', 'Idr');");
+        await db.execute(
+            "insert into famiglie ( codice, descrizione, colore, abbreviazione) values ( 6, 'Siderurgia', '0xFF663300', 'Sid');");
+        await db.execute(
+            "insert into famiglie ( codice, descrizione, colore, abbreviazione) values ( 7, 'Ferramenta', '0xFF000099', 'Fer');");
+        await db.execute(
+            "insert into famiglie ( codice, descrizione, colore, abbreviazione) values ( 8, 'Domo utility', '0xFFFF6600', 'Dom');");
 
         await db.execute("DROP TABLE IF EXISTS invio");
         await db.execute("""
@@ -325,9 +328,10 @@ codice_articolo CHAR(6,0),
 codice_ean CHAR(20,0)
 )""");
 
-        await db.execute("CREATE INDEX codice_ean_codice_articolo_indice ON codici_ean (codice_articolo ASC)");
-        await db.execute("CREATE INDEX codice_ean_codice_ean_indice ON codici_ean (codice_ean ASC)");
-
+        await db.execute(
+            "CREATE INDEX codice_ean_codice_articolo_indice ON codici_ean (codice_articolo ASC)");
+        await db.execute(
+            "CREATE INDEX codice_ean_codice_ean_indice ON codici_ean (codice_ean ASC)");
 
         await db.execute("DROP TABLE IF EXISTS referenze_agenti");
         await db.execute("""
@@ -336,8 +340,8 @@ id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 codice_articolo CHAR(6,0)
 )""");
 
-        await db.execute("CREATE INDEX referenze_agenti_codice_articolo_indice ON referenze_agenti (codice_articolo ASC)");
-
+        await db.execute(
+            "CREATE INDEX referenze_agenti_codice_articolo_indice ON referenze_agenti (codice_articolo ASC)");
 
         await db.execute("DROP TABLE IF EXISTS schede");
         await db.execute("""
@@ -348,73 +352,157 @@ tipo CHAR(20,0),
 file_nome CHAR(255,0)
 )""");
 
-        await db.execute("CREATE INDEX schede_catalogo_id_indice ON schede (catalogo_id ASC)");
+        await db.execute(
+            "CREATE INDEX schede_catalogo_id_indice ON schede (catalogo_id ASC)");
 
+        await db.execute("DROP TABLE IF EXISTS spedizione_categorie");
+        await db.execute("""
+CREATE TABLE spedizione_categorie ( 
+id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+codice CHAR(2,0),
+colore text(15,0), 
+descrizione CHAR(30,0)
+)""");
 
-        await db.execute("CREATE INDEX agenti_codice_indice ON agenti (codice ASC)");
-        await db.execute("CREATE INDEX agenti_sede_indice ON agenti (sede ASC)");
-        await db.execute("CREATE INDEX assortimenti_descrizione_indice ON assortimenti (descrizione ASC)");
-        await db.execute("CREATE INDEX assortimenti_codici_catalogo_id_indice ON assortimenti_codici (catalogo_id ASC)");
-        await db.execute("CREATE INDEX catalogo_nome_indice ON catalogo (nome ASC)");
-        await db.execute("CREATE INDEX catalogo_sospeso_indice ON catalogo (sospeso ASC)");
-        await db.execute("CREATE INDEX catalogo_nuovo_indice ON catalogo (nuovo ASC)");
-        await db.execute("CREATE INDEX catalogo_famiglia_indice ON catalogo (famiglia ASC)");
-        await db.execute("CREATE INDEX clienti_ragione_sociale_indice ON clienti (ragione_sociale ASC)");
-        await db.execute("CREATE INDEX clienti_codice_indice ON clienti (codice ASC)");
-        await db.execute("CREATE INDEX clienti_sede_indice ON clienti (sede ASC)");
-        await db.execute("CREATE INDEX codici_catalogo_id_indice ON codici (catalogo_id ASC)");
-        await db.execute("CREATE INDEX codici_sospeso_indice ON codici (sospeso ASC)");
-        await db.execute("CREATE INDEX codici_nuovo_indice ON codici (nuovo ASC)");
-        await db.execute("CREATE INDEX comunicazioni_oggetto_indice ON comunicazioni (oggetto ASC)");
-        await db.execute("CREATE INDEX famiglie_codice_indice ON famiglie (codice ASC)");
-        await db.execute("CREATE INDEX invio_utente_id_indice ON invio (utente_id ASC)");
-        await db.execute("CREATE INDEX invio_ricezione_id_indice ON invio (ricezione_id ASC)");
-        await db.execute("CREATE INDEX invio_mittente_id_indice ON invio (mittente_id ASC)");
-        await db.execute("CREATE INDEX invio_mittente_tipo_indice ON invio (mittente_tipo ASC)");
-        await db.execute("CREATE INDEX note_cliente_id_indice ON note (cliente_id ASC)");
-        await db.execute("CREATE INDEX note_agente_id_indice ON note (agente_id ASC)");
-        await db.execute("CREATE INDEX note_ordini_numero_indice ON note (ordini_numero ASC)");
-        await db.execute("CREATE INDEX ordini_cliente_id_indice ON ordini (cliente_id ASC)");
-        await db.execute("CREATE INDEX ordini_agente_id_indice ON ordini (agente_id ASC)");
-        await db.execute("CREATE INDEX ordini_ordini_numero_indice ON ordini (ordini_numero ASC)");
-        await db.execute("CREATE INDEX ordini_articolo_codice_indice ON ordini (articolo_codice ASC)");
-        await db.execute("CREATE INDEX promozioni_nome_indice ON promozioni (nome ASC)");
-        await db.execute("CREATE INDEX promozioni_codici_promozione_id_indice ON promozioni_codici (promozione_id ASC)");
-        await db.execute("CREATE INDEX resi_cliente_id_indice ON resi (cliente_id ASC)");
-        await db.execute("CREATE INDEX resi_agente_id_indice ON resi (agente_id ASC)");
-        await db.execute("CREATE INDEX resi_resinumero_indice ON resi (resinumero ASC)");
-        await db.execute("CREATE INDEX resi_articolo_codice_indice ON resi (articolo_codice ASC)");
+        await db.execute(
+            "insert into spedizione_categorie ( codice, colore, descrizione) values ( 'X', '0xFFFFB796', 'X');");
+        await db.execute(
+            "insert into spedizione_categorie ( codice, colore, descrizione) values ( 'Y', '0xFF8FFE8F', 'Y');");
+        await db.execute(
+            "insert into spedizione_categorie ( codice, colore, descrizione) values ( 'W', '0xFFFDC5FF', 'W');");
+        await db.execute(
+            "insert into spedizione_categorie ( codice, colore, descrizione) values ( 'Z', '0xFF8EC5FF', 'Z');");
 
-
+        await db.execute(
+            "CREATE INDEX agenti_codice_indice ON agenti (codice ASC)");
+        await db
+            .execute("CREATE INDEX agenti_sede_indice ON agenti (sede ASC)");
+        await db.execute(
+            "CREATE INDEX assortimenti_descrizione_indice ON assortimenti (descrizione ASC)");
+        await db.execute(
+            "CREATE INDEX assortimenti_codici_catalogo_id_indice ON assortimenti_codici (catalogo_id ASC)");
+        await db.execute(
+            "CREATE INDEX catalogo_nome_indice ON catalogo (nome ASC)");
+        await db.execute(
+            "CREATE INDEX catalogo_sospeso_indice ON catalogo (sospeso ASC)");
+        await db.execute(
+            "CREATE INDEX catalogo_nuovo_indice ON catalogo (nuovo ASC)");
+        await db.execute(
+            "CREATE INDEX catalogo_famiglia_indice ON catalogo (famiglia ASC)");
+        await db.execute(
+            "CREATE INDEX clienti_ragione_sociale_indice ON clienti (ragione_sociale ASC)");
+        await db.execute(
+            "CREATE INDEX clienti_codice_indice ON clienti (codice ASC)");
+        await db
+            .execute("CREATE INDEX clienti_sede_indice ON clienti (sede ASC)");
+        await db.execute(
+            "CREATE INDEX codici_catalogo_id_indice ON codici (catalogo_id ASC)");
+        await db.execute(
+            "CREATE INDEX codici_sospeso_indice ON codici (sospeso ASC)");
+        await db
+            .execute("CREATE INDEX codici_nuovo_indice ON codici (nuovo ASC)");
+        await db.execute(
+            "CREATE INDEX comunicazioni_oggetto_indice ON comunicazioni (oggetto ASC)");
+        await db.execute(
+            "CREATE INDEX famiglie_codice_indice ON famiglie (codice ASC)");
+        await db.execute(
+            "CREATE INDEX invio_utente_id_indice ON invio (utente_id ASC)");
+        await db.execute(
+            "CREATE INDEX invio_ricezione_id_indice ON invio (ricezione_id ASC)");
+        await db.execute(
+            "CREATE INDEX invio_mittente_id_indice ON invio (mittente_id ASC)");
+        await db.execute(
+            "CREATE INDEX invio_mittente_tipo_indice ON invio (mittente_tipo ASC)");
+        await db.execute(
+            "CREATE INDEX note_cliente_id_indice ON note (cliente_id ASC)");
+        await db.execute(
+            "CREATE INDEX note_agente_id_indice ON note (agente_id ASC)");
+        await db.execute(
+            "CREATE INDEX note_ordini_numero_indice ON note (ordini_numero ASC)");
+        await db.execute(
+            "CREATE INDEX ordini_cliente_id_indice ON ordini (cliente_id ASC)");
+        await db.execute(
+            "CREATE INDEX ordini_agente_id_indice ON ordini (agente_id ASC)");
+        await db.execute(
+            "CREATE INDEX ordini_ordini_numero_indice ON ordini (ordini_numero ASC)");
+        await db.execute(
+            "CREATE INDEX ordini_articolo_codice_indice ON ordini (articolo_codice ASC)");
+        await db.execute(
+            "CREATE INDEX promozioni_nome_indice ON promozioni (nome ASC)");
+        await db.execute(
+            "CREATE INDEX promozioni_codici_promozione_id_indice ON promozioni_codici (promozione_id ASC)");
+        await db.execute(
+            "CREATE INDEX resi_cliente_id_indice ON resi (cliente_id ASC)");
+        await db.execute(
+            "CREATE INDEX resi_agente_id_indice ON resi (agente_id ASC)");
+        await db.execute(
+            "CREATE INDEX resi_resinumero_indice ON resi (resinumero ASC)");
+        await db.execute(
+            "CREATE INDEX resi_articolo_codice_indice ON resi (articolo_codice ASC)");
       },
-
     );
 
     return DbRepository(database);
+  }
+
+  Future<bool> utente_registra(
+      {required String username, required String password, required String codice_attivazione}) async {
+    // crea l'ìggetto con i dati da inviare
+    // chiama DbRepository che fa la chiamata http e restituisce la risposta
+    // elabora la risposta,
+    // - aggiornail db
+    // - ricarica prametri
+    // - restituisce esito/mostra errori
+
+    bool esito = false;
+    Map<String, dynamic> risposta;
+
+
+    Map<String, dynamic> data_invio = {};
+    data_invio["azione"] = "Post.Aggior.Registrazione";
+    data_invio["azione_versione"] = 1;
+    data_invio["username"] = username;
+    data_invio["videocatalogo_versione"] = VIDEOCATALOGO_VERSIONE;
+    data_invio["videocatalogo_uid"] = getIt.get<ParametriModel>().videocatalogo_uid;
+    data_invio["dispositivo_codice"] = getIt.get<ParametriModel>().codice_macchina;
+    data_invio["dispositivo_tipo"] = VIDEOCATALOGO_DISPOSIVITO_TIPO;
+
+    data_invio["codice_attivazione"] = codice_attivazione;
+
+    // presenti in base al tipo di chimata
+    //$o_input.codice_attivazione:=""
+
+
+    try {
+      risposta = await getIt.get<HttpRepository>().http!.utente_registra(data_invio: data_invio);
+    } on DatabaseException catch (e) {
+      if (e.isNoSuchTableError()) {
+        print("Errore inizializzazione parametri");
+      }
+    }
+    // $o_output.esito_codice:=0
+    // $o_output.esito_descrizione:=""
+    // $o_output.errori:=New collection
+    // $o_output.sql_eseguire:=New collection
+    // $o_output.codice_attivazione_nuvo:=""
+    // $o_output.videocatalogo_uid:=""
+
+    // if (risposta["esito_codice"] == 0) {
+    // } else {}
+
+    // if (record_eleborati > 0) {
+    //   print("parametri host_server_aggiorna 1");
+    //   await this.inizializza();
+    //   print("parametri host_server_aggiorna 2");
+    // } else {
+    //   print("ParametriModel errore aggiornamento host_server");
+    // }
+
+    return esito;
   }
 
   Future<List<FamigliaModel>> famiglie_lista() async {
     final rows = await database.query("famiglie");
     return rows.map((row) => FamigliaModel.fromMap(row)).toList();
   }
-
-
-  // controlla se l'utente è registrato
-  // controlla se è già presente un utente
-  // legge il mac address lo verifica con i parametri
-  //
-
-  Future<bool> utente_egistrato() async {
-    // bool utenteRegistrato() {
-    String _codice_macchina = "";
-    bool utenteRegistrato = false;
-
-    utenteRegistrato = true;
-
-
-    return utenteRegistrato;
-  }
-
-
-
 }

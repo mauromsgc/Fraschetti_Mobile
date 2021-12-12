@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/main.dart';
+import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
+import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/LoginPage.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/ParametriConnesionePage.dart';
 import 'package:fraschetti_videocatalogo/utils/ValidationBlock.dart';
+import 'package:get_it/get_it.dart';
 
 class RegistazionePage extends StatefulWidget {
   RegistazionePage({Key? key}) : super(key: key);
@@ -28,6 +31,11 @@ class _RegistazionePageState extends State<RegistazionePage> {
   String password_verificaError = "";
   String codice_attivazioneError = "";
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   void registrazioneOnSubmit(BuildContext context) async {
     final username = usernameController.text.trim();
     final password = passwordController.text.trim();
@@ -41,7 +49,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
       codice_attivazioneError = "";
     });
 
-    final valid = validationBlock((when) {
+    bool valid = validationBlock((when) {
       when(username.isEmpty,
               () => setState(() => usernameError = "Campo obbligatorio"));
       when(password.isEmpty,
@@ -55,6 +63,13 @@ class _RegistazionePageState extends State<RegistazionePage> {
     });
 
     if (valid) {
+      valid = await GetIt.instance<DbRepository>().utente_registra(username: username, password: password, codice_attivazione: codice_attivazione);
+      if (valid) {
+        Navigator.popAndPushNamed(context, LoginPage.routeName);
+      } else {
+        codice_attivazioneError = "Errore durante la registrazione, riprovare";
+      }
+
       Navigator.pushNamed(context, LoginPage.routeName);
     } else {
       print("Registrazione fallita");
@@ -66,13 +81,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
   }
 
   void testComunicazioneOnSubmit(BuildContext context) async {
-    final username = usernameController.text.trim();
-    final password = passwordController.text.trim();
-
-    // final response = await getIt.get<HttpRepository>().http!.test('lg', 'superbmsgc');
-
-
-    final response = await getIt.get<HttpRepository>().http!.trasmissione_test();
+      final response = await getIt.get<HttpRepository>().http!.trasmissione_test();
 
     print(response);
   }

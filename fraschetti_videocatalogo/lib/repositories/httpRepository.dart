@@ -55,15 +55,6 @@ class HttpClient {
     throw RequestError(data["error"]);
   }
 
-  // temporano da implementare in dbRepository
-  Future<bool> utenteRegistrato() async {
-    // bool utenteRegistrato() {
-    bool utenteRegistrato = false;
-
-    utenteRegistrato = true;
-
-    return utenteRegistrato;
-  }
 
   Future<Map<String, dynamic>> trasmissione_test() async {
     // effettua un test di trasmissione
@@ -134,8 +125,31 @@ class HttpClient {
     // verifica se ci sono aggiornamenti da scaricare
   }
 
-  void videocatalogo_registra() {
+  Future<Map<String, dynamic>> utente_registra ({required Map<String, dynamic> data_invio}) async {
     // effettua la registrazione del videocatalogo
+
+    final String _api = "/4daction/Post_mv1_Registrazione";
+    var url = Uri.parse(HTTP_HOST + _api);
+
+    Map _body_data = {};
+    _body_data["data"] = data_invio;
+
+    final t1 = json.encode(_body_data);
+
+    var response = await http.post(url, body: t1);
+
+    print(response.body);
+    print(response.statusCode);
+
+    final data_risposta = json.decode(response.body);
+    print(data_risposta);
+
+    if (response.statusCode == 200) {
+      return data_risposta["data"];
+    }
+
+    throw RequestError(data_risposta["error"]);
+
   }
 
   void videocatalogo_disinstalla() {
