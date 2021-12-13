@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/RegistrazionePage.dart';
@@ -22,8 +24,18 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
 
   // variabili per errori
-  String usernameError = GetIt.instance<ParametriModel>().username;
+  String usernameError = "";
   String passwordError = "";
+
+  @override
+  void initState() {
+    super.initState();
+
+    usernameController.text = GetIt.instance<ParametriModel>().username;
+    setState(() {    });
+    print("username: "+usernameController.text);
+    log(GetIt.instance<ParametriModel>().password);
+  }
 
   void loginOnSubmit(BuildContext context) async {
     final username = usernameController.text.trim();

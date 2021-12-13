@@ -1,12 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
+import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
 
 // import 'package:focus_login_sessioni_utente/repositories/SessionRepository.dart';
 // import 'package:focus_login_sessioni_utente/repositories/UserRepository.dart';
 
 const String HTTP_HOST = "http://192.168.1.78:8080";
+
 
 // Questa è una delle classi più importanti di tutta l'applicazione.
 //
@@ -62,11 +66,15 @@ class HttpClient {
     final String _api = "/4daction/Post_mv1_ConnessioneTest";
     var url = Uri.parse(HTTP_HOST + _api);
 
-    Map _body_data = {
-      "data": "test",
-    };
+    Map<String, dynamic> data_invio = {};
+    data_invio["data"] = "Post.Test";
+    data_invio["parametri"] = GetIt.instance<ParametriModel>().toMap().toString();
 
-    var response = await http.post(url, body: _body_data);
+    // var response = await http.post(url, body: data_invio);
+
+    // trasformando in json mi arrivano i dati nel body
+    final _oggetto_invio = json.encode(data_invio);
+    var response = await http.post(url, body: _oggetto_invio);
 
     print(response.body);
     print(response.statusCode);
@@ -89,11 +97,13 @@ class HttpClient {
     final String _api = "/4daction/Post_mv1_ConnessioneTest";
     var url = Uri.parse(HTTP_HOST + _api);
 
-    Map _body_data = {
-      "data": "test",
-    };
+    Map<String, dynamic> data_invio = {};
+    data_invio["data"] = "Post.Test";
+    data_invio["parametri"] = GetIt.instance<ParametriModel>().toString();
 
-    var response = await http.post(url, body: _body_data);
+    // _body_data["parametri"] = GetIt.instance<ParametriModel>().toString();
+
+    var response = await http.post(url, body: data_invio);
 
     print(response.body);
     print(response.statusCode);
@@ -127,6 +137,7 @@ class HttpClient {
 
   Future<Map<String, dynamic>> utente_registra ({required Map<String, dynamic> data_invio}) async {
     // effettua la registrazione del videocatalogo
+    print("httpRepositoty utente_registra inizio");
 
     final String _api = "/4daction/Post_mv1_Registrazione";
     var url = Uri.parse(HTTP_HOST + _api);
@@ -134,16 +145,15 @@ class HttpClient {
     Map _body_data = {};
     _body_data["data"] = data_invio;
 
-    final t1 = json.encode(_body_data);
+    // var response = await http.post(url, body: data_invio);
 
-    var response = await http.post(url, body: t1);
-
-    print(response.body);
-    print(response.statusCode);
+    final _oggetto_invio = json.encode(_body_data);
+    var response = await http.post(url, body: _oggetto_invio);
 
     final data_risposta = json.decode(response.body);
     print(data_risposta);
 
+    print("httpRepositoty utente_registra fine");
     if (response.statusCode == 200) {
       return data_risposta["data"];
     }

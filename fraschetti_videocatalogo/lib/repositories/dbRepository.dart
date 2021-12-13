@@ -1,8 +1,11 @@
 import 'package:fraschetti_videocatalogo/main.dart';
+import 'package:fraschetti_videocatalogo/models/clienteModel.dart';
 import 'package:fraschetti_videocatalogo/models/famigliaModel.dart';
 import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:fraschetti_videocatalogo/utils/Utility.dart';
+import 'package:get_it/get_it.dart';
+import 'package:logger/logger.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as path;
 
@@ -80,7 +83,7 @@ preventivi_abilitati INTEGER,
 listino_id INTEGER,
 offerte_disattivate INTEGER,
 comunicazioni_disattivate INTEGER,
-ordini_dasattivati INTEGER,
+ordini_disattivati INTEGER,
 servizi_disattivati INTEGER,
 disponibilita_disattivate INTEGER,
 prezzi_non_visibili INTEGER,
@@ -140,7 +143,7 @@ stato INTEGER,
 videocatalogo_disattivato INTEGER, 
 offerte_disattivate INTEGER,
 comunicazioni_disattivate INTEGER,
-ordini_dasattivati INTEGER,
+ordini_disattivati INTEGER,
 servizi_disattivati INTEGER,
 disponibilita_disattivate INTEGER,
 prezzi_non_visibili INTEGER,
@@ -446,7 +449,9 @@ descrizione CHAR(30,0)
   }
 
   Future<bool> utente_registra(
-      {required String username, required String password, required String codice_attivazione}) async {
+      {required String username,
+      required String password,
+      required String codice_attivazione}) async {
     // crea l'ìggetto con i dati da inviare
     // chiama DbRepository che fa la chiamata http e restituisce la risposta
     // elabora la risposta,
@@ -454,17 +459,20 @@ descrizione CHAR(30,0)
     // - ricarica prametri
     // - restituisce esito/mostra errori
 
-    bool esito = false;
-    Map<String, dynamic> risposta;
+    print("dbRepositoty utente_registra inizio");
 
+    bool esito = false;
+    Map<String, dynamic> risposta = {};
 
     Map<String, dynamic> data_invio = {};
     data_invio["azione"] = "Post.Aggior.Registrazione";
     data_invio["azione_versione"] = 1;
     data_invio["username"] = username;
     data_invio["videocatalogo_versione"] = VIDEOCATALOGO_VERSIONE;
-    data_invio["videocatalogo_uid"] = getIt.get<ParametriModel>().videocatalogo_uid;
-    data_invio["dispositivo_codice"] = getIt.get<ParametriModel>().codice_macchina;
+    data_invio["videocatalogo_uid"] =
+        getIt.get<ParametriModel>().videocatalogo_uid;
+    data_invio["dispositivo_codice"] =
+        getIt.get<ParametriModel>().codice_macchina;
     data_invio["dispositivo_tipo"] = VIDEOCATALOGO_DISPOSIVITO_TIPO;
 
     data_invio["codice_attivazione"] = codice_attivazione;
@@ -472,14 +480,17 @@ descrizione CHAR(30,0)
     // presenti in base al tipo di chimata
     //$o_input.codice_attivazione:=""
 
-
     try {
-      risposta = await getIt.get<HttpRepository>().http!.utente_registra(data_invio: data_invio);
+      risposta = await getIt
+          .get<HttpRepository>()
+          .http!
+          .utente_registra(data_invio: data_invio);
     } on DatabaseException catch (e) {
       if (e.isNoSuchTableError()) {
         print("Errore inizializzazione parametri");
       }
     }
+    print("dbRepository utente_registra: " + risposta.toString());
     // $o_output.esito_codice:=0
     // $o_output.esito_descrizione:=""
     // $o_output.errori:=New collection
@@ -487,8 +498,29 @@ descrizione CHAR(30,0)
     // $o_output.codice_attivazione_nuvo:=""
     // $o_output.videocatalogo_uid:=""
 
-    // if (risposta["esito_codice"] == 0) {
-    // } else {}
+    if (risposta["esito_codice"] == 0) {
+      esito = true;
+      try {
+        List<dynamic> sql_eseguire = [];
+        sql_eseguire = risposta["sql_eseguire"];
+        // aggiorna i dati e i parametri
+        await database.transaction((txn) async {
+          sql_eseguire.forEach((sql_eseguire_riga) async {
+            await database.execute(sql_eseguire_riga.toString());
+          });
+        });
+
+        // ricaricare i parametri
+        await GetIt.instance<ParametriModel>().inizializza();
+        await GetIt.instance<ParametriModel>().password_aggiorna(password);
+      } on DatabaseException catch (errore_db) {
+        esito = false;
+        print("Errore sql: " + errore_db.toString());
+      }
+    } else {
+      print(risposta["errori"].toString());
+      esito = false;
+    }
 
     // if (record_eleborati > 0) {
     //   print("parametri host_server_aggiorna 1");
@@ -498,6 +530,8 @@ descrizione CHAR(30,0)
     //   print("ParametriModel errore aggiornamento host_server");
     // }
 
+    print("dbRepositoty utente_registra fine");
+
     return esito;
   }
 
@@ -505,4 +539,12 @@ descrizione CHAR(30,0)
     final rows = await database.query("famiglie");
     return rows.map((row) => FamigliaModel.fromMap(row)).toList();
   }
+
+  // poi fare il cerca
+  Future<List<ClienteModel>> clienti_lista() async {
+    final rows = await database.query("clienti");
+    return rows.map((row) => ClienteModel.fromMap(row)).toList();
+  }
+
+
 }

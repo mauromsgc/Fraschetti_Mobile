@@ -5,10 +5,13 @@ import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/components/OrdineTopMenu.dart';
 import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
-import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
+import 'package:fraschetti_videocatalogo/models/clienteModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/comunicazioniRepository.dart';
+import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineLista.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get_it/get_it.dart';
 
 class ClienteLista extends StatefulWidget {
@@ -20,8 +23,47 @@ class ClienteLista extends StatefulWidget {
   _ClienteListaState createState() => _ClienteListaState();
 }
 
+final pageStato = PageStore().obs;
+
+class PageStore {
+  List<ClienteModel> clienti_lista = [];
+
+  PageStore() {
+    print("PageStore inizializza ");
+    inizializza();
+  }
+
+  void inizializza() async {
+    _clienti_lista_carica();
+  }
+
+  Future<void> _clienti_lista_carica() async {
+    clienti_lista = await GetIt.instance<DbRepository>().clienti_lista();
+    print("clienti_lista: " + clienti_lista.length.toString());
+    // clienti_lista.forEach((ClienteModel cliente) async {
+    //   print(cliente.ragione_sociale);
+    // });
+    pageStato.refresh();
+  }
+
+  void clienti_cerca() async {
+    _clienti_lista_carica();
+  }
+
+  void clienti_con_ordine() async {
+    _clienti_lista_carica();
+  }
+
+  void clienti_tutti() async {
+    _clienti_lista_carica();
+  }
+}
+
 class _ClienteListaState extends State<ClienteLista> {
-  List<ComunicazioneModel> clienti_lista = ComunicazioniRepository().all_2();
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void listaClick(BuildContext context, int index) {
     // selezione al cliente e va in ordine
@@ -63,7 +105,9 @@ class _ClienteListaState extends State<ClienteLista> {
                   thickness: 2,
                   // color: Theme.of(context).primaryColor,
                 ),
-                ListaWidget(clienti_lista),
+                Obx(
+                  () => ListaWidget(pageStato.value.clienti_lista),
+                ),
               ],
             ),
           ),
@@ -84,6 +128,8 @@ class _ClienteListaState extends State<ClienteLista> {
               flex: 6,
               child: TextFormField(
                 onEditingComplete: () {
+                  pageStato.value.clienti_cerca();
+
                   showDialog<String>(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
@@ -113,6 +159,8 @@ class _ClienteListaState extends State<ClienteLista> {
               flex: 2,
               child: TextFormField(
                 onEditingComplete: () {
+                  pageStato.value.clienti_cerca();
+
                   showDialog<String>(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
@@ -142,7 +190,9 @@ class _ClienteListaState extends State<ClienteLista> {
               flex: 2,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
-                onPressed: () {},
+                onPressed: () {
+                  pageStato.value.clienti_cerca();
+                },
                 child: Text('Cerca'),
               ),
             ),
@@ -166,7 +216,9 @@ class _ClienteListaState extends State<ClienteLista> {
               flex: 1,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
-                onPressed: () {},
+                onPressed: () {
+                  pageStato.value.clienti_con_ordine();
+                },
                 child: Text('Clienti con ordini'),
               ),
             ),
@@ -177,7 +229,9 @@ class _ClienteListaState extends State<ClienteLista> {
               flex: 1,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
-                onPressed: () {},
+                onPressed: () {
+                  pageStato.value.clienti_tutti();
+                },
                 child: Text('Tutti'),
               ),
             ),
@@ -188,7 +242,7 @@ class _ClienteListaState extends State<ClienteLista> {
   }
 
 // riga lista
-  Widget ListaWidget(List<ComunicazioneModel> clienti_lista) {
+  Widget ListaWidget(List<ClienteModel> clienti_lista) {
     return Expanded(
       child: ListView.separated(
         separatorBuilder: (context, index) => Divider(
@@ -206,44 +260,46 @@ class _ClienteListaState extends State<ClienteLista> {
               height: 40,
               // decoration: MyBoxDecoration().MyBox(),
               child: Row(
-                  children: <Widget>[
-                    Container(
-                      alignment: Alignment(0.0, 0.0),
-                      width: 60,
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment(0.0, 0.0),
+                    width: 60,
+                    decoration: MyBoxDecoration().MyBox(),
+                    child: Text(
+                      "${clienti_lista[index].id}",
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.only(left: 5.0, right: 5.0),
                       decoration: MyBoxDecoration().MyBox(),
-                      child: Text(
-                        "${clienti_lista[index].id}",
-                        style: TextStyle(
-                          fontSize: 18,
-                        ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "${clienti_lista[index].ragione_sociale}",
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Text(
+                            "${clienti_lista[index].localita}",
+                            style: TextStyle(
+                              fontSize: 10.0,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Expanded(
-                      child: Container(
-                        padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                        decoration: MyBoxDecoration().MyBox(),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "${clienti_lista[index].oggetto}",
-                              style: TextStyle(
-                                  fontSize: 18.0,
-                                  overflow: TextOverflow.ellipsis,),
-                            ),
-                            Text(
-                              "${clienti_lista[index].oggetto}",
-                              style: TextStyle(
-                                  fontSize: 10.0,
-                                  overflow: TextOverflow.ellipsis,),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
+              ),
             ),
           );
         },

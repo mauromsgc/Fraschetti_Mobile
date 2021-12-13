@@ -11,12 +11,21 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:fraschetti_videocatalogo/utils/router_app.dart';
-
+import 'package:logger/logger.dart';
 
 final getIt = GetIt.instance;
+// final log_app = Logger();
 
 void main() async{
+  // log_app.v("Verbose log");
+  // log_app.d("Debug log");
+  // log_app.i("Info log");
+  // log_app.w("Warning log");
+  // log_app.e("Error log");
+  // log_app.wtf("What a terrible failure log");
+
   print("main 0");
+
   // per attendere che carichi tutte le librerie
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -45,7 +54,7 @@ void main() async{
   getIt.registerSingleton<UtenteCorrenteModel>(UtenteCorrenteModel());
 
   print("main 5");
-  await GetIt.instance<DbRepository>().famiglie_lista();
+  // await GetIt.instance<DbRepository>().famiglie_lista();
 
   print("main 10");
   runApp(MyApp());

@@ -6,6 +6,7 @@ import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
 import 'package:fraschetti_videocatalogo/models/utenteCorrenteModel.dart';
+import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/ParametriConnesionePage.dart';
 import 'package:get_it/get_it.dart';
 
@@ -21,6 +22,12 @@ class AltroMenuLista extends StatefulWidget {
 class _AltroMenuListaState extends State<AltroMenuLista> {
   void listaClick(BuildContext context, int index) {
     // selezione al cliente e va in ordine
+  }
+
+  void testComunicazioneOnSubmit(BuildContext context) async {
+    final response = await getIt.get<HttpRepository>().http!.trasmissione_test();
+
+    print(response);
   }
 
   void test_1() async {
@@ -115,9 +122,7 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
                       padding: EdgeInsets.all(5),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(elevation: 2),
-                        onPressed: () {
-                          // Navigator.of(context).pop();
-                        },
+                        onPressed: () => testComunicazioneOnSubmit(context),
                         child: Text('Test trasmissione'),
                       ),
                     ),

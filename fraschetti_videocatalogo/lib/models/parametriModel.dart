@@ -51,10 +51,10 @@ class ParametriModel {
           .query('parametri', where: 'id = ?', whereArgs: ["1"]));
 
       print("parametri inizializza 2");
-    } on DatabaseException catch (e) {
-      if (e.isNoSuchTableError()) {
-        print("Errore inizializzazione parametri");
-      }
+    } on DatabaseException catch (errore_db) {
+      // if (e.isNoSuchTableError()) {
+      print("Errore inizializzazione parametri");
+      // }
     }
     if (results.length == 1) {
       print("parametri inizializza 3");
@@ -103,6 +103,86 @@ class ParametriModel {
     this.log_attivo = 0;
   }
 
+  ParametriModel.per_ftom_map({
+    this.id = 0,
+    this.agg_dati_id = 0,
+    this.agg_immagini_id = 0,
+    this.agg_comunicazioni_id = 0,
+    this.agg_codici_ean_id = 0,
+    this.agg_script_id = 0,
+    this.agg_sql_id = 0,
+    this.aggiornamento_obbligatorio = 0,
+    this.anagrafica_aggiornamento = 0,
+    this.promozioni_attivazione = 0,
+    this.sql_versione = 0,
+    this.host_server = "http://www.fraschetti.com:8080",
+    this.codice_macchina = "",
+    this.username = "",
+    this.password = "",
+    this.videocatalogo_uid = "",
+    this.log_attivo = 0,
+  });
+
+  factory ParametriModel.fromMap(Map<String, dynamic> map) {
+    final id = map["id"];
+    final agg_dati_id = map["agg_dati_id"];
+    final agg_immagini_id = map["agg_immagini_id"];
+    final agg_comunicazioni_id = map["agg_comunicazioni_id"];
+    final agg_codici_ean_id = map["agg_codici_ean_id"];
+    final agg_script_id = map["agg_script_id"];
+    final agg_sql_id = map["agg_sql_id"];
+    final aggiornamento_obbligatorio = map["aggiornamento_obbligatorio"];
+    final anagrafica_aggiornamento = map["anagrafica_aggiornamento"];
+    final promozioni_attivazione = map["promozioni_attivazione"];
+    final sql_versione = map["sql_versione"];
+    final host_server = map["host_server"];
+    final codice_macchina = map["codice_macchina"];
+    final username = map["username"];
+    final password = map["password"];
+    final videocatalogo_uid = map["videocatalogo_uid"];
+    final log_attivo = map["log_attivo"];
+
+    return ParametriModel.per_ftom_map(
+      id: id,
+      agg_dati_id: agg_dati_id,
+      agg_immagini_id: agg_immagini_id,
+      agg_comunicazioni_id: agg_comunicazioni_id,
+      agg_codici_ean_id: agg_codici_ean_id,
+      agg_script_id: agg_script_id,
+      agg_sql_id: agg_sql_id,
+      aggiornamento_obbligatorio: aggiornamento_obbligatorio,
+      anagrafica_aggiornamento: anagrafica_aggiornamento,
+      promozioni_attivazione: promozioni_attivazione,
+      sql_versione: sql_versione,
+      host_server: host_server,
+      codice_macchina: codice_macchina,
+      username: username,
+      password: password,
+      videocatalogo_uid: videocatalogo_uid,
+      log_attivo: log_attivo,
+    );
+  }
+
+  Map<String, dynamic> toMap() => {
+    "id": id,
+        "agg_dati_id": agg_dati_id,
+        "agg_immagini_id": agg_immagini_id,
+        "agg_comunicazioni_id": agg_comunicazioni_id,
+        "agg_codici_ean_id": agg_codici_ean_id,
+        "agg_script_id": agg_script_id,
+        "agg_sql_id": agg_sql_id,
+        "aggiornamento_obbligatorio": aggiornamento_obbligatorio,
+        "anagrafica_aggiornamento": anagrafica_aggiornamento,
+        "promozioni_attivazione": promozioni_attivazione,
+        "sql_versione": sql_versione,
+        "host_server": host_server,
+        "codice_macchina": codice_macchina,
+        "username": username,
+        "password": password,
+        "videocatalogo_uid": videocatalogo_uid,
+        "log_attivo": log_attivo,
+      };
+
   Future<bool> host_server_aggiorna(String? host_server) async {
     // bool host_server_aggiorna(String? host_server) async {
     // aggiorna la proprieta host_server
@@ -110,12 +190,12 @@ class ParametriModel {
     int record_eleborati = 0;
 
     try {
-
-      record_eleborati = await(await db!.update('parametri', {'host_server': host_server}, where: 'id = ?', whereArgs: ["1"]));
-
-    } on DatabaseException catch (e) {
-      if (e.isNoSuchTableError()) {
-        print("Errore inizializzazione parametri");
+      record_eleborati = await (await db!.update(
+          'parametri', {'host_server': host_server},
+          where: 'id = ?', whereArgs: ["1"]));
+    } on DatabaseException catch (errore_db) {
+      if (errore_db.isNoSuchTableError()) {
+        print("Errore aggiornamento parametri");
       }
     }
 
@@ -130,6 +210,32 @@ class ParametriModel {
     return (record_eleborati > 0);
   }
 
+  Future<bool> password_aggiorna(String? password) async {
+    // bool host_server_aggiorna(String? host_server) async {
+    // aggiorna la proprieta host_server
+
+    int record_eleborati = 0;
+
+    try {
+      record_eleborati = await (await db!.update(
+          'parametri', {'password': password},
+          where: 'id = ?', whereArgs: ["1"]));
+    } on DatabaseException catch (errore_db) {
+      if (errore_db.isNoSuchTableError()) {
+        print("Errore aggiornamento parametri");
+      }
+    }
+
+    if (record_eleborati > 0) {
+      print("parametri host_server_aggiorna 1");
+      await this.inizializza();
+      print("parametri host_server_aggiorna 2");
+    } else {
+      print("ParametriModel errore aggiornamento host_server");
+    }
+
+    return (record_eleborati > 0);
+  }
 
   bool utente_registrato() {
     // se non è presente la username l'utente non è ancora registrato
@@ -143,5 +249,4 @@ class ParametriModel {
 
     return utente_regisrtrato;
   }
-
 }

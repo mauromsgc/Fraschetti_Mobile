@@ -35,7 +35,7 @@ class UtenteCorrenteModel {
   int preventivi_abilitati = 0;
   int offerte_disattivate = 0;
   int comunicazioni_disattivate = 0;
-  int ordini_dasattivati = 0;
+  int ordini_disattivati = 0;
   int servizi_disattivati = 0;
   int disponibilita_disattivate = 0;
   int prezzi_non_visibili = 0;

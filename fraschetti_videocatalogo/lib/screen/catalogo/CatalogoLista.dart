@@ -14,7 +14,6 @@ import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 import 'package:get_it/get_it.dart';
 import 'package:get/get.dart';
 
-
 class CatalogoListaPage extends StatefulWidget {
   CatalogoListaPage({Key? key}) : super(key: key);
   static const String routeName = "catalogo_lista";
@@ -25,79 +24,65 @@ class CatalogoListaPage extends StatefulWidget {
 }
 
 final pageStato = PageStore().obs;
+
 class PageStore {
   List<FamigliaModel> famiglie_lista = [];
   List<AssortimentoModel> assortimenti_lista = [];
   List<CatalogoModel> articoli_lista = [];
 
-  PageStore(){
+  PageStore() {
     print("PageStore inizializza ");
     inizializza();
   }
 
-  void inizializza () async {
+  void inizializza() async {
     _famiglie_lista_carica();
     _assortimenti_lista_carica();
     _articoli_lista_carica();
   }
 
-  Future<void> _famiglie_lista_carica () async {
-      famiglie_lista = await GetIt.instance<DbRepository>().famiglie_lista();
-      print("famiglie_lista: "+famiglie_lista.toString());
-      pageStato.refresh();
+  Future<void> _famiglie_lista_carica() async {
+    famiglie_lista = await GetIt.instance<DbRepository>().famiglie_lista();
+    print("famiglie_lista: " + famiglie_lista.length.toString());
+    pageStato.refresh();
   }
 
-  Future<void> _assortimenti_lista_carica () async {
+  Future<void> _assortimenti_lista_carica() async {
     assortimenti_lista = await AssortimentiRepository().all();
     // print("assortimenti_lista: "+assortimenti_lista.toString());
     // assortimenti_lista = await GetIt.instance<DbRepository>().famiglie_lista();
     pageStato.refresh();
   }
 
-  Future<void> _articoli_lista_carica () async {
+  Future<void> _articoli_lista_carica() async {
     articoli_lista = await ArticoliRepository().all();
-    print("articoli_lista: "+articoli_lista.length.toString());
+    print("articoli_lista: " + articoli_lista.length.toString());
 // print("articoli_lista: "+articoli_lista.toString());
 // articoli_lista = await GetIt.instance<DbRepository>().famiglie_lista();
     pageStato.refresh();
   }
 
-  Future<void> _articoli_lista_test () async {
+  Future<void> _articoli_lista_test() async {
     articoli_lista = await ArticoliRepository().all_sub();
-    print("articoli_lista: "+articoli_lista.length.toString());
+    print("articoli_lista: " + articoli_lista.length.toString());
 // print("articoli_lista: "+articoli_lista.toString());
 // articoli_lista = await GetIt.instance<DbRepository>().famiglie_lista();
     pageStato.refresh();
   }
 
-  void articoli_cerca () async {
+  void articoli_cerca() async {
     _articoli_lista_test();
   }
-  void articoli_tutti () async {
+
+  void articoli_tutti() async {
     _articoli_lista_carica();
   }
-
 }
 
 class _CatalogoListaPageState extends State<CatalogoListaPage> {
-
-  // List<CatalogoModel> articoli_lista = ArticoliRepository().all_2();
-  // List<AssortimentoModel> _assortimenti_lista = AssortimentiRepository()
-  //     .all_2();
-  //
-  // List<FamigliaModel> famiglie_lista = [];
-  //
-  // void _famiglie_lista_carica () async {
-  //   setState(() async{
-  //         famiglie_lista = await GetIt.instance<DbRepository>().famiglie_lista();
-  //   });
-  // }
-
   @override
   void initState() {
     super.initState();
-    // _famiglie_lista_carica();
-
   }
 
   void listaClick(BuildContext context) {
@@ -107,176 +92,165 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
   void _assortimenti_menu(BuildContext context) {
     showDialog<String>(
       context: context,
-      builder: (BuildContext context) =>
-          AlertDialog(
-            title: const Text("Assortimenti"),
-            content: SingleChildScrollView(
-              child: Container(
-                width: 300,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children:
-
-
-                  pageStato.value.assortimenti_lista.map((elemento) {
-                    return Container(
-                      height: 40,
-                      width: double.maxFinite,
-                      padding: EdgeInsets.all(5),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(elevation: 2),
-                        onPressed: () {},
-                        child: Text(elemento.descrizione),
-                      ),
-                    );
-                  }).toList(),
-
-
-                ),
-              ),
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text("Assortimenti"),
+        content: SingleChildScrollView(
+          child: Container(
+            width: 300,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: pageStato.value.assortimenti_lista.map((elemento) {
+                return Container(
+                  height: 40,
+                  width: double.maxFinite,
+                  padding: EdgeInsets.all(5),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(elevation: 2),
+                    onPressed: () {},
+                    child: Text(elemento.descrizione),
+                  ),
+                );
+              }).toList(),
             ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Chiudi'),
-              ),
-            ],
           ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Chiudi'),
+          ),
+        ],
+      ),
     );
   }
 
   void _selezioni_menu(BuildContext context) {
     showDialog<String>(
       context: context,
-      builder: (BuildContext context) =>
-          AlertDialog(
-            title: const Text("Selezioni"),
-            content: Container(
-              width: 300,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    height: 40,
-                    width: double.maxFinite,
-                    padding: EdgeInsets.all(5),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(elevation: 2),
-                      onPressed: () {},
-                      child: Text('Novità'),
-                    ),
-                  ),
-                  Container(
-                    height: 40,
-                    width: double.maxFinite,
-                    padding: EdgeInsets.all(5),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(elevation: 2),
-                      onPressed: () {},
-                      child: Text('Nuovi codici'),
-                    ),
-                  ),
-                  Container(
-                    height: 40,
-                    width: double.maxFinite,
-                    padding: EdgeInsets.all(5),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(elevation: 2),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('Prodotti in offerta'),
-                    ),
-                  ),
-
-                ],
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text("Selezioni"),
+        content: Container(
+          width: 300,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: 40,
+                width: double.maxFinite,
+                padding: EdgeInsets.all(5),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(elevation: 2),
+                  onPressed: () {},
+                  child: Text('Novità'),
+                ),
               ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Chiudi'),
+              Container(
+                height: 40,
+                width: double.maxFinite,
+                padding: EdgeInsets.all(5),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(elevation: 2),
+                  onPressed: () {},
+                  child: Text('Nuovi codici'),
+                ),
+              ),
+              Container(
+                height: 40,
+                width: double.maxFinite,
+                padding: EdgeInsets.all(5),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(elevation: 2),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Prodotti in offerta'),
+                ),
               ),
             ],
           ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Chiudi'),
+          ),
+        ],
+      ),
     );
   }
 
   void _ordinamenti_menu(BuildContext context) {
     showDialog<String>(
       context: context,
-      builder: (BuildContext context) =>
-          AlertDialog(
-            title: const Text("Seleziona l'ordine"),
-            content: SingleChildScrollView(
-              child: Container(
-                width: 300,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      height: 40,
-                      width: double.maxFinite,
-                      padding: EdgeInsets.all(5),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(elevation: 2),
-                        onPressed: () {},
-                        child: Text('Descrizione crescente'),
-                      ),
-                    ),
-                    Container(
-                      height: 40,
-                      width: double.maxFinite,
-                      padding: EdgeInsets.all(5),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(elevation: 2),
-                        onPressed: () {},
-                        child: Text('Descrizione decrescente'),
-                      ),
-                    ),
-                    Container(
-                      height: 40,
-                      width: double.maxFinite,
-                      padding: EdgeInsets.all(5),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(elevation: 2),
-                        onPressed: () {},
-                        child: Text('Codice crescente'),
-                      ),
-                    ),
-                    Container(
-                      height: 40,
-                      width: double.maxFinite,
-                      padding: EdgeInsets.all(5),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(elevation: 2),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('Codice decrescente'),
-                      ),
-                    ),
-
-                  ],
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text("Seleziona l'ordine"),
+        content: SingleChildScrollView(
+          child: Container(
+            width: 300,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  height: 40,
+                  width: double.maxFinite,
+                  padding: EdgeInsets.all(5),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(elevation: 2),
+                    onPressed: () {},
+                    child: Text('Descrizione crescente'),
+                  ),
                 ),
-              ),
+                Container(
+                  height: 40,
+                  width: double.maxFinite,
+                  padding: EdgeInsets.all(5),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(elevation: 2),
+                    onPressed: () {},
+                    child: Text('Descrizione decrescente'),
+                  ),
+                ),
+                Container(
+                  height: 40,
+                  width: double.maxFinite,
+                  padding: EdgeInsets.all(5),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(elevation: 2),
+                    onPressed: () {},
+                    child: Text('Codice crescente'),
+                  ),
+                ),
+                Container(
+                  height: 40,
+                  width: double.maxFinite,
+                  padding: EdgeInsets.all(5),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(elevation: 2),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Codice decrescente'),
+                  ),
+                ),
+              ],
             ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Chiudi'),
-              ),
-            ],
           ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Chiudi'),
+          ),
+        ],
+      ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -321,7 +295,9 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   thickness: 2,
                   // color: Theme.of(context).primaryColor,
                 ),
-                Obx(() => ListaWidget(pageStato.value.articoli_lista),),
+                Obx(
+                  () => ListaWidget(pageStato.value.articoli_lista),
+                ),
               ],
             ),
           ),
@@ -344,16 +320,15 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                 onEditingComplete: () {
                   showDialog<String>(
                     context: context,
-                    builder: (BuildContext context) =>
-                        AlertDialog(
-                          title: const Text('Avviare ricerca'),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text('ok'),
-                            ),
-                          ],
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text('Avviare ricerca'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('ok'),
                         ),
+                      ],
+                    ),
                   );
                 },
                 textInputAction: TextInputAction.done,
@@ -374,16 +349,15 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                 onEditingComplete: () {
                   showDialog<String>(
                     context: context,
-                    builder: (BuildContext context) =>
-                        AlertDialog(
-                          title: const Text('Avviare ricerca'),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text('ok'),
-                            ),
-                          ],
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text('Avviare ricerca'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('ok'),
                         ),
+                      ],
+                    ),
                   );
                 },
                 textInputAction: TextInputAction.done,
@@ -434,7 +408,6 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                 child: Text('Assortimenti'),
               ),
             ),
-
             SizedBox(
               width: 10,
             ),
@@ -467,60 +440,59 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
     );
   }
 
-
 // sezione categorie
   Widget CategorieWidget() => Obx(
         () => Row(
-      children: pageStato.value.famiglie_lista.map((elemento) {
-        return Expanded(
-          flex: 1,
-          child: InkWell(
-            hoverColor: Color(int.parse(elemento.colore)).withAlpha(50),
-            highlightColor: Color(int.parse(elemento.colore)).withAlpha(200),
-            splashColor: Colors.grey.shade600,
-            focusColor: Color(int.parse(elemento.colore)).withAlpha(125),
-            onTap: () {
-              print(elemento.descrizione);
-            },
-            child: Container(
-              padding: EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                // color: Color(0xFF009900),
-                border: Border(
-                  top: BorderSide(
-                    color: Color(int.parse(elemento.colore)),
-                    width: 5,
+          children: pageStato.value.famiglie_lista.map((elemento) {
+            return Expanded(
+              flex: 1,
+              child: InkWell(
+                hoverColor: Color(int.parse(elemento.colore)).withAlpha(50),
+                highlightColor:
+                    Color(int.parse(elemento.colore)).withAlpha(200),
+                splashColor: Colors.grey.shade600,
+                focusColor: Color(int.parse(elemento.colore)).withAlpha(125),
+                onTap: () {
+                  print(elemento.descrizione);
+                },
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    // color: Color(0xFF009900),
+                    border: Border(
+                      top: BorderSide(
+                        color: Color(int.parse(elemento.colore)),
+                        width: 5,
+                      ),
+                      bottom: BorderSide(
+                        color: Color(int.parse(elemento.colore)),
+                        width: 5,
+                      ),
+                    ),
                   ),
-                  bottom: BorderSide(
-                    color: Color(int.parse(elemento.colore)),
-                    width: 5,
+                  child: Text(
+                    elemento.abbreviazione,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        // color: Colors.white,
+                        ),
                   ),
                 ),
               ),
-              child: Text(elemento.abbreviazione,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  // color: Colors.white,
-                ),),
-            ),
-          ),
-        );
-      }).toList(),
-    ),
-    );
+            );
+          }).toList(),
+        ),
+      );
 
   // riga lista
   Widget ListaWidget(List<CatalogoModel> articoli_lista) {
     return Expanded(
       child: ListView.separated(
-        separatorBuilder: (context, index) =>
-            Divider(
-              height: 5,
-              thickness: 2,
-              color: Theme
-                  .of(context)
-                  .primaryColor,
-            ),
+        separatorBuilder: (context, index) => Divider(
+          height: 5,
+          thickness: 2,
+          color: Theme.of(context).primaryColor,
+        ),
         itemCount: articoli_lista.length,
         itemBuilder: (context, index) {
           return InkWell(
@@ -594,14 +566,11 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
   Widget ListaWidget_old(List<CatalogoModel> articoli_lista) {
     return Expanded(
       child: ListView.separated(
-        separatorBuilder: (context, index) =>
-            Divider(
-              height: 5,
-              thickness: 2,
-              color: Theme
-                  .of(context)
-                  .primaryColor,
-            ),
+        separatorBuilder: (context, index) => Divider(
+          height: 5,
+          thickness: 2,
+          color: Theme.of(context).primaryColor,
+        ),
         itemCount: articoli_lista.length,
         itemBuilder: (context, index) {
           return InkWell(

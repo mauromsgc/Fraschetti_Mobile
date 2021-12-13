@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
@@ -63,14 +65,19 @@ class _RegistazionePageState extends State<RegistazionePage> {
     });
 
     if (valid) {
+
       valid = await GetIt.instance<DbRepository>().utente_registra(username: username, password: password, codice_attivazione: codice_attivazione);
+      print("valid: "+valid.toString());
       if (valid) {
+// aggiorna la pasword nei parametri e ricaricai parametri
+
+        await GetIt.instance<ParametriModel>().inizializza();
+
         Navigator.popAndPushNamed(context, LoginPage.routeName);
       } else {
-        codice_attivazioneError = "Errore durante la registrazione, riprovare";
+        setState(() => codice_attivazioneError = "Errore durante la registrazione, riprovare");
       }
 
-      Navigator.pushNamed(context, LoginPage.routeName);
     } else {
       print("Registrazione fallita");
     }
