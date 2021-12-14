@@ -48,30 +48,21 @@ class PageStore {
   }
 
   Future<void> _assortimenti_lista_carica() async {
-    assortimenti_lista = await AssortimentiRepository().all();
+    assortimenti_lista = await GetIt.instance<DbRepository>().assortimenti_lista();
     // print("assortimenti_lista: "+assortimenti_lista.toString());
     // assortimenti_lista = await GetIt.instance<DbRepository>().famiglie_lista();
     pageStato.refresh();
   }
 
   Future<void> _articoli_lista_carica() async {
-    articoli_lista = await ArticoliRepository().all();
+    articoli_lista = await GetIt.instance<DbRepository>().catalogo_lista();
     print("articoli_lista: " + articoli_lista.length.toString());
 // print("articoli_lista: "+articoli_lista.toString());
-// articoli_lista = await GetIt.instance<DbRepository>().famiglie_lista();
-    pageStato.refresh();
-  }
-
-  Future<void> _articoli_lista_test() async {
-    articoli_lista = await ArticoliRepository().all_sub();
-    print("articoli_lista: " + articoli_lista.length.toString());
-// print("articoli_lista: "+articoli_lista.toString());
-// articoli_lista = await GetIt.instance<DbRepository>().famiglie_lista();
     pageStato.refresh();
   }
 
   void articoli_cerca() async {
-    _articoli_lista_test();
+    _articoli_lista_carica();
   }
 
   void articoli_tutti() async {
@@ -318,6 +309,8 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
               flex: 6,
               child: TextFormField(
                 onEditingComplete: () {
+                  pageStato.value.articoli_cerca();
+
                   showDialog<String>(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
@@ -347,6 +340,8 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
               flex: 2,
               child: TextFormField(
                 onEditingComplete: () {
+                  pageStato.value.articoli_cerca();
+
                   showDialog<String>(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(

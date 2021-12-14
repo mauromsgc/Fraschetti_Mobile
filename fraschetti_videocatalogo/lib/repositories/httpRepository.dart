@@ -138,9 +138,9 @@ class HttpClient {
 
   }
 
-  Future<Map<String, dynamic>> aggiorna_da_server ({required Map<String, dynamic> data_invio}) async {
+  Future<Map<String, dynamic>> dati_aggiorna ({required Map<String, dynamic> data_invio}) async {
     // scarica gli aggiornamenti
-    print("httpRepositoty aggiorna_da_server inizio");
+    print("httpRepositoty dati_aggiorna inizio");
 
     final host_server = GetIt.instance<ParametriModel>().host_server;
     final String _api = "/4daction/Post_mv1_AggiornaDati";
@@ -157,7 +157,7 @@ class HttpClient {
     final data_risposta = json.decode(response.body);
     print(data_risposta);
 
-    print("httpRepositoty aggiorna_da_server fine");
+    print("httpRepositoty dati_aggiorna fine");
     if (response.statusCode == 200) {
       return data_risposta["data"];
     }
@@ -166,6 +166,33 @@ class HttpClient {
 
   }
 
+  Future<Map<String, dynamic>> comunicazioni_aggiorna ({required Map<String, dynamic> data_invio}) async {
+    // scarica le comunicazioni
+    print("httpRepositoty dati_aggiorna inizio");
+
+    final host_server = GetIt.instance<ParametriModel>().host_server;
+    final String _api = "/4daction/Post_mv1_AggiornaComunicazioni";
+    var url = Uri.parse(host_server + _api);
+
+    Map _body_data = {};
+    _body_data["data"] = data_invio;
+
+    // var response = await http.post(url, body: data_invio);
+
+    final _oggetto_invio = json.encode(_body_data);
+    var response = await http.post(url, body: _oggetto_invio);
+
+    final data_risposta = json.decode(response.body);
+    print(data_risposta);
+
+    print("httpRepositoty comunicazioni_aggiorna fine");
+    if (response.statusCode == 200) {
+      return data_risposta["data"];
+    }
+
+    throw RequestError(data_risposta["error"]);
+
+  }
 
 
   Future<Map<String, dynamic>> aggiornamenti_controlla ({required Map<String, dynamic> data_invio}) async {

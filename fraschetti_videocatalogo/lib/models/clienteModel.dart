@@ -1,6 +1,25 @@
 import 'package:flutter/foundation.dart';
 
 class ClienteModel {
+
+  int id = 0;
+  int agente_id = 0;
+  String ragione_sociale = '';
+  String localita = '';
+  String indirizzo = '';
+  String username = '';
+  String sede = '';
+  String codice = '';
+  int stato = 0;
+  int videocatalogo_disattivato = 0;
+  int offerte_disattivate = 0;
+  int comunicazioni_disattivate = 0;
+  int ordini_disattivati = 0;
+  int servizi_disattivati = 0;
+  int disponibilita_disattivate = 0;
+  int prezzi_non_visibili = 0;
+  int giacenze_disattivate = 0;
+
   // il costruttore con tutti i parametri lo uso solo per creare i record fake
   ClienteModel({
     this.id = 0,
@@ -21,24 +40,6 @@ class ClienteModel {
     this.prezzi_non_visibili = 0,
     this.giacenze_disattivate = 0,
   });
-
-  int id = 0;
-  int agente_id = 0;
-  String ragione_sociale = '';
-  String localita = '';
-  String indirizzo = '';
-  String username = '';
-  String sede = '';
-  String codice = '';
-  int stato = 0;
-  int videocatalogo_disattivato = 0;
-  int offerte_disattivate = 0;
-  int comunicazioni_disattivate = 0;
-  int ordini_disattivati = 0;
-  int servizi_disattivati = 0;
-  int disponibilita_disattivate = 0;
-  int prezzi_non_visibili = 0;
-  int giacenze_disattivate = 0;
 
   factory ClienteModel.fromMap(Map<String, dynamic> map) {
     final id = map["id"];

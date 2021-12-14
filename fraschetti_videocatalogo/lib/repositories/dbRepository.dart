@@ -1,7 +1,11 @@
 import 'package:fraschetti_videocatalogo/main.dart';
+import 'package:fraschetti_videocatalogo/models/assortimentoModel.dart';
+import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/models/clienteModel.dart';
+import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/famigliaModel.dart';
 import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
+import 'package:fraschetti_videocatalogo/models/promozioneModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:fraschetti_videocatalogo/utils/Utility.dart';
 import 'package:get_it/get_it.dart';
@@ -548,8 +552,8 @@ descrizione CHAR(30,0)
     return esito;
   }
 
-  Future<bool> aggiorna_da_server() async {
-    print("dbRepositoty aggiorna_da_server inizio");
+  Future<bool> dati_aggiorna() async {
+    print("dbRepositoty dati_aggiorna inizio");
 
     bool esito = false;
     Map<String, dynamic> risposta = {};
@@ -573,13 +577,13 @@ descrizione CHAR(30,0)
       risposta = await getIt
           .get<HttpRepository>()
           .http!
-          .aggiorna_da_server(data_invio: data_invio);
+          .dati_aggiorna(data_invio: data_invio);
     } on DatabaseException catch (e) {
       if (e.isNoSuchTableError()) {
         print("Errore inizializzazione parametri");
       }
     }
-    print("dbRepository aggiorna_da_server: " + risposta.toString());
+    print("dbRepository dati_aggiorna: " + risposta.toString());
     //$o_output.esito_codice:=0
     //$o_output.esito_descrizione:=""
     //$o_output.errori:=New collection
@@ -621,7 +625,92 @@ descrizione CHAR(30,0)
     //   print("ParametriModel errore aggiornamento host_server");
     // }
 
-    print("dbRepositoty aggiorna_da_server fine");
+    print("dbRepositoty dati_aggiorna fine");
+
+    return esito;
+  }
+
+  Future<bool> comunicazioni_aggiorna() async {
+    print("dbRepositoty comunicazioni_aggiorna inizio");
+
+    bool esito = false;
+    Map<String, dynamic> risposta = {};
+
+    Map<String, dynamic> data_invio = {};
+    data_invio["azione"] = "Aggiornamento.Com.Cerca";
+    data_invio["azione_versione"] = 1;
+    data_invio["username"] = getIt.get<ParametriModel>().username;
+    data_invio["videocatalogo_versione"] = VIDEOCATALOGO_VERSIONE;
+    data_invio["videocatalogo_uid"] =
+        getIt.get<ParametriModel>().videocatalogo_uid;
+    data_invio["dispositivo_codice"] =
+        getIt.get<ParametriModel>().codice_macchina;
+    data_invio["dispositivo_tipo"] = VIDEOCATALOGO_DISPOSIVITO_TIPO;
+
+    // presenti in base al tipo di chimata
+    data_invio["aggiornamento_id_ultimo"] =
+        getIt.get<ParametriModel>().agg_comunicazioni_id;
+
+    try {
+      risposta = await getIt
+          .get<HttpRepository>()
+          .http!
+          .comunicazioni_aggiorna(data_invio: data_invio);
+    } on DatabaseException catch (e) {
+      if (e.isNoSuchTableError()) {
+        print("Errore inizializzazione parametri");
+      }
+    }
+    print("dbRepository dati_aggiorna: " + risposta.toString());
+    //$o_output.esito_codice:=0
+    //$o_output.esito_descrizione:=""
+    //$o_output.errori:=New collection
+    //$o_output.sql_eseguire:=""
+    //$o_output.videocatalogo_uid:=""
+    //$o_output.comunicazioni_id_aggiornare:=lista id comunicazioni da scaricare
+
+    if (risposta["esito_codice"] == 0) {
+      esito = true;
+      try {
+        List<int> comunicazioni_id_aggiornare = [];
+        comunicazioni_id_aggiornare = risposta["comunicazioni_id_aggiornare"];
+        // aggiorna le comunicazioni
+
+        await database.transaction((txn) async {
+          comunicazioni_id_aggiornare.forEach((comunicazioni_id) async {
+          // faccio la chiamata per scaricare la comunicazione
+
+// fare un altra funzione che scarica la singola comunicazione
+
+
+
+          });
+        });
+
+        // // ricaricare i parametri
+        // if (getIt.get<ParametriModel>().agg_comunicazioni_id !=
+        //     risposta["aggiornamento_id_ultimo"]) {
+        //   await GetIt.instance<ParametriModel>().agg_dati_id_aggiorna(risposta["aggiornamento_id_ultimo"]);
+        // }
+
+      } on DatabaseException catch (errore_db) {
+        esito = false;
+        print("Errore sql: " + errore_db.toString());
+      }
+    } else {
+      print(risposta["errori"].toString());
+      esito = false;
+    }
+
+    // if (record_eleborati > 0) {
+    //   print("parametri host_server_aggiorna 1");
+    //   await this.inizializza();
+    //   print("parametri host_server_aggiorna 2");
+    // } else {
+    //   print("ParametriModel errore aggiornamento host_server");
+    // }
+
+    print("dbRepositoty comunicazioni_aggiorna fine");
 
     return esito;
   }
@@ -631,9 +720,34 @@ descrizione CHAR(30,0)
     return rows.map((row) => FamigliaModel.fromMap(row)).toList();
   }
 
+  Future<List<AssortimentoModel>> assortimenti_lista() async {
+    final rows = await database.query("assortimenti");
+    return rows.map((row) => AssortimentoModel.fromMap(row)).toList();
+  }
+
+  // poi fare il cerca
+  Future<List<CatalogoModel>> catalogo_lista() async {
+    final rows = await database.query("catalogo");
+    return rows.map((row) => CatalogoModel.fromMap(row)).toList();
+  }
+
+
+  // poi fare il cerca
+  Future<List<PromozioneModel>> promozioni_lista() async {
+    final rows = await database.query("promozioni");
+    return rows.map((row) => PromozioneModel.fromMap(row)).toList();
+  }
+
+  // poi fare il cerca
+  Future<List<ComunicazioneModel>> comunicazioni_lista() async {
+    final rows = await database.query("comunicazioni");
+    return rows.map((row) => ComunicazioneModel.fromMap(row)).toList();
+  }
+
   // poi fare il cerca
   Future<List<ClienteModel>> clienti_lista() async {
     final rows = await database.query("clienti");
     return rows.map((row) => ClienteModel.fromMap(row)).toList();
   }
+
 }

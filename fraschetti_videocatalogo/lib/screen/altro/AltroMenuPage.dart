@@ -6,6 +6,7 @@ import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
 import 'package:fraschetti_videocatalogo/models/utenteCorrenteModel.dart';
+import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/ParametriConnesionePage.dart';
 import 'package:get_it/get_it.dart';
@@ -31,24 +32,13 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
   }
 
   void test_1() async {
-    print("test 1");
-    var t0 = GetIt.instance<ParametriModel>();
 
-    print("test 2");
-    await GetIt.instance<ParametriModel>().inizializza();
-
-    print("test 3");
-    var t1 = GetIt.instance<ParametriModel>();
-    print("test 4");
-    var t2 = GetIt.instance<UtenteCorrenteModel>();
-
-    print("test 5");
-    GetIt.instance<UtenteCorrenteModel>().inizializza();
-
-    print("test 6");
-    var t3 = GetIt.instance<UtenteCorrenteModel>();
-
-    print("test 7");
+    final valid = await GetIt.instance<DbRepository>().comunicazioni_aggiorna();
+    if (valid) {
+      print("Aggiornamento completato");
+    } else {
+      print("Errore durante l'aggiornamento, riprovare");
+    }
 
   }
 

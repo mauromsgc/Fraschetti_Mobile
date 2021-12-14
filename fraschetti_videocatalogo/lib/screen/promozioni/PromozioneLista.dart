@@ -5,8 +5,12 @@ import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/promozioneModel.dart';
+import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:fraschetti_videocatalogo/repositories/promozioniRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:get_it/get_it.dart';
 
 import 'PromozionePage.dart';
 
@@ -19,8 +23,47 @@ class PromozioneListaPage extends StatefulWidget {
   _PromozioneListaPageState createState() => _PromozioneListaPageState();
 }
 
+final pageStato = PageStore().obs;
+
+class PageStore {
+  List<PromozioneModel> promozioni_lista = [];
+
+  PageStore() {
+    print("PageStore inizializza ");
+    inizializza();
+  }
+
+  void inizializza() async {
+    promozioni_lista_carica();
+  }
+
+  Future<void> promozioni_lista_carica() async {
+    promozioni_lista = await GetIt.instance<DbRepository>().promozioni_lista();
+    print("promozioni_lista: " + promozioni_lista.length.toString());
+    // promozioni_lista.forEach((PromozioneModel promozione) async {
+    //   print(promozione.nome);
+    // });
+    pageStato.refresh();
+  }
+
+  void promozioni_cerca() async {
+    promozioni_lista_carica();
+  }
+
+  void promozioni_tour_intero() async {
+    promozioni_lista_carica();
+  }
+
+  void promozioni_tour_singolo() async {
+    promozioni_lista_carica();
+  }
+}
+
 class _PromozioneListaPageState extends State<PromozioneListaPage> {
-  List<PromozioneModel> promozioni_lista = PromozioniRepository().all_2();
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void listaClick(BuildContext context) {
     Navigator.pushNamed(context, PromozionePage.routeName);
@@ -55,7 +98,9 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
                   thickness: 2,
                   // color: Theme.of(context).primaryColor,
                 ),
-                ListaWidget(promozioni_lista),
+                Obx(
+                      () => ListaWidget(pageStato.value.promozioni_lista),
+                ),
               ],
             ),
           ),
@@ -76,6 +121,8 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
               flex: 5,
               child: TextFormField(
                 onEditingComplete: () {
+                  pageStato.value.promozioni_cerca();
+
                   showDialog<String>(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
@@ -107,7 +154,9 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
               flex: 2,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
-                onPressed: () {},
+                onPressed: () {
+                  pageStato.value.promozioni_cerca();
+                },
                 child: Text('Cerca'),
               ),
             ),
@@ -131,7 +180,9 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
               flex: 1,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
-                onPressed: () {},
+                onPressed: () {
+                  pageStato.value.promozioni_tour_intero();
+                },
                 child: Text('Tour intero'),
               ),
             ),
@@ -142,7 +193,9 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
               flex: 1,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
-                onPressed: () {},
+                onPressed: () {
+                  pageStato.value.promozioni_tour_singolo();
+                },
                 child: Text('Tour singolo'),
               ),
             ),

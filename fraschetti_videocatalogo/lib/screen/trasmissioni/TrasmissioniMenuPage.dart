@@ -32,9 +32,9 @@ class _TrasmissioniMenuListaState extends State<TrasmissioniMenuLista> {
     print("aggiornamenti_controlla: "+response.toString());
   }
 
-  void aggiorna_da_server(BuildContext context) async {
+  void dati_aggiorna(BuildContext context) async {
 
-    final valid = await GetIt.instance<DbRepository>().aggiorna_da_server();
+    final valid = await GetIt.instance<DbRepository>().dati_aggiorna();
     if (valid) {
       print("Aggiornamento completato");
     } else {
@@ -92,7 +92,7 @@ class _TrasmissioniMenuListaState extends State<TrasmissioniMenuLista> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(elevation: 2),
                       onPressed: () {
-                        aggiorna_da_server(context);
+                        dati_aggiorna(context);
                       },
                       child: Text('Aggiorna da server'),
                     ),
