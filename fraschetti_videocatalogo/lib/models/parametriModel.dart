@@ -236,7 +236,7 @@ class ParametriModel {
     return (record_eleborati > 0);
   }
 
-  Future<bool> agg_dati_id_aggiorna(String? agg_dati_id) async {
+  Future<bool> agg_dati_id_aggiorna(int? agg_dati_id) async {
     // aggiorna la proprieta agg_dati_id
 
     int record_eleborati = 0;
@@ -257,6 +257,32 @@ class ParametriModel {
       print("parametri agg_dati_id_aggiorna 2");
     } else {
       print("ParametriModel errore aggiornamento agg_dati_id");
+    }
+
+    return (record_eleborati > 0);
+  }
+
+  Future<bool> agg_comunicazioni_id_aggiorna(int? agg_comunicazioni_id) async {
+    // aggiorna la proprieta agg_comunicazioni_id
+
+    int record_eleborati = 0;
+
+    try {
+      record_eleborati = await (await db!.update(
+          'parametri', {'agg_comunicazioni_id': agg_comunicazioni_id},
+          where: 'id = ?', whereArgs: ["1"]));
+    } on DatabaseException catch (errore_db) {
+      if (errore_db.isNoSuchTableError()) {
+        print("Errore aggiornamento parametri");
+      }
+    }
+
+    if (record_eleborati > 0) {
+      print("parametri agg_comunicazioni_id_aggiorna 1");
+      await this.inizializza();
+      print("parametri agg_comunicazioni_id_aggiorna 2");
+    } else {
+      print("ParametriModel errore aggiornamento agg_comunicazioni_id_aggiorna");
     }
 
     return (record_eleborati > 0);

@@ -168,7 +168,7 @@ class HttpClient {
 
   Future<Map<String, dynamic>> comunicazioni_aggiorna ({required Map<String, dynamic> data_invio}) async {
     // scarica le comunicazioni
-    print("httpRepositoty dati_aggiorna inizio");
+    print("httpRepositoty comunicazioni_aggiorna inizio");
 
     final host_server = GetIt.instance<ParametriModel>().host_server;
     final String _api = "/4daction/Post_mv1_AggiornaComunicazioni";
