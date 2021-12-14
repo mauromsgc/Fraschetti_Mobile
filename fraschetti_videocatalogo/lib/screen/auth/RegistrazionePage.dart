@@ -87,7 +87,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
     Navigator.of(context).pushNamed("parametri_connessione");
   }
 
-  void testComunicazioneOnSubmit(BuildContext context) async {
+  void test_comunicazine(BuildContext context) async {
       final response = await getIt.get<HttpRepository>().http!.trasmissione_test();
 
     print(response);
@@ -165,7 +165,8 @@ class _RegistazionePageState extends State<RegistazionePage> {
                         registrazioneOnSubmit(context);
                       },
                       controller: codice_attivazioneController,
-                      keyboardType: TextInputType.number,
+                      // per poter inserire la password come programmatore
+                      // keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.done,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
@@ -190,7 +191,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
                     padding: EdgeInsets.all(5),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(elevation: 2),
-                      onPressed: () => testComunicazioneOnSubmit(context),
+                      onPressed: () => test_comunicazine(context),
                       child: Text('Test comunicazione'),
                     ),
                   ),

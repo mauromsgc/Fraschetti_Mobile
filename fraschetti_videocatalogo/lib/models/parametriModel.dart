@@ -211,8 +211,7 @@ class ParametriModel {
   }
 
   Future<bool> password_aggiorna(String? password) async {
-    // bool host_server_aggiorna(String? host_server) async {
-    // aggiorna la proprieta host_server
+     // aggiorna la proprieta password
 
     int record_eleborati = 0;
 
@@ -237,6 +236,32 @@ class ParametriModel {
     return (record_eleborati > 0);
   }
 
+  Future<bool> agg_dati_id_aggiorna(String? agg_dati_id) async {
+    // aggiorna la proprieta agg_dati_id
+
+    int record_eleborati = 0;
+
+    try {
+      record_eleborati = await (await db!.update(
+          'parametri', {'agg_dati_id': agg_dati_id},
+          where: 'id = ?', whereArgs: ["1"]));
+    } on DatabaseException catch (errore_db) {
+      if (errore_db.isNoSuchTableError()) {
+        print("Errore aggiornamento parametri");
+      }
+    }
+
+    if (record_eleborati > 0) {
+      print("parametri agg_dati_id_aggiorna 1");
+      await this.inizializza();
+      print("parametri agg_dati_id_aggiorna 2");
+    } else {
+      print("ParametriModel errore aggiornamento agg_dati_id");
+    }
+
+    return (record_eleborati > 0);
+  }
+
   bool utente_registrato() {
     // se non è presente la username l'utente non è ancora registrato
     bool utente_regisrtrato = false;
@@ -249,4 +274,65 @@ class ParametriModel {
 
     return utente_regisrtrato;
   }
+
+
+
+  Future<bool> aggiornamenti_controlla() async {
+    // cotrolla se ci sono aggiornamenti da scaricare
+
+    print("dbRepositoty aggiornamenti_controlla inizio");
+
+    bool esito = false;
+    Map<String, dynamic> risposta = {};
+
+    // dati generali
+    Map<String, dynamic> data_invio = {};
+    data_invio["azione"] = "Post.Aggior.AggiornamentiVerifica";
+    data_invio["azione_versione"] = 1;
+    data_invio["username"] = username;
+    data_invio["videocatalogo_versione"] = VIDEOCATALOGO_VERSIONE;
+    data_invio["videocatalogo_uid"] = this.videocatalogo_uid;
+    data_invio["dispositivo_codice"] = this.codice_macchina;
+    data_invio["dispositivo_tipo"] = VIDEOCATALOGO_DISPOSIVITO_TIPO;
+
+    // presenti in base al tipo di chimata
+    // aggiungo tutti i campi dei parametri da verificare
+    data_invio["agg_dati_id"] = this.agg_dati_id;
+    data_invio["agg_immagini_id"] = this.agg_immagini_id;
+    data_invio["agg_comunicazioni_id"] = this.agg_comunicazioni_id;
+    data_invio["agg_codici_ean_id"] = this.agg_codici_ean_id;
+    data_invio["agg_script_id"] = this.agg_script_id;
+    data_invio["agg_sql_id"] = this.agg_sql_id; // non utilizzato
+
+    try {
+      risposta = await getIt
+          .get<HttpRepository>()
+          .http!
+          .aggiornamenti_controlla(data_invio: data_invio);
+    } on DatabaseException catch (e) {
+      if (e.isNoSuchTableError()) {
+        print("Errore inizializzazione parametri");
+      }
+    }
+    print("dbRepository aggiornamenti_controlla: " + risposta.toString());
+    // $o_output.esito_codice:=0
+    // $o_output.esito_descrizione:=""
+    // $o_output.errori:=New collection
+    // $o_output.sql_eseguire:=New collection
+    // $o_output.codice_attivazione_nuvo:=""
+    // $o_output.videocatalogo_uid:=""
+
+    if (risposta["aggiornabenti_disponibili"] == true) {
+      esito = true;
+    } else {
+      print(risposta["errori"].toString());
+      esito = false;
+    }
+
+    print("dbRepositoty aggiornamenti_controlla fine");
+
+    return esito;
+  }
+
+
 }

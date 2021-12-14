@@ -1,5 +1,22 @@
 
 
+- fare verifica aggiornamenti da scaricare
+
+- aggiornamenti ordine da seguire
+    - aggiornamento software
+    - aggiornamento script
+    - aggiornamento anagrafica
+    - aggiornamento comunicazioni
+    - aggiornamento immagini ma solo NEW PROMO
+    - aggiornamento dati
+        -
+    - aggiornamento immagini
+
+- ricezione ordini
+- ricezione moduli ??
+
+- banner videocatalogo
+
 - in oggetto utente corrente
     - creare funzione che carica i dati dell'utente dal database
     - funzione controlla se esite utente e porta al logon o a registrazione

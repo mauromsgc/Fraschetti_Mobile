@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
+import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:fraschetti_videocatalogo/utils/ValidationBlock.dart';
 import 'package:get_it/get_it.dart';
 
@@ -56,8 +58,19 @@ class _ParametriConnesionePageState extends State<ParametriConnesionePage> {
     Navigator.of(context).pop();
   }
 
-  void parametri_defaultOnSubmit() async {
-    host_serverController.text = "http://www.fraschetti.com:8080";
+  void parametri_default_assegna({bool debug = false}) async {
+    if(debug == false) {
+      host_serverController.text = "http://www.fraschetti.com:8080";
+    }else{
+      host_serverController.text = "http://192.168.1.78:8080";
+    }
+
+  }
+
+  void test_comunicazine(BuildContext context) async {
+    final response = await getIt.get<HttpRepository>().http!.trasmissione_test(p_host_server: host_serverController.text);
+
+    print(response);
   }
 
   @override
@@ -116,7 +129,8 @@ class _ParametriConnesionePageState extends State<ParametriConnesionePage> {
                         padding: EdgeInsets.all(5),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(elevation: 2),
-                          onPressed: () => parametri_defaultOnSubmit(),
+                          onPressed: () => parametri_default_assegna(),
+                          onLongPress: () => parametri_default_assegna(debug: true),
                           child: Text('Assegna parameri default'),
                         ),
                       ),
@@ -129,7 +143,7 @@ class _ParametriConnesionePageState extends State<ParametriConnesionePage> {
                         padding: EdgeInsets.all(5),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(elevation: 2),
-                          onPressed: () {},
+                          onPressed: () => test_comunicazine(context),
                           child: Text('Test trasmissione'),
                         ),
                       ),

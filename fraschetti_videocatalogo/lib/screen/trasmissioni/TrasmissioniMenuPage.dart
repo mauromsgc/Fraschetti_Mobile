@@ -3,8 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
+import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
+import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
+import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/trasmissioni/TrasmissioneLista.dart';
 import 'package:get_it/get_it.dart';
+
+import '../../main.dart';
 
 class TrasmissioniMenuLista extends StatefulWidget {
   TrasmissioniMenuLista({Key? key}) : super(key: key);
@@ -19,6 +24,25 @@ class _TrasmissioniMenuListaState extends State<TrasmissioniMenuLista> {
   void listaClick(BuildContext context, int index) {
     // selezione al cliente e va in ordine
   }
+
+
+  void aggiornamenti_controlla(BuildContext context) async {
+    final response = await getIt.get<ParametriModel>().aggiornamenti_controlla();
+
+    print("aggiornamenti_controlla: "+response.toString());
+  }
+
+  void aggiorna_da_server(BuildContext context) async {
+
+    final valid = await GetIt.instance<DbRepository>().aggiorna_da_server();
+    if (valid) {
+      print("Aggiornamento completato");
+    } else {
+      print("Errore durante l'aggiornamento, riprovare");
+    }
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -68,9 +92,22 @@ class _TrasmissioniMenuListaState extends State<TrasmissioniMenuLista> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(elevation: 2),
                       onPressed: () {
-                        // Navigator.of(context).pop();
+                        aggiorna_da_server(context);
                       },
                       child: Text('Aggiorna da server'),
+                    ),
+                  ),
+                  Container(
+                    height: 50,
+                    // width: double.maxFinite,
+                    width: 300,
+                    padding: EdgeInsets.all(5),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(elevation: 2),
+                      onPressed: () {
+                        aggiornamenti_controlla(context);
+                      },
+                      child: Text('Verifica disponibilità aggiornamenti'),
                     ),
                   ),
                   Container(

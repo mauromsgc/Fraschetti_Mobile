@@ -96,12 +96,14 @@ giacenze_disattivate INTEGER
 CREATE TABLE assortimenti ( 
 id INTEGER NOT NULL PRIMARY KEY, 
 descrizione TEXT(100,0), 
-ordinatore integer
+ordinatore integer,
+immagine TEXT 
 )""");
 
         await db.execute("DROP TABLE IF EXISTS assortimenti_codici");
         await db.execute("""
 CREATE TABLE assortimenti_codici ( 
+id INTEGER NOT NULL PRIMARY KEY, 
 assortimenti_id INTEGER, 
 catalogo_id integer, 
 ordinatore integer
@@ -163,7 +165,9 @@ sospeso INTEGER,
 pezzi INTEGER, 
 prezzo REAL, 
 um CHAR(2,0), 
-iva INTEGER
+iva INTEGER,
+spedizione_categoria_codice CHAR(2,0), 
+quantita_massima INTEGER
 )""");
 
         await db.execute("DROP TABLE IF EXISTS comunicazioni");
@@ -336,6 +340,17 @@ codice_ean CHAR(20,0)
         await db.execute(
             "CREATE INDEX codice_ean_codice_ean_indice ON codici_ean (codice_ean ASC)");
 
+        await db.execute("DROP TABLE IF EXISTS giacenze");
+        await db.execute("""
+CREATE TABLE giacenze ( 
+id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+codice_articolo CHAR(6,0),
+quantita REAL 
+)""");
+
+        await db.execute(
+            "CREATE INDEX giacenze_codice_articolo_indice ON giacenze (codice_articolo ASC)");
+
         await db.execute("DROP TABLE IF EXISTS referenze_agenti");
         await db.execute("""
 CREATE TABLE referenze_agenti ( 
@@ -475,10 +490,8 @@ descrizione CHAR(30,0)
         getIt.get<ParametriModel>().codice_macchina;
     data_invio["dispositivo_tipo"] = VIDEOCATALOGO_DISPOSIVITO_TIPO;
 
-    data_invio["codice_attivazione"] = codice_attivazione;
-
     // presenti in base al tipo di chimata
-    //$o_input.codice_attivazione:=""
+    data_invio["codice_attivazione"] = codice_attivazione;
 
     try {
       risposta = await getIt
@@ -535,6 +548,84 @@ descrizione CHAR(30,0)
     return esito;
   }
 
+  Future<bool> aggiorna_da_server() async {
+    print("dbRepositoty aggiorna_da_server inizio");
+
+    bool esito = false;
+    Map<String, dynamic> risposta = {};
+
+    Map<String, dynamic> data_invio = {};
+    data_invio["azione"] = "Post.Aggior.Dati";
+    data_invio["azione_versione"] = 1;
+    data_invio["username"] = getIt.get<ParametriModel>().username;
+    data_invio["videocatalogo_versione"] = VIDEOCATALOGO_VERSIONE;
+    data_invio["videocatalogo_uid"] =
+        getIt.get<ParametriModel>().videocatalogo_uid;
+    data_invio["dispositivo_codice"] =
+        getIt.get<ParametriModel>().codice_macchina;
+    data_invio["dispositivo_tipo"] = VIDEOCATALOGO_DISPOSIVITO_TIPO;
+
+    // presenti in base al tipo di chimata
+    data_invio["aggiornamento_id_ultimo"] =
+        getIt.get<ParametriModel>().agg_dati_id;
+
+    try {
+      risposta = await getIt
+          .get<HttpRepository>()
+          .http!
+          .aggiorna_da_server(data_invio: data_invio);
+    } on DatabaseException catch (e) {
+      if (e.isNoSuchTableError()) {
+        print("Errore inizializzazione parametri");
+      }
+    }
+    print("dbRepository aggiorna_da_server: " + risposta.toString());
+    //$o_output.esito_codice:=0
+    //$o_output.esito_descrizione:=""
+    //$o_output.errori:=New collection
+    //$o_output.sql_eseguire:=""
+    //$o_output.videocatalogo_uid:=""
+    //$o_output.aggiornamento_id_ultimo:=0
+
+    if (risposta["esito_codice"] == 0) {
+      esito = true;
+      try {
+        List<dynamic> sql_eseguire = [];
+        sql_eseguire = risposta["sql_eseguire"];
+        // aggiorna i dati e i parametri
+        await database.transaction((txn) async {
+          sql_eseguire.forEach((sql_eseguire_riga) async {
+            await database.execute(sql_eseguire_riga.toString());
+          });
+        });
+
+        // ricaricare i parametri
+        if (getIt.get<ParametriModel>().agg_dati_id !=
+            risposta["aggiornamento_id_ultimo"]) {
+          await GetIt.instance<ParametriModel>().agg_dati_id_aggiorna(risposta["aggiornamento_id_ultimo"]);
+        }
+      } on DatabaseException catch (errore_db) {
+        esito = false;
+        print("Errore sql: " + errore_db.toString());
+      }
+    } else {
+      print(risposta["errori"].toString());
+      esito = false;
+    }
+
+    // if (record_eleborati > 0) {
+    //   print("parametri host_server_aggiorna 1");
+    //   await this.inizializza();
+    //   print("parametri host_server_aggiorna 2");
+    // } else {
+    //   print("ParametriModel errore aggiornamento host_server");
+    // }
+
+    print("dbRepositoty aggiorna_da_server fine");
+
+    return esito;
+  }
+
   Future<List<FamigliaModel>> famiglie_lista() async {
     final rows = await database.query("famiglie");
     return rows.map((row) => FamigliaModel.fromMap(row)).toList();
@@ -545,6 +636,4 @@ descrizione CHAR(30,0)
     final rows = await database.query("clienti");
     return rows.map((row) => ClienteModel.fromMap(row)).toList();
   }
-
-
 }

@@ -9,7 +9,6 @@ import 'package:logger/logger.dart';
 // import 'package:focus_login_sessioni_utente/repositories/SessionRepository.dart';
 // import 'package:focus_login_sessioni_utente/repositories/UserRepository.dart';
 
-const String HTTP_HOST = "http://192.168.1.78:8080";
 
 
 // Questa è una delle classi più importanti di tutta l'applicazione.
@@ -60,11 +59,16 @@ class HttpClient {
   }
 
 
-  Future<Map<String, dynamic>> trasmissione_test() async {
+  Future<Map<String, dynamic>> trasmissione_test({String p_host_server = ""}) async {
     // effettua un test di trasmissione
 
+    String host_server = GetIt.instance<ParametriModel>().host_server;
+    if(p_host_server != ""){
+      host_server = p_host_server;
+    }
+
     final String _api = "/4daction/Post_mv1_ConnessioneTest";
-    var url = Uri.parse(HTTP_HOST + _api);
+    var url = Uri.parse(host_server + _api);
 
     Map<String, dynamic> data_invio = {};
     data_invio["data"] = "Post.Test";
@@ -75,35 +79,6 @@ class HttpClient {
     // trasformando in json mi arrivano i dati nel body
     final _oggetto_invio = json.encode(data_invio);
     var response = await http.post(url, body: _oggetto_invio);
-
-    print(response.body);
-    print(response.statusCode);
-
-    final data = json.decode(response.body);
-    print(data);
-
-    if (response.statusCode == 200) {
-      return data;
-    }
-
-    throw RequestError(data["error"]);
-  }
-
-
-
-  Future<Map<String, dynamic>> trasmissione_test_2() async {
-    // effettua un test di trasmissione
-
-    final String _api = "/4daction/Post_mv1_ConnessioneTest";
-    var url = Uri.parse(HTTP_HOST + _api);
-
-    Map<String, dynamic> data_invio = {};
-    data_invio["data"] = "Post.Test";
-    data_invio["parametri"] = GetIt.instance<ParametriModel>().toString();
-
-    // _body_data["parametri"] = GetIt.instance<ParametriModel>().toString();
-
-    var response = await http.post(url, body: data_invio);
 
     print(response.body);
     print(response.statusCode);
@@ -139,8 +114,9 @@ class HttpClient {
     // effettua la registrazione del videocatalogo
     print("httpRepositoty utente_registra inizio");
 
+    final host_server = GetIt.instance<ParametriModel>().host_server;
     final String _api = "/4daction/Post_mv1_Registrazione";
-    var url = Uri.parse(HTTP_HOST + _api);
+    var url = Uri.parse(host_server + _api);
 
     Map _body_data = {};
     _body_data["data"] = data_invio;
@@ -162,9 +138,71 @@ class HttpClient {
 
   }
 
+  Future<Map<String, dynamic>> aggiorna_da_server ({required Map<String, dynamic> data_invio}) async {
+    // scarica gli aggiornamenti
+    print("httpRepositoty aggiorna_da_server inizio");
+
+    final host_server = GetIt.instance<ParametriModel>().host_server;
+    final String _api = "/4daction/Post_mv1_AggiornaDati";
+    var url = Uri.parse(host_server + _api);
+
+    Map _body_data = {};
+    _body_data["data"] = data_invio;
+
+    // var response = await http.post(url, body: data_invio);
+
+    final _oggetto_invio = json.encode(_body_data);
+    var response = await http.post(url, body: _oggetto_invio);
+
+    final data_risposta = json.decode(response.body);
+    print(data_risposta);
+
+    print("httpRepositoty aggiorna_da_server fine");
+    if (response.statusCode == 200) {
+      return data_risposta["data"];
+    }
+
+    throw RequestError(data_risposta["error"]);
+
+  }
+
+
+
+  Future<Map<String, dynamic>> aggiornamenti_controlla ({required Map<String, dynamic> data_invio}) async {
+    // controlla se ci sono aggiornamenti da scaricare
+    print("httpRepositoty aggiornamenti_controlla inizio");
+
+    final host_server = GetIt.instance<ParametriModel>().host_server;
+    final String _api = "/4daction/Post_mv1_AggiornamentiControlla";
+    var url = Uri.parse(host_server + _api);
+
+    Map _body_data = {};
+    _body_data["data"] = data_invio;
+
+    // var response = await http.post(url, body: data_invio);
+
+    final _oggetto_invio = json.encode(_body_data);
+    var response = await http.post(url, body: _oggetto_invio);
+
+    final data_risposta = json.decode(response.body);
+    print(data_risposta);
+
+    print("httpRepositoty aggiornamenti_controlla fine");
+    if (response.statusCode == 200) {
+      return data_risposta["data"];
+    }
+
+    throw RequestError(data_risposta["error"]);
+
+  }
+
   void videocatalogo_disinstalla() {
     // disinstalla il videocatalogo
   }
+
+
+
+
 
   void aggiornamenti_scarica() {
     // scarica gli aggiornamenti
