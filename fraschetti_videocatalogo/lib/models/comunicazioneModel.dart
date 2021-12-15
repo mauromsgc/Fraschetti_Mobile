@@ -1,4 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
+import 'package:get_it/get_it.dart';
+import 'package:sqflite/sqflite.dart';
 
 class ComunicazioneModel {
   int id = 0;
@@ -49,4 +52,23 @@ class ComunicazioneModel {
         "comunicazione_testo": comunicazione_testo,
         "comunicazione_blob": comunicazione_blob,
       };
+
+static Future<List<Map>> comunicazioni_lista() async {
+  List<Map> comunicazioni_lista = [];
+
+  Database db = GetIt.instance<DbRepository>().database;
+  final rows = await db.rawQuery("""SELECT 
+    comunicazioni.id,
+    comunicazioni.oggetto,
+    comunicazioni.data,
+    comunicazioni.da_leggere
+     FROM comunicazioni
+    ;""");
+
+  comunicazioni_lista = rows;
+
+  return comunicazioni_lista;
+}
+
+
 }

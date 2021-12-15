@@ -27,7 +27,7 @@ class ComunicazioneListaPage extends StatefulWidget {
 final pageStato = PageStore().obs;
 
 class PageStore {
-  List<ComunicazioneModel> comunicazioni_lista = [];
+  List<Map> comunicazioni_lista = [];
 
   PageStore() {
     print("PageStore inizializza ");
@@ -39,7 +39,7 @@ class PageStore {
   }
 
   Future<void> _comunicazioni_lista_carica() async {
-    comunicazioni_lista = await GetIt.instance<DbRepository>().comunicazioni_lista();
+    comunicazioni_lista = await ComunicazioneModel.comunicazioni_lista();
     print("comunicazioni_lista: " + comunicazioni_lista.length.toString());
 
     pageStato.refresh();
@@ -237,7 +237,7 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
   }
 
 // riga lista
-  Widget ListaWidget(List<ComunicazioneModel> comunicazioni_lista) {
+  Widget ListaWidget(List<Map> comunicazioni_lista) {
     return Expanded(
       child: ListView.separated(
         separatorBuilder: (context, index) => Divider(
@@ -247,34 +247,15 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
         ),
         itemCount: comunicazioni_lista.length,
         itemBuilder: (context, index) {
-          // print(comunicazioni_lista[index].comunicazione_blob.toString());
-          print(comunicazioni_lista[index].oggetto);
           return InkWell(
             onTap: () {
               listaClick(context);
             },
             child: Container(
-              height: 40,
+              height: 50,
               // decoration: MyBoxDecoration().MyBox(),
               child: Row(
                   children: <Widget>[
-
-                    Container(
-                      width: 40,
-                      decoration: BoxDecoration(
-                        border: MyBorder().MyBorderOrange(),
-                        // image: DecorationImage(
-                        //   image: AssetImage("assets/immagini/splash_screen.png"),
-                        //   fit: BoxFit.contain,
-                        // ),
-                      ),
-                      child:
-                      Image.memory(
-                        Base64Decoder().convert(comunicazioni_lista[index].comunicazione_blob),
-                        width: 200,
-                      ),
-                    ),
-
                     Container(
                       width: 100,
                       decoration: MyBoxDecoration().MyBox(),
@@ -283,13 +264,13 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            "${comunicazioni_lista[index].id}",
+                            "${comunicazioni_lista[index]['id']}",
                             style: TextStyle(
                               // fontSize: 12,
                             ),
                           ),
                           Text(
-                            "${comunicazioni_lista[index].data}",
+                            "${comunicazioni_lista[index]['data']}",
                             style: TextStyle(
                               // fontSize: 12,
                             ),
@@ -303,7 +284,7 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
                         padding: EdgeInsets.all(5.0),
                         decoration: MyBoxDecoration().MyBox(),
                         child: Text(
-                              "${comunicazioni_lista[index].oggetto}",
+                              "${comunicazioni_lista[index]['oggetto']}",
                               style: TextStyle(
                                   fontSize: 18.0,
                                   overflow: TextOverflow.ellipsis

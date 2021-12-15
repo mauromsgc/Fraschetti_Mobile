@@ -1,4 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
+import 'package:get_it/get_it.dart';
+import 'package:sqflite/sqflite.dart';
 
 class ClienteModel {
 
@@ -100,4 +103,23 @@ class ClienteModel {
         "prezzi_non_visibili": prezzi_non_visibili,
         "giacenze_disattivate": giacenze_disattivate,
       };
+
+
+  // poi fare il cerca
+  static Future<List<Map>> clienti_lista() async {
+    List<Map> clienti_lista = [];
+
+    Database db = GetIt.instance<DbRepository>().database;
+    final rows = await db.rawQuery("""SELECT 
+    clienti.id,
+    clienti.agente_id,
+    clienti.ragione_sociale,
+    clienti.localita
+     FROM clienti
+    ;""");
+
+    clienti_lista = rows;
+
+    return clienti_lista;  }
+
 }

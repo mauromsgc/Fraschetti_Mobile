@@ -180,7 +180,7 @@ class _TrasmissioneListaState extends State<TrasmissioneLista> {
               listaClick(context);
             },
             child: Container(
-              height: 40,
+              height: 50,
               // decoration: MyBoxDecoration().MyBox(),
               child: Row(
                 children: <Widget>[

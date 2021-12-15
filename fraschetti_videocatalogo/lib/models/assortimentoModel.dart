@@ -1,4 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
+import 'package:get_it/get_it.dart';
+import 'package:sqflite/sqflite.dart';
 
 class AssortimentoModel {
   int id = 0;
@@ -29,4 +32,11 @@ class AssortimentoModel {
         "descrizione": descrizione,
         "ordinatore": ordinatore,
       };
+
+static  Future<List<AssortimentoModel>> assortimenti_lista() async {
+  Database db = GetIt.instance<DbRepository>().database;
+  final rows = await db.query("assortimenti");
+    return rows.map((row) => AssortimentoModel.fromMap(row)).toList();
+  }
+
 }

@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:fraschetti_videocatalogo/models/promozione_codiceModel.dart';
+import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
+import 'package:get_it/get_it.dart';
+import 'package:sqflite/sqflite.dart';
 
 class PromozioneModel {
   int id = 0;
@@ -47,4 +50,24 @@ class PromozioneModel {
         "ordinatore": ordinatore,
         "nome": nome,
       };
+
+  // poi fare il cerca
+  static Future<List<Map>> promozioni_lista() async {
+    List<Map> promozioni_lista = [];
+
+    Database db = GetIt.instance<DbRepository>().database;
+    final rows = await db.rawQuery("""SELECT 
+    promozioni.id,
+    promozioni.nome,
+    promozioni.ordinatore,
+    ifnull(promozioni_img.immagine_preview, '') as immagine_preview
+    FROM promozioni
+    LEFT JOIN promozioni_img ON promozioni_img.promozione_id = promozioni.id
+    ;""");
+
+    promozioni_lista = rows;
+
+    return promozioni_lista;
+  }
+
 }

@@ -1,4 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
+import 'package:get_it/get_it.dart';
+import 'package:sqflite/sqflite.dart';
 
 class FamigliaModel {
   // il costruttore con tutti i parametri lo uso solo per creare i record fake
@@ -40,6 +43,10 @@ class FamigliaModel {
     "abbreviazione": abbreviazione,
   };
 
-
+  static Future<List<FamigliaModel>> famiglie_lista() async {
+    Database db = GetIt.instance<DbRepository>().database;
+    final rows = await db.query("famiglie");
+    return rows.map((row) => FamigliaModel.fromMap(row)).toList();
+  }
 
 }

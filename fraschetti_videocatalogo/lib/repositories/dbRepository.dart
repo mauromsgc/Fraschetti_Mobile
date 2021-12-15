@@ -9,6 +9,7 @@ import 'package:fraschetti_videocatalogo/models/promozioneModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:fraschetti_videocatalogo/utils/Utility.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as path;
@@ -598,23 +599,32 @@ descrizione CHAR(30,0)
           List<dynamic> sql_eseguire = [];
           sql_eseguire = risposta["sql_eseguire"];
           // aggiorna i dati e i parametri
-          await database.transaction((txn) async {
-            sql_eseguire.forEach((sql_eseguire_riga) async {
-              await database.execute(sql_eseguire_riga.toString());
-            });
-          });
+
+          print(DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now())+" - "+"Esecuzione query inizio");
+
+          for (String sql_eseguire_riga in sql_eseguire) {
+            await database.execute(sql_eseguire_riga);
+            // print(sql_eseguire_riga);
+          }
+          // await database.transaction((txn) async {
+          //   sql_eseguire.forEach((sql_eseguire_riga) async {
+          //     await database.execute(sql_eseguire_riga.toString());
+          //   });
+          // });
+
+          print(DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now())+" - "+"Esecuzione query fine");
 
           // ricaricare i parametri
           int aggiornamento_id_ultimo_int = risposta["aggiornamento_id_ultimo"];
 
           if (getIt.get<ParametriModel>().agg_dati_id != aggiornamento_id_ultimo_int) {
             GetIt.instance<ParametriModel>()
-                .agg_comunicazioni_id_aggiorna(aggiornamento_id_ultimo_int);
+                .agg_dati_id_aggiorna(aggiornamento_id_ultimo_int);
           }
 
         } on DatabaseException catch (errore_db) {
           esito = false;
-          print("Errore sql: " + errore_db.toString());
+          print(DateFormat("yyyy-MM-dd HH:mm:ss").toString()+" - "+"Errore sql: " + errore_db.toString());
         }
       } else {
         print(risposta["errori"].toString());
@@ -930,37 +940,9 @@ descrizione CHAR(30,0)
   }
 
 
-  Future<List<FamigliaModel>> famiglie_lista() async {
-    final rows = await database.query("famiglie");
-    return rows.map((row) => FamigliaModel.fromMap(row)).toList();
-  }
 
-  Future<List<AssortimentoModel>> assortimenti_lista() async {
-    final rows = await database.query("assortimenti");
-    return rows.map((row) => AssortimentoModel.fromMap(row)).toList();
-  }
 
-  // poi fare il cerca
-  Future<List<CatalogoModel>> catalogo_lista() async {
-    final rows = await database.query("catalogo");
-    return rows.map((row) => CatalogoModel.fromMap(row)).toList();
-  }
 
-  // poi fare il cerca
-  Future<List<PromozioneModel>> promozioni_lista() async {
-    final rows = await database.query("promozioni");
-    return rows.map((row) => PromozioneModel.fromMap(row)).toList();
-  }
 
-  // poi fare il cerca
-  Future<List<ComunicazioneModel>> comunicazioni_lista() async {
-    final rows = await database.query("comunicazioni");
-    return rows.map((row) => ComunicazioneModel.fromMap(row)).toList();
-  }
 
-  // poi fare il cerca
-  Future<List<ClienteModel>> clienti_lista() async {
-    final rows = await database.query("clienti");
-    return rows.map((row) => ClienteModel.fromMap(row)).toList();
-  }
 }

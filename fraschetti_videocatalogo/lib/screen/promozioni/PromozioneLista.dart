@@ -27,7 +27,7 @@ class PromozioneListaPage extends StatefulWidget {
 final pageStato = PageStore().obs;
 
 class PageStore {
-  List<PromozioneModel> promozioni_lista = [];
+  List<Map> promozioni_lista = [];
 
   PageStore() {
     print("PageStore inizializza ");
@@ -39,7 +39,7 @@ class PageStore {
   }
 
   Future<void> promozioni_lista_carica() async {
-    promozioni_lista = await GetIt.instance<DbRepository>().promozioni_lista();
+    promozioni_lista = await PromozioneModel.promozioni_lista();
     print("promozioni_lista: " + promozioni_lista.length.toString());
     // promozioni_lista.forEach((PromozioneModel promozione) async {
     //   print(promozione.nome);
@@ -207,7 +207,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
   }
 
 // riga lista
-  Widget ListaWidget(List<PromozioneModel> promozioni_lista) {
+  Widget ListaWidget(List<Map> promozioni_lista) {
     return Expanded(
       child: ListView.separated(
         separatorBuilder: (context, index) => Divider(
@@ -222,25 +222,17 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
               listaClick(context);
             },
             child: Container(
-              height: 40,
+              height: 50,
               // decoration: MyBoxDecoration().MyBox(),
               child: Row(
                   children: <Widget>[
                     Container(
-                      width: 40,
+                      width: 60,
                       decoration: BoxDecoration(
                         border: MyBorder().MyBorderOrange(),
-                        image: DecorationImage(
-                          image: AssetImage("assets/immagini/splash_screen.png"),
-                          fit: BoxFit.contain,
-                        ),
                       ),
-
-                      // child:
-                      // Image.memory(
-                      //   Base64Decoder().convert(promozioni_lista[index].immagine_preview),
-                      //   width: 200,
-                      // ),
+                      child:
+                      ListaImmagineWidget(immagine_base64: promozioni_lista[index]['immagine_preview']),
 
                     ),
                     Expanded(
@@ -251,7 +243,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
                           border: MyBorder().MyBorderOrange(),
                         ),
                         child: Text(
-                          "${promozioni_lista[index].nome}",
+                          "${promozioni_lista[index]['nome']}",
                           style: TextStyle(
                               fontSize: 18.0,
                               overflow: TextOverflow.ellipsis
@@ -267,4 +259,15 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
       ),
     );
   }
+
+  Widget ListaImmagineWidget ({dynamic immagine_base64 = ''}) {
+    if((immagine_base64 != null) && (immagine_base64 != '')){
+      return Image.memory(
+        Base64Decoder().convert(immagine_base64),
+      );
+    }else{
+      return Image.asset("assets/immagini/splash_screen.png");
+    }
+  }
+
 }

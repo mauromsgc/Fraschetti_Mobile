@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
@@ -28,7 +29,7 @@ final pageStato = PageStore().obs;
 class PageStore {
   List<FamigliaModel> famiglie_lista = [];
   List<AssortimentoModel> assortimenti_lista = [];
-  List<CatalogoModel> articoli_lista = [];
+  List<Map> articoli_lista = [];
 
   PageStore() {
     print("PageStore inizializza ");
@@ -42,20 +43,20 @@ class PageStore {
   }
 
   Future<void> _famiglie_lista_carica() async {
-    famiglie_lista = await GetIt.instance<DbRepository>().famiglie_lista();
+    famiglie_lista = await FamigliaModel.famiglie_lista();
     print("famiglie_lista: " + famiglie_lista.length.toString());
     pageStato.refresh();
   }
 
   Future<void> _assortimenti_lista_carica() async {
-    assortimenti_lista = await GetIt.instance<DbRepository>().assortimenti_lista();
+    assortimenti_lista = await AssortimentoModel.assortimenti_lista();
     // print("assortimenti_lista: "+assortimenti_lista.toString());
     // assortimenti_lista = await GetIt.instance<DbRepository>().famiglie_lista();
     pageStato.refresh();
   }
 
   Future<void> _articoli_lista_carica() async {
-    articoli_lista = await GetIt.instance<DbRepository>().catalogo_lista();
+    articoli_lista = await CatalogoModel.catalogo_lista();
     print("articoli_lista: " + articoli_lista.length.toString());
 // print("articoli_lista: "+articoli_lista.toString());
     pageStato.refresh();
@@ -480,7 +481,8 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
       );
 
   // riga lista
-  Widget ListaWidget(List<CatalogoModel> articoli_lista) {
+  // Widget ListaWidget(List<CatalogoModel> articoli_lista) {
+  Widget ListaWidget(List<Map> articoli_lista) {
     return Expanded(
       child: ListView.separated(
         separatorBuilder: (context, index) => Divider(
@@ -495,32 +497,24 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
               listaClick(context);
             },
             child: Container(
-              height: 40,
+              height: 50,
               // decoration: MyBoxDecoration().MyBox(),
               child: Row(
                 children: <Widget>[
                   Container(
                     width: 10,
                     decoration: BoxDecoration(
-                      color: Colors.orange,
-                      // "${articoli_lista[index].nome}"
+                      color: Color(int.parse(articoli_lista[index]['colore'])),
+                      // "${articoli_lista[index]["nome"]}"
                     ),
                   ),
                   Container(
-                    width: 40,
+                    width: 60,
                     decoration: BoxDecoration(
                       border: MyBorder().MyBorderOrange(),
-                      image: DecorationImage(
-                        image: AssetImage("assets/immagini/splash_screen.png"),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-
-                    // child:
-                    // Image.memory(
-                    //   Base64Decoder().convert(articoli_lista[index].immagine_preview),
-                    //   width: 200,
-                    // ),
+                     ),
+                    child:
+                         ListaImmagineWidget(immagine_base64: articoli_lista[index]['immagine_preview']),
 
                   ),
                   Expanded(
@@ -529,7 +523,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                       padding: EdgeInsets.all(5.0),
                       decoration: MyBoxDecoration().MyBox(),
                       child: Text(
-                        "${articoli_lista[index].nome}",
+                        "${articoli_lista[index]['nome']}",
                         style: TextStyle(
                             fontSize: 15.0, overflow: TextOverflow.ellipsis),
                       ),
@@ -564,6 +558,15 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
     );
   }
 
+  Widget ListaImmagineWidget ({dynamic immagine_base64 = ''}) {
+    if((immagine_base64 != null) && (immagine_base64 != '')){
+      return Image.memory(
+        Base64Decoder().convert(immagine_base64),
+      );
+    }else{
+      return Image.asset("assets/immagini/splash_screen.png");
+    }
+  }
 // riga lista
   Widget ListaWidget_old(List<CatalogoModel> articoli_lista) {
     return Expanded(

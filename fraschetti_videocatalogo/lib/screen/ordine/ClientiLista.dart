@@ -26,7 +26,7 @@ class ClienteLista extends StatefulWidget {
 final pageStato = PageStore().obs;
 
 class PageStore {
-  List<ClienteModel> clienti_lista = [];
+  List<Map> clienti_lista = [];
 
   PageStore() {
     print("PageStore inizializza ");
@@ -38,7 +38,7 @@ class PageStore {
   }
 
   Future<void> _clienti_lista_carica() async {
-    clienti_lista = await GetIt.instance<DbRepository>().clienti_lista();
+    clienti_lista = await ClienteModel.clienti_lista();
     print("clienti_lista: " + clienti_lista.length.toString());
     // clienti_lista.forEach((ClienteModel cliente) async {
     //   print(cliente.ragione_sociale);
@@ -242,7 +242,7 @@ class _ClienteListaState extends State<ClienteLista> {
   }
 
 // riga lista
-  Widget ListaWidget(List<ClienteModel> clienti_lista) {
+  Widget ListaWidget(List<Map> clienti_lista) {
     return Expanded(
       child: ListView.separated(
         separatorBuilder: (context, index) => Divider(
@@ -257,7 +257,7 @@ class _ClienteListaState extends State<ClienteLista> {
               listaClick(context, index);
             },
             child: Container(
-              height: 40,
+              height: 50,
               // decoration: MyBoxDecoration().MyBox(),
               child: Row(
                 children: <Widget>[
@@ -266,7 +266,7 @@ class _ClienteListaState extends State<ClienteLista> {
                     width: 60,
                     decoration: MyBoxDecoration().MyBox(),
                     child: Text(
-                      "${clienti_lista[index].id}",
+                      "${clienti_lista[index]['id']}",
                       style: TextStyle(
                         fontSize: 18,
                       ),
@@ -277,18 +277,18 @@ class _ClienteListaState extends State<ClienteLista> {
                       padding: EdgeInsets.only(left: 5.0, right: 5.0),
                       decoration: MyBoxDecoration().MyBox(),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "${clienti_lista[index].ragione_sociale}",
+                            "${clienti_lista[index]['ragione_sociale']}",
                             style: TextStyle(
                               fontSize: 18.0,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           Text(
-                            "${clienti_lista[index].localita}",
+                            "${clienti_lista[index]['localita']}",
                             style: TextStyle(
                               fontSize: 10.0,
                               overflow: TextOverflow.ellipsis,
