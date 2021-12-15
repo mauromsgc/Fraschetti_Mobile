@@ -858,7 +858,7 @@ descrizione CHAR(30,0)
     Map<String, dynamic> risposta = {};
 
     Map<String, dynamic> data_invio = {};
-    data_invio["azione"] = "Aggiornamento.Com";
+    data_invio["azione"] = "Aggiornamento.Img";
     data_invio["azione_versione"] = 1;
     data_invio["username"] = getIt.get<ParametriModel>().username;
     data_invio["videocatalogo_versione"] = VIDEOCATALOGO_VERSIONE;
