@@ -43,26 +43,19 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
   }
 
   void test_2() async{
-    print("test 1");
-    var t0 = ParametriModel();
-    await t0.inizializza();
+    final valid = await GetIt.instance<DbRepository>().immagini_aggiorna();
+    if (valid) {
+      print("Aggiornamento completato");
+    } else {
+      print("Errore durante l'aggiornamento, riprovare");
+    }
 
-    print("test 2");
-    Future.delayed(const Duration(milliseconds: 500));
+  }
 
-    print("test 3");
-    Future.delayed(const Duration(milliseconds: 500));
+  void test_3() async{
+    getIt.get<ParametriModel>().inizializza();
 
-    print("test 4");
-    Future.delayed(const Duration(milliseconds: 500));
-
-    print("test 5");
-    Future.delayed(const Duration(milliseconds: 500));
-
-    print("test 6");
-    Future.delayed(const Duration(milliseconds: 500));
-
-    print("test 7");
+    print(getIt.get<ParametriModel>().toMap().toString());
 
   }
 
@@ -224,7 +217,7 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
                         onPressed: () {
                           test_1();
                         },
-                        child: Text('Test 1'),
+                        child: Text('Test 1 comunicazioni'),
                       ),
                     ),
                     Container(
@@ -237,7 +230,20 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
                         onPressed: () {
                           test_2();
                         },
-                        child: Text('Test 1'),
+                        child: Text('Test 2 immagini'),
+                      ),
+                    ),
+                    Container(
+                      // lo fa già il server
+                      height: 50,
+                      width: double.maxFinite,
+                      padding: EdgeInsets.all(5),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(elevation: 2),
+                        onPressed: () {
+                          test_3();
+                        },
+                        child: Text('Ricarica parametri'),
                       ),
                     ),
                   ],

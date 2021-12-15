@@ -195,6 +195,35 @@ class HttpClient {
   }
 
 
+  Future<Map<String, dynamic>> immagini_aggiorna ({required Map<String, dynamic> data_invio}) async {
+    // scarica le immagini
+    print("httpRepositoty immagini_aggiorna inizio");
+
+    final host_server = GetIt.instance<ParametriModel>().host_server;
+    final String _api = "/4daction/Post_mv1_AggiornaImmagini";
+    var url = Uri.parse(host_server + _api);
+
+    Map _body_data = {};
+    _body_data["data"] = data_invio;
+
+    // var response = await http.post(url, body: data_invio);
+
+    final _oggetto_invio = json.encode(_body_data);
+    var response = await http.post(url, body: _oggetto_invio);
+
+    final data_risposta = json.decode(response.body);
+    print(data_risposta);
+
+    print("httpRepositoty immagini_aggiorna fine");
+    if (response.statusCode == 200) {
+      return data_risposta["data"];
+    }
+
+    throw RequestError(data_risposta["error"]);
+
+  }
+
+
   Future<Map<String, dynamic>> aggiornamenti_controlla ({required Map<String, dynamic> data_invio}) async {
     // controlla se ci sono aggiornamenti da scaricare
     print("httpRepositoty aggiornamenti_controlla inizio");

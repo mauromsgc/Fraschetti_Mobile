@@ -605,11 +605,13 @@ descrizione CHAR(30,0)
           });
 
           // ricaricare i parametri
-          if (getIt.get<ParametriModel>().agg_dati_id !=
-              int.parse(risposta["aggiornamento_id_ultimo"])) {
-            await GetIt.instance<ParametriModel>()
-                .agg_dati_id_aggiorna(int.parse(risposta["aggiornamento_id_ultimo"]));
+          int aggiornamento_id_ultimo_int = risposta["aggiornamento_id_ultimo"];
+
+          if (getIt.get<ParametriModel>().agg_dati_id != aggiornamento_id_ultimo_int) {
+            GetIt.instance<ParametriModel>()
+                .agg_comunicazioni_id_aggiorna(aggiornamento_id_ultimo_int);
           }
+
         } on DatabaseException catch (errore_db) {
           esito = false;
           print("Errore sql: " + errore_db.toString());
@@ -673,9 +675,7 @@ descrizione CHAR(30,0)
         comunicazioni_id_aggiornare = risposta["comunicazioni_id_aggiornare"];
         // aggiorna le comunicazioni
 
-        comunicazioni_id_aggiornare.forEach((comunicazioni_id) async {
-          // faccio la chiamata per scaricare la comunicazione
-
+        for (int comunicazioni_id in comunicazioni_id_aggiornare) {
           final valid = await GetIt.instance<DbRepository>()
               .comunicazioni_aggiorna_scarica(
               comunicazione_id_aggiornare: comunicazioni_id);
@@ -683,9 +683,10 @@ descrizione CHAR(30,0)
             print("Aggiornamento completato");
           } else {
             print("Errore durante l'aggiornamento");
-            return;
           }
-        });
+        }
+
+
       }
       } else {
         print(risposta["errori"].toString());
@@ -755,16 +756,17 @@ descrizione CHAR(30,0)
           });
 
           // ricaricare i parametri
-          if (getIt.get<ParametriModel>().agg_comunicazioni_id !=
-              int.parse(risposta["aggiornamento_id_ultimo"])) {
+          int aggiornamento_id_ultimo_int = risposta["aggiornamento_id_ultimo"];
+          if (getIt.get<ParametriModel>().agg_comunicazioni_id != aggiornamento_id_ultimo_int) {
             GetIt.instance<ParametriModel>()
-                .agg_comunicazioni_id_aggiorna(
-                    int.parse(risposta["aggiornamento_id_ultimo"]));
+                .agg_comunicazioni_id_aggiorna(aggiornamento_id_ultimo_int);
           }
+
         } on DatabaseException catch (errore_db) {
           esito = false;
           print("Errore sql: " + errore_db.toString());
         }
+
       } else {
         print(risposta["errori"].toString());
         esito = false;
@@ -775,6 +777,158 @@ descrizione CHAR(30,0)
 
     return esito;
   }
+
+
+  Future<bool> immagini_aggiorna() async {
+    print("dbRepositoty immagini_aggiorna inizio");
+
+    bool esito = true;
+    Map<String, dynamic> risposta = {};
+
+    Map<String, dynamic> data_invio = {};
+    data_invio["azione"] = "Aggiornamento.Img.Cerca";
+    data_invio["azione_versione"] = 1;
+    data_invio["username"] = getIt.get<ParametriModel>().username;
+    data_invio["videocatalogo_versione"] = VIDEOCATALOGO_VERSIONE;
+    data_invio["videocatalogo_uid"] =
+        getIt.get<ParametriModel>().videocatalogo_uid;
+    data_invio["dispositivo_codice"] =
+        getIt.get<ParametriModel>().codice_macchina;
+    data_invio["dispositivo_tipo"] = VIDEOCATALOGO_DISPOSIVITO_TIPO;
+
+    // presenti in base al tipo di chimata
+    data_invio["aggiornamento_id_ultimo"] =
+        getIt.get<ParametriModel>().agg_immagini_id;
+
+    if (esito == true) {
+      try {
+        risposta = await getIt.get<HttpRepository>().http!.immagini_aggiorna(data_invio: data_invio);
+      } on DatabaseException catch (e) {
+        if (e.isNoSuchTableError()) {
+          esito = false;
+          print("Errore inizializzazione parametri");
+        }
+      }
+      print("dbRepository immagini_aggiorna: " + risposta.toString());
+    }
+    //$o_output.esito_codice:=0
+    //$o_output.esito_descrizione:=""
+    //$o_output.errori:=New collection
+    //$o_output.sql_eseguire:=""
+    //$o_output.videocatalogo_uid:=""
+    //$o_output.immagini_id_aggiornare:=lista id immagini da scaricare
+
+    if (esito == true) {
+      if (risposta["esito_codice"] == 0) {
+        esito = true;
+
+        if(risposta["immagini_id_aggiornare"].length > 0){
+          List<dynamic> immagini_id_aggiornare = [];
+          immagini_id_aggiornare = risposta["immagini_id_aggiornare"];
+          // aggiorna le immagini
+
+          for (int immagini_id in immagini_id_aggiornare) {
+            final valid = await GetIt.instance<DbRepository>()
+                .immagini_aggiorna_scarica(
+                immagine_id_aggiornare: immagini_id);
+            if (valid) {
+              print("Aggiornamento completato");
+            } else {
+              print("Errore durante l'aggiornamento");
+            }
+          }
+
+        }
+      } else {
+        print(risposta["errori"].toString());
+        esito = false;
+      }
+    }
+
+    print("dbRepositoty immagini_aggiorna fine");
+
+    return esito;
+  }
+
+  Future<bool> immagini_aggiorna_scarica(
+      {int immagine_id_aggiornare = 0}) async {
+    print("dbRepositoty immagini_aggiorna_scarica inizio");
+
+    bool esito = true;
+    Map<String, dynamic> risposta = {};
+
+    Map<String, dynamic> data_invio = {};
+    data_invio["azione"] = "Aggiornamento.Com";
+    data_invio["azione_versione"] = 1;
+    data_invio["username"] = getIt.get<ParametriModel>().username;
+    data_invio["videocatalogo_versione"] = VIDEOCATALOGO_VERSIONE;
+    data_invio["videocatalogo_uid"] =
+        getIt.get<ParametriModel>().videocatalogo_uid;
+    data_invio["dispositivo_codice"] =
+        getIt.get<ParametriModel>().codice_macchina;
+    data_invio["dispositivo_tipo"] = VIDEOCATALOGO_DISPOSIVITO_TIPO;
+
+    // presenti in base al tipo di chimata
+    data_invio["aggiornamento_id_ultimo"] = immagine_id_aggiornare;
+
+    if (esito == true) {
+      try {
+        risposta = await getIt
+            .get<HttpRepository>()
+            .http!
+            .immagini_aggiorna(data_invio: data_invio);
+      } on DatabaseException catch (e) {
+        if (e.isNoSuchTableError()) {
+          esito = false;
+          print("Errore inizializzazione parametri");
+        }
+      }
+      print("dbRepository immagini_aggiorna_scarica: " +
+          risposta.toString());
+    }
+    //$o_output.esito_codice:=0
+    //$o_output.esito_descrizione:=""
+    //$o_output.errori:=New collection
+    //$o_output.sql_eseguire:=""
+    //$o_output.videocatalogo_uid:=""
+    //$o_output.immagini_id_aggiornare:=lista id immagini da scaricare
+
+    if (esito == true) {
+      if (risposta["esito_codice"] == 0) {
+        esito = true;
+        try {
+          List<dynamic> sql_eseguire = [];
+          sql_eseguire = risposta["sql_eseguire"];
+          // aggiorna i dati e i parametri
+          await database.transaction((txn) async {
+            sql_eseguire.forEach((sql_eseguire_riga) async {
+              await database.execute(sql_eseguire_riga.toString());
+            });
+          });
+
+          // ricaricare i parametri
+          int aggiornamento_id_ultimo_int = risposta["aggiornamento_id_ultimo"];
+          if (getIt.get<ParametriModel>().agg_immagini_id != aggiornamento_id_ultimo_int) {
+            GetIt.instance<ParametriModel>()
+                .agg_immagini_id_aggiorna(aggiornamento_id_ultimo_int);
+          }
+
+        } on DatabaseException catch (errore_db) {
+          esito = false;
+          print("Errore sql: " + errore_db.toString());
+        }
+
+      } else {
+        print(risposta["errori"].toString());
+        esito = false;
+      }
+    }
+
+    print("dbRepositoty immagini_aggiorna_scarica fine");
+
+    return esito;
+  }
+
 
   Future<List<FamigliaModel>> famiglie_lista() async {
     final rows = await database.query("famiglie");

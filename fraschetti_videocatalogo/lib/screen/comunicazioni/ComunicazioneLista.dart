@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
@@ -6,8 +7,12 @@ import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/comunicazioniRepository.dart';
+import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/comunicazioni/ComunicazionePage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:get_it/get_it.dart';
 
 
 class ComunicazioneListaPage extends StatefulWidget {
@@ -19,9 +24,45 @@ class ComunicazioneListaPage extends StatefulWidget {
   _ComunicazioneListaPageState createState() => _ComunicazioneListaPageState();
 }
 
+final pageStato = PageStore().obs;
+
+class PageStore {
+  List<ComunicazioneModel> comunicazioni_lista = [];
+
+  PageStore() {
+    print("PageStore inizializza ");
+    inizializza();
+  }
+
+  void inizializza() async {
+    _comunicazioni_lista_carica();
+  }
+
+  Future<void> _comunicazioni_lista_carica() async {
+    comunicazioni_lista = await GetIt.instance<DbRepository>().comunicazioni_lista();
+    print("comunicazioni_lista: " + comunicazioni_lista.length.toString());
+
+    pageStato.refresh();
+  }
+
+  void comunicazioni_cerca() async {
+    _comunicazioni_lista_carica();
+  }
+
+  void comunicazioni_da_leggere() async {
+    _comunicazioni_lista_carica();
+  }
+
+  void comunicazioni_lette() async {
+    _comunicazioni_lista_carica();
+  }
+}
+
 class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
-  List<ComunicazioneModel> comunicazioni_lista =
-      ComunicazioniRepository().all_2();
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void listaClick(BuildContext context) {
     Navigator.pushNamed(context, ComunicazionePage.routeName);
@@ -56,7 +97,9 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
                   thickness: 2,
                   // color: Theme.of(context).primaryColor,
                 ),
-                ListaWidget(comunicazioni_lista),
+                Obx(
+                      () => ListaWidget(pageStato.value.comunicazioni_lista),
+                ),
               ],
             ),
           ),
@@ -77,6 +120,8 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
               flex: 5,
               child: TextFormField(
                 onEditingComplete: () {
+                  pageStato.value.comunicazioni_cerca();
+
                   showDialog<String>(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
@@ -106,6 +151,8 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
               flex: 3,
               child: TextFormField(
                 onEditingComplete: () {
+                  pageStato.value.comunicazioni_cerca();
+
                   showDialog<String>(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
@@ -135,7 +182,10 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
               flex: 2,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
-                onPressed: () {},
+                onPressed: () {
+                  pageStato.value.comunicazioni_cerca();
+
+                },
                 child: Text('Cerca'),
               ),
             ),
@@ -159,7 +209,10 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
               flex: 1,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
-                onPressed: () {},
+                onPressed: () {
+                  pageStato.value.comunicazioni_da_leggere();
+
+                },
                 child: Text('Da leggere'),
               ),
             ),
@@ -170,7 +223,10 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
               flex: 1,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
-                onPressed: () {},
+                onPressed: () {
+                  pageStato.value.comunicazioni_lette();
+
+                },
                 child: Text('Lette'),
               ),
             ),
@@ -191,6 +247,8 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
         ),
         itemCount: comunicazioni_lista.length,
         itemBuilder: (context, index) {
+          // print(comunicazioni_lista[index].comunicazione_blob.toString());
+          print(comunicazioni_lista[index].oggetto);
           return InkWell(
             onTap: () {
               listaClick(context);
@@ -200,6 +258,23 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
               // decoration: MyBoxDecoration().MyBox(),
               child: Row(
                   children: <Widget>[
+
+                    Container(
+                      width: 40,
+                      decoration: BoxDecoration(
+                        border: MyBorder().MyBorderOrange(),
+                        // image: DecorationImage(
+                        //   image: AssetImage("assets/immagini/splash_screen.png"),
+                        //   fit: BoxFit.contain,
+                        // ),
+                      ),
+                      child:
+                      Image.memory(
+                        Base64Decoder().convert(comunicazioni_lista[index].comunicazione_blob),
+                        width: 200,
+                      ),
+                    ),
+
                     Container(
                       width: 100,
                       decoration: MyBoxDecoration().MyBox(),

@@ -515,6 +515,13 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                         fit: BoxFit.contain,
                       ),
                     ),
+
+                    // child:
+                    // Image.memory(
+                    //   Base64Decoder().convert(articoli_lista[index].immagine_preview),
+                    //   width: 200,
+                    // ),
+
                   ),
                   Expanded(
                     child: Container(

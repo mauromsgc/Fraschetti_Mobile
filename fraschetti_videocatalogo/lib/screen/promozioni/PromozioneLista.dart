@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
@@ -234,6 +235,13 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
                           fit: BoxFit.contain,
                         ),
                       ),
+
+                      // child:
+                      // Image.memory(
+                      //   Base64Decoder().convert(promozioni_lista[index].immagine_preview),
+                      //   width: 200,
+                      // ),
+
                     ),
                     Expanded(
                       child: Container(
