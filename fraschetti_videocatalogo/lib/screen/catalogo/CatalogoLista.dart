@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/models/assortimentoModel.dart';
 import 'package:fraschetti_videocatalogo/models/famigliaModel.dart';
@@ -31,50 +33,63 @@ class PageStore {
   List<AssortimentoModel> assortimenti_lista = [];
   List<Map> articoli_lista = [];
 
-  PageStore() {
-    print("PageStore inizializza ");
-    inizializza();
-  }
+  // PageStore() {
+  //   print("PageStore inizializza ");
+  // }
 
-  void inizializza() async {
+}
+
+class _CatalogoListaPageState extends State<CatalogoListaPage> {
+  final TextEditingController descrizioneController = TextEditingController();
+  final TextEditingController codiceController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
     _famiglie_lista_carica();
     _assortimenti_lista_carica();
     _articoli_lista_carica();
   }
 
+  void app_chiudi(){
+    if (kDebugMode) {
+      Navigator.pushNamed(context, LoginPage.routeName);
+    }else {
+      Future.delayed(const Duration(milliseconds: 1000), () {
+        SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+      });
+    }
+  }
+
   Future<void> _famiglie_lista_carica() async {
-    famiglie_lista = await FamigliaModel.famiglie_lista();
-    print("famiglie_lista: " + famiglie_lista.length.toString());
+    pageStato.value.famiglie_lista = await FamigliaModel.famiglie_lista();
     pageStato.refresh();
   }
 
   Future<void> _assortimenti_lista_carica() async {
-    assortimenti_lista = await AssortimentoModel.assortimenti_lista();
-    // print("assortimenti_lista: "+assortimenti_lista.toString());
-    // assortimenti_lista = await GetIt.instance<DbRepository>().famiglie_lista();
+    pageStato.value.assortimenti_lista = await AssortimentoModel.assortimenti_lista();
     pageStato.refresh();
   }
 
-  Future<void> _articoli_lista_carica() async {
-    articoli_lista = await CatalogoModel.catalogo_lista();
-    print("articoli_lista: " + articoli_lista.length.toString());
-// print("articoli_lista: "+articoli_lista.toString());
+  Future<void> _articoli_lista_carica({
+    int famiglia_id = 0,
+    int assortimento_id = 0,
+    String selezione = '', // selezione contiene anche tutto
+    String ordinamento_campo = '',
+    String ordinamento_verso = '',
+  }) async {
+    // passo sempre le variabili descrizione e codice
+    pageStato.value.articoli_lista = await CatalogoModel.catalogo_lista(
+      descrizione: descrizioneController.text,
+      codice: codiceController.text,
+      famiglia_id: famiglia_id,
+      assortimento_id: assortimento_id,
+      selezione: selezione,
+      ordinamento_campo: ordinamento_campo,
+      ordinamento_verso: ordinamento_verso,
+    );
     pageStato.refresh();
-  }
-
-  void articoli_cerca() async {
-    _articoli_lista_carica();
-  }
-
-  void articoli_tutti() async {
-    _articoli_lista_carica();
-  }
-}
-
-class _CatalogoListaPageState extends State<CatalogoListaPage> {
-  @override
-  void initState() {
-    super.initState();
   }
 
   void listaClick(BuildContext context) {
@@ -100,7 +115,10 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   padding: EdgeInsets.all(5),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(elevation: 2),
-                    onPressed: () {},
+                    onPressed: () {
+                      _articoli_lista_carica(assortimento_id: elemento.id);
+                      Navigator.pop(context);
+                    },
                     child: Text(elemento.descrizione),
                   ),
                 );
@@ -136,7 +154,10 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                 padding: EdgeInsets.all(5),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(elevation: 2),
-                  onPressed: () {},
+                  onPressed: () {
+                    _articoli_lista_carica(selezione: 'novita');
+                    Navigator.pop(context);
+                  },
                   child: Text('Novità'),
                 ),
               ),
@@ -146,7 +167,10 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                 padding: EdgeInsets.all(5),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(elevation: 2),
-                  onPressed: () {},
+                  onPressed: () {
+                    _articoli_lista_carica(selezione: 'nuovi_codici');
+                    Navigator.pop(context);
+                  },
                   child: Text('Nuovi codici'),
                 ),
               ),
@@ -157,6 +181,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(elevation: 2),
                   onPressed: () {
+                    _articoli_lista_carica(selezione: 'in_offerta');
                     Navigator.of(context).pop();
                   },
                   child: Text('Prodotti in offerta'),
@@ -265,7 +290,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
             ),
             IconButton(
               onPressed: () {
-                Navigator.pushNamed(context, LoginPage.routeName);
+                app_chiudi();
               },
               icon: Icon(Icons.exit_to_app),
             )
@@ -309,21 +334,17 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
             Expanded(
               flex: 6,
               child: TextFormField(
+                controller: descrizioneController,
+                onChanged: (value) {
+                  // Call setState to update the UI
+                  codiceController.clear();
+                  setState(() {});
+                  if(descrizioneController.text.length >=3){
+                    _articoli_lista_carica();
+                  }
+                },
                 onEditingComplete: () {
-                  pageStato.value.articoli_cerca();
-
-                  showDialog<String>(
-                    context: context,
-                    builder: (BuildContext context) => AlertDialog(
-                      title: const Text('Avviare ricerca'),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('ok'),
-                        ),
-                      ],
-                    ),
-                  );
+                  _articoli_lista_carica();
                 },
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.text,
@@ -331,6 +352,15 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
                   hintText: 'Descrizione',
+                  suffixIcon: descrizioneController.text.length == 0
+                      ? null
+                      : IconButton(
+                    icon: Icon(Icons.clear),
+                    onPressed: () {
+                      descrizioneController.clear();
+                      setState(() {});
+                    },
+                  ),
                 ),
               ),
             ),
@@ -340,21 +370,16 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
             Expanded(
               flex: 2,
               child: TextFormField(
+                controller: codiceController,
+                onChanged: (value) {
+                  // Call setState to update the UI
+                  descrizioneController.clear();
+                  setState(() {});
+                  if(codiceController.text.length >=2){
+                    _articoli_lista_carica();
+                  }},
                 onEditingComplete: () {
-                  pageStato.value.articoli_cerca();
-
-                  showDialog<String>(
-                    context: context,
-                    builder: (BuildContext context) => AlertDialog(
-                      title: const Text('Avviare ricerca'),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('ok'),
-                        ),
-                      ],
-                    ),
-                  );
+                  _articoli_lista_carica();
                 },
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.number,
@@ -362,6 +387,16 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
                   hintText: 'Codice',
+                  suffixIcon: codiceController.text.length == 0
+                      ? null
+                      : IconButton(
+                    icon: Icon(Icons.clear),
+                    onPressed: () {
+                      codiceController.clear();
+                      _articoli_lista_carica();
+                      setState(() {});
+                    },
+                  ),
                 ),
               ),
             ),
@@ -373,7 +408,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
                 onPressed: () {
-                  pageStato.value.articoli_cerca();
+                  _articoli_lista_carica();
                 },
                 child: Text('Cerca'),
               ),
@@ -425,7 +460,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
                 onPressed: () {
-                  pageStato.value.articoli_tutti();
+                  _articoli_lista_carica(selezione: 'tutto');
                 },
                 child: Text('Tutto'),
               ),
@@ -449,7 +484,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                 splashColor: Colors.grey.shade600,
                 focusColor: Color(int.parse(elemento.colore)).withAlpha(125),
                 onTap: () {
-                  print(elemento.descrizione);
+                  _articoli_lista_carica(famiglia_id: elemento.id);
                 },
                 child: Container(
                   padding: EdgeInsets.all(5),
@@ -518,37 +553,56 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
 
                   ),
                   Expanded(
-                    child: Container(
-                      alignment: Alignment(-1.0, 0.0),
-                      padding: EdgeInsets.all(5.0),
-                      decoration: MyBoxDecoration().MyBox(),
-                      child: Text(
-                        "${articoli_lista[index]['nome']}",
-                        style: TextStyle(
-                            fontSize: 15.0, overflow: TextOverflow.ellipsis),
+                    child: Stack(
+                      children: [
+                        Container(
+                          alignment: Alignment.centerLeft,
+                        // alignment: Alignment(-1.0, 0.0),
+                        padding: EdgeInsets.all(5.0),
+                        decoration: MyBoxDecoration().MyBox(),
+                        child: Text(
+                          "${articoli_lista[index]['nome']}",
+                          style: TextStyle(
+                              fontSize: 15.0, overflow: TextOverflow.ellipsis),
+                        ),
                       ),
-                    ),
+                      if (articoli_lista[index]['nuovo'] == 1)  Positioned(
+                          top: 0,
+                          right: 0,
+                          child: Container(
+                            width: 60,
+                            height: 25,
+                            decoration: BoxDecoration(
+                              border: MyBorder().MyBorderOrange(),
+                              image: DecorationImage(
+                                image: AssetImage("assets/immagini/splash_screen.png"),
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        if (articoli_lista[index]['promozione_id'] > 0)  Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            width: 60,
+                            height: 25,
+                            decoration: BoxDecoration(
+                              border: MyBorder().MyBorderOrange(),
+                              image: DecorationImage(
+                                image: AssetImage("assets/immagini/splash_screen.png"),
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                      ],),
                   ),
-                  Container(
-                    width: 60,
-                    decoration: BoxDecoration(
-                      border: MyBorder().MyBorderOrange(),
-                      image: DecorationImage(
-                        image: AssetImage("assets/immagini/splash_screen.png"),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 60,
-                    decoration: BoxDecoration(
-                      border: MyBorder().MyBorderOrange(),
-                      image: DecorationImage(
-                        image: AssetImage("assets/immagini/splash_screen.png"),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
+
+
+                  
                 ],
               ),
             ),

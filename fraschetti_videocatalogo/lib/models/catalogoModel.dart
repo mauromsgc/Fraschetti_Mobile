@@ -62,25 +62,196 @@ class CatalogoModel {
       };
 
   // poi fare il cerca
-  static Future<List<Map>> catalogo_lista() async {
+  static Future<List<Map>> catalogo_lista({
+    String descrizione = '',
+    String codice = '',
+    int famiglia_id = 0,
+    int assortimento_id = 0,
+    String selezione = '',
+    String ordinamento_campo = '',
+    String ordinamento_verso = '',
+  }) async {
     List<Map> catalogo_lista = [];
 
     Database db = GetIt.instance<DbRepository>().database;
-    final rows = await db.rawQuery("""SELECT 
+    String sql_eseguire = """SELECT DISTINCT 
     catalogo.id,
     catalogo.nome,
     catalogo.nuovo,
     catalogo.sospeso,
     catalogo.ordinatore,
     famiglie.colore,
+    ifnull(promozioni_codici.promozione_id, 0) as promozione_id,
     ifnull(catalogo_img.immagine_preview, '') as immagine_preview
     FROM catalogo
     LEFT JOIN famiglie ON famiglie.id = catalogo.famiglia
+    LEFT JOIN promozioni_codici ON promozioni_codici.catalogo_id = catalogo.id
     LEFT JOIN catalogo_img ON catalogo_img.catalogo_id = catalogo.id
-    ;""");
+    """;
+
+    // fare ricerca per parole separate
+    // in base ai parametri compilare i vettori con
+    // i join, le condizioni, gli ordinamenti
+
+
+    if (codice != '') {
+      sql_eseguire += "LEFT JOIN codici ON codici.catalogo_id = catalogo.id ";
+    }
+    if (assortimento_id != 0) {
+      sql_eseguire +=
+          "LEFT JOIN assortimenti_codici ON assortimenti_codici.catalogo_id = catalogo.id ";
+      sql_eseguire +=
+          "LEFT JOIN assortimenti ON assortimenti.id = assortimenti_codici.assortimenti_id ";
+    }
+
+    if ((descrizione != '') ||
+        (codice != '') ||
+        (famiglia_id != 0) ||
+        (assortimento_id != 0) ||
+        (selezione != '')) {
+      sql_eseguire += "WHERE ";
+    }
+    if (descrizione != '') {
+      sql_eseguire += "catalogo.nome LIKE '%${descrizione}%' ";
+    }
+    if (codice != '') {
+      sql_eseguire += "codici.numero LIKE '${codice}%' ";
+    }
+    if (famiglia_id != 0) {
+      sql_eseguire += "famiglie.id = ${famiglia_id} ";
+    }
+    if (assortimento_id != 0) {
+      sql_eseguire += "assortimenti.id = ${assortimento_id} ";
+    }
+    if (selezione != '') {
+      switch (selezione) {
+        case 'tutto':
+          sql_eseguire += "catalogo.id > 0 ";
+          break;
+        case 'novita':
+          sql_eseguire += "catalogo.nuovo > 0 ";
+          break;
+        case 'nuovi_codici':
+          // sql_eseguire += "famiglie.id = ${selezione} ";
+          break;
+        case 'in_offerta':
+          // sql_eseguire += "famiglie.id = ${selezione} ";
+          break;
+      }
+    }
+
+    sql_eseguire += ";";
+    print(sql_eseguire);
+
+    final rows = await db.rawQuery(sql_eseguire);
 
     catalogo_lista = rows;
 
     return catalogo_lista;
+
+    // switch
+    // case (pCercare = "Svuota")
+    // put "SELECT Catalogo.ID FROM Catalogo" into tSQL
+    // put tSQL && "WHERE Catalogo.ID < 0" into tSQL
+    // put tSQL && "AND Catalogo.Sospeso <= " & tSOFT_SospesiMostra into tSQL
+    // break
+    // case (pCercare = "Tutto")
+    // put "SELECT Catalogo.ID FROM Catalogo" into tSQL
+    // put tSQL && "WHERE Catalogo.Sospeso < 1" into tSQL
+    // put tSQL && "AND Catalogo.Sospeso <= " & tSOFT_SospesiMostra into tSQL
+    // put tSQL && "ORDER BY Catalogo.Nome ASC" into tSQL
+    // break
+    // case (pCercare = "Famiglia")
+    // put "SELECT Catalogo.ID FROM Catalogo" into tSQL
+    // put tSQL && "WHERE Catalogo.Famiglia = " & pValoreCercare into tSQL
+    // put tSQL && "AND Catalogo.Sospeso <= " & tSOFT_SospesiMostra into tSQL
+    // put tSQL && "ORDER BY Catalogo.Nome ASC" into tSQL
+    // break
+    // case (pCercare = "Assortimenti")
+    // put "SELECT DISTINCT Catalogo.ID FROM Catalogo, AssortimentiCodici, Assortimenti" into tSQL
+    // put tSQL && "WHERE Catalogo.ID = AssortimentiCodici.CatalogoID" into tSQL
+    // put tSQL && "AND AssortimentiCodici.AssortimentiID = Assortimenti.ID" into tSQL
+    // put tSQL && "AND Assortimenti.Descrizione LIKE '" & pValoreCercare & "'" into tSQL
+    // put tSQL && "AND Catalogo.Sospeso <= " & tSOFT_SospesiMostra into tSQL
+    // put tSQL && "ORDER BY AssortimentiCodici.Ordinatore ASC" into tSQL
+    //
+    // break
+    // case (pCercare = "Selezione")
+    // switch
+    // case (pValoreCercare = "Novità")
+    // put "SELECT Catalogo.ID FROM Catalogo" into tSQL
+    // put tSQL && "WHERE Catalogo.Nuovo = 1" into tSQL
+    // put tSQL && "AND Catalogo.Sospeso <= " & tSOFT_SospesiMostra into tSQL
+    // put tSQL && "ORDER BY Catalogo.Nome ASC" into tSQL
+    // break
+    //
+    // case (pValoreCercare = "Nuovi codici")
+    // put "SELECT DISTINCT Catalogo.ID FROM Catalogo, Codici" into tSQL
+    // put tSQL && "WHERE Catalogo.ID = Codici.CatalogoID" into tSQL
+    // put tSQL && "AND Catalogo.Sospeso <= " & tSOFT_SospesiMostra into tSQL
+    // put tSQL && "AND Codici.Nuovo = 1" into tSQL
+    // put tSQL && "ORDER BY Catalogo.Nome ASC" into tSQL
+    // break
+    //
+    // case (pValoreCercare = "Prodotti in offerta")
+    // put "SELECT DISTINCT Catalogo.ID FROM Catalogo, PromozioniCodici" into tSQL
+    // put tSQL && "WHERE Catalogo.ID = PromozioniCodici.CatalogoID" into tSQL
+    // put tSQL && "AND Catalogo.Sospeso <= " & tSOFT_SospesiMostra into tSQL
+    // put tSQL && "ORDER BY PromozioniCodici.Ordinatore ASC" into tSQL
+    // break
+    //
+    // case (pValoreCercare = "Assortimenti")
+    // put "SELECT DISTINCT Catalogo.ID FROM Catalogo, AssortimentiCodici" into tSQL
+    // put tSQL && "WHERE Catalogo.ID = AssortimentiCodici.CatalogoID" into tSQL
+    // put tSQL && "AND Catalogo.Sospeso <= " & tSOFT_SospesiMostra into tSQL
+    // put tSQL && "ORDER BY AssortimentiCodici.Ordinatore ASC" into tSQL
+    // break
+    // end switch
+    //
+    // break
+    //
+    // case tNome is not empty
+    // -- controllare se c'è più di una parola
+    // -- se c'è una sola parola cercare la parola con %, che iniza per
+    // -- se ci sono n parole cercare gli articoli che contengono esattamente le parole fino a n-1
+    // -- e per la parola n cercare con %
+    //
+    // local tParolaNumero, tParoleTotale, tParola
+    // put 0 into tParolaNumero
+    // put 0 into tParoleTotale
+    // put empty into tParola
+    //
+    // put "%" after word -1 of tNome -- aggiungo % alla fine dell'ultima parola per la ricerca
+    // -- inserisco le parole in un array per creare poi la
+    //
+    // put the number of words in tNome into tParoleTotale
+    //
+    // put "SELECT Catalogo.ID FROM Catalogo" into tSQL
+    // put tSQL && "WHERE Catalogo.Sospeso <= " & tSOFT_SospesiMostra into tSQL
+    //
+    // repeat with tParolaNumero = 1 to tParoleTotale
+    // put word tParolaNumero of tNome into tParola
+    // put tSQL && "AND (Catalogo.Nome LIKE '" & tParola & " %'" into tSQL
+    // put tSQL && "OR Catalogo.Nome LIKE '% " & tParola & " %'" into tSQL
+    // put tSQL && "OR Catalogo.Nome LIKE '% " & tParola & "'" into tSQL
+    // put tSQL && "OR Catalogo.Nome LIKE '" & tParola & "')" into tSQL
+    // end repeat
+    //
+    // put tSQL && "ORDER BY Catalogo.Nome ASC" into tSQL
+    // break
+    // case tCodice is not empty
+    // put "SELECT DISTINCT Catalogo.ID FROM Catalogo, Codici" into tSQL
+    // put tSQL && "WHERE Catalogo.ID = Codici.CatalogoID" into tSQL
+    // put tSQL && "AND Catalogo.Sospeso <= " & tSOFT_SospesiMostra into tSQL
+    // put tSQL && "AND Codici.Numero LIKE '" & tCodice & "%'" into tSQL
+    // put tSQL && "ORDER BY Catalogo.Nome ASC" into tSQL
+    // break
+    // default
+    // put "SELECT Catalogo.ID FROM Catalogo" into tSQL
+    // put tSQL && "WHERE Catalogo.ID < 0" into tSQL
+    // put tSQL && "AND Catalogo.Sospeso <= " & tSOFT_SospesiMostra into tSQL
+    // put tSQL && "ORDER BY Catalogo.Nome ASC" into tSQL
+    // break
+    // end switch
   }
 }

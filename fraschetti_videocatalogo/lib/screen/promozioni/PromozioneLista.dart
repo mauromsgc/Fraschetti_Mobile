@@ -61,6 +61,8 @@ class PageStore {
 }
 
 class _PromozioneListaPageState extends State<PromozioneListaPage> {
+  final TextEditingController descrizioneController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -121,30 +123,30 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
             Expanded(
               flex: 5,
               child: TextFormField(
+                controller: descrizioneController,
+                onChanged: (value) {
+                  // Call setState to update the UI
+                  setState(() {});
+                },
                 onEditingComplete: () {
                   pageStato.value.promozioni_cerca();
 
-                  showDialog<String>(
-                    context: context,
-                    builder: (BuildContext context) => AlertDialog(
-                      title: const Text('Avviare ricerca'),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('ok'),
-                        ),
-                      ],
-                    ),
-                  );
                 },
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
-                  // labelText: 'Descrizione/EAN',
-                  // labelText: 'Descrizione',
                   hintText: 'Descrizione',
+                  suffixIcon: descrizioneController.text.length == 0
+                      ? null
+                      : IconButton(
+                    icon: Icon(Icons.clear),
+                    onPressed: () {
+                      descrizioneController.clear();
+                      setState(() {});
+                    },
+                  ),
                 ),
               ),
             ),

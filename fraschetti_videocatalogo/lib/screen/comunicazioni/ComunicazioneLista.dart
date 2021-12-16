@@ -59,6 +59,9 @@ class PageStore {
 }
 
 class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
+  final TextEditingController oggettoController = TextEditingController();
+  final TextEditingController idController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -119,21 +122,14 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
             Expanded(
               flex: 5,
               child: TextFormField(
+                controller: oggettoController,
+                onChanged: (value) {
+                  // Call setState to update the UI
+                  setState(() {});
+                },
                 onEditingComplete: () {
                   pageStato.value.comunicazioni_cerca();
 
-                  showDialog<String>(
-                    context: context,
-                    builder: (BuildContext context) => AlertDialog(
-                      title: const Text('Avviare ricerca'),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('ok'),
-                        ),
-                      ],
-                    ),
-                  );
                 },
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.text,
@@ -141,6 +137,15 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
                   hintText: 'Oggetto',
+                  suffixIcon: oggettoController.text.length == 0
+                      ? null
+                      : IconButton(
+                    icon: Icon(Icons.clear),
+                    onPressed: () {
+                      oggettoController.clear();
+                      setState(() {});
+                    },
+                  ),
                 ),
               ),
             ),
@@ -150,21 +155,14 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
             Expanded(
               flex: 3,
               child: TextFormField(
+                controller: idController,
+                onChanged: (value) {
+                  // Call setState to update the UI
+                  setState(() {});
+                },
                 onEditingComplete: () {
                   pageStato.value.comunicazioni_cerca();
 
-                  showDialog<String>(
-                    context: context,
-                    builder: (BuildContext context) => AlertDialog(
-                      title: const Text('Avviare ricerca'),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('ok'),
-                        ),
-                      ],
-                    ),
-                  );
                 },
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.number,
@@ -172,6 +170,15 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
                   hintText: 'ID',
+                  suffixIcon: idController.text.length == 0
+                      ? null
+                      : IconButton(
+                    icon: Icon(Icons.clear),
+                    onPressed: () {
+                      idController.clear();
+                      setState(() {});
+                    },
+                  ),
                 ),
               ),
             ),
