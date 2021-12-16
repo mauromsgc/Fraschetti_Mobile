@@ -312,7 +312,8 @@ immagine_preview TEXT
         await db.execute("""
 CREATE TABLE promozioni_new ( 
 promozione_id INTEGER NOT NULL PRIMARY KEY, 
-immagine TEXT
+immagine TEXT, 
+immagine_preview TEXT
 )""");
 
         await db.execute("DROP TABLE IF EXISTS resi");

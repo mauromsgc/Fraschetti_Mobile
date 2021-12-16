@@ -135,7 +135,7 @@ class CatalogoModel {
           // sql_eseguire += "famiglie.id = ${selezione} ";
           break;
         case 'in_offerta':
-          // sql_eseguire += "famiglie.id = ${selezione} ";
+          sql_eseguire += "promozione_id > 0 ";
           break;
       }
     }

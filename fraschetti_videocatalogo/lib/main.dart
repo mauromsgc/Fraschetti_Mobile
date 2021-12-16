@@ -24,39 +24,40 @@ void main() async{
   // log_app.e("Error log");
   // log_app.wtf("What a terrible failure log");
 
-  print("main 0");
+  // esempi getIt
+  // creazione oggetto globale
+
+  // // lettura oggetto globale
+  // var myAppModel = getIt<ClasseNome>();
+  // // lettura oggetto globale come singleton
+  // var myAppModel = GetIt.instance<ClasseNome>();
+
 
   // per attendere che carichi tutte le librerie
   WidgetsFlutterBinding.ensureInitialized();
 
+  // per gestione date in formato corretto
   Intl.defaultLocale = 'it_IT';
   await initializeDateFormatting('it_IT', null);
-  print("main 1");
 
-  print("main 2");
+  // Singleton connessione al database
   final db = await DbRepository.newConnection();
   GetIt.instance.registerSingleton(db);
 
-  print("main 3");
+  // singleton per connessione http
   GetIt.instance.registerSingleton(HttpRepository());
   // getIt.registerSingleton<HttpRepository>(HttpRepository());
 
-
-  // SessioneModel sessione = SessioneModel();
-  // var test = "Pippo pippo".obs;
-  print("main 4");
+  // singleton per gestione variabili dello stato globale (cliente selezionato, numero ordine attuale ecc.)
   getIt.registerSingleton<SessioneModel>(SessioneModel());
 
-  print("main 5");
+  // singleton accesso parametri salvati nel database (username, id aggiornament ecc.)
   getIt.registerSingleton<ParametriModel>(ParametriModel());
   await GetIt.instance<ParametriModel>().inizializza();
-  print("main 6");
+
+  // singleton variabili utente utilizzatore (dati utente da tabella e calcolati)
   getIt.registerSingleton<UtenteCorrenteModel>(UtenteCorrenteModel());
 
-  print("main 5");
-  // await GetIt.instance<DbRepository>().famiglie_lista();
-
-  print("main 10");
   runApp(MyApp());
 
 

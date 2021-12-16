@@ -1,36 +1,65 @@
 import 'package:flutter/foundation.dart';
 import 'package:fraschetti_videocatalogo/main.dart';
+import 'package:fraschetti_videocatalogo/models/agenteModel.dart';
+import 'package:fraschetti_videocatalogo/models/clienteModel.dart';
+import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
+import 'package:get_it/get_it.dart';
 import 'package:sqflite/sqflite.dart';
 
+// va ricaricato/aggiornato al momneto
+// della registrazione, del login e dopo l'ggiornamento dati
+
+// class UtenteCorrenteModel {
+//   static final UtenteCorrenteModel _istanza = UtenteCorrenteModel._costruttore_privato();
+//
+//   factory UtenteCorrenteModel() {
+//     return _istanza;
+//   }
+//
+//   UtenteCorrenteModel._costruttore_privato(){
+//     // inizializzazione
+//     String t1 ="";
+//   }
+//
+// }
+
+
+
 class UtenteCorrenteModel {
+  static final UtenteCorrenteModel _istanza = UtenteCorrenteModel._costruttore_privato();
 
-  Database? db = null;
+  factory UtenteCorrenteModel() {
+    return _istanza;
+  }
 
-  // definito come singleton all'avvio per avere sempre i dati a gisposizione
+  // definito come singleton all'avvio per avere sempre i dati a disposizione
   // da richiamare dopo il login
-  // e dopo aver caricato un oggetto parametri aggiornato
+  // dopo aver caricato un oggetto parametri aggiornato
+  // dopo aggiornamento dati
 
-  UtenteCorrenteModel () {
+  // i dati di stato dell'app li salvo nel singleton SessioneModel
+  // cliente selezionato, numero ordine in corso ecc.
+
+  UtenteCorrenteModel._costruttore_privato(){
     // carico i parametri e da quelli compilo tutte le proprietà
-    this.db = getIt.get<DbRepository>().database;
     this.inizializza();
   }
 
-  int agente_id = 0;  // id agente per utente agente, id agente del cliente per utente cliente
-  int listino_id = 0;
-  int cliente_id = 0;  // id cliente selezionato per utente agente, id cliente per utente cliente
-  int user_id = 0;
+  int agente_id =
+      0; // id agente per utente agente, id agente del cliente per utente cliente
+  int cliente_id = 0; // id cliente per utente cliente
+  int utente_id = 0;
   String cognome = '';
   String nome = '';
-  String user_sede_codice = '';
-  String user_sede_sigla = '';
-  String user_codice = '';
-  String user_tipo = '';
-  String user_tipo_interno = '';
-  String user_username = '';
+  String utente_sede_codice = '';
+  String utente_sede_sigla = '';
+  String utente_codice = '';
+  String utente_tipo = '';
+  String utente_tipo_interno = '';
+  String utente_username = '';
   int log_attivo = 0;
-  int user_in_attivita = 0;
+  int utente_in_attivita = 0;
   int sospesi_mostra = 0;
   int preventivi_abilitati = 0;
   int offerte_disattivate = 0;
@@ -42,8 +71,103 @@ class UtenteCorrenteModel {
   int moduli_disattivati = 0;
   int giacenze_disattivate = 0;
 
-  void inizializza(){
+  void inizializza() {
+    ParametriModel parametri = GetIt.instance<ParametriModel>();
 
+    String username_tipo = parametri.username.substring(1, 2);
+    this.utente_username = parametri.username;
+    this.utente_codice = parametri.username.substring(2);
+
+    switch (username_tipo) {
+      case "A":
+        AgenteModel agente_record =
+            AgenteModel.agente_cerca(codice: this.utente_codice);
+
+        this.agente_id = agente_record.id;
+        this.utente_id = agente_record.id;
+        this.utente_sede_codice = agente_record.sede;
+        this.utente_sede_sigla = agente_record.sede_sigla;
+
+        this.utente_tipo = username_tipo;
+        this.utente_tipo_interno = "-";
+        this.utente_in_attivita = agente_record.stato;
+        this.sospesi_mostra = 0;
+
+        this.preventivi_abilitati = agente_record.preventivi_abilitati;
+        this.offerte_disattivate = agente_record.offerte_disattivate;
+        this.comunicazioni_disattivate =
+            agente_record.comunicazioni_disattivate;
+        this.ordini_disattivati = agente_record.ordini_disattivati;
+        this.servizi_disattivati = agente_record.servizi_disattivati;
+        this.disponibilita_disattivate =
+            agente_record.disponibilita_disattivate;
+        this.prezzi_non_visibili = agente_record.prezzi_non_visibili;
+        this.moduli_disattivati = agente_record.moduli_disattivati;
+        this.giacenze_disattivate = agente_record.giacenze_disattivate;
+
+        break;
+      case "S":
+        AgenteModel agente_record =
+            AgenteModel.agente_cerca(codice: this.utente_codice);
+
+        this.agente_id = agente_record.id;
+        this.utente_id = agente_record.id;
+        this.utente_sede_codice = agente_record.sede;
+        this.utente_sede_sigla = agente_record.sede_sigla;
+
+        this.utente_tipo = username_tipo;
+        if ((agente_record.vendite == 1) && (agente_record.vendite == 1)) {
+          this.utente_tipo_interno = "T";
+        } else if (agente_record.vendite == 1) {
+          this.utente_tipo_interno = "A";
+        } else if (agente_record.vendite == 1) {
+          this.utente_tipo_interno = "V";
+        }
+
+        this.utente_in_attivita = agente_record.stato;
+        this.sospesi_mostra = 1;
+
+        this.preventivi_abilitati = agente_record.preventivi_abilitati;
+        this.offerte_disattivate = agente_record.offerte_disattivate;
+        this.comunicazioni_disattivate =
+            agente_record.comunicazioni_disattivate;
+        this.ordini_disattivati = agente_record.ordini_disattivati;
+        this.servizi_disattivati = agente_record.servizi_disattivati;
+        this.disponibilita_disattivate =
+            agente_record.disponibilita_disattivate;
+        this.prezzi_non_visibili = agente_record.prezzi_non_visibili;
+        this.moduli_disattivati = agente_record.moduli_disattivati;
+        this.giacenze_disattivate = agente_record.giacenze_disattivate;
+
+        break;
+      case "P":
+      case "B":
+        // lo eseguirà per P e B
+        ClienteModel cliente_record =
+            ClienteModel.cliente_cerca(codice: this.utente_codice);
+
+        this.agente_id = cliente_record.agente_id;
+        this.utente_id = cliente_record.id;
+        this.utente_sede_codice = cliente_record.sede;
+        this.utente_sede_sigla = cliente_record.sede_sigla;
+
+        this.utente_tipo = "N";
+        this.utente_tipo_interno = "-";
+        this.utente_in_attivita = cliente_record.stato;
+        this.sospesi_mostra = 0;
+
+        this.preventivi_abilitati = 0;
+        this.offerte_disattivate = cliente_record.offerte_disattivate;
+        this.comunicazioni_disattivate =
+            cliente_record.comunicazioni_disattivate;
+        this.ordini_disattivati = cliente_record.ordini_disattivati;
+        this.servizi_disattivati = cliente_record.servizi_disattivati;
+        this.disponibilita_disattivate =
+            cliente_record.disponibilita_disattivate;
+        this.prezzi_non_visibili = cliente_record.prezzi_non_visibili;
+        this.moduli_disattivati = 0;
+        this.giacenze_disattivate = cliente_record.giacenze_disattivate;
+        break;
+    }
   }
-
 }

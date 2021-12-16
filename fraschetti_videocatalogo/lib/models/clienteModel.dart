@@ -44,6 +44,10 @@ class ClienteModel {
     this.giacenze_disattivate = 0,
   });
 
+  ClienteModel.cliente_cerca({int cliente_id = 0, String codice = ""}) {
+    ClienteModel.cliente_da(cliente_id: cliente_id, codice: codice);
+  }
+
   factory ClienteModel.fromMap(Map<String, dynamic> map) {
     final id = map["id"];
     final agente_id = map["agente_id"];
@@ -105,7 +109,35 @@ class ClienteModel {
       };
 
 
-  // poi fare il cerca
+  static Future<ClienteModel> cliente_da({int cliente_id = 0, String codice = ""}) async {
+    Database db = GetIt
+        .instance<DbRepository>()
+        .database;
+
+    String sql_where = "";
+    List sql_argomenti = [];
+
+    if(cliente_id != 0){
+      sql_where += "id = ?";
+      sql_argomenti.add(cliente_id);
+    }
+    if(codice != ""){
+      if (sql_where != ""){
+        sql_where += " And ";
+      }
+      sql_where += "codice = ?";
+      sql_argomenti.add(codice);
+    }
+
+    final rows = await (await db
+        .query("clienti", where: sql_where, whereArgs: sql_argomenti));
+    if(rows.length>0){
+      return ClienteModel.fromMap(rows[0]);
+    } else {
+      return ClienteModel();
+    }
+  }
+
   static Future<List<Map>> clienti_lista() async {
     List<Map> clienti_lista = [];
 
@@ -120,6 +152,12 @@ class ClienteModel {
 
     clienti_lista = rows;
 
-    return clienti_lista;  }
+    return clienti_lista;
+  }
 
+  String get sede_sigla {
+
+    return (this.sede == 0) ? "P" : (this.sede == 1) ? "B" : "";
+
+  }
 }

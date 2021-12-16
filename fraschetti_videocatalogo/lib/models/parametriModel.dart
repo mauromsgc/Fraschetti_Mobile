@@ -57,7 +57,6 @@ class ParametriModel {
       // }
     }
     if (results.length == 1) {
-      print("parametri inizializza 3");
       this.id = results[0]["id"];
       this.agg_dati_id = results[0]["agg_dati_id"];
       this.agg_immagini_id = results[0]["agg_immagini_id"];
@@ -103,7 +102,7 @@ class ParametriModel {
     this.log_attivo = 0;
   }
 
-  ParametriModel.per_ftom_map({
+  ParametriModel.per_from_map({
     this.id = 0,
     this.agg_dati_id = 0,
     this.agg_immagini_id = 0,
@@ -142,7 +141,7 @@ class ParametriModel {
     final videocatalogo_uid = map["videocatalogo_uid"];
     final log_attivo = map["log_attivo"];
 
-    return ParametriModel.per_ftom_map(
+    return ParametriModel.per_from_map(
       id: id,
       agg_dati_id: agg_dati_id,
       agg_immagini_id: agg_immagini_id,
@@ -200,9 +199,7 @@ class ParametriModel {
     }
 
     if (record_eleborati > 0) {
-      print("parametri host_server_aggiorna 1");
       await this.inizializza();
-      print("parametri host_server_aggiorna 2");
     } else {
       print("ParametriModel errore aggiornamento host_server");
     }
@@ -226,9 +223,7 @@ class ParametriModel {
     }
 
     if (record_eleborati > 0) {
-      print("parametri host_server_aggiorna 1");
       await this.inizializza();
-      print("parametri host_server_aggiorna 2");
     } else {
       print("ParametriModel errore aggiornamento host_server");
     }
@@ -252,9 +247,7 @@ class ParametriModel {
     }
 
     if (record_eleborati > 0) {
-      print("parametri agg_dati_id_aggiorna 1");
       await this.inizializza();
-      print("parametri agg_dati_id_aggiorna 2");
     } else {
       print("ParametriModel errore aggiornamento agg_dati_id");
     }
