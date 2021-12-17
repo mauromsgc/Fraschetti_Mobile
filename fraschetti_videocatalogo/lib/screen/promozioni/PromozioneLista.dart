@@ -27,37 +27,8 @@ class PromozioneListaPage extends StatefulWidget {
 final pageStato = PageStore().obs;
 
 class PageStore {
+  List<Map> tour_offerte_lista = [];
   List<Map> promozioni_lista = [];
-
-  PageStore() {
-    print("PageStore inizializza ");
-    inizializza();
-  }
-
-  void inizializza() async {
-    promozioni_lista_carica();
-  }
-
-  Future<void> promozioni_lista_carica() async {
-    promozioni_lista = await PromozioneModel.promozioni_lista();
-    print("promozioni_lista: " + promozioni_lista.length.toString());
-    // promozioni_lista.forEach((PromozioneModel promozione) async {
-    //   print(promozione.nome);
-    // });
-    pageStato.refresh();
-  }
-
-  void promozioni_cerca() async {
-    promozioni_lista_carica();
-  }
-
-  void promozioni_tour_intero() async {
-    promozioni_lista_carica();
-  }
-
-  void promozioni_tour_singolo() async {
-    promozioni_lista_carica();
-  }
 }
 
 class _PromozioneListaPageState extends State<PromozioneListaPage> {
@@ -66,10 +37,76 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
   @override
   void initState() {
     super.initState();
+
+    _tour_offerte_lista_carica();
   }
+
+  Future<void> _tour_offerte_lista_carica() async {
+    pageStato.value.tour_offerte_lista =
+        await PromozioneModel.tour_offerte_lista();
+    pageStato.refresh();
+  }
+
+  Future<void> _promozioni_lista_cerca({
+    String nome = "",
+    String tour_singolo = "",
+    int tour_intero = 0,
+  }) async {
+    if ((tour_singolo != "") || (tour_intero != 0)) {
+      descrizioneController.clear();
+      setState(() {});
+    }
+    pageStato.value.promozioni_lista = await PromozioneModel.promozioni_lista(
+      nome: descrizioneController.text,
+      tour_singolo: tour_singolo,
+      tour_intero: tour_intero,
+    );
+    pageStato.refresh();
+  }
+
 
   void listaClick(BuildContext context) {
     Navigator.pushNamed(context, PromozionePage.routeName);
+  }
+
+  void _tour_singolo_menu(BuildContext context) {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text("Tour"),
+        content: SingleChildScrollView(
+          child: Container(
+            width: 300,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: pageStato.value.tour_offerte_lista.map((elemento) {
+                return Container(
+                  height: 40,
+                  width: double.maxFinite,
+                  padding: EdgeInsets.all(5),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(elevation: 2),
+                    onPressed: () {
+                      _promozioni_lista_cerca(tour_singolo: elemento["tour"]);
+                      Navigator.pop(context);
+                    },
+                    child: Text(elemento["tour"]),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Chiudi'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -102,7 +139,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
                   // color: Theme.of(context).primaryColor,
                 ),
                 Obx(
-                      () => ListaWidget(pageStato.value.promozioni_lista),
+                  () => ListaWidget(pageStato.value.promozioni_lista),
                 ),
               ],
             ),
@@ -125,12 +162,13 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
               child: TextFormField(
                 controller: descrizioneController,
                 onChanged: (value) {
-                  // Call setState to update the UI
                   setState(() {});
+                  // if(descrizioneController.text.length >=3){
+                  _promozioni_lista_cerca();
+                  // }
                 },
                 onEditingComplete: () {
-                  pageStato.value.promozioni_cerca();
-
+                  _promozioni_lista_cerca();
                 },
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.text,
@@ -141,28 +179,29 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
                   suffixIcon: descrizioneController.text.length == 0
                       ? null
                       : IconButton(
-                    icon: Icon(Icons.clear),
-                    onPressed: () {
-                      descrizioneController.clear();
-                      setState(() {});
-                    },
-                  ),
+                          icon: Icon(Icons.clear),
+                          onPressed: () {
+                            descrizioneController.clear();
+                            setState(() {});
+                            _promozioni_lista_cerca();
+                          },
+                        ),
                 ),
               ),
             ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              flex: 2,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(elevation: 2),
-                onPressed: () {
-                  pageStato.value.promozioni_cerca();
-                },
-                child: Text('Cerca'),
-              ),
-            ),
+            // SizedBox(
+            //   width: 10,
+            // ),
+            // Expanded(
+            //   flex: 2,
+            //   child: ElevatedButton(
+            //     style: ElevatedButton.styleFrom(elevation: 2),
+            //     onPressed: () {
+            //       pageStato.value._promozioni_lista_cerca();
+            //     },
+            //     child: Text('Cerca'),
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -184,7 +223,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
                 onPressed: () {
-                  pageStato.value.promozioni_tour_intero();
+                  _promozioni_lista_cerca(tour_intero: 1);
                 },
                 child: Text('Tour intero'),
               ),
@@ -197,7 +236,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
                 onPressed: () {
-                  pageStato.value.promozioni_tour_singolo();
+                  _tour_singolo_menu(context);
                 },
                 child: Text('Tour singolo'),
               ),
@@ -227,34 +266,32 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
               height: 50,
               // decoration: MyBoxDecoration().MyBox(),
               child: Row(
-                  children: <Widget>[
-                    Container(
-                      width: 60,
+                children: <Widget>[
+                  Container(
+                    width: 60,
+                    decoration: BoxDecoration(
+                      border: MyBorder().MyBorderOrange(),
+                    ),
+                    child: ListaImmagineWidget(
+                        immagine_base64: promozioni_lista[index]
+                            ['immagine_preview']),
+                  ),
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment(-1.0, 0.0),
+                      padding: EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
                         border: MyBorder().MyBorderOrange(),
                       ),
-                      child:
-                      ListaImmagineWidget(immagine_base64: promozioni_lista[index]['immagine_preview']),
-
-                    ),
-                    Expanded(
-                      child: Container(
-                        alignment: Alignment(-1.0, 0.0),
-                        padding: EdgeInsets.all(5.0),
-                        decoration: BoxDecoration(
-                          border: MyBorder().MyBorderOrange(),
-                        ),
-                        child: Text(
-                          "${promozioni_lista[index]['nome']}",
-                          style: TextStyle(
-                              fontSize: 18.0,
-                              overflow: TextOverflow.ellipsis
-                          ),
-                        ),
+                      child: Text(
+                        "${promozioni_lista[index]['nome']}",
+                        style: TextStyle(
+                            fontSize: 18.0, overflow: TextOverflow.ellipsis),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -262,14 +299,13 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
     );
   }
 
-  Widget ListaImmagineWidget ({dynamic immagine_base64 = ''}) {
-    if((immagine_base64 != null) && (immagine_base64 != '')){
+  Widget ListaImmagineWidget({dynamic immagine_base64 = ''}) {
+    if ((immagine_base64 != null) && (immagine_base64 != '')) {
       return Image.memory(
         Base64Decoder().convert(immagine_base64),
       );
-    }else{
+    } else {
       return Image.asset("assets/immagini/splash_screen.png");
     }
   }
-
 }

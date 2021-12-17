@@ -1,25 +1,40 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fraschetti_videocatalogo/helper/DBHelper.dart';
 import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
+import 'package:get_it/get_it.dart';
 import 'package:sqflite/sqflite.dart';
 
-const String VIDEOCATALOGO_VERSIONE = "0.0.1";
+const double VIDEOCATALOGO_VERSIONE = 0.01;
 const String VIDEOCATALOGO_DISPOSIVITO_TIPO = "mobile_2";
 
 // nella tabella parametri esisterà un solo record con id = 1
 
 // definito come singleton all'avvio per avere sempre i parametri a disposizione e aggiornarli
-
 class ParametriModel {
-  Database? db = null;
+  static final ParametriModel _istanza = ParametriModel
+      ._costruttore_privato();
 
-  ParametriModel() {
-    this.db = getIt.get<DbRepository>().database;
-    // inizializza non funziona l'await nel costruttore
-    // this.inizializza();
+  factory ParametriModel() {
+    return _istanza;
   }
+
+  // definito come singleton all'avvio per avere sempre i dati a disposizione
+  // da richiamare dopo il login
+  // dopo aver caricato un oggetto parametri aggiornato
+  // dopo aggiornamento dati
+
+  // i dati di stato dell'app li salvo nel singleton SessioneModel
+  // cliente selezionato, numero ordine in corso ecc.
+
+  ParametriModel._costruttore_privato(){
+    // carico i parametri e da quelli compilo tutte le proprietà
+    this.inizializza();
+  }
+
+  final Database? db = GetIt.instance<DbRepository>().database;
 
   int id = 0;
   int agg_dati_id = 0;
@@ -350,8 +365,7 @@ class ParametriModel {
     data_invio["agg_sql_id"] = this.agg_sql_id; // non utilizzato
 
     try {
-      risposta = await getIt
-          .get<HttpRepository>()
+      risposta = await GetIt.instance<HttpRepository>()
           .http!
           .aggiornamenti_controlla(data_invio: data_invio);
     } on DatabaseException catch (e) {

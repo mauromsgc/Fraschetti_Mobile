@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:fraschetti_videocatalogo/helper/DBHelper.dart';
 import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
@@ -88,7 +89,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
   }
 
   void test_comunicazine(BuildContext context) async {
-      final response = await getIt.get<HttpRepository>().http!.trasmissione_test();
+      final response = await GetIt.instance<HttpRepository>().http!.trasmissione_test();
 
     print(response);
   }

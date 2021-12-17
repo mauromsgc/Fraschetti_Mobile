@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:fraschetti_videocatalogo/helper/DBHelper.dart';
 import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sqflite/sqflite.dart';
@@ -118,8 +119,7 @@ class AgenteModel {
       };
 
   static Future<AgenteModel> agente_da({int agente_id = 0, String codice = ""}) async {
-    Database db = GetIt
-        .instance<DbRepository>()
+    Database db = GetIt.instance<DbRepository>()
         .database;
 
     String sql_where = "";

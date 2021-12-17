@@ -24,10 +24,9 @@ import 'package:sqflite/sqflite.dart';
 //
 // }
 
-
-
 class UtenteCorrenteModel {
-  static final UtenteCorrenteModel _istanza = UtenteCorrenteModel._costruttore_privato();
+  static final UtenteCorrenteModel _istanza =
+      UtenteCorrenteModel._costruttore_privato();
 
   factory UtenteCorrenteModel() {
     return _istanza;
@@ -41,7 +40,7 @@ class UtenteCorrenteModel {
   // i dati di stato dell'app li salvo nel singleton SessioneModel
   // cliente selezionato, numero ordine in corso ecc.
 
-  UtenteCorrenteModel._costruttore_privato(){
+  UtenteCorrenteModel._costruttore_privato() {
     // carico i parametri e da quelli compilo tutte le proprietà
     this.inizializza();
   }
@@ -59,7 +58,7 @@ class UtenteCorrenteModel {
   String utente_tipo_interno = '';
   String utente_username = '';
   int log_attivo = 0;
-  int utente_in_attivita = 0;
+  int utente_in_attivita = 1;
   int sospesi_mostra = 0;
   int preventivi_abilitati = 0;
   int offerte_disattivate = 0;
@@ -72,11 +71,14 @@ class UtenteCorrenteModel {
   int giacenze_disattivate = 0;
 
   void inizializza() {
+    String username_tipo = "";
     ParametriModel parametri = GetIt.instance<ParametriModel>();
 
-    String username_tipo = parametri.username.substring(1, 2);
-    this.utente_username = parametri.username;
-    this.utente_codice = parametri.username.substring(2);
+    if (parametri.username.length > 0) {
+      username_tipo = parametri.username.substring(1, 2);
+      this.utente_username = parametri.username;
+      this.utente_codice = parametri.username.substring(2);
+    }
 
     switch (username_tipo) {
       case "A":

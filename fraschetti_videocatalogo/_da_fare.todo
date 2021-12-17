@@ -1,7 +1,36 @@
 
-- controllare aggiorna dati
 
-- passaggio dati tra pagine
+- in pagina di login e registrazione sostituire icona per password e codice registrazione
+con lucchetto e chiave
+
+- fare ricerca per comunicazioni clienti trasmissioni esito
+
+- aggiornare ricerca per catalogo con parole separare e aggoungere ordinamento standar
+
+- aggiustare le alte ricerche
+
+- passaggio dati tra pagine liste e elenco
+
+- navigare in pagina scheda
+
+- inserimento riga ordine
+
+- inserimento riga note
+
+- preparazione ordine e note da spdire
+- spedizione ordine
+
+- fare inserimento e elaborazione sql
+
+
+- pagine stato avanzamento trasmissioni
+con banner visibile
+
+- salvataggio log su file
+
+- invio log e dati utente e parametri con chiamata post
+
+
 
 - per altro_page, elenco assortimenti e elenco selezioni
     mettere lista alta 40 in dialog e 50 in altro_page

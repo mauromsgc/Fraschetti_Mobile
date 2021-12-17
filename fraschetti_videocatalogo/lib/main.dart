@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:fraschetti_videocatalogo/helper/DBHelper.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
 import 'package:fraschetti_videocatalogo/models/utenteCorrenteModel.dart';
@@ -13,7 +14,6 @@ import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:fraschetti_videocatalogo/utils/router_app.dart';
 import 'package:logger/logger.dart';
 
-final getIt = GetIt.instance;
 // final log_app = Logger();
 
 void main() async{
@@ -24,14 +24,6 @@ void main() async{
   // log_app.e("Error log");
   // log_app.wtf("What a terrible failure log");
 
-  // esempi getIt
-  // creazione oggetto globale
-
-  // // lettura oggetto globale
-  // var myAppModel = getIt<ClasseNome>();
-  // // lettura oggetto globale come singleton
-  // var myAppModel = GetIt.instance<ClasseNome>();
-
 
   // per attendere che carichi tutte le librerie
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,7 +32,8 @@ void main() async{
   Intl.defaultLocale = 'it_IT';
   await initializeDateFormatting('it_IT', null);
 
-  // Singleton connessione al database
+  // GetIt.instance.registerSingleton<DBHelper>(DBHelper());
+// Singleton connessione al database
   final db = await DbRepository.newConnection();
   GetIt.instance.registerSingleton(db);
 
@@ -49,14 +42,14 @@ void main() async{
   // getIt.registerSingleton<HttpRepository>(HttpRepository());
 
   // singleton per gestione variabili dello stato globale (cliente selezionato, numero ordine attuale ecc.)
-  getIt.registerSingleton<SessioneModel>(SessioneModel());
+  GetIt.instance.registerSingleton<SessioneModel>(SessioneModel());
 
   // singleton accesso parametri salvati nel database (username, id aggiornament ecc.)
-  getIt.registerSingleton<ParametriModel>(ParametriModel());
-  await GetIt.instance<ParametriModel>().inizializza();
+  GetIt.instance.registerSingleton<ParametriModel>(ParametriModel());
+  // await GetIt.instance<ParametriModel>().inizializza();
 
   // singleton variabili utente utilizzatore (dati utente da tabella e calcolati)
-  getIt.registerSingleton<UtenteCorrenteModel>(UtenteCorrenteModel());
+  GetIt.instance.registerSingleton<UtenteCorrenteModel>(UtenteCorrenteModel());
 
   runApp(MyApp());
 

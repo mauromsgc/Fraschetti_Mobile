@@ -1,31 +1,63 @@
-import 'package:fraschetti_videocatalogo/helper/DBHelper.dart';
-import 'package:fraschetti_videocatalogo/main.dart';
-import 'package:fraschetti_videocatalogo/models/assortimentoModel.dart';
-import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
-import 'package:fraschetti_videocatalogo/models/clienteModel.dart';
-import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
-import 'package:fraschetti_videocatalogo/models/famigliaModel.dart';
 import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
-import 'package:fraschetti_videocatalogo/models/promozioneModel.dart';
+import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
-import 'package:fraschetti_videocatalogo/utils/Utility.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as path;
+import 'package:async/async.dart';
 
-class DbRepository {
-  final Database database;
+class DBHelper {
+  // Singleton pattern
+  static final DBHelper _dbhelper = new DBHelper._costruttore_privato();
 
-  DbRepository(this.database);
+  DBHelper._costruttore_privato() {
+    _inizializza();
+  }
 
-  // _onConfigure(Database db) async {
-  //   // Add support for cascade delete
-  //   await db.execute("PRAGMA foreign_keys = ON");
+  factory DBHelper() {
+    return _dbhelper;
+  }
+
+  static DBHelper get istanza => _dbhelper;
+
+  // Members
+  late Database database;
+  final _initDBMemoizer = AsyncMemoizer<Database>();
+
+  // Database get database {
+  //   return _database;
   // }
 
-  static Future<DbRepository> newConnection() async {
+  // Future<Database?> get database async {
+  //   if (_database != null)
+  //     return _database;
+  //   _database = await _initDB();
+  //   return _database;
+  // }
+
+  // Future<Database?> get database async {
+  //   if (_database != null)
+  //     return _database;
+  //
+  //   // if _database is null we instantiate it
+  //   _database = await _initDBMemoizer.runOnce(() async {
+  //     return await _initDB();
+  //   });
+  //
+  //   return _database;
+  // }
+
+  Future<void> _inizializza() async {
+    // _database = await _initDBMemoizer.runOnce(() async {
+    //   return await _initDB();
+    // });
+
+    database = await _initDB();
+
+  }
+
+  Future<Database> _initDB() async {
     final databasesPath = await getDatabasesPath();
     final databasePath = path.join(databasesPath, "videocatalogo.db");
 
@@ -467,15 +499,15 @@ descrizione CHAR(30,0)
       },
     );
 
-    return DbRepository(database);
+    return database;
   }
 
   Future<bool> utente_registra(
       {required String username,
       required String password,
       required String codice_attivazione}) async {
-    // crea l'ìggetto con i dati da inviare
-    // chiama DbRepository che fa la chiamata http e restituisce la risposta
+    // crea l'oggetto con i dati da inviare
+    // chiama HttpRepository che fa la chiamata http e restituisce la risposta
     // elabora la risposta,
     // - aggiornail db
     // - ricarica prametri
@@ -600,7 +632,9 @@ descrizione CHAR(30,0)
           sql_eseguire = risposta["sql_eseguire"];
           // aggiorna i dati e i parametri
 
-          print(DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now())+" - "+"Esecuzione query inizio");
+          print(DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()) +
+              " - " +
+              "Esecuzione query inizio");
 
           for (String sql_eseguire_riga in sql_eseguire) {
             await database.execute(sql_eseguire_riga);
@@ -612,19 +646,24 @@ descrizione CHAR(30,0)
           //   });
           // });
 
-          print(DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now())+" - "+"Esecuzione query fine");
+          print(DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()) +
+              " - " +
+              "Esecuzione query fine");
 
           // ricaricare i parametri
           int aggiornamento_id_ultimo_int = risposta["aggiornamento_id_ultimo"];
 
-          if (GetIt.instance<ParametriModel>().agg_dati_id != aggiornamento_id_ultimo_int) {
+          if (GetIt.instance<ParametriModel>().agg_dati_id !=
+              aggiornamento_id_ultimo_int) {
             GetIt.instance<ParametriModel>()
                 .agg_dati_id_aggiorna(aggiornamento_id_ultimo_int);
           }
-
         } on DatabaseException catch (errore_db) {
           esito = false;
-          print(DateFormat("yyyy-MM-dd HH:mm:ss").toString()+" - "+"Errore sql: " + errore_db.toString());
+          print(DateFormat("yyyy-MM-dd HH:mm:ss").toString() +
+              " - " +
+              "Errore sql: " +
+              errore_db.toString());
         }
       } else {
         print(risposta["errori"].toString());
@@ -660,7 +699,9 @@ descrizione CHAR(30,0)
 
     if (esito == true) {
       try {
-        risposta = await GetIt.instance<HttpRepository>().http!.comunicazioni_aggiorna(data_invio: data_invio);
+        risposta = await GetIt.instance<HttpRepository>()
+            .http!
+            .comunicazioni_aggiorna(data_invio: data_invio);
       } on DatabaseException catch (e) {
         if (e.isNoSuchTableError()) {
           esito = false;
@@ -680,24 +721,22 @@ descrizione CHAR(30,0)
       if (risposta["esito_codice"] == 0) {
         esito = true;
 
-        if(risposta["comunicazioni_id_aggiornare"].length > 0){
-        List<dynamic> comunicazioni_id_aggiornare = [];
-        comunicazioni_id_aggiornare = risposta["comunicazioni_id_aggiornare"];
-        // aggiorna le comunicazioni
+        if (risposta["comunicazioni_id_aggiornare"].length > 0) {
+          List<dynamic> comunicazioni_id_aggiornare = [];
+          comunicazioni_id_aggiornare = risposta["comunicazioni_id_aggiornare"];
+          // aggiorna le comunicazioni
 
-        for (int comunicazioni_id in comunicazioni_id_aggiornare) {
-          final valid = await GetIt.instance<DbRepository>()
-              .comunicazioni_aggiorna_scarica(
-              comunicazione_id_aggiornare: comunicazioni_id);
-          if (valid) {
-            print("Aggiornamento completato");
-          } else {
-            print("Errore durante l'aggiornamento");
+          for (int comunicazioni_id in comunicazioni_id_aggiornare) {
+            final valid = await GetIt.instance<DbRepository>()
+                .comunicazioni_aggiorna_scarica(
+                    comunicazione_id_aggiornare: comunicazioni_id);
+            if (valid) {
+              print("Aggiornamento completato");
+            } else {
+              print("Errore durante l'aggiornamento");
+            }
           }
         }
-
-
-      }
       } else {
         print(risposta["errori"].toString());
         esito = false;
@@ -766,16 +805,15 @@ descrizione CHAR(30,0)
 
           // ricaricare i parametri
           int aggiornamento_id_ultimo_int = risposta["aggiornamento_id_ultimo"];
-          if (GetIt.instance<ParametriModel>().agg_comunicazioni_id != aggiornamento_id_ultimo_int) {
+          if (GetIt.instance<ParametriModel>().agg_comunicazioni_id !=
+              aggiornamento_id_ultimo_int) {
             GetIt.instance<ParametriModel>()
                 .agg_comunicazioni_id_aggiorna(aggiornamento_id_ultimo_int);
           }
-
         } on DatabaseException catch (errore_db) {
           esito = false;
           print("Errore sql: " + errore_db.toString());
         }
-
       } else {
         print(risposta["errori"].toString());
         esito = false;
@@ -786,7 +824,6 @@ descrizione CHAR(30,0)
 
     return esito;
   }
-
 
   Future<bool> immagini_aggiorna() async {
     print("dbRepositoty immagini_aggiorna inizio");
@@ -811,7 +848,9 @@ descrizione CHAR(30,0)
 
     if (esito == true) {
       try {
-        risposta = await GetIt.instance<HttpRepository>().http!.immagini_aggiorna(data_invio: data_invio);
+        risposta = await GetIt.instance<HttpRepository>()
+            .http!
+            .immagini_aggiorna(data_invio: data_invio);
       } on DatabaseException catch (e) {
         if (e.isNoSuchTableError()) {
           esito = false;
@@ -831,22 +870,20 @@ descrizione CHAR(30,0)
       if (risposta["esito_codice"] == 0) {
         esito = true;
 
-        if(risposta["immagini_id_aggiornare"].length > 0){
+        if (risposta["immagini_id_aggiornare"].length > 0) {
           List<dynamic> immagini_id_aggiornare = [];
           immagini_id_aggiornare = risposta["immagini_id_aggiornare"];
           // aggiorna le immagini
 
           for (int immagini_id in immagini_id_aggiornare) {
             final valid = await GetIt.instance<DbRepository>()
-                .immagini_aggiorna_scarica(
-                immagine_id_aggiornare: immagini_id);
+                .immagini_aggiorna_scarica(immagine_id_aggiornare: immagini_id);
             if (valid) {
               print("Aggiornamento completato");
             } else {
               print("Errore durante l'aggiornamento");
             }
           }
-
         }
       } else {
         print(risposta["errori"].toString());
@@ -891,8 +928,7 @@ descrizione CHAR(30,0)
           print("Errore inizializzazione parametri");
         }
       }
-      print("dbRepository immagini_aggiorna_scarica: " +
-          risposta.toString());
+      print("dbRepository immagini_aggiorna_scarica: " + risposta.toString());
     }
     //$o_output.esito_codice:=0
     //$o_output.esito_descrizione:=""
@@ -916,16 +952,15 @@ descrizione CHAR(30,0)
 
           // ricaricare i parametri
           int aggiornamento_id_ultimo_int = risposta["aggiornamento_id_ultimo"];
-          if (GetIt.instance<ParametriModel>().agg_immagini_id != aggiornamento_id_ultimo_int) {
+          if (GetIt.instance<ParametriModel>().agg_immagini_id !=
+              aggiornamento_id_ultimo_int) {
             GetIt.instance<ParametriModel>()
                 .agg_immagini_id_aggiorna(aggiornamento_id_ultimo_int);
           }
-
         } on DatabaseException catch (errore_db) {
           esito = false;
           print("Errore sql: " + errore_db.toString());
         }
-
       } else {
         print(risposta["errori"].toString());
         esito = false;
@@ -936,11 +971,4 @@ descrizione CHAR(30,0)
 
     return esito;
   }
-
-
-
-
-
-
-
 }

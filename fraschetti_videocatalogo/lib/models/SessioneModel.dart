@@ -1,5 +1,3 @@
-
-
 class SessioneModel {
   static final SessioneModel _istanza = SessioneModel._costruttore_privato();
 
@@ -7,12 +5,10 @@ class SessioneModel {
     return _istanza;
   }
 
-  SessioneModel._costruttore_privato(){
+  SessioneModel._costruttore_privato() {
     // inizializzazione
     this.inizializza();
-}
-
-}
+  }
 
   void inizializza() {
     this.bottom_bar_indice = 0;
@@ -22,7 +18,7 @@ class SessioneModel {
 
   int bottom_bar_indice = 0;
   int ordine_top_menu_indice = 0;
+
   // poi spostarlo un utente corrente
   int cliente_id_selezionato = 0;
-
 }

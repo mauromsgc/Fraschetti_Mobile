@@ -33,10 +33,6 @@ class PageStore {
   List<AssortimentoModel> assortimenti_lista = [];
   List<Map> articoli_lista = [];
 
-  // PageStore() {
-  //   print("PageStore inizializza ");
-  // }
-
 }
 
 class _CatalogoListaPageState extends State<CatalogoListaPage> {
@@ -49,7 +45,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
 
     _famiglie_lista_carica();
     _assortimenti_lista_carica();
-    _articoli_lista_carica();
+    // _articoli_lista_cerca(); // non carico la lista al'avvio
   }
 
   void app_chiudi(){
@@ -72,7 +68,12 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
     pageStato.refresh();
   }
 
-  Future<void> _articoli_lista_carica({
+  Future<void> _articoli_lista_svuota() async {
+    pageStato.value.articoli_lista = [];
+    pageStato.refresh();
+  }
+
+  Future<void> _articoli_lista_cerca({
     int famiglia_id = 0,
     int assortimento_id = 0,
     String selezione = '', // selezione contiene anche tutto
@@ -80,6 +81,11 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
     String ordinamento_verso = '',
   }) async {
     // passo sempre le variabili descrizione e codice
+    if((famiglia_id != 0) ||(assortimento_id != 0) ||(selezione != "")){
+      descrizioneController.clear();
+      codiceController.clear();
+      setState(() {});
+    }
     pageStato.value.articoli_lista = await CatalogoModel.catalogo_lista(
       descrizione: descrizioneController.text,
       codice: codiceController.text,
@@ -91,6 +97,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
     );
     pageStato.refresh();
   }
+
 
   void listaClick(BuildContext context) {
     Navigator.pushNamed(context, CatalogoPage.routeName);
@@ -116,7 +123,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(elevation: 2),
                     onPressed: () {
-                      _articoli_lista_carica(assortimento_id: elemento.id);
+                      _articoli_lista_cerca(assortimento_id: elemento.id);
                       Navigator.pop(context);
                     },
                     child: Text(elemento.descrizione),
@@ -155,7 +162,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(elevation: 2),
                   onPressed: () {
-                    _articoli_lista_carica(selezione: 'novita');
+                    _articoli_lista_cerca(selezione: 'novita');
                     Navigator.pop(context);
                   },
                   child: Text('Novità'),
@@ -168,7 +175,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(elevation: 2),
                   onPressed: () {
-                    _articoli_lista_carica(selezione: 'nuovi_codici');
+                    _articoli_lista_cerca(selezione: 'nuovi_codici');
                     Navigator.pop(context);
                   },
                   child: Text('Nuovi codici'),
@@ -181,7 +188,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(elevation: 2),
                   onPressed: () {
-                    _articoli_lista_carica(selezione: 'in_offerta');
+                    _articoli_lista_cerca(selezione: 'in_offerta');
                     Navigator.of(context).pop();
                   },
                   child: Text('Prodotti in offerta'),
@@ -282,12 +289,12 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
           title: Text(widget.pagina_titolo),
           centerTitle: true,
           actions: [
-            IconButton(
-              onPressed: () {
-                _ordinamenti_menu(context);
-              },
-              icon: Icon(Icons.sort),
-            ),
+            // IconButton(
+            //   onPressed: () {
+            //     _ordinamenti_menu(context);
+            //   },
+            //   icon: Icon(Icons.sort),
+            // ),
             IconButton(
               onPressed: () {
                 app_chiudi();
@@ -339,12 +346,12 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   // Call setState to update the UI
                   codiceController.clear();
                   setState(() {});
-                  if(descrizioneController.text.length >=3){
-                    _articoli_lista_carica();
-                  }
+                  // if(descrizioneController.text.length >=3){
+                    _articoli_lista_cerca();
+                  // }
                 },
                 onEditingComplete: () {
-                  _articoli_lista_carica();
+                  _articoli_lista_cerca();
                 },
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.text,
@@ -359,6 +366,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                     onPressed: () {
                       descrizioneController.clear();
                       setState(() {});
+                      _articoli_lista_svuota();
                     },
                   ),
                 ),
@@ -375,11 +383,12 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   // Call setState to update the UI
                   descrizioneController.clear();
                   setState(() {});
-                  if(codiceController.text.length >=2){
-                    _articoli_lista_carica();
-                  }},
+                  // if(codiceController.text.length >=2){
+                    _articoli_lista_cerca();
+                  // }
+                },
                 onEditingComplete: () {
-                  _articoli_lista_carica();
+                  _articoli_lista_cerca();
                 },
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.number,
@@ -393,26 +402,26 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                     icon: Icon(Icons.clear),
                     onPressed: () {
                       codiceController.clear();
-                      _articoli_lista_carica();
                       setState(() {});
+                      _articoli_lista_svuota();
                     },
                   ),
                 ),
               ),
             ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              flex: 2,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(elevation: 2),
-                onPressed: () {
-                  _articoli_lista_carica();
-                },
-                child: Text('Cerca'),
-              ),
-            ),
+            // SizedBox(
+            //   width: 10,
+            // ),
+            // Expanded(
+            //   flex: 2,
+            //   child: ElevatedButton(
+            //     style: ElevatedButton.styleFrom(elevation: 2),
+            //     onPressed: () {
+            //       _articoli_lista_cerca();
+            //     },
+            //     child: Text('Cerca'),
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -460,7 +469,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
                 onPressed: () {
-                  _articoli_lista_carica(selezione: 'tutto');
+                  _articoli_lista_cerca(selezione: 'tutto');
                 },
                 child: Text('Tutto'),
               ),
@@ -484,7 +493,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                 splashColor: Colors.grey.shade600,
                 focusColor: Color(int.parse(elemento.colore)).withAlpha(125),
                 onTap: () {
-                  _articoli_lista_carica(famiglia_id: elemento.id);
+                  _articoli_lista_cerca(famiglia_id: elemento.id);
                 },
                 child: Container(
                   padding: EdgeInsets.all(5),

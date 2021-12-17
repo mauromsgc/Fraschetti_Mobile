@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:fraschetti_videocatalogo/helper/DBHelper.dart';
 import 'package:fraschetti_videocatalogo/models/promozione_codiceModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:get_it/get_it.dart';
@@ -52,22 +53,64 @@ class PromozioneModel {
       };
 
   // poi fare il cerca
-  static Future<List<Map>> promozioni_lista() async {
+  static Future<List<Map>> promozioni_lista({
+    String nome = "",
+    String tour_singolo = "",
+    int tour_intero = 0,
+  }) async {
     List<Map> promozioni_lista = [];
 
     Database db = GetIt.instance<DbRepository>().database;
-    final rows = await db.rawQuery("""SELECT 
+    String sql_eseguire = """SELECT 
     promozioni.id,
     promozioni.nome,
+    promozioni.tour,
     promozioni.ordinatore,
     ifnull(promozioni_img.immagine_preview, '') as immagine_preview
     FROM promozioni
     LEFT JOIN promozioni_img ON promozioni_img.promozione_id = promozioni.id
-    ;""");
+    """;
+
+    if ((nome != '') ||
+        (tour_singolo != '') ||
+        (tour_intero != 0)) {
+      sql_eseguire += "WHERE ";
+    }
+
+    if (nome != '') {
+      sql_eseguire += "promozioni.nome LIKE '%${nome}%' ";
+    }
+    if (tour_singolo != '') {
+      sql_eseguire += "promozioni.tour = '${tour_singolo}' ";
+    }
+    if (tour_intero == 1) {
+      sql_eseguire += "promozioni.id > 0 ";
+    }
+
+    sql_eseguire += "ORDER BY promozioni.ordinatore ASC ";
+
+    sql_eseguire += ";";
+    print(sql_eseguire);
+
+    final rows = await db.rawQuery(sql_eseguire);
 
     promozioni_lista = rows;
 
     return promozioni_lista;
   }
 
+  static Future<List<Map>> tour_offerte_lista() async {
+    List<Map> tour_offerte_lista = [];
+
+    Database db = GetIt.instance<DbRepository>().database;
+    final rows = await db.rawQuery("""SELECT DISTINCT
+tour
+FROM promozioni
+ORDER BY tour asc
+    ;""");
+
+    tour_offerte_lista = rows;
+
+    return tour_offerte_lista;
+  }
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
+import 'package:fraschetti_videocatalogo/helper/DBHelper.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
@@ -27,7 +28,7 @@ class _TrasmissioniMenuListaState extends State<TrasmissioniMenuLista> {
 
 
   void aggiornamenti_controlla(BuildContext context) async {
-    final response = await getIt.get<ParametriModel>().aggiornamenti_controlla();
+    final response = await GetIt.instance<ParametriModel>().aggiornamenti_controlla();
 
     print("aggiornamenti_controlla: "+response.toString());
   }

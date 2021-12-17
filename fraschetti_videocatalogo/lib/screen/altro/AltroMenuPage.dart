@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
+import 'package:fraschetti_videocatalogo/helper/DBHelper.dart';
 import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
@@ -26,7 +27,7 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
   }
 
   void testComunicazioneOnSubmit(BuildContext context) async {
-    final response = await getIt.get<HttpRepository>().http!.trasmissione_test();
+    final response = await GetIt.instance<HttpRepository>().http!.trasmissione_test();
 
     print(response);
   }
@@ -53,9 +54,9 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
   }
 
   void test_3() async{
-    getIt.get<ParametriModel>().inizializza();
+    GetIt.instance<ParametriModel>().inizializza();
 
-    print(getIt.get<ParametriModel>().toMap().toString());
+    print(GetIt.instance<ParametriModel>().toMap().toString());
 
   }
 
