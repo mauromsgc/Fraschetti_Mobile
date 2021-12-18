@@ -54,22 +54,69 @@ class ComunicazioneModel {
         "comunicazione_blob": comunicazione_blob,
       };
 
-static Future<List<Map>> comunicazioni_lista() async {
-  List<Map> comunicazioni_lista = [];
+  static Future<List<Map>> comunicazioni_lista({
+    String oggetto = '',
+    int id = 0,
+    String stato = "",
+  }) async {
+    List<Map> comunicazioni_lista = [];
 
-  Database db = GetIt.instance<DbRepository>().database;
-  final rows = await db.rawQuery("""SELECT 
+    Database db = GetIt.instance<DbRepository>().database;
+    String sql_eseguire = """SELECT 
     comunicazioni.id,
     comunicazioni.oggetto,
     comunicazioni.data,
     comunicazioni.da_leggere
      FROM comunicazioni
-    ;""");
+    """;
 
-  comunicazioni_lista = rows;
+    List<String> sql_join = [];
+    List<String> sql_where = [];
+    List<String> sql_ordinamenti = [];
 
-  return comunicazioni_lista;
-}
+    if (oggetto != '') {
+      String sql_descrizione = "";
+      oggetto.split(" ").forEach((String element) {
+        sql_descrizione += (sql_descrizione == "") ? "(" : " AND ";
+        sql_descrizione += " comunicazioni.oggetto LIKE '%${element}%' ";
+      });
+      sql_descrizione += ")";
+      sql_where.add(sql_descrizione);
+    }
+    if (id != 0) {
+      sql_where.add(" comunicazioni.id = ${id} ");
+    }
+    if (stato == 'da_leggere') {
+      sql_where.add(" comunicazioni.da_leggere = 1 ");
+    }
+    if (stato == 'lette') {
+      sql_where.add(" comunicazioni.da_leggere = 0 ");
+    }
+    if (stato == 'tutte') {
+      sql_where.add(" comunicazioni.id > 0 ");
+    }
+    // sql_ordinamenti.add(" comunicazioni.data DESC ");
+    sql_ordinamenti.add(" comunicazioni.id DESC ");
 
+    sql_join.forEach((element) {
+      sql_eseguire += element;
+    });
+    // il forEach per le mappe ha l'indice
+    sql_where.asMap().forEach((indice, element) {
+      sql_eseguire += (indice == 0) ? " WHERE " : " AND ";
+      sql_eseguire += element;
+    });
+    sql_ordinamenti.asMap().forEach((indice, element) {
+      sql_eseguire += (indice == 0) ? " ORDER BY  " : " , ";
+      sql_eseguire += element;
+    });
+    sql_eseguire += ";";
+    print(sql_eseguire);
 
+    final rows = await db.rawQuery(sql_eseguire);
+
+    comunicazioni_lista = rows;
+
+    return comunicazioni_lista;
+  }
 }

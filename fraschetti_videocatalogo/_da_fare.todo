@@ -1,11 +1,9 @@
 
 
-- in pagina di login e registrazione sostituire icona per password e codice registrazione
-con lucchetto e chiave
+
 
 - fare ricerca per comunicazioni clienti trasmissioni esito
-
-- aggiornare ricerca per catalogo con parole separare e aggoungere ordinamento standar
+ e ordinamento di default per liste
 
 - aggiustare le alte ricerche
 
@@ -25,6 +23,8 @@ con lucchetto e chiave
 
 - pagine stato avanzamento trasmissioni
 con banner visibile
+
+- compressione dati scambiati
 
 - salvataggio log su file
 

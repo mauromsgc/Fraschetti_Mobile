@@ -33,6 +33,7 @@ class PageStore {
   List<AssortimentoModel> assortimenti_lista = [];
   List<Map> articoli_lista = [];
 
+  int lista_numero_elementi = 0;
 }
 
 class _CatalogoListaPageState extends State<CatalogoListaPage> {
@@ -48,10 +49,10 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
     // _articoli_lista_cerca(); // non carico la lista al'avvio
   }
 
-  void app_chiudi(){
+  void app_chiudi() {
     if (kDebugMode) {
       Navigator.pushNamed(context, LoginPage.routeName);
-    }else {
+    } else {
       Future.delayed(const Duration(milliseconds: 1000), () {
         SystemChannels.platform.invokeMethod('SystemNavigator.pop');
       });
@@ -64,12 +65,15 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
   }
 
   Future<void> _assortimenti_lista_carica() async {
-    pageStato.value.assortimenti_lista = await AssortimentoModel.assortimenti_lista();
+    pageStato.value.assortimenti_lista =
+        await AssortimentoModel.assortimenti_lista();
     pageStato.refresh();
   }
 
   Future<void> _articoli_lista_svuota() async {
     pageStato.value.articoli_lista = [];
+    pageStato.value.lista_numero_elementi =
+        pageStato.value.articoli_lista.length;
     pageStato.refresh();
   }
 
@@ -81,7 +85,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
     String ordinamento_verso = '',
   }) async {
     // passo sempre le variabili descrizione e codice
-    if((famiglia_id != 0) ||(assortimento_id != 0) ||(selezione != "")){
+    if ((famiglia_id != 0) || (assortimento_id != 0) || (selezione != "")) {
       descrizioneController.clear();
       codiceController.clear();
       setState(() {});
@@ -95,9 +99,10 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
       ordinamento_campo: ordinamento_campo,
       ordinamento_verso: ordinamento_verso,
     );
+    pageStato.value.lista_numero_elementi =
+        pageStato.value.articoli_lista.length;
     pageStato.refresh();
   }
-
 
   void listaClick(BuildContext context) {
     Navigator.pushNamed(context, CatalogoPage.routeName);
@@ -286,7 +291,20 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
           //   onPressed: () {},
           //   icon: Icon(Icons.sort),
           // ),
-          title: Text(widget.pagina_titolo),
+          title: Column(
+            children: [
+              Text(widget.pagina_titolo),
+              // if(pageStato.value.lista_numero_elementi >0)
+              Obx(
+                () => Text(
+                  "${pageStato.value.lista_numero_elementi} elementi",
+                  style: TextStyle(
+                    fontSize: 10,
+                  ),
+                ),
+              ),
+            ],
+          ),
           centerTitle: true,
           actions: [
             // IconButton(
@@ -347,7 +365,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   codiceController.clear();
                   setState(() {});
                   // if(descrizioneController.text.length >=3){
-                    _articoli_lista_cerca();
+                  _articoli_lista_cerca();
                   // }
                 },
                 onEditingComplete: () {
@@ -362,13 +380,13 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   suffixIcon: descrizioneController.text.length == 0
                       ? null
                       : IconButton(
-                    icon: Icon(Icons.clear),
-                    onPressed: () {
-                      descrizioneController.clear();
-                      setState(() {});
-                      _articoli_lista_svuota();
-                    },
-                  ),
+                          icon: Icon(Icons.clear),
+                          onPressed: () {
+                            descrizioneController.clear();
+                            setState(() {});
+                            _articoli_lista_svuota();
+                          },
+                        ),
                 ),
               ),
             ),
@@ -384,7 +402,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   descrizioneController.clear();
                   setState(() {});
                   // if(codiceController.text.length >=2){
-                    _articoli_lista_cerca();
+                  _articoli_lista_cerca();
                   // }
                 },
                 onEditingComplete: () {
@@ -399,13 +417,13 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   suffixIcon: codiceController.text.length == 0
                       ? null
                       : IconButton(
-                    icon: Icon(Icons.clear),
-                    onPressed: () {
-                      codiceController.clear();
-                      setState(() {});
-                      _articoli_lista_svuota();
-                    },
-                  ),
+                          icon: Icon(Icons.clear),
+                          onPressed: () {
+                            codiceController.clear();
+                            setState(() {});
+                            _articoli_lista_svuota();
+                          },
+                        ),
                 ),
               ),
             ),
@@ -556,62 +574,63 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                     width: 60,
                     decoration: BoxDecoration(
                       border: MyBorder().MyBorderOrange(),
-                     ),
-                    child:
-                         ListaImmagineWidget(immagine_base64: articoli_lista[index]['immagine_preview']),
-
+                    ),
+                    child: ListaImmagineWidget(
+                        immagine_base64: articoli_lista[index]
+                            ['immagine_preview']),
                   ),
                   Expanded(
                     child: Stack(
                       children: [
                         Container(
                           alignment: Alignment.centerLeft,
-                        // alignment: Alignment(-1.0, 0.0),
-                        padding: EdgeInsets.all(5.0),
-                        decoration: MyBoxDecoration().MyBox(),
-                        child: Text(
-                          "${articoli_lista[index]['nome']}",
-                          style: TextStyle(
-                              fontSize: 15.0, overflow: TextOverflow.ellipsis),
+                          // alignment: Alignment(-1.0, 0.0),
+                          padding: EdgeInsets.all(5.0),
+                          decoration: MyBoxDecoration().MyBox(),
+                          child: Text(
+                            "${articoli_lista[index]['nome']}",
+                            style: TextStyle(
+                                fontSize: 15.0,
+                                overflow: TextOverflow.ellipsis),
+                          ),
                         ),
-                      ),
-                      if (articoli_lista[index]['nuovo'] == 1)  Positioned(
-                          top: 0,
-                          right: 0,
-                          child: Container(
-                            width: 60,
-                            height: 25,
-                            decoration: BoxDecoration(
-                              border: MyBorder().MyBorderOrange(),
-                              image: DecorationImage(
-                                image: AssetImage("assets/immagini/splash_screen.png"),
-                                fit: BoxFit.contain,
+                        if (articoli_lista[index]['nuovo'] == 1)
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            child: Container(
+                              width: 60,
+                              height: 25,
+                              decoration: BoxDecoration(
+                                border: MyBorder().MyBorderOrange(),
+                                image: DecorationImage(
+                                  image: AssetImage(
+                                      "assets/immagini/splash_screen.png"),
+                                  fit: BoxFit.contain,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-
-                        if (articoli_lista[index]['promozione_id'] > 0)  Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: Container(
-                            width: 60,
-                            height: 25,
-                            decoration: BoxDecoration(
-                              border: MyBorder().MyBorderOrange(),
-                              image: DecorationImage(
-                                image: AssetImage("assets/immagini/splash_screen.png"),
-                                fit: BoxFit.contain,
+                        if (articoli_lista[index]['promozione_id'] > 0)
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                              width: 60,
+                              height: 25,
+                              decoration: BoxDecoration(
+                                border: MyBorder().MyBorderOrange(),
+                                image: DecorationImage(
+                                  image: AssetImage(
+                                      "assets/immagini/splash_screen.png"),
+                                  fit: BoxFit.contain,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-
-                      ],),
+                      ],
+                    ),
                   ),
-
-
-                  
                 ],
               ),
             ),
@@ -621,90 +640,13 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
     );
   }
 
-  Widget ListaImmagineWidget ({dynamic immagine_base64 = ''}) {
-    if((immagine_base64 != null) && (immagine_base64 != '')){
+  Widget ListaImmagineWidget({dynamic immagine_base64 = ''}) {
+    if ((immagine_base64 != null) && (immagine_base64 != '')) {
       return Image.memory(
         Base64Decoder().convert(immagine_base64),
       );
-    }else{
+    } else {
       return Image.asset("assets/immagini/splash_screen.png");
     }
-  }
-// riga lista
-  Widget ListaWidget_old(List<CatalogoModel> articoli_lista) {
-    return Expanded(
-      child: ListView.separated(
-        separatorBuilder: (context, index) => Divider(
-          height: 5,
-          thickness: 2,
-          color: Theme.of(context).primaryColor,
-        ),
-        itemCount: articoli_lista.length,
-        itemBuilder: (context, index) {
-          return InkWell(
-            onTap: () {
-              listaClick(context);
-            },
-            child: Container(
-              height: 40,
-              // decoration: MyBoxDecoration().MyBox(),
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    width: 10,
-                    decoration: BoxDecoration(
-                      color: Colors.orange,
-                      // "${articoli_lista[index].nome}"
-                    ),
-                  ),
-                  Container(
-                    width: 40,
-                    decoration: BoxDecoration(
-                      border: MyBorder().MyBorderOrange(),
-                      image: DecorationImage(
-                        image: AssetImage("assets/immagini/splash_screen.png"),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      alignment: Alignment(-1.0, 0.0),
-                      padding: EdgeInsets.all(5.0),
-                      decoration: MyBoxDecoration().MyBox(),
-                      child: Text(
-                        "${articoli_lista[index].nome}",
-                        style: TextStyle(
-                            fontSize: 15.0, overflow: TextOverflow.ellipsis),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 60,
-                    decoration: BoxDecoration(
-                      border: MyBorder().MyBorderOrange(),
-                      image: DecorationImage(
-                        image: AssetImage("assets/immagini/splash_screen.png"),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 60,
-                    decoration: BoxDecoration(
-                      border: MyBorder().MyBorderOrange(),
-                      image: DecorationImage(
-                        image: AssetImage("assets/immagini/splash_screen.png"),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
   }
 }

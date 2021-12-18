@@ -86,61 +86,69 @@ class CatalogoModel {
     ifnull(catalogo_img.immagine_preview, '') as immagine_preview
     FROM catalogo
     LEFT JOIN famiglie ON famiglie.id = catalogo.famiglia
-    LEFT JOIN promozioni_codici ON promozioni_codici.catalogo_id = catalogo.id
     LEFT JOIN catalogo_img ON catalogo_img.catalogo_id = catalogo.id
+    LEFT JOIN promozioni_codici ON promozioni_codici.catalogo_id = catalogo.id 
     """;
 
-    // fare ricerca per parole separate
-    // in base ai parametri compilare i vettori con
-    // i join, le condizioni, gli ordinamenti
+    List<String> sql_join = [];
+    List<String> sql_where = [];
+    List<String> sql_ordinamenti = [];
 
 
-    if (codice != '') {
-      sql_eseguire += "LEFT JOIN codici ON codici.catalogo_id = catalogo.id ";
-    }
-    if (assortimento_id != 0) {
-      sql_eseguire +=
-          "LEFT JOIN assortimenti_codici ON assortimenti_codici.catalogo_id = catalogo.id ";
-      sql_eseguire +=
-          "LEFT JOIN assortimenti ON assortimenti.id = assortimenti_codici.assortimenti_id ";
-    }
-
-    if ((descrizione != '') ||
-        (codice != '') ||
-        (famiglia_id != 0) ||
-        (assortimento_id != 0) ||
-        (selezione != '')) {
-      sql_eseguire += "WHERE ";
-    }
     if (descrizione != '') {
-      sql_eseguire += "catalogo.nome LIKE '%${descrizione}%' ";
+      String sql_descrizione = "";
+      descrizione.split(" ").forEach((String element) {
+        sql_descrizione +=(sql_descrizione == "") ? "(" : " AND ";
+        sql_descrizione +=" catalogo.nome LIKE '%${element}%' ";
+      });
+      sql_descrizione +=")";
+      sql_where.add(sql_descrizione);
     }
     if (codice != '') {
-      sql_eseguire += "codici.numero LIKE '${codice}%' ";
+      sql_join.add(" LEFT JOIN codici ON codici.catalogo_id = catalogo.id ");
+      sql_where.add(" codici.numero LIKE '${codice}%' ");
     }
     if (famiglia_id != 0) {
-      sql_eseguire += "famiglie.id = ${famiglia_id} ";
+      sql_where.add(" famiglie.id = ${famiglia_id} ");
     }
     if (assortimento_id != 0) {
-      sql_eseguire += "assortimenti.id = ${assortimento_id} ";
+      sql_join.add(" LEFT JOIN assortimenti_codici ON assortimenti_codici.catalogo_id = catalogo.id ");
+      sql_join.add(" LEFT JOIN assortimenti ON assortimenti.id = assortimenti_codici.assortimenti_id ");
+      sql_where.add(" assortimenti.id = ${assortimento_id} ");
     }
     if (selezione != '') {
       switch (selezione) {
         case 'tutto':
-          sql_eseguire += "catalogo.id > 0 ";
+          sql_where.add(" catalogo.id > 0 ");
           break;
         case 'novita':
-          sql_eseguire += "catalogo.nuovo > 0 ";
+          sql_where.add(" catalogo.nuovo > 0 ");
           break;
         case 'nuovi_codici':
-          // sql_eseguire += "famiglie.id = ${selezione} ";
+          sql_join.add(" LEFT JOIN codici ON codici.catalogo_id = catalogo.id ");
+          sql_where.add(" codici.nuovo > 0 ");
           break;
         case 'in_offerta':
-          sql_eseguire += "promozione_id > 0 ";
+          // il join per promozioni_codici c'è già per la proprietà promozione_id della lista
+          sql_where.add(" promozione_id > 0 ");
           break;
       }
     }
 
+    sql_ordinamenti.add(" catalogo.nome ASC ");
+
+    sql_join.forEach((element) {
+      sql_eseguire += element;
+    });
+    // il forEach per le mappe ha l'indice
+    sql_where.asMap().forEach((indice, element) {
+      sql_eseguire += (indice == 0) ? " WHERE " : " AND ";
+      sql_eseguire += element;
+    });
+    sql_ordinamenti.asMap().forEach((indice, element) {
+      sql_eseguire += (indice == 0) ? " ORDER BY  " : " , ";
+      sql_eseguire += element;
+    });
     sql_eseguire += ";";
     print(sql_eseguire);
 
@@ -149,6 +157,5 @@ class CatalogoModel {
     catalogo_lista = rows;
 
     return catalogo_lista;
-
   }
 }

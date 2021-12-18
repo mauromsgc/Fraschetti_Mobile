@@ -29,6 +29,8 @@ final pageStato = PageStore().obs;
 class PageStore {
   List<Map> tour_offerte_lista = [];
   List<Map> promozioni_lista = [];
+
+  int lista_numero_elementi = 0;
 }
 
 class _PromozioneListaPageState extends State<PromozioneListaPage> {
@@ -39,11 +41,21 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
     super.initState();
 
     _tour_offerte_lista_carica();
+    if(pageStato.value.lista_numero_elementi == 0){
+    _promozioni_lista_cerca();
+    }
   }
 
   Future<void> _tour_offerte_lista_carica() async {
     pageStato.value.tour_offerte_lista =
         await PromozioneModel.tour_offerte_lista();
+    pageStato.refresh();
+  }
+
+  Future<void> _promozioni_lista_svuota() async {
+    pageStato.value.promozioni_lista = [];
+    pageStato.value.lista_numero_elementi =
+        pageStato.value.promozioni_lista.length;
     pageStato.refresh();
   }
 
@@ -61,6 +73,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
       tour_singolo: tour_singolo,
       tour_intero: tour_intero,
     );
+    pageStato.value.lista_numero_elementi = pageStato.value.promozioni_lista.length;
     pageStato.refresh();
   }
 
@@ -120,7 +133,20 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
           //   icon: Icon(Icons.menu),
           // ),
           // title: Text("${getIt.get<SessioneModel>().bottom_bar_indice.toString()} ${widget.pagina_titolo}"),
-          title: Text(widget.pagina_titolo),
+          title: Column(
+            children: [
+              Text(widget.pagina_titolo),
+              // if(pageStato.value.lista_numero_elementi >0)
+              Obx(
+                    () => Text(
+                  "${pageStato.value.lista_numero_elementi} elementi",
+                  style: TextStyle(
+                    fontSize: 10,
+                  ),
+                ),
+              ),
+            ],
+          ),
           centerTitle: true,
         ),
         bottomNavigationBar: BottomBarWidget(),
@@ -184,6 +210,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
                             descrizioneController.clear();
                             setState(() {});
                             _promozioni_lista_cerca();
+                            // _promozioni_lista_svuota();
                           },
                         ),
                 ),

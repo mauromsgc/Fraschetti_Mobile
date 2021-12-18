@@ -14,7 +14,6 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get_it/get_it.dart';
 
-
 class ComunicazioneListaPage extends StatefulWidget {
   ComunicazioneListaPage({Key? key}) : super(key: key);
   static const String routeName = "comunicazione_lista";
@@ -29,33 +28,7 @@ final pageStato = PageStore().obs;
 class PageStore {
   List<Map> comunicazioni_lista = [];
 
-  PageStore() {
-    print("PageStore inizializza ");
-    inizializza();
-  }
-
-  void inizializza() async {
-    _comunicazioni_lista_carica();
-  }
-
-  Future<void> _comunicazioni_lista_carica() async {
-    comunicazioni_lista = await ComunicazioneModel.comunicazioni_lista();
-    print("comunicazioni_lista: " + comunicazioni_lista.length.toString());
-
-    pageStato.refresh();
-  }
-
-  void comunicazioni_cerca() async {
-    _comunicazioni_lista_carica();
-  }
-
-  void comunicazioni_da_leggere() async {
-    _comunicazioni_lista_carica();
-  }
-
-  void comunicazioni_lette() async {
-    _comunicazioni_lista_carica();
-  }
+  int lista_numero_elementi = 0;
 }
 
 class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
@@ -65,6 +38,38 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
   @override
   void initState() {
     super.initState();
+
+    if (pageStato.value.lista_numero_elementi == 0) {
+      _comunicazioni_lista_cerca(stato: "da_leggere");
+    }
+  }
+
+  Future<void> _comunicazioni_lista_svuota() async {
+    pageStato.value.comunicazioni_lista = [];
+    pageStato.value.lista_numero_elementi =
+        pageStato.value.comunicazioni_lista.length;
+    pageStato.refresh();
+  }
+
+  Future<void> _comunicazioni_lista_cerca({
+    String oggetto = '',
+    int id = 0,
+    String stato = '',
+  }) async {
+    if ((stato != "")) {
+      oggettoController.clear();
+      idController.clear();
+      setState(() {});
+    }
+    pageStato.value.comunicazioni_lista =
+        await ComunicazioneModel.comunicazioni_lista(
+      oggetto: oggettoController.text,
+      id: (idController.text != "") ? int.parse(idController.text) : 0,
+      stato: stato,
+    );
+    pageStato.value.lista_numero_elementi =
+        pageStato.value.comunicazioni_lista.length;
+    pageStato.refresh();
   }
 
   void listaClick(BuildContext context) {
@@ -82,7 +87,20 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
           //   icon: Icon(Icons.menu),
           // ),
           // title: Text("${getIt.get<SessioneModel>().bottom_bar_indice.toString()} ${widget.pagina_titolo}"),
-          title: Text(widget.pagina_titolo),
+          title: Column(
+            children: [
+              Text(widget.pagina_titolo),
+              // if(pageStato.value.lista_numero_elementi >0)
+              Obx(
+                () => Text(
+                  "${pageStato.value.lista_numero_elementi} elementi",
+                  style: TextStyle(
+                    fontSize: 10,
+                  ),
+                ),
+              ),
+            ],
+          ),
           centerTitle: true,
         ),
         bottomNavigationBar: BottomBarWidget(),
@@ -101,7 +119,7 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
                   // color: Theme.of(context).primaryColor,
                 ),
                 Obx(
-                      () => ListaWidget(pageStato.value.comunicazioni_lista),
+                  () => ListaWidget(pageStato.value.comunicazioni_lista),
                 ),
               ],
             ),
@@ -125,11 +143,14 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
                 controller: oggettoController,
                 onChanged: (value) {
                   // Call setState to update the UI
+                  idController.clear();
                   setState(() {});
+                  // if(oggettoController.text.length >=3){
+                  _comunicazioni_lista_cerca();
+                  // }
                 },
                 onEditingComplete: () {
-                  pageStato.value.comunicazioni_cerca();
-
+                  _comunicazioni_lista_cerca();
                 },
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.text,
@@ -140,12 +161,13 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
                   suffixIcon: oggettoController.text.length == 0
                       ? null
                       : IconButton(
-                    icon: Icon(Icons.clear),
-                    onPressed: () {
-                      oggettoController.clear();
-                      setState(() {});
-                    },
-                  ),
+                          icon: Icon(Icons.clear),
+                          onPressed: () {
+                            oggettoController.clear();
+                            setState(() {});
+                            _comunicazioni_lista_cerca();
+                          },
+                        ),
                 ),
               ),
             ),
@@ -158,11 +180,14 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
                 controller: idController,
                 onChanged: (value) {
                   // Call setState to update the UI
+                  oggettoController.clear();
                   setState(() {});
+                  // if(idController.text.length >=2){
+                  _comunicazioni_lista_cerca();
+                  // }
                 },
                 onEditingComplete: () {
-                  pageStato.value.comunicazioni_cerca();
-
+                  _comunicazioni_lista_cerca();
                 },
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.number,
@@ -173,29 +198,29 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
                   suffixIcon: idController.text.length == 0
                       ? null
                       : IconButton(
-                    icon: Icon(Icons.clear),
-                    onPressed: () {
-                      idController.clear();
-                      setState(() {});
-                    },
-                  ),
+                          icon: Icon(Icons.clear),
+                          onPressed: () {
+                            idController.clear();
+                            setState(() {});
+                            _comunicazioni_lista_cerca();
+                          },
+                        ),
                 ),
               ),
             ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              flex: 2,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(elevation: 2),
-                onPressed: () {
-                  pageStato.value.comunicazioni_cerca();
-
-                },
-                child: Text('Cerca'),
-              ),
-            ),
+            // SizedBox(
+            //   width: 10,
+            // ),
+            // Expanded(
+            //   flex: 2,
+            //   child: ElevatedButton(
+            //     style: ElevatedButton.styleFrom(elevation: 2),
+            //     onPressed: () {
+            //       _comunicazioni_lista_cerca();
+            //     },
+            //     child: Text('Cerca'),
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -217,8 +242,7 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
                 onPressed: () {
-                  pageStato.value.comunicazioni_da_leggere();
-
+                  _comunicazioni_lista_cerca(stato: "da_leggere");
                 },
                 child: Text('Da leggere'),
               ),
@@ -231,10 +255,22 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
                 onPressed: () {
-                  pageStato.value.comunicazioni_lette();
-
+                  _comunicazioni_lista_cerca(stato: "lette");
                 },
                 child: Text('Lette'),
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              flex: 1,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(elevation: 2),
+                onPressed: () {
+                  _comunicazioni_lista_cerca(stato: "tutte");
+                },
+                child: Text('Tutte'),
               ),
             ),
           ],
@@ -260,48 +296,48 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
             },
             child: Container(
               height: 50,
+              color: (comunicazioni_lista[index]['da_leggere'] == 1)
+                  ? Colors.red.shade100
+                  : null,
               // decoration: MyBoxDecoration().MyBox(),
               child: Row(
-                  children: <Widget>[
-                    Container(
-                      width: 100,
-                      decoration: MyBoxDecoration().MyBox(),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "${comunicazioni_lista[index]['id']}",
-                            style: TextStyle(
+                children: <Widget>[
+                  Container(
+                    width: 100,
+                    decoration: MyBoxDecoration().MyBox(),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "${comunicazioni_lista[index]['id']}",
+                          style: TextStyle(
                               // fontSize: 12,
-                            ),
-                          ),
-                          Text(
-                            "${comunicazioni_lista[index]['data']}",
-                            style: TextStyle(
-                              // fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        alignment: Alignment(-1.0, 0.0),
-                        padding: EdgeInsets.all(5.0),
-                        decoration: MyBoxDecoration().MyBox(),
-                        child: Text(
-                              "${comunicazioni_lista[index]['oggetto']}",
-                              style: TextStyle(
-                                  fontSize: 18.0,
-                                  overflow: TextOverflow.ellipsis
                               ),
-                            ),
-
+                        ),
+                        Text(
+                          "${comunicazioni_lista[index]['data']}",
+                          style: TextStyle(
+                              // fontSize: 12,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment(-1.0, 0.0),
+                      padding: EdgeInsets.all(5.0),
+                      decoration: MyBoxDecoration().MyBox(),
+                      child: Text(
+                        "${comunicazioni_lista[index]['oggetto']}",
+                        style: TextStyle(
+                            fontSize: 18.0, overflow: TextOverflow.ellipsis),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
+              ),
             ),
           );
         },

@@ -137,7 +137,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
                         labelText: 'Password',
                         errorText: (passwordError == "") ? null : passwordError,
                         icon: Icon(
-                          Icons.visibility_off,
+                          Icons.password,
                         ),
                       ),
                     ),
@@ -154,7 +154,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
                         labelText: 'Conferma Password',
                         errorText: (password_verificaError == "") ? null : password_verificaError,
                         icon: Icon(
-                          Icons.visibility_off,
+                          Icons.password,
                         ),
                       ),
                     ),
@@ -175,7 +175,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
                         labelText: 'Codice attivazione',
                         errorText: (codice_attivazioneError == "") ? null : codice_attivazioneError,
                         icon: Icon(
-                          Icons.lock_open,
+                          Icons.vpn_key,
                         ),
                       ),
                     ),

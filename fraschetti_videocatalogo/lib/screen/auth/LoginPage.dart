@@ -113,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
                         labelText: 'Password',
                         errorText: (passwordError == "") ? null : passwordError,
                         icon: Icon(
-                          Icons.visibility_off,
+                          Icons.password,
                         ),
                       ),
                     ),

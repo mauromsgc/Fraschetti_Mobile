@@ -71,24 +71,44 @@ class PromozioneModel {
     LEFT JOIN promozioni_img ON promozioni_img.promozione_id = promozioni.id
     """;
 
-    if ((nome != '') ||
-        (tour_singolo != '') ||
-        (tour_intero != 0)) {
-      sql_eseguire += "WHERE ";
-    }
+
+    List<String> sql_join = [];
+    List<String> sql_where = [];
+    List<String> sql_ordinamenti = [];
+
+    // per avere la lista piena
+    sql_where.add(" promozioni.id > 0 ");
 
     if (nome != '') {
-      sql_eseguire += "promozioni.nome LIKE '%${nome}%' ";
+      String sql_descrizione = "";
+      nome.split(" ").forEach((String element) {
+        sql_descrizione +=(sql_descrizione == "") ? "(" : " AND ";
+        sql_descrizione +=" promozioni.nome LIKE '%${element}%' ";
+      });
+      sql_descrizione +=")";
+      sql_where.add(sql_descrizione);
     }
     if (tour_singolo != '') {
-      sql_eseguire += "promozioni.tour = '${tour_singolo}' ";
+      sql_where.add(" promozioni.tour = '${tour_singolo}' ");
     }
     if (tour_intero == 1) {
-      sql_eseguire += "promozioni.id > 0 ";
+      sql_where.add(" promozioni.id > 0 ");
     }
 
-    sql_eseguire += "ORDER BY promozioni.ordinatore ASC ";
+    sql_ordinamenti.add(" promozioni.ordinatore ASC ");
 
+    sql_join.forEach((element) {
+      sql_eseguire += element;
+    });
+    // il forEach per le mappe ha l'indice
+    sql_where.asMap().forEach((indice, element) {
+      sql_eseguire += (indice == 0) ? " WHERE " : " AND ";
+      sql_eseguire += element;
+    });
+    sql_ordinamenti.asMap().forEach((indice, element) {
+      sql_eseguire += (indice == 0) ? " ORDER BY  " : " , ";
+      sql_eseguire += element;
+    });
     sql_eseguire += ";";
     print(sql_eseguire);
 
