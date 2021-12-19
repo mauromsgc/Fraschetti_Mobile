@@ -104,8 +104,17 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
     pageStato.refresh();
   }
 
-  void listaClick(BuildContext context) {
-    Navigator.pushNamed(context, CatalogoPage.routeName);
+  void listaClick(BuildContext context, int indice) {
+
+        Navigator.pushNamed(
+        context,
+        CatalogoPage.routeName,
+        arguments:
+        CatalogoPageArgs(
+          articoli_lista: pageStato.value.articoli_lista.toList(),
+          indice: indice,
+        ),
+    );
   }
 
   void _assortimenti_menu(BuildContext context) {
@@ -556,7 +565,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
-              listaClick(context);
+              listaClick(context, index);
             },
             child: Container(
               height: 50,

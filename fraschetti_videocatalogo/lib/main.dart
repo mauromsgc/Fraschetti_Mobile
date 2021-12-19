@@ -46,7 +46,6 @@ void main() async{
 
   // singleton accesso parametri salvati nel database (username, id aggiornament ecc.)
   GetIt.instance.registerSingleton<ParametriModel>(ParametriModel());
-  // await GetIt.instance<ParametriModel>().inizializza();
 
   // singleton variabili utente utilizzatore (dati utente da tabella e calcolati)
   GetIt.instance.registerSingleton<UtenteCorrenteModel>(UtenteCorrenteModel());
@@ -95,6 +94,8 @@ class MyApp extends StatelessWidget {
 
     );
   }
+
+  MyApp();
 }
 
 

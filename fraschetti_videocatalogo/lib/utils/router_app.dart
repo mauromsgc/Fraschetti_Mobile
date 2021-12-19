@@ -30,7 +30,7 @@ class RouterApp {
     // se non si è registrati si va in RegistrazionePage
     switch (settings.name) {
       case SplashPage.routeName:
-        return MaterialPageRoute(builder: (context) => SplashPage());
+        return MaterialPageRoute(settings: settings, builder: (context) => SplashPage());
       case LoginPage.routeName:
         return PageTransition(
           child: LoginPage(),
@@ -39,49 +39,49 @@ class RouterApp {
         );
         return MaterialPageRoute(builder: (context) => LoginPage());
       case RegistazionePage.routeName:
-        return MaterialPageRoute(builder: (context) => RegistazionePage());
+        return MaterialPageRoute(settings: settings, builder: (context) => RegistazionePage());
       case ParametriConnesionePage.routeName:
-        return MaterialPageRoute(builder: (context) => ParametriConnesionePage());
+        return MaterialPageRoute(settings: settings, builder: (context) => ParametriConnesionePage());
       case CatalogoListaPage.routeName:
-        return MaterialPageRoute(builder: (context) => CatalogoListaPage());
+        return MaterialPageRoute(settings: settings,builder: (context) => CatalogoListaPage());
       case CatalogoPage.routeName:
-        return MaterialPageRoute(builder: (context) => CatalogoPage());
+        return MaterialPageRoute(settings: settings, builder: (context) => CatalogoPage());
       case PromozioneListaPage.routeName:
-        return MaterialPageRoute(builder: (context) => PromozioneListaPage());
+        return MaterialPageRoute(settings: settings, builder: (context) => PromozioneListaPage());
       case PromozionePage.routeName:
-        return MaterialPageRoute(builder: (context) => PromozionePage());
+        return MaterialPageRoute(settings: settings, builder: (context) => PromozionePage());
       case ComunicazioneListaPage.routeName:
-        return MaterialPageRoute(builder: (context) => ComunicazioneListaPage());
+        return MaterialPageRoute(settings: settings, builder: (context) => ComunicazioneListaPage());
       case ComunicazionePage.routeName:
-        return MaterialPageRoute(builder: (context) => ComunicazionePage());
+        return MaterialPageRoute(settings: settings, builder: (context) => ComunicazionePage());
 
       case ClienteLista.routeName:
-        return MaterialPageRoute(builder: (context) => ClienteLista());
+        return MaterialPageRoute(settings: settings, builder: (context) => ClienteLista());
       case OrdineLista.routeName:
-        return MaterialPageRoute(builder: (context) => OrdineLista());
+        return MaterialPageRoute(settings: settings, builder: (context) => OrdineLista());
       case OrdineCodiceCercaPage.routeName:
-        return MaterialPageRoute(builder: (context) => OrdineCodiceCercaPage());
+        return MaterialPageRoute(settings: settings, builder: (context) => OrdineCodiceCercaPage());
       case OrdineArticoloAggiungiPage.routeName:
-        return MaterialPageRoute(builder: (context) => OrdineArticoloAggiungiPage());
+        return MaterialPageRoute(settings: settings, builder: (context) => OrdineArticoloAggiungiPage());
       case OrdineNoteAggiungiPage.routeName:
-        return MaterialPageRoute(builder: (context) => OrdineNoteAggiungiPage());
+        return MaterialPageRoute(settings: settings, builder: (context) => OrdineNoteAggiungiPage());
       case OrdineResiLista.routeName:
-        return MaterialPageRoute(builder: (context) => OrdineResiLista());
+        return MaterialPageRoute(settings: settings, builder: (context) => OrdineResiLista());
       case ResoArticoloAggiungiPage.routeName:
-        return MaterialPageRoute(builder: (context) => ResoArticoloAggiungiPage());
+        return MaterialPageRoute(settings: settings, builder: (context) => ResoArticoloAggiungiPage());
 
       case TrasmissioniMenuLista.routeName:
-        return MaterialPageRoute(builder: (context) => TrasmissioniMenuLista());
+        return MaterialPageRoute(settings: settings, builder: (context) => TrasmissioniMenuLista());
       case TrasmissioneLista.routeName:
-        return MaterialPageRoute(builder: (context) => TrasmissioneLista());
+        return MaterialPageRoute(settings: settings, builder: (context) => TrasmissioneLista());
       case TrasmissionePage.routeName:
-        return MaterialPageRoute(builder: (context) => TrasmissionePage());
+        return MaterialPageRoute(settings: settings, builder: (context) => TrasmissionePage());
 
       case AltroMenuLista.routeName:
-        return MaterialPageRoute(builder: (context) => AltroMenuLista());
+        return MaterialPageRoute(settings: settings, builder: (context) => AltroMenuLista());
 
       case DisponibilitaPage.routeName:
-        return MaterialPageRoute(builder: (context) => DisponibilitaPage());
+        return MaterialPageRoute(settings: settings, builder: (context) => DisponibilitaPage());
 
       default:
         return MaterialPageRoute(builder: (context) => SplashPage());

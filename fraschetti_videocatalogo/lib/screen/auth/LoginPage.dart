@@ -100,6 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                   Container(
                     padding: EdgeInsets.all(5),
                     child: TextFormField(
+                      autofocus: true,
                       onEditingComplete: () {
                         loginOnSubmit(context);
                       },
