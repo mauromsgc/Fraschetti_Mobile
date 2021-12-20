@@ -9,16 +9,16 @@ class FamigliaModel {
   FamigliaModel({
     this.id = 0,
     this.codice = 0,
-    this.descrizione = '',
-    this.colore = '',
-    this.abbreviazione = '',
+    this.descrizione = "",
+    this.colore = "",
+    this.abbreviazione = "",
   });
 
   int id = 0;
   int codice = 0;
-  String descrizione = '';
-  String colore = '';
-  String abbreviazione = '';
+  String descrizione = "";
+  String colore = "";
+  String abbreviazione = "";
 
   factory FamigliaModel.fromMap(Map<String, dynamic> map) {
     final id = map["id"];

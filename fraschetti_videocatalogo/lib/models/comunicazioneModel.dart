@@ -55,7 +55,7 @@ class ComunicazioneModel {
       };
 
   static Future<List<Map>> comunicazioni_lista({
-    String oggetto = '',
+    String oggetto = "",
     int id = 0,
     String stato = "",
   }) async {
@@ -74,7 +74,7 @@ class ComunicazioneModel {
     List<String> sql_where = [];
     List<String> sql_ordinamenti = [];
 
-    if (oggetto != '') {
+    if (oggetto != "") {
       String sql_descrizione = "";
       oggetto.split(" ").forEach((String element) {
         sql_descrizione += (sql_descrizione == "") ? "(" : " AND ";

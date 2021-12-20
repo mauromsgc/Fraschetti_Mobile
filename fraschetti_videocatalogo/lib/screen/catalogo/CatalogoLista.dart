@@ -7,9 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/models/assortimentoModel.dart';
 import 'package:fraschetti_videocatalogo/models/famigliaModel.dart';
-import 'package:fraschetti_videocatalogo/repositories/assortimentiRepository.dart';
-import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
-import 'package:fraschetti_videocatalogo/repositories/articoliRepository.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/LoginPage.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoPage.dart';
@@ -80,9 +77,9 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
   Future<void> _articoli_lista_cerca({
     int famiglia_id = 0,
     int assortimento_id = 0,
-    String selezione = '', // selezione contiene anche tutto
-    String ordinamento_campo = '',
-    String ordinamento_verso = '',
+    String selezione = "", // selezione contiene anche tutto
+    String ordinamento_campo = "",
+    String ordinamento_verso = "",
   }) async {
     // passo sempre le variabili descrizione e codice
     if ((famiglia_id != 0) || (assortimento_id != 0) || (selezione != "")) {
@@ -368,6 +365,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
             Expanded(
               flex: 6,
               child: TextFormField(
+                autofocus: true,
                 controller: descrizioneController,
                 onChanged: (value) {
                   // Call setState to update the UI
@@ -575,7 +573,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   Container(
                     width: 10,
                     decoration: BoxDecoration(
-                      color: Color(int.parse(articoli_lista[index]['colore'])),
+                      color: Color(int.parse(articoli_lista[index]['famiglie_colore'])),
                       // "${articoli_lista[index]["nome"]}"
                     ),
                   ),
@@ -649,8 +647,8 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
     );
   }
 
-  Widget ListaImmagineWidget({dynamic immagine_base64 = ''}) {
-    if ((immagine_base64 != null) && (immagine_base64 != '')) {
+  Widget ListaImmagineWidget({dynamic immagine_base64 = ""}) {
+    if ((immagine_base64 != null) && (immagine_base64 != "")) {
       return Image.memory(
         Base64Decoder().convert(immagine_base64),
       );

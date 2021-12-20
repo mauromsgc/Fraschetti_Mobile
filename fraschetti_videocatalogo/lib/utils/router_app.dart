@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/screen/altro/AltroMenuPage.dart';
+import 'package:fraschetti_videocatalogo/screen/altro/TestPage.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/SplashPage.dart';
 import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaPage.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/ClientiLista.dart';
@@ -82,6 +83,9 @@ class RouterApp {
 
       case DisponibilitaPage.routeName:
         return MaterialPageRoute(settings: settings, builder: (context) => DisponibilitaPage());
+
+      case TestPage.routeName:
+        return MaterialPageRoute(settings: settings, builder: (context) => TestPage());
 
       default:
         return MaterialPageRoute(builder: (context) => SplashPage());

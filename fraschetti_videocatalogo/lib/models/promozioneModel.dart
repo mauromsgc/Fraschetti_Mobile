@@ -79,7 +79,7 @@ class PromozioneModel {
     // per avere la lista piena
     sql_where.add(" promozioni.id > 0 ");
 
-    if (nome != '') {
+    if (nome != "") {
       String sql_descrizione = "";
       nome.split(" ").forEach((String element) {
         sql_descrizione +=(sql_descrizione == "") ? "(" : " AND ";
@@ -88,7 +88,7 @@ class PromozioneModel {
       sql_descrizione +=")";
       sql_where.add(sql_descrizione);
     }
-    if (tour_singolo != '') {
+    if (tour_singolo != "") {
       sql_where.add(" promozioni.tour = '${tour_singolo}' ");
     }
     if (tour_intero == 1) {

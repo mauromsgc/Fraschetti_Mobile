@@ -1,12 +1,19 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
+import 'package:fraschetti_videocatalogo/models/codiceModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/articoliRepository.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaPage.dart';
 import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaWidget.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
-import 'package:image/image.dart';
+import 'package:get/get.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_utils/src/extensions/context_extensions.dart';
 
 class CatalogoPageArgs {
   List<Map>? articoli_lista;
@@ -16,9 +23,7 @@ class CatalogoPageArgs {
     this.articoli_lista = null,
     this.indice = 0,
   });
-
 }
-
 
 class CatalogoPage extends StatefulWidget {
   CatalogoPage({Key? key}) : super(key: key);
@@ -29,34 +34,85 @@ class CatalogoPage extends StatefulWidget {
   _CatalogoPageState createState() => _CatalogoPageState();
 }
 
+final pageStato = PageStore().obs;
+
+class PageStore {
+  CatalogoModel catalogo_scheda = CatalogoModel();
+}
+
 class _CatalogoPageState extends State<CatalogoPage> {
   // late CatalogoPageArgs? argomenti= ModalRoute.of(context)?.settings.arguments as CatalogoPageArgs;
+  late CatalogoPageArgs? argomenti;
 
   @override
   void initState() {
     super.initState();
-
-   }
-
-  void listaClick(BuildContext context) {
-    Navigator.pushNamed(context, OrdineArticoloAggiungiPage.routeName);
   }
 
-  void articolo_disponibilita_mostra(BuildContext context) {
+  Future<void> _catalogo_scheda_carica({
+    int id = 0,
+  }) async {
+    pageStato.value.catalogo_scheda = await CatalogoModel.scheda_form_id(
+      id: id,
+    );
+    // pageStato.value.lista_numero_elementi =
+    //     pageStato.value.articoli_lista.length;
+    pageStato.refresh();
+  }
+
+  _scheda_precedente(){
+    int indice = argomenti!.indice;
+    if(indice != 0){
+      indice = indice-1;
+      argomenti!.indice = indice;
+    _catalogo_scheda_carica(id: argomenti?.articoli_lista![indice]["id"]);
+    }
+
+  }
+  _scheda_successiva(){
+    int indice = argomenti!.indice;
+    if(indice < argomenti!.articoli_lista!.length){
+      indice = indice+1;
+      argomenti!.indice = indice;
+      _catalogo_scheda_carica(id: argomenti?.articoli_lista![indice]["id"]);
+    }
+  }
+
+  void listaClick(BuildContext context, int indice) {
+    Navigator.pushNamed(
+      context,
+      OrdineArticoloAggiungiPage.routeName,
+      // arguments: CatalogoPageArgs(
+      //   articoli_lista: pageStato.value.articoli_lista.toList(),
+      //   indice: indice,
+      // ),
+    );
+  }
+
+  void articolo_disponibilita_mostra(BuildContext context, CodiceModel codice_scheda) {
     // Navigator.pushNamed(context, DisponibilitaPage.routeName);
     showDialog(
       context: context,
-      builder: DisponibilitaDialogWidget(codice_id: 1, returnValue: true),
+      builder: DisponibilitaDialogWidget(codice_scheda: codice_scheda, returnValue: true),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    CatalogoPageArgs? argomenti= ModalRoute.of(context)?.settings.arguments as CatalogoPageArgs;
+    // CatalogoPageArgs? argomenti= ModalRoute.of(context)?.settings.arguments as CatalogoPageArgs;
+    // print(argomenti.articoli_lista.toString());
+    // print(argomenti.indice.toString());
 
-    print(argomenti.articoli_lista.toString());
-    print(argomenti.indice.toString());
-
+    if (ModalRoute.of(context)?.settings.arguments != null) {
+      argomenti =
+          ModalRoute.of(context)?.settings.arguments as CatalogoPageArgs;
+      print(argomenti?.articoli_lista.toString());
+      print(argomenti?.indice.toString());
+      print(argomenti?.articoli_lista![1]["id"].toString());
+      int indice = argomenti!.indice;
+      print(argomenti?.articoli_lista![indice]["id"].toString());
+      _catalogo_scheda_carica(id: argomenti?.articoli_lista![indice]["id"]);
+    }
 
     return SafeArea(
       child: Scaffold(
@@ -71,34 +127,49 @@ class _CatalogoPageState extends State<CatalogoPage> {
           centerTitle: true,
         ),
         bottomNavigationBar: BottomBarWidget(),
-        body: Container(
-          // height: 400,
-          height: MediaQuery
-              .of(context)
-              .size
-              .height,
+        body: GestureDetector(
+          onHorizontalDragUpdate: (details) {
+            // Note: Sensitivity is integer used when you don't want to mess up vertical drag
+            int sensitivity = 20;
+            if (details.delta.dx > sensitivity) {
+              // Right Swipe
+              print("Right Swipe");
+              _scheda_precedente();
+            } else if (details.delta.dx < -sensitivity) {
+              //Left Swipe
+              print("Left Swipe");
+              _scheda_successiva();
+            }
+          },
           child: SingleChildScrollView(
             child: Container(
-              // padding: new EdgeInsets.all(10.0),
+              // si dovrebbe sitemare meglio
+              height: MediaQuery.of(context).size.height -
+                  (kBottomNavigationBarHeight * 2),
               // decoration: MyBoxDecoration().MyBox(),
-              // width: 600,
               child: Column(
                 children: <Widget>[
-                  ArticoloWidget(),
-                  // SizedBox(height: 5),
+                  Obx(
+                    () => ArticoloWidget(),
+                  ),
+// SizedBox(height: 5),
                   Divider(
                     height: 5,
                     thickness: 2,
                     // color: Theme.of(context).primaryColor,
                   ),
-                  CodiciIntestazioneWidget_2(),
+                  CodiciIntestazioneWidget(),
                   Divider(
                     height: 5,
                     thickness: 2,
                     // color: Theme.of(context).primaryColor,
                   ),
-                  // CodiciWidget(),
-                  // CodiciWidget_2(),
+          Obx(
+                () {
+                  // print(pageStato.value.catalogo_scheda.codici.toString());
+                  return CodiciWidget(pageStato.value.catalogo_scheda.codici);
+                  },
+          ),
                 ],
               ),
             ),
@@ -120,55 +191,69 @@ class _CatalogoPageState extends State<CatalogoPage> {
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
-                  color: Theme
-                      .of(context)
-                      .primaryColor,
+                  color: Theme.of(context).primaryColor,
                   width: 2,
                 ),
               ),
             ),
             child: Row(
               children: [
+                // Text("${int.parse(pageStato.value.catalogo_scheda.famiglie_colore)}"),
                 CircleAvatar(
-                  backgroundColor: Colors.amber,
+                  backgroundColor: Colors.red,
                 ),
                 SizedBox(
                   width: 5,
                 ),
                 Expanded(
-                  flex: 1,
-                  child: Container(
-                    decoration: MyBoxDecoration().MyBox(),
-                    child: Text(
-                      "Categoria Categoria",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        overflow: TextOverflow.ellipsis,
+                  child: Stack(
+                    children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        decoration: MyBoxDecoration().MyBox(),
+                        child: Text(
+                          pageStato.value.catalogo_scheda.famiglie_descrizione,
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-                Container(
-                  width: 60,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    border: MyBorder().MyBorderOrange(),
-                    image: DecorationImage(
-                      image: AssetImage("assets/immagini/splash_screen.png"),
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-                Container(
-                  width: 60,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    border: MyBorder().MyBorderOrange(),
-                    image: DecorationImage(
-                      image: AssetImage("assets/immagini/splash_screen.png"),
-                      fit: BoxFit.contain,
-                    ),
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: Row(
+                          children: [
+                            if (pageStato.value.catalogo_scheda.nuovo == 1)
+                              Container(
+                                width: 60,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  border: MyBorder().MyBorderOrange(),
+                                  image: DecorationImage(
+                                    image: AssetImage(
+                                        "assets/immagini/splash_screen.png"),
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                            if (pageStato.value.catalogo_scheda.promozione_id >0)
+                              Container(
+                                width: 60,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  border: MyBorder().MyBorderOrange(),
+                                  image: DecorationImage(
+                                    image: AssetImage(
+                                        "assets/immagini/splash_screen.png"),
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                          ],),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -180,7 +265,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                 child: Container(
                   padding: EdgeInsets.all(5),
                   child: Text(
-                    "Articolo Articolo Articolo",
+                    pageStato.value.catalogo_scheda.nome,
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -208,8 +293,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                     height: 300,
                     child: SingleChildScrollView(
                       child: Text(
-                        "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.",
-                        // "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, ",
+                        pageStato.value.catalogo_scheda.descrizione,
                         textAlign: TextAlign.justify,
                         // style: TextStyle(fontSize: 12.0),
                       ),
@@ -227,12 +311,10 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       // width: 500,
                       decoration: BoxDecoration(
                         border: MyBorder().MyBorderOrange(),
-                        image: DecorationImage(
-                          image:
-                          AssetImage("assets/immagini/splash_screen.png"),
-                          fit: BoxFit.contain,
-                        ),
                       ),
+                      child: SchedaImmagineWidget(
+                          immagine_base64:
+                              pageStato.value.catalogo_scheda.immagine),
                     );
                   },
                 ),
@@ -245,143 +327,18 @@ class _CatalogoPageState extends State<CatalogoPage> {
     );
   }
 
-// riga lista codici
-  Widget CodiciWidget() {
-    return SizedBox(
-      height: 300,
-      child: Expanded(
-        child: ListView.separated(
-          separatorBuilder: (context, index) =>
-              Divider(
-                height: 5,
-                thickness: 2,
-                color: Theme
-                    .of(context)
-                    .primaryColor,
-              ),
-          itemCount: 15,
-          itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () {
-                listaClick(context);
-              },
-              onLongPress: () {
-                articolo_disponibilita_mostra(context);
-              },
-              child: Container(
-                height: 40,
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: Theme
-                          .of(context)
-                          .primaryColor,
-                      width: 2,
-                    ),
-                  ),
-                ),
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      // venduto
-                      alignment: Alignment(0.0, 0.0),
-                      width: 15,
-                      decoration: MyBoxDecoration().MyBox(),
-                      child: Text(
-                        "•",
-                        style: TextStyle(fontSize: 18.0),
-                      ),
-                    ),
-                    Container(
-                      // codice
-                      alignment: Alignment(0.0, 0.0),
-                      width: 60,
-                      // color: Colors.orange,
-                      decoration: MyBoxDecoration().MyBox(),
-                      child: Text(
-                        "000000",
-                        // style: TextStyle(fontSize: 14.0),
-                      ),
-                    ),
-                    Expanded(
-                      // descrizione
-                      child: Container(
-                        padding: EdgeInsets.all(2),
-                        alignment: Alignment(-1.0, 0.0),
-                        decoration: MyBoxDecoration().MyBox(),
-                        child: Text(
-                          "Codice Codice Codice Codice Codice Codice",
-                          style: TextStyle(
-                            // fontSize: 14.0,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      // quantità
-                      padding: EdgeInsets.all(2),
-                      alignment: Alignment(1.0, 0.0),
-                      width: 50,
-                      decoration: MyBoxDecoration().MyBox(),
-                      child: Text(
-                        "1500",
-                        // style: TextStyle(fontSize: 18.0),
-                      ),
-                    ),
-                    Container(
-                      // apribile
-                      alignment: Alignment(0.0, 0.0),
-                      width: 20,
-                      decoration: MyBoxDecoration().MyBox(),
-                      child: Text(
-                        "*",
-                        style: TextStyle(fontSize: 18.0),
-                      ),
-                    ),
-                    Container(
-                      // unità di misura
-                      alignment: Alignment(0.0, 0.0),
-                      width: 25,
-                      decoration: MyBoxDecoration().MyBox(),
-                      child: Text(
-                        "XC",
-                        // style: TextStyle(fontSize: 18.0),
-                      ),
-                    ),
-                    Container(
-                      // prezzo
-                      padding: EdgeInsets.all(3),
-                      alignment: Alignment(1.0, 0.0),
-                      width: 80,
-                      decoration: MyBoxDecoration().MyBox(),
-                      child: Text(
-                        "99999,99",
-                        // style: TextStyle(fontSize: 18.0),
-                      ),
-                    ),
-                    Container(
-                      // iva
-                      alignment: Alignment(0.0, 0.0),
-                      width: 25,
-                      decoration: MyBoxDecoration().MyBox(),
-                      child: Text(
-                        "22",
-                        // style: TextStyle(fontSize: 18.0),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
-      ),
-    );
+  Widget SchedaImmagineWidget({dynamic immagine_base64 = ""}) {
+    if ((immagine_base64 != null) && (immagine_base64 != "")) {
+      return Image.memory(
+        Base64Decoder().convert(immagine_base64),
+      );
+    } else {
+      return Image.asset("assets/immagini/splash_screen.png");
+    }
   }
 
 // riga lista codici
-  Widget CodiciIntestazioneWidget_2() {
+  Widget CodiciIntestazioneWidget() {
     return Container(
       // height: 40,
       // decoration: BoxDecoration(
@@ -550,161 +507,157 @@ class _CatalogoPageState extends State<CatalogoPage> {
   }
 
 // riga lista codici
-  Widget CodiciWidget_2() {
-    return SizedBox(
-      // height: MediaQuery.of(context).size.height/2,
-      height: 300,
-      child: Expanded(
-        child: ListView.separated(
-          separatorBuilder: (context, index) =>
-              Divider(
-                height: 5,
-                thickness: 2,
-                color: Theme
-                    .of(context)
-                    .primaryColor,
-              ),
-          itemCount: 15,
-          itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () {
-                listaClick(context);
-              },
-              onLongPress: () {
-                articolo_disponibilita_mostra(context);
-              },
-              child: Container(
-                // height: 40,
-                // decoration: BoxDecoration(
-                //   border: Border(
-                //     bottom: BorderSide(
-                //       color: Theme.of(context).primaryColor,
-                //       width: 2,
-                //     ),
-                //   ),
-                // ),
-                child: Column(
-                  children: [
-                    Row(
-                      children: <Widget>[
-                        Container(
-                          // venduto
+  Widget CodiciWidget(List<CodiceModel> codice_scheda) {
+    return Flexible(
+      child: ListView.separated(
+        separatorBuilder: (context, index) => Divider(
+          height: 5,
+          thickness: 2,
+          color: Theme.of(context).primaryColor,
+        ),
+        itemCount: codice_scheda.length,
+        itemBuilder: (context, index) {
+          return InkWell(
+            onTap: () {
+              listaClick(context, index);
+            },
+            onLongPress: () {
+              articolo_disponibilita_mostra(context, codice_scheda[index]);
+            },
+            child: Container(
+              // height: 40,
+              // decoration: BoxDecoration(
+              //   border: Border(
+              //     bottom: BorderSide(
+              //       color: Theme.of(context).primaryColor,
+              //       width: 2,
+              //     ),
+              //   ),
+              // ),
+              child: Column(
+                children: [
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        // venduto
+                        padding: EdgeInsets.all(2),
+                        alignment: Alignment.center,
+                        width: 15,
+                        decoration: MyBoxDecoration().MyBox(),
+                        child: Text(
+                          "•",
+                          // style: TextStyle(fontSize: 18.0),
+                        ),
+                      ),
+                      Container(
+                        // codice
+                        padding: EdgeInsets.all(2),
+                        alignment: Alignment.center,
+                        width: 70,
+                        // color: Colors.orange,
+                        decoration: MyBoxDecoration().MyBox(),
+                        child: Text(
+                          codice_scheda[index].numero,
+                          // style: TextStyle(fontSize: 14.0),
+                        ),
+                      ),
+                      Expanded(
+                        // descrizione
+                        child: Container(
                           padding: EdgeInsets.all(2),
-                          alignment: Alignment.center,
-                          width: 15,
+                          alignment: Alignment.centerLeft,
                           decoration: MyBoxDecoration().MyBox(),
                           child: Text(
-                            "•",
-                            // style: TextStyle(fontSize: 18.0),
-                          ),
-                        ),
-                        Container(
-                          // codice
-                          padding: EdgeInsets.all(2),
-                          alignment: Alignment.center,
-                          width: 70,
-                          // color: Colors.orange,
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text(
-                            "000000",
-                            // style: TextStyle(fontSize: 14.0),
-                          ),
-                        ),
-                        Expanded(
-                          // descrizione
-                          child: Container(
-                            padding: EdgeInsets.all(2),
-                            alignment: Alignment.centerLeft,
-                            decoration: MyBoxDecoration().MyBox(),
-                            child: Text(
-                              "Codice Codice Codice Codice Codice Codice",
-                              style: TextStyle(
-                                // fontSize: 14.0,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                            codice_scheda[index].descrizione,
+                            style: TextStyle(
+                              // fontSize: 14.0,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Container(
-                          // quantità
-                          padding: EdgeInsets.all(2),
-                          alignment: Alignment.centerRight,
-                          width: 50,
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text(
-                            "1500",
-                            // style: TextStyle(fontSize: 18.0),
-                          ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      if (codice_scheda[index].quantita_massima > 0)
+                      Container(
+                        // quantità
+                        padding: EdgeInsets.all(2),
+                        alignment: Alignment.centerRight,
+                        width: 50,
+                        decoration: MyBoxDecoration().MyBox(),
+                        child: Text(
+                          codice_scheda[index].quantita_massima.toString(),
+                          // style: TextStyle(fontSize: 18.0),
                         ),
+                      ),
+                      if (codice_scheda[index].quantita_massima > 0)
                         Text(" x "),
-                        Container(
-                          // quantità
-                          padding: EdgeInsets.all(2),
-                          alignment: Alignment.centerRight,
-                          width: 50,
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text(
-                            "1500",
-                            // style: TextStyle(fontSize: 18.0),
-                          ),
+                      Container(
+                        // quantità
+                        padding: EdgeInsets.all(2),
+                        alignment: Alignment.centerRight,
+                        width: 50,
+                        decoration: MyBoxDecoration().MyBox(),
+                        child: Text(
+                          codice_scheda[index].pezzi.toString(),
+                          // style: TextStyle(fontSize: 18.0),
                         ),
-                        Container(
-                          // apribile
-                          padding: EdgeInsets.all(2),
-                          alignment: Alignment.center,
-                          width: 20,
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text(
-                            "*",
-                            // style: TextStyle(fontSize: 18.0),
-                          ),
+                      ),
+                      Container(
+                        // apribile
+                        padding: EdgeInsets.all(2),
+                        alignment: Alignment.center,
+                        width: 20,
+                        decoration: MyBoxDecoration().MyBox(),
+                        child: Text(
+                          (codice_scheda[index].apribile == 1) ? "*" : "",
+                          // style: TextStyle(fontSize: 18.0),
                         ),
-                        Container(
-                          // unità di misura
-                          padding: EdgeInsets.all(2),
-                          alignment: Alignment.center,
-                          width: 30,
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text(
-                            "XC",
-                            // style: TextStyle(fontSize: 18.0),
-                          ),
+                      ),
+                      Container(
+                        // unità di misura
+                        padding: EdgeInsets.all(2),
+                        alignment: Alignment.center,
+                        width: 30,
+                        decoration: MyBoxDecoration().MyBox(),
+                        child: Text(
+                          codice_scheda[index].um,
+                          // style: TextStyle(fontSize: 18.0),
                         ),
-                        Container(
-                          // prezzo
-                          padding: EdgeInsets.all(2),
-                          alignment: Alignment.centerRight,
-                          width: 80,
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text(
-                            "99999,99",
-                            // style: TextStyle(fontSize: 18.0),
-                          ),
+                      ),
+                      Container(
+                        // prezzo
+                        padding: EdgeInsets.all(2),
+                        alignment: Alignment.centerRight,
+                        width: 80,
+                        decoration: MyBoxDecoration().MyBox(),
+                        child: Text(
+                          codice_scheda[index].prezzo.toString(),
+                          // style: TextStyle(fontSize: 18.0),
                         ),
-                        Container(
-                          // iva
-                          padding: EdgeInsets.all(2),
-                          alignment: Alignment.center,
-                          width: 25,
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text(
-                            "22",
-                            // style: TextStyle(fontSize: 18.0),
-                          ),
+                      ),
+                      Container(
+                        // iva
+                        padding: EdgeInsets.all(2),
+                        alignment: Alignment.center,
+                        width: 25,
+                        decoration: MyBoxDecoration().MyBox(),
+                        child: Text(
+                          codice_scheda[index].iva.toString(),
+                          // style: TextStyle(fontSize: 18.0),
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+
+                ],
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

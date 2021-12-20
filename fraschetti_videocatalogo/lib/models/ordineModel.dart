@@ -9,8 +9,8 @@ class OrdineModel {
     int agente_id = 0,
     int ordine_numero = 0,
     int articolo_codice = 0,
-    String descrizione = '',
-    String unita_misura = '',
+    String descrizione = "",
+    String unita_misura = "",
     double quantita = 0,
     double prezzo = 0,
     double prezzo_ordine = 0,
@@ -21,8 +21,8 @@ class OrdineModel {
   int agente_id = 0;
   int ordine_numero = 0;
   int articolo_codice = 0;
-  String descrizione = '';
-  String unita_misura = '';
+  String descrizione = "";
+  String unita_misura = "";
   double quantita = 0;
   double prezzo = 0;
   double prezzo_ordine = 0;

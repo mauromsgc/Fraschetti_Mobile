@@ -5,6 +5,17 @@ import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoPage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 
+class ComunicazionePageArgs {
+  List<Map>? comunicazioni_lista;
+  int indice;
+
+  ComunicazionePageArgs({
+    this.comunicazioni_lista = null,
+    this.indice = 0,
+  });
+
+}
+
 class ComunicazionePage extends StatefulWidget {
   ComunicazionePage({Key? key}) : super(key: key);
   static const String routeName = 'comunicazione_page';
@@ -15,6 +26,7 @@ class ComunicazionePage extends StatefulWidget {
 }
 
 class _ComunicazionePageState extends State<ComunicazionePage> {
+  late ComunicazionePageArgs? argomenti;
   List<CatalogoModel> articoli_lista = ArticoliRepository().all_3();
 
   void listaClick(BuildContext context) {
@@ -23,6 +35,15 @@ class _ComunicazionePageState extends State<ComunicazionePage> {
 
   @override
   Widget build(BuildContext context) {
+    if (ModalRoute.of(context)?.settings.arguments != null) {
+      argomenti = ModalRoute
+          .of(context)
+          ?.settings
+          .arguments as ComunicazionePageArgs;
+      print(argomenti?.comunicazioni_lista.toString());
+      print(argomenti?.indice.toString());
+    }
+
     return SafeArea(
       child: Scaffold(
         // resizeToAvoidBottomInset: true,
@@ -36,21 +57,27 @@ class _ComunicazionePageState extends State<ComunicazionePage> {
           centerTitle: true,
         ),
         bottomNavigationBar: BottomBarWidget(),
-        body: Container(
-          // height: 400,
-          // height: MediaQuery.of(context).size.height/2,
+        body: GestureDetector(
+          onHorizontalDragUpdate: (details) {
+            // Note: Sensitivity is integer used when you don't want to mess up vertical drag
+            int sensitivity = 8;
+            if (details.delta.dx > sensitivity) {
+              // Right Swipe
+              print("Right Swipe");
+            } else if(details.delta.dx < -sensitivity){
+              //Left Swipe
+              print("Left Swipe");
+            }
+          },
           child: SingleChildScrollView(
-            child: Container(
-              // padding: new EdgeInsets.all(10.0),
-              // decoration: MyBoxDecoration().MyBox(),
-              // width: 600,
-              child: Column(
-                children: <Widget>[
-                  ComunicazopneWidget(),
-                ],
+              child: Container(
+                // si dovrebbe sitemare meglio
+                height: MediaQuery.of(context).size.height-(kBottomNavigationBarHeight*2),
+                // decoration: MyBoxDecoration().MyBox(),
+                child: ComunicazopneWidget(),
+
               ),
             ),
-          ),
         ),
       ),
     );
@@ -80,26 +107,8 @@ class _ComunicazionePageState extends State<ComunicazionePage> {
               ),
             ],
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(width: 5),
-              Expanded(
-                child: Container(
-                  height: 500,
-                  // width: 400,
-                  decoration: BoxDecoration(
-                    border: MyBorder().MyBorderOrange(),
-                    image: DecorationImage(
-                      image: AssetImage("assets/immagini/splash_screen.png"),
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(width: 5),
-            ],
-          ),
+          Divider(),
+
           SizedBox(height: 5),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -141,6 +150,31 @@ class _ComunicazionePageState extends State<ComunicazionePage> {
               ),
               SizedBox(width: 5),
             ],
+          ),
+          SizedBox(height: 5),
+          Divider(),
+
+          Flexible(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(width: 5),
+                Expanded(
+                  child: Container(
+
+                    decoration: BoxDecoration(
+                      border: MyBorder().MyBorderOrange(),
+                      image: DecorationImage(
+                        image: AssetImage("assets/immagini/splash_screen.png"),
+                        fit: BoxFit.fitWidth,
+                        alignment: Alignment.topCenter
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 5),
+              ],
+            ),
           ),
         ],
       ),

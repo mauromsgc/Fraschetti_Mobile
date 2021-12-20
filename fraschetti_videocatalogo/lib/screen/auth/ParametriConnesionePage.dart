@@ -68,9 +68,20 @@ class _ParametriConnesionePageState extends State<ParametriConnesionePage> {
   }
 
   void test_comunicazine(BuildContext context) async {
-    final response = await GetIt.instance<HttpRepository>().http!.trasmissione_test(p_host_server: host_serverController.text);
+    try {
+      final response = await GetIt
+          .instance<HttpRepository>()
+          .http!
+          .trasmissione_test(p_host_server: host_serverController.text);
+      print(response);
 
-    print(response);
+      if (response["data"] == "OK") {
+        print("Trasmissione OK");
+      }
+    }catch(e){
+      print("Trasmissione Fallita");
+    }
+
   }
 
   @override

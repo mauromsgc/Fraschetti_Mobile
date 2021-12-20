@@ -9,13 +9,13 @@ class ResoModel {
     this.agente_id = 0,
     this.reso_numero = 0,
     this.articolo_codice = 0,
-    this.descrizione = '',
-    this.unita_misura = '',
+    this.descrizione = "",
+    this.unita_misura = "",
     this.quantita = 0,
-    this.causale_reso = '',
-    this.fattura_data = '',
-    this.fattura_numero = '',
-    this.note = '',
+    this.causale_reso = "",
+    this.fattura_data = "",
+    this.fattura_numero = "",
+    this.note = "",
   });
 
   int id = 0;
@@ -23,12 +23,12 @@ class ResoModel {
   int agente_id = 0;
   int reso_numero = 0;
   int articolo_codice = 0;
-  String descrizione = '';
-  String unita_misura = '';
+  String descrizione = "";
+  String unita_misura = "";
   double quantita = 0;
-  String causale_reso = '';
-  String fattura_data = '';
-  String fattura_numero = '';
-  String note = '';
+  String causale_reso = "";
+  String fattura_data = "";
+  String fattura_numero = "";
+  String note = "";
 
 }

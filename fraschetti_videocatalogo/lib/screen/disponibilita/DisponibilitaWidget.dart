@@ -1,7 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:fraschetti_videocatalogo/models/codiceModel.dart';
 
-WidgetBuilder DisponibilitaDialogWidget({int? codice_id, dynamic returnValue}) {
+WidgetBuilder DisponibilitaDialogWidget({required CodiceModel codice_scheda, dynamic returnValue}) {
   return (BuildContext context) => AlertDialog(
       title: const Text("Disponibilità"),
       content: Column(
@@ -18,7 +19,7 @@ WidgetBuilder DisponibilitaDialogWidget({int? codice_id, dynamic returnValue}) {
                 child: TextFormField(
                   // readOnly: true,
                   enabled: false,
-                  initialValue: "000000",
+                  initialValue: codice_scheda.numero,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.grey.shade200,
@@ -39,8 +40,7 @@ WidgetBuilder DisponibilitaDialogWidget({int? codice_id, dynamic returnValue}) {
               minLines: 2,
               maxLines: 2,
               enabled: false,
-              initialValue:
-                  "Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione",
+              initialValue: codice_scheda.descrizione,
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.grey.shade200,
@@ -56,7 +56,7 @@ WidgetBuilder DisponibilitaDialogWidget({int? codice_id, dynamic returnValue}) {
             child: TextFormField(
               // readOnly: true,
               enabled: false,
-              initialValue: "non disponibile",
+              initialValue: codice_scheda.disponibilita_stato.toString(),
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.grey.shade200,
@@ -72,7 +72,7 @@ WidgetBuilder DisponibilitaDialogWidget({int? codice_id, dynamic returnValue}) {
             child: TextFormField(
               // readOnly: true,
               enabled: false,
-              initialValue: "00/00/0000",
+              initialValue: codice_scheda.disponibilita_data_arrivo,
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.grey.shade200,

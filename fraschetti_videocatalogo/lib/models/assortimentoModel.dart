@@ -6,13 +6,13 @@ import 'package:sqflite/sqflite.dart';
 
 class AssortimentoModel {
   int id = 0;
-  String descrizione = '';
+  String descrizione = "";
   int ordinatore = 0;
 
   // il costruttore con tutti i parametri lo uso solo per creare i record fake
   AssortimentoModel({
     this.id = 0,
-    this.descrizione = '',
+    this.descrizione = "",
     this.ordinatore = 0,
   });
 

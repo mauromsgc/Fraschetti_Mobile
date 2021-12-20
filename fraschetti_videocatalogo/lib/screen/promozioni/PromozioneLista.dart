@@ -186,6 +186,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
             Expanded(
               flex: 5,
               child: TextFormField(
+                autofocus: true,
                 controller: descrizioneController,
                 onChanged: (value) {
                   setState(() {});
@@ -326,8 +327,8 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
     );
   }
 
-  Widget ListaImmagineWidget({dynamic immagine_base64 = ''}) {
-    if ((immagine_base64 != null) && (immagine_base64 != '')) {
+  Widget ListaImmagineWidget({dynamic immagine_base64 = ""}) {
+    if ((immagine_base64 != null) && (immagine_base64 != "")) {
       return Image.memory(
         Base64Decoder().convert(immagine_base64),
       );

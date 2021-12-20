@@ -52,9 +52,9 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
   }
 
   Future<void> _comunicazioni_lista_cerca({
-    String oggetto = '',
+    String oggetto = "",
     int id = 0,
-    String stato = '',
+    String stato = "",
   }) async {
     if ((stato != "")) {
       oggettoController.clear();
@@ -140,6 +140,7 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
             Expanded(
               flex: 5,
               child: TextFormField(
+                autofocus: true,
                 controller: oggettoController,
                 onChanged: (value) {
                   // Call setState to update the UI

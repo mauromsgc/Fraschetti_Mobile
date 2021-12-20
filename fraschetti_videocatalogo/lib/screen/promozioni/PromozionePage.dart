@@ -5,6 +5,16 @@ import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoPage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 
+class PromozionePageArgs {
+  List<Map>? promozioni_lista;
+  int indice;
+
+  PromozionePageArgs({
+    this.promozioni_lista = null,
+    this.indice = 0,
+  });
+}
+
 class PromozionePage extends StatefulWidget {
   PromozionePage({Key? key}) : super(key: key);
   static const String routeName = 'promozione_page';
@@ -15,6 +25,7 @@ class PromozionePage extends StatefulWidget {
 }
 
 class _PromozionePageState extends State<PromozionePage> {
+  late PromozionePageArgs? argomenti;
   List<CatalogoModel> articoli_lista = ArticoliRepository().all_3();
 
   void listaClick(BuildContext context) {
@@ -23,6 +34,13 @@ class _PromozionePageState extends State<PromozionePage> {
 
   @override
   Widget build(BuildContext context) {
+    if (ModalRoute.of(context)?.settings.arguments != null) {
+      argomenti = ModalRoute.of(context)?.settings.arguments as PromozionePageArgs;
+    print(argomenti?.promozioni_lista.toString());
+    print(argomenti?.indice.toString());
+    }
+
+
     return SafeArea(
       child: Scaffold(
         // resizeToAvoidBottomInset: true,
@@ -36,14 +54,24 @@ class _PromozionePageState extends State<PromozionePage> {
           centerTitle: true,
         ),
         bottomNavigationBar: BottomBarWidget(),
-        body: Container(
-          // height: 400,
-          // height: MediaQuery.of(context).size.height/2,
+        body: GestureDetector(
+          onHorizontalDragUpdate: (details) {
+            // Note: Sensitivity is integer used when you don't want to mess up vertical drag
+            int sensitivity = 8;
+            if (details.delta.dx > sensitivity) {
+              // Right Swipe
+              print("Right Swipe");
+            } else if (details.delta.dx < -sensitivity) {
+              //Left Swipe
+              print("Left Swipe");
+            }
+          },
           child: SingleChildScrollView(
             child: Container(
-              // padding: new EdgeInsets.all(10.0),
+              // si dovrebbe sitemare meglio
+              height: MediaQuery.of(context).size.height -
+                  (kBottomNavigationBarHeight * 2),
               // decoration: MyBoxDecoration().MyBox(),
-              // width: 600,
               child: Column(
                 children: <Widget>[
                   PromozioneWidget(),
@@ -114,85 +142,81 @@ class _PromozionePageState extends State<PromozionePage> {
 
 // riga lista articoli
   Widget ListaWidget(List<CatalogoModel> articoli_lista) {
-    return Container(
-      height: 300,
-      child: Expanded(
-        child: ListView.separated(
-          separatorBuilder: (context, index) => Divider(
-            height: 5,
-            thickness: 2,
-            color: Theme.of(context).primaryColor,
-          ),
-          itemCount: articoli_lista.length,
-          itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () {
-                listaClick(context);
-              },
-              child: Container(
-                height: 40,
-                // decoration: MyBoxDecoration().MyBox(),
-                child: Row(
-                    children: <Widget>[
-                      Container(
-                        width: 10,
-                        decoration: BoxDecoration(
-                          color: Colors.orange,
-                          // "${articoli_lista[index].nome}"
-                        ),
-                      ),
-                      Container(
-                        width: 40,
-                        decoration: BoxDecoration(
-                          border: MyBorder().MyBorderOrange(),
-                          image: DecorationImage(
-                            image:
-                                AssetImage("assets/immagini/splash_screen.png"),
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          alignment: Alignment(-1.0, 0.0),
-                          padding: EdgeInsets.all(5.0),
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text(
-                            "${articoli_lista[index].nome}",
-                            maxLines: 2,
-                            style: TextStyle(
-                                fontSize: 15.0, overflow: TextOverflow.ellipsis,),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        width: 60,
-                        decoration: BoxDecoration(
-                          border: MyBorder().MyBorderOrange(),
-                          image: DecorationImage(
-                            image:
-                                AssetImage("assets/immagini/splash_screen.png"),
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        width: 60,
-                        decoration: BoxDecoration(
-                          border: MyBorder().MyBorderOrange(),
-                          image: DecorationImage(
-                            image:
-                                AssetImage("assets/immagini/splash_screen.png"),
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-              ),
-            );
-          },
+    return Flexible(
+      child: ListView.separated(
+        separatorBuilder: (context, index) => Divider(
+          height: 5,
+          thickness: 2,
+          color: Theme.of(context).primaryColor,
         ),
+        itemCount: articoli_lista.length,
+        itemBuilder: (context, index) {
+          return InkWell(
+            onTap: () {
+              listaClick(context);
+            },
+            child: Container(
+              height: 40,
+              // decoration: MyBoxDecoration().MyBox(),
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    width: 10,
+                    decoration: BoxDecoration(
+                      color: Colors.orange,
+                      // "${articoli_lista[index].nome}"
+                    ),
+                  ),
+                  Container(
+                    width: 40,
+                    decoration: BoxDecoration(
+                      border: MyBorder().MyBorderOrange(),
+                      image: DecorationImage(
+                        image: AssetImage("assets/immagini/splash_screen.png"),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment(-1.0, 0.0),
+                      padding: EdgeInsets.all(5.0),
+                      decoration: MyBoxDecoration().MyBox(),
+                      child: Text(
+                        "${articoli_lista[index].nome}",
+                        maxLines: 2,
+                        style: TextStyle(
+                          fontSize: 15.0,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 60,
+                    decoration: BoxDecoration(
+                      border: MyBorder().MyBorderOrange(),
+                      image: DecorationImage(
+                        image: AssetImage("assets/immagini/splash_screen.png"),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 60,
+                    decoration: BoxDecoration(
+                      border: MyBorder().MyBorderOrange(),
+                      image: DecorationImage(
+                        image: AssetImage("assets/immagini/splash_screen.png"),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

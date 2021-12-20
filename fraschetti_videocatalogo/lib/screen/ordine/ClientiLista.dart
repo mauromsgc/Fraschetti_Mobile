@@ -127,6 +127,7 @@ class _ClienteListaState extends State<ClienteLista> {
             Expanded(
               flex: 6,
               child: TextFormField(
+                autofocus: true,
                 onEditingComplete: () {
                   pageStato.value.clienti_cerca();
 

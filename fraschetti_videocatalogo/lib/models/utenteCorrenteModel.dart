@@ -49,14 +49,14 @@ class UtenteCorrenteModel {
       0; // id agente per utente agente, id agente del cliente per utente cliente
   int cliente_id = 0; // id cliente per utente cliente
   int utente_id = 0;
-  String cognome = '';
-  String nome = '';
-  String utente_sede_codice = '';
-  String utente_sede_sigla = '';
-  String utente_codice = '';
-  String utente_tipo = '';
-  String utente_tipo_interno = '';
-  String utente_username = '';
+  String cognome = "";
+  String nome = "";
+  String utente_sede_codice = "";
+  String utente_sede_sigla = "";
+  String utente_codice = "";
+  String utente_tipo = "";
+  String utente_tipo_interno = "";
+  String utente_username = "";
   int log_attivo = 0;
   int utente_in_attivita = 1;
   int sospesi_mostra = 0;

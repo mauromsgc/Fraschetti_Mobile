@@ -8,12 +8,12 @@ class ClienteModel {
 
   int id = 0;
   int agente_id = 0;
-  String ragione_sociale = '';
-  String localita = '';
-  String indirizzo = '';
-  String username = '';
-  String sede = '';
-  String codice = '';
+  String ragione_sociale = "";
+  String localita = "";
+  String indirizzo = "";
+  String username = "";
+  String sede = "";
+  String codice = "";
   int stato = 0;
   int videocatalogo_disattivato = 0;
   int offerte_disattivate = 0;
@@ -28,12 +28,12 @@ class ClienteModel {
   ClienteModel({
     this.id = 0,
     this.agente_id = 0,
-    this.ragione_sociale = '',
-    this.localita = '',
-    this.indirizzo = '',
-    this.username = '',
-    this.sede = '',
-    this.codice = '',
+    this.ragione_sociale = "",
+    this.localita = "",
+    this.indirizzo = "",
+    this.username = "",
+    this.sede = "",
+    this.codice = "",
     this.stato = 0,
     this.videocatalogo_disattivato = 0,
     this.offerte_disattivate = 0,

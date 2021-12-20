@@ -9,6 +9,7 @@ import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
 import 'package:fraschetti_videocatalogo/models/utenteCorrenteModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
+import 'package:fraschetti_videocatalogo/screen/altro/TestPage.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/ParametriConnesionePage.dart';
 import 'package:get_it/get_it.dart';
 
@@ -44,12 +45,14 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
   }
 
   void test_2() async{
-    final valid = await GetIt.instance<DbRepository>().immagini_aggiorna();
-    if (valid) {
-      print("Aggiornamento completato");
-    } else {
-      print("Errore durante l'aggiornamento, riprovare");
-    }
+    // final valid = await GetIt.instance<DbRepository>().immagini_aggiorna();
+    // if (valid) {
+    //   print("Aggiornamento completato");
+    // } else {
+    //   print("Errore durante l'aggiornamento, riprovare");
+    // }
+
+    Navigator.pushNamed(context, TestPage.routeName);
 
   }
 
