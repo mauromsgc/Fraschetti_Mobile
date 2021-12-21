@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/models/codiceModel.dart';
@@ -9,6 +8,7 @@ import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaWidget.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
+import 'package:get/get.dart';
 
 class CatalogoPageArgs {
   List<Map>? articoli_lista;
@@ -19,6 +19,11 @@ class CatalogoPageArgs {
     this.indice = 0,
   });
 }
+class PageStore {
+  CatalogoModel catalogo_scheda = CatalogoModel();
+}
+
+final pageStato = PageStore().obs;
 
 class CatalogoPage extends StatefulWidget {
   CatalogoPage({Key? key}) : super(key: key);
@@ -29,65 +34,58 @@ class CatalogoPage extends StatefulWidget {
   _CatalogoPageState createState() => _CatalogoPageState();
 }
 
-// final pageStato = PageStore().obs;
-//
-// class PageStore {
-//   CatalogoModel catalogo_scheda = CatalogoModel();
-// }
 
 
-class _CatalogoPageState extends State<CatalogoPage> {
+class Controller extends GetxController {
+
+  late CatalogoPageArgs? argomenti;
   // late CatalogoPageArgs? argomenti= ModalRoute.of(context)?.settings.arguments as CatalogoPageArgs;
-  CatalogoPageArgs argomenti = CatalogoPageArgs();
-  CatalogoModel catalogo_scheda = CatalogoModel();
+
+  // BuildContext? bc = Get.context;
 
   @override
   void initState() {
-    super.initState();
+
+    print("initState Controller");
+    // argomenti = Get.arguments;
+    // if (ModalRoute.of(bc!)?.settings.arguments != null) {
+    //   print("argomenti");
+    //   argomenti =
+    //   ModalRoute.of(bc!)?.settings.arguments as CatalogoPageArgs;
+    //   int indice = argomenti!.indice;
+    //   // all'apertura va caricato prima
+    //   _catalogo_scheda_carica(id: argomenti?.articoli_lista![indice]["id"]);
+    // }
+      _catalogo_scheda_carica(id: 30);
 
   }
-
-  @override
-  void didChangeDependencies() {
-
-    if (ModalRoute.of(context)?.settings.arguments != null) {
-      argomenti =
-      ModalRoute.of(context)?.settings.arguments as CatalogoPageArgs;
-      int indice = argomenti.indice;
-      // all'apertura va caricato prima
-      _catalogo_scheda_carica(id: argomenti.articoli_lista![indice]["id"]);
-    }
-
-    super.didChangeDependencies();
-  }
-
 
   Future<void> _catalogo_scheda_carica({
     int id = 0,
   }) async {
-    catalogo_scheda = await CatalogoModel.scheda_form_id(
+    pageStato.value.catalogo_scheda = await CatalogoModel.scheda_form_id(
       id: id,
     );
-
-    setState(() {
-    });
+    // pageStato.value.lista_numero_elementi =
+    //     pageStato.value.articoli_lista.length;
+    pageStato.refresh();
   }
 
   _scheda_precedente(){
-    int indice = argomenti.indice;
+    int indice = argomenti!.indice;
     if(indice != 0){
       indice = indice-1;
-      argomenti.indice = indice;
-    _catalogo_scheda_carica(id: argomenti.articoli_lista![indice]["id"]);
+      argomenti!.indice = indice;
+      _catalogo_scheda_carica(id: argomenti?.articoli_lista![indice]["id"]);
     }
 
   }
   _scheda_successiva(){
-    int indice = argomenti.indice;
-    if(indice < argomenti.articoli_lista!.length){
+    int indice = argomenti!.indice;
+    if(indice < argomenti!.articoli_lista!.length){
       indice = indice+1;
-      argomenti.indice = indice;
-      _catalogo_scheda_carica(id: argomenti.articoli_lista![indice]["id"]);
+      argomenti!.indice = indice;
+      _catalogo_scheda_carica(id: argomenti?.articoli_lista![indice]["id"]);
     }
   }
 
@@ -110,19 +108,22 @@ class _CatalogoPageState extends State<CatalogoPage> {
     );
   }
 
+}
+
+class _CatalogoPageState extends State<CatalogoPage> {
+
+  @override
+  void initState() {
+    super.initState();
+    print("initState _CatalogoPageState");
+  }
+
+  // final Controller controller = Get.put(Controller());
+
   @override
   Widget build(BuildContext context) {
-    print("Widget build 1");
-    // if (ModalRoute.of(context)?.settings.arguments != null) {
-    //   argomenti =
-    //       ModalRoute.of(context)?.settings.arguments as CatalogoPageArgs;
-    //   int indice = argomenti!.indice;
-    //   print("Widget build 2");
-    //   // all'apertura va caricato prima
-    //   _catalogo_scheda_carica(id: argomenti?.articoli_lista![indice]["id"]);
-    //   print("Widget build 3");
-    // }
-    // print("Widget build 4");
+    final Controller controller = Get.put(Controller());
+    print("build");
 
     return SafeArea(
       child: Scaffold(
@@ -142,11 +143,11 @@ class _CatalogoPageState extends State<CatalogoPage> {
             if (drag.primaryVelocity! < 0) {
               // drag from right to left
               print("drag from right to left");
-              _scheda_successiva();
+              controller._scheda_successiva();
             } else {
               // drag from left to right
               print("drag from left to right");
-              _scheda_precedente();
+              controller._scheda_precedente();
             }
           },
           child: SingleChildScrollView(
@@ -157,8 +158,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
               // decoration: MyBoxDecoration().MyBox(),
               child: Column(
                 children: <Widget>[
-                  if(catalogo_scheda.id != 0)
-                    ArticoloWidget(),
+                  // ArticoloWidget(),
                   //   Obx(
                   //   () => ArticoloWidget(),
                   // ),
@@ -173,8 +173,11 @@ class _CatalogoPageState extends State<CatalogoPage> {
                     thickness: 2,
                     // color: Theme.of(context).primaryColor,
                   ),
-                  if(catalogo_scheda.id != 0)
-                  CodiciWidget(catalogo_scheda.codici),
+// Text(pageStato.value.catalogo_scheda.id.toString()),
+//                 Obx(() => (
+//                     Text(pageStato.value.catalogo_scheda.id.toString()),
+//                 ),
+
                   //   Obx(() {
                   //   print("Obx CodiciWidget 1");
                   //   return CodiciWidget(pageStato.value.catalogo_scheda.codici);
@@ -191,6 +194,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
 
 // dati articolo catalogo
   Widget  ArticoloWidget() {
+    Controller controller = Get.find();
     return Container(
       // height: 500,
       // padding: EdgeInsets.all(5),
@@ -209,7 +213,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
             child: Row(
               children: [
                 CircleAvatar(
-                  backgroundColor: Color(int.parse(catalogo_scheda.famiglie_colore)),
+                  backgroundColor: Color(int.parse(pageStato.value.catalogo_scheda.famiglie_colore)),
                 ),
                 SizedBox(
                   width: 5,
@@ -221,7 +225,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                         alignment: Alignment.centerLeft,
                         decoration: MyBoxDecoration().MyBox(),
                         child: Text(
-                          catalogo_scheda.famiglie_descrizione,
+                          pageStato.value.catalogo_scheda.famiglie_descrizione,
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
@@ -234,14 +238,14 @@ class _CatalogoPageState extends State<CatalogoPage> {
                         right: 0,
                         child: Row(
                           children: [
-                            if (catalogo_scheda.nuovo == 1)
+                            if (pageStato.value.catalogo_scheda.nuovo == 1)
                               Container(
                                 width: 60,
                                 height: 50,
                                 decoration: MyBoxDecoration().MyBox(),
                                 child: Image.asset("assets/immagini/splash_screen.png"),
                               ),
-                            if (catalogo_scheda.promozione_id >0)
+                            if (pageStato.value.catalogo_scheda.promozione_id >0)
                               Container(
                                 width: 60,
                                 height: 50,
@@ -270,7 +274,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                   ),
                   padding: EdgeInsets.all(5),
                   child: Text(
-                    catalogo_scheda.nome,
+                    pageStato.value.catalogo_scheda.nome,
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -334,7 +338,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                     height: 300,
                     child: SingleChildScrollView(
                       child: Text(
-                        catalogo_scheda.descrizione,
+                        pageStato.value.catalogo_scheda.descrizione,
                         textAlign: TextAlign.justify,
                         // style: TextStyle(fontSize: 12.0),
                       ),
@@ -353,7 +357,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       decoration: MyBoxDecoration().MyBox(),
                       child: SchedaImmagineWidget(
                           immagine_base64:
-                          catalogo_scheda.immagine),
+                          pageStato.value.catalogo_scheda.immagine),
                     );
                   },
                 ),
@@ -547,6 +551,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
 
 // riga lista codici
   Widget CodiciWidget(List<CodiceModel> codice_scheda) {
+    Controller controller = Get.find();
     return Flexible(
       child: ListView.separated(
         separatorBuilder: (context, index) => Divider(
@@ -558,10 +563,10 @@ class _CatalogoPageState extends State<CatalogoPage> {
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
-              listaClick(context, index);
+              controller.listaClick(context, index);
             },
             onLongPress: () {
-              articolo_disponibilita_mostra(context, codice_scheda[index]);
+              controller.articolo_disponibilita_mostra(context, codice_scheda[index]);
             },
             child: Container(
               height: 50,
