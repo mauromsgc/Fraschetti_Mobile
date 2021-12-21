@@ -71,22 +71,8 @@ class CatalogoModel {
       immagine_preview: immagine_preview,
     );
 
-    CodiceModel.codici_lista(catalogo_id: oggetto.id).then((risposta) {
-      oggetto.codici = risposta;
-    }, onError: (error) {
-      print(error);
-    });
-
-    // void test () async{
-    //   oggetto.codici = await ( await CodiceModel.codici_lista(catalogo_id: oggetto.id));
-    // }
-    // test();
-
-
-
     return oggetto;
   }
-
 
   // factory CatalogoModel.fromMap(Map<String, dynamic> map) {
   //   final id = map["id"];
@@ -210,7 +196,7 @@ class CatalogoModel {
       sql_eseguire += element;
     });
     sql_eseguire += ";";
-    print(sql_eseguire);
+    // print(sql_eseguire);
 
     final rows = await db.rawQuery(sql_eseguire);
 
@@ -268,12 +254,16 @@ class CatalogoModel {
       sql_eseguire += element;
     });
     sql_eseguire += ";";
-    print(sql_eseguire);
+    // print(sql_eseguire);
 
     final rows = await db.rawQuery(sql_eseguire);
 
     if (rows.length > 0) {
       catalogo_cheda = CatalogoModel.fromMap_con_lista(rows.first);
+
+      print("cat mod 1");
+      catalogo_cheda.codici = await CodiceModel.codici_lista(catalogo_id: catalogo_cheda.id);
+      print("cat mod 2");
     } else {
       catalogo_cheda = CatalogoModel();
     }

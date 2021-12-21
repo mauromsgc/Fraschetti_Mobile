@@ -35,11 +35,11 @@ class _PromozionePageState extends State<PromozionePage> {
   @override
   Widget build(BuildContext context) {
     if (ModalRoute.of(context)?.settings.arguments != null) {
-      argomenti = ModalRoute.of(context)?.settings.arguments as PromozionePageArgs;
-    print(argomenti?.promozioni_lista.toString());
-    print(argomenti?.indice.toString());
+      argomenti =
+          ModalRoute.of(context)?.settings.arguments as PromozionePageArgs;
+      print(argomenti?.promozioni_lista.toString());
+      print(argomenti?.indice.toString());
     }
-
 
     return SafeArea(
       child: Scaffold(
@@ -55,15 +55,16 @@ class _PromozionePageState extends State<PromozionePage> {
         ),
         bottomNavigationBar: BottomBarWidget(),
         body: GestureDetector(
-          onHorizontalDragUpdate: (details) {
-            // Note: Sensitivity is integer used when you don't want to mess up vertical drag
-            int sensitivity = 8;
-            if (details.delta.dx > sensitivity) {
-              // Right Swipe
-              print("Right Swipe");
-            } else if (details.delta.dx < -sensitivity) {
-              //Left Swipe
-              print("Left Swipe");
+          onHorizontalDragEnd: (DragEndDetails drag) {
+            if (drag.primaryVelocity == null) return;
+            if (drag.primaryVelocity! < 0) {
+              // drag from right to left
+              print("drag from right to left");
+              // _scheda_successiva();
+            } else {
+              // drag from left to right
+              print("drag from left to right");
+              // _scheda_precedente();
             }
           },
           child: SingleChildScrollView(
@@ -123,13 +124,8 @@ class _PromozionePageState extends State<PromozionePage> {
                 child: Container(
                   height: 500,
                   // width: 400,
-                  decoration: BoxDecoration(
-                    border: MyBorder().MyBorderOrange(),
-                    image: DecorationImage(
-                      image: AssetImage("assets/immagini/splash_screen.png"),
-                      fit: BoxFit.contain,
-                    ),
-                  ),
+                  decoration: MyBoxDecoration().MyBox(),
+                  child: Image.asset("assets/immagini/splash_screen.png"),
                 ),
               ),
               SizedBox(width: 5),
@@ -147,7 +143,7 @@ class _PromozionePageState extends State<PromozionePage> {
         separatorBuilder: (context, index) => Divider(
           height: 5,
           thickness: 2,
-          color: Theme.of(context).primaryColor,
+          // color: Theme.of(context).primaryColor,
         ),
         itemCount: articoli_lista.length,
         itemBuilder: (context, index) {
@@ -156,7 +152,7 @@ class _PromozionePageState extends State<PromozionePage> {
               listaClick(context);
             },
             child: Container(
-              height: 40,
+              height: 50,
               // decoration: MyBoxDecoration().MyBox(),
               child: Row(
                 children: <Widget>[
@@ -168,48 +164,52 @@ class _PromozionePageState extends State<PromozionePage> {
                     ),
                   ),
                   Container(
-                    width: 40,
-                    decoration: BoxDecoration(
-                      border: MyBorder().MyBorderOrange(),
-                      image: DecorationImage(
-                        image: AssetImage("assets/immagini/splash_screen.png"),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
+                    width: 60,
+                    decoration: MyBoxDecoration().MyBox(),
+                    child: Image.asset("assets/immagini/splash_screen.png"),
                   ),
                   Expanded(
-                    child: Container(
-                      alignment: Alignment(-1.0, 0.0),
-                      padding: EdgeInsets.all(5.0),
-                      decoration: MyBoxDecoration().MyBox(),
-                      child: Text(
-                        "${articoli_lista[index].nome}",
-                        maxLines: 2,
-                        style: TextStyle(
-                          fontSize: 15.0,
-                          overflow: TextOverflow.ellipsis,
+                    child: Stack(
+                      children: [
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.all(5.0),
+                          decoration: MyBoxDecoration().MyBox(),
+                          child: Text(
+                            "${articoli_lista[index].nome}",
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 60,
-                    decoration: BoxDecoration(
-                      border: MyBorder().MyBorderOrange(),
-                      image: DecorationImage(
-                        image: AssetImage("assets/immagini/splash_screen.png"),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 60,
-                    decoration: BoxDecoration(
-                      border: MyBorder().MyBorderOrange(),
-                      image: DecorationImage(
-                        image: AssetImage("assets/immagini/splash_screen.png"),
-                        fit: BoxFit.contain,
-                      ),
+                        // if (articoli_lista[index].nuovo == 1)
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            child: Container(
+                              width: 60,
+                              decoration: MyBoxDecoration().MyBox(),
+                              child: Image.asset(
+                                  "assets/immagini/splash_screen.png",
+                              fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                        // if (articoli_lista[index].promozione_id > 0)
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                              width: 60,
+                              decoration: MyBoxDecoration().MyBox(),
+                              child: Image.asset(
+                                  "assets/immagini/splash_screen.png",
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ],

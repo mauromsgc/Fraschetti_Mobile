@@ -287,7 +287,7 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
         separatorBuilder: (context, index) => Divider(
           height: 5,
           thickness: 2,
-          color: Theme.of(context).primaryColor,
+          // color: Theme.of(context).primaryColor,
         ),
         itemCount: comunicazioni_lista.length,
         itemBuilder: (context, index) {

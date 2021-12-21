@@ -557,7 +557,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
         separatorBuilder: (context, index) => Divider(
           height: 5,
           thickness: 2,
-          color: Theme.of(context).primaryColor,
+          // color: Theme.of(context).primaryColor,
         ),
         itemCount: articoli_lista.length,
         itemBuilder: (context, index) {
@@ -579,9 +579,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   ),
                   Container(
                     width: 60,
-                    decoration: BoxDecoration(
-                      border: MyBorder().MyBorderOrange(),
-                    ),
+                    decoration: MyBoxDecoration().MyBox(),
                     child: ListaImmagineWidget(
                         immagine_base64: articoli_lista[index]
                             ['immagine_preview']),
@@ -598,7 +596,8 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                             "${articoli_lista[index]['nome']}",
                             style: TextStyle(
                                 fontSize: 15.0,
-                                overflow: TextOverflow.ellipsis),
+                                overflow: TextOverflow.ellipsis
+                            ),
                           ),
                         ),
                         if (articoli_lista[index]['nuovo'] == 1)
@@ -608,14 +607,8 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                             child: Container(
                               width: 60,
                               height: 25,
-                              decoration: BoxDecoration(
-                                border: MyBorder().MyBorderOrange(),
-                                image: DecorationImage(
-                                  image: AssetImage(
-                                      "assets/immagini/splash_screen.png"),
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
+                                decoration: MyBoxDecoration().MyBox(),
+                                child: Image.asset("assets/immagini/splash_screen.png"),
                             ),
                           ),
                         if (articoli_lista[index]['promozione_id'] > 0)
@@ -625,14 +618,8 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                             child: Container(
                               width: 60,
                               height: 25,
-                              decoration: BoxDecoration(
-                                border: MyBorder().MyBorderOrange(),
-                                image: DecorationImage(
-                                  image: AssetImage(
-                                      "assets/immagini/splash_screen.png"),
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
+                              decoration: MyBoxDecoration().MyBox(),
+                              child: Image.asset("assets/immagini/splash_screen.png"),
                             ),
                           ),
                       ],

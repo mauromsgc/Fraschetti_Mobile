@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
@@ -10,7 +12,6 @@ import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_utils/src/extensions/context_extensions.dart';
-import 'package:image/image.dart';
 
 class TestPageArgs {
   List<Map>? articoli_lista;
@@ -185,24 +186,14 @@ class _TestPageState extends State<TestPage> {
                 Container(
                   width: 60,
                   height: 50,
-                  decoration: BoxDecoration(
-                    border: MyBorder().MyBorderOrange(),
-                    image: DecorationImage(
-                      image: AssetImage("assets/immagini/splash_screen.png"),
-                      fit: BoxFit.contain,
-                    ),
-                  ),
+                  decoration: MyBoxDecoration().MyBox(),
+                    child: Image.asset("assets/immagini/splash_screen.png"),
                 ),
                 Container(
                   width: 60,
                   height: 50,
-                  decoration: BoxDecoration(
-                    border: MyBorder().MyBorderOrange(),
-                    image: DecorationImage(
-                      image: AssetImage("assets/immagini/splash_screen.png"),
-                      fit: BoxFit.contain,
-                    ),
-                  ),
+                  decoration: MyBoxDecoration().MyBox(),
+                  child: Image.asset("assets/immagini/splash_screen.png"),
                 ),
               ],
             ),
@@ -287,7 +278,7 @@ class _TestPageState extends State<TestPage> {
           separatorBuilder: (context, index) => Divider(
             height: 5,
             thickness: 2,
-            color: Theme.of(context).primaryColor,
+            // color: Theme.of(context).primaryColor,
           ),
           itemCount: 15,
           itemBuilder: (context, index) {
@@ -587,7 +578,7 @@ class _TestPageState extends State<TestPage> {
           separatorBuilder: (context, index) => Divider(
             height: 5,
             thickness: 2,
-            color: Theme.of(context).primaryColor,
+            // color: Theme.of(context).primaryColor,
           ),
           itemCount: 15,
           itemBuilder: (context, index) {

@@ -185,7 +185,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
         separatorBuilder: (context, index) => Divider(
           height: 5,
           thickness: 2,
-          color: Theme.of(context).primaryColor,
+          // color: Theme.of(context).primaryColor,
         ),
         // itemCount: codici_lista.length,
         itemCount: 10,
@@ -204,13 +204,8 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
                     Container(
                       width: 40,
                       height: 40,
-                      decoration: BoxDecoration(
-                        border: MyBorder().MyBorderOrange(),
-                        image: DecorationImage(
-                          image: AssetImage("assets/immagini/splash_screen.png"),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
+                      decoration: MyBoxDecoration().MyBox(),
+                      child: Image.asset("assets/immagini/splash_screen.png"),
                     ),
                     Expanded(
                       child: Column(

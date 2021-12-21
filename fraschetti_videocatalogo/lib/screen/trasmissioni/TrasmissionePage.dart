@@ -320,13 +320,8 @@ class _TrasmissionePageState extends State<TrasmissionePage> {
                 child: Container(
                   height: 500,
                   // width: 400,
-                  decoration: BoxDecoration(
-                    border: MyBorder().MyBorderOrange(),
-                    image: DecorationImage(
-                      image: AssetImage("assets/immagini/splash_screen.png"),
-                      fit: BoxFit.contain,
-                    ),
-                  ),
+                  decoration: MyBoxDecoration().MyBox(),
+                  child: Image.asset("assets/immagini/splash_screen.png"),
                 ),
               ),
               SizedBox(width: 5),

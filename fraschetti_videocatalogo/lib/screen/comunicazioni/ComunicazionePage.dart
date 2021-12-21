@@ -58,15 +58,16 @@ class _ComunicazionePageState extends State<ComunicazionePage> {
         ),
         bottomNavigationBar: BottomBarWidget(),
         body: GestureDetector(
-          onHorizontalDragUpdate: (details) {
-            // Note: Sensitivity is integer used when you don't want to mess up vertical drag
-            int sensitivity = 8;
-            if (details.delta.dx > sensitivity) {
-              // Right Swipe
-              print("Right Swipe");
-            } else if(details.delta.dx < -sensitivity){
-              //Left Swipe
-              print("Left Swipe");
+          onHorizontalDragEnd: (DragEndDetails drag) {
+            if(drag.primaryVelocity == null) return;
+            if(drag.primaryVelocity! < 0) {
+              // drag from right to left
+              print("drag from right to left");
+              // _scheda_successiva();
+            }else{
+              // drag from left to right
+              print("drag from left to right");
+              // _scheda_precedente();
             }
           },
           child: SingleChildScrollView(
@@ -161,15 +162,8 @@ class _ComunicazionePageState extends State<ComunicazionePage> {
                 SizedBox(width: 5),
                 Expanded(
                   child: Container(
-
-                    decoration: BoxDecoration(
-                      border: MyBorder().MyBorderOrange(),
-                      image: DecorationImage(
-                        image: AssetImage("assets/immagini/splash_screen.png"),
-                        fit: BoxFit.fitWidth,
-                        alignment: Alignment.topCenter
-                      ),
-                    ),
+                    decoration: MyBoxDecoration().MyBox(),
+                    child: Image.asset("assets/immagini/splash_screen.png"),
                   ),
                 ),
                 SizedBox(width: 5),

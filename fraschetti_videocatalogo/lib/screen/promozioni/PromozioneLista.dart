@@ -282,7 +282,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
         separatorBuilder: (context, index) => Divider(
           height: 5,
           thickness: 2,
-          color: Theme.of(context).primaryColor,
+          // color: Theme.of(context).primaryColor,
         ),
         itemCount: promozioni_lista.length,
         itemBuilder: (context, index) {
@@ -297,9 +297,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
                 children: <Widget>[
                   Container(
                     width: 60,
-                    decoration: BoxDecoration(
-                      border: MyBorder().MyBorderOrange(),
-                    ),
+                    decoration: MyBoxDecoration().MyBox(),
                     child: ListaImmagineWidget(
                         immagine_base64: promozioni_lista[index]
                             ['immagine_preview']),
@@ -308,9 +306,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
                     child: Container(
                       alignment: Alignment(-1.0, 0.0),
                       padding: EdgeInsets.all(5.0),
-                      decoration: BoxDecoration(
-                        border: MyBorder().MyBorderOrange(),
-                      ),
+                      decoration: MyBoxDecoration().MyBox(),
                       child: Text(
                         "${promozioni_lista[index]['nome']}",
                         style: TextStyle(

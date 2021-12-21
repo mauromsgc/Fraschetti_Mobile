@@ -161,12 +161,17 @@ class CodiceModel {
       sql_eseguire += element;
     });
     sql_eseguire += ";";
-    print(sql_eseguire);
+    // print(sql_eseguire);
 
-    final rows = await ( await db.rawQuery(sql_eseguire));
+    print("cod mod 1");
+    final rows = await db.rawQuery(sql_eseguire);
+    print("cod mod 2");
 
+    print("cod mod 3");
     codici_lista = rows.map((row) => CodiceModel.fromMap(row)).toList();
+    print("cod mod 4");
 
+    print("cod mod 5");
     return codici_lista;
   }
 }

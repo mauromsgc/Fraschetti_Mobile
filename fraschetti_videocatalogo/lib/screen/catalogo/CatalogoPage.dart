@@ -99,24 +99,15 @@ class _CatalogoPageState extends State<CatalogoPage> {
 
   @override
   Widget build(BuildContext context) {
-    // CatalogoPageArgs? argomenti= ModalRoute.of(context)?.settings.arguments as CatalogoPageArgs;
-    // print(argomenti.articoli_lista.toString());
-    // print(argomenti.indice.toString());
-
     if (ModalRoute.of(context)?.settings.arguments != null) {
       argomenti =
           ModalRoute.of(context)?.settings.arguments as CatalogoPageArgs;
-      print(argomenti?.articoli_lista.toString());
-      print(argomenti?.indice.toString());
-      print(argomenti?.articoli_lista![1]["id"].toString());
       int indice = argomenti!.indice;
-      print(argomenti?.articoli_lista![indice]["id"].toString());
       _catalogo_scheda_carica(id: argomenti?.articoli_lista![indice]["id"]);
     }
 
     return SafeArea(
       child: Scaffold(
-        // resizeToAvoidBottomInset: true,
         appBar: AppBar(
           automaticallyImplyLeading: true,
           // leading: IconButton(
@@ -128,17 +119,16 @@ class _CatalogoPageState extends State<CatalogoPage> {
         ),
         bottomNavigationBar: BottomBarWidget(),
         body: GestureDetector(
-          onHorizontalDragUpdate: (details) {
-            // Note: Sensitivity is integer used when you don't want to mess up vertical drag
-            int sensitivity = 20;
-            if (details.delta.dx > sensitivity) {
-              // Right Swipe
-              print("Right Swipe");
-              _scheda_precedente();
-            } else if (details.delta.dx < -sensitivity) {
-              //Left Swipe
-              print("Left Swipe");
+          onHorizontalDragEnd: (DragEndDetails drag) {
+            if (drag.primaryVelocity == null) return;
+            if (drag.primaryVelocity! < 0) {
+              // drag from right to left
+              print("drag from right to left");
               _scheda_successiva();
+            } else {
+              // drag from left to right
+              print("drag from left to right");
+              _scheda_precedente();
             }
           },
           child: SingleChildScrollView(
@@ -164,12 +154,10 @@ class _CatalogoPageState extends State<CatalogoPage> {
                     thickness: 2,
                     // color: Theme.of(context).primaryColor,
                   ),
-          Obx(
-                () {
-                  // print(pageStato.value.catalogo_scheda.codici.toString());
-                  return CodiciWidget(pageStato.value.catalogo_scheda.codici);
-                  },
-          ),
+                  Obx(() {
+                    // print(pageStato.value.catalogo_scheda.codici.toString());
+                    return CodiciWidget(pageStato.value.catalogo_scheda.codici);
+                  },),
                 ],
               ),
             ),
@@ -198,9 +186,8 @@ class _CatalogoPageState extends State<CatalogoPage> {
             ),
             child: Row(
               children: [
-                // Text("${int.parse(pageStato.value.catalogo_scheda.famiglie_colore)}"),
                 CircleAvatar(
-                  backgroundColor: Colors.red,
+                  backgroundColor: Color(int.parse(pageStato.value.catalogo_scheda.famiglie_colore)),
                 ),
                 SizedBox(
                   width: 5,
@@ -229,27 +216,15 @@ class _CatalogoPageState extends State<CatalogoPage> {
                               Container(
                                 width: 60,
                                 height: 50,
-                                decoration: BoxDecoration(
-                                  border: MyBorder().MyBorderOrange(),
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                        "assets/immagini/splash_screen.png"),
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
+                                decoration: MyBoxDecoration().MyBox(),
+                                child: Image.asset("assets/immagini/splash_screen.png"),
                               ),
                             if (pageStato.value.catalogo_scheda.promozione_id >0)
                               Container(
                                 width: 60,
                                 height: 50,
-                                decoration: BoxDecoration(
-                                  border: MyBorder().MyBorderOrange(),
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                        "assets/immagini/splash_screen.png"),
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
+                                decoration: MyBoxDecoration().MyBox(),
+                                child: Image.asset("assets/immagini/splash_screen.png"),
                               ),
                           ],),
                       ),
@@ -263,6 +238,14 @@ class _CatalogoPageState extends State<CatalogoPage> {
             children: [
               Expanded(
                 child: Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Theme.of(context).primaryColor,
+                        width: 2,
+                      ),
+                    ),
+                  ),
                   padding: EdgeInsets.all(5),
                   child: Text(
                     pageStato.value.catalogo_scheda.nome,
@@ -276,18 +259,54 @@ class _CatalogoPageState extends State<CatalogoPage> {
               ),
             ],
           ),
+          SizedBox(height: 5),
+
+          // Row(
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   children: [
+          //     Flexible(
+          //       child: ConstrainedBox(
+          //         constraints: BoxConstraints(
+          //           // maxWidth: MediaQuery.of(context).size.width * 0.25,
+          //           // minWidth: MediaQuery.of(context).size.width * 0.25,
+          //           // maxWidth: 150,
+          //         ),
+          //         child: Container(
+          //           // width: MediaQuery.of(context).size.width * 0.25,
+          //           // color : Colors.blue,
+          //           decoration: MyBoxDecoration().MyBox(),
+          //           child: Text('${MediaQuery.of(context).size.width.toString()} Your Text here ${(MediaQuery.of(context).size.width * 0.25).toString()}'),
+          //         ),
+          //       ),
+          //     ),
+          //     Flexible(
+          //       child: ConstrainedBox(
+          //         constraints: BoxConstraints(
+          //             maxWidth: 500,
+          //           maxHeight: 375,
+          //           // minWidth: MediaQuery.of(context).size.width * 0.75,
+          //           // minHeight: 100,
+          //         ),
+          //         child: Container(
+          //           // width: MediaQuery.of(context).size.width * 0.75,
+          //           // color : Colors.blue,
+          //           decoration: BoxDecoration(
+          //             border: MyBorder().MyBorderOrange(),
+          //           ),
+          //           child: Text('Your Text here ${(MediaQuery.of(context).size.width * 0.75).toString()}'),
+          //         ),
+          //       ),
+          //     ),
+          //   ],
+          // ),
+
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(width: 5),
               Expanded(
                 flex: 1,
                 child: Container(
                   padding: EdgeInsets.all(5),
-                  // height: 400,
-                  // width: 100,
-                  // height: double.infinity,
-
                   decoration: MyBoxDecoration().MyBox(),
                   child: SizedBox(
                     height: 300,
@@ -309,9 +328,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                     return Container(
                       height: constraints.minWidth,
                       // width: 500,
-                      decoration: BoxDecoration(
-                        border: MyBorder().MyBorderOrange(),
-                      ),
+                      decoration: MyBoxDecoration().MyBox(),
                       child: SchedaImmagineWidget(
                           immagine_base64:
                               pageStato.value.catalogo_scheda.immagine),
@@ -513,7 +530,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
         separatorBuilder: (context, index) => Divider(
           height: 5,
           thickness: 2,
-          color: Theme.of(context).primaryColor,
+          // color: Theme.of(context).primaryColor,
         ),
         itemCount: codice_scheda.length,
         itemBuilder: (context, index) {
@@ -525,7 +542,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
               articolo_disponibilita_mostra(context, codice_scheda[index]);
             },
             child: Container(
-              // height: 40,
+              height: 50,
               // decoration: BoxDecoration(
               //   border: Border(
               //     bottom: BorderSide(
@@ -652,9 +669,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       ),
                     ],
                   ),
-
-                ],
-              ),
+                ],),
             ),
           );
         },

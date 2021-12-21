@@ -296,7 +296,7 @@ class _OrdineListaState extends State<OrdineLista> {
         separatorBuilder: (context, index) => Divider(
           height: 5,
           thickness: 2,
-          color: Theme.of(context).primaryColor,
+          // color: Theme.of(context).primaryColor,
         ),
         // itemCount: ordine_righe_lista.length,
         itemCount: 10,

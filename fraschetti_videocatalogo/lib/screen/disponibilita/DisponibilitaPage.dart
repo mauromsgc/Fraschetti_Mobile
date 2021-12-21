@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
-import 'package:image/image.dart';
 
 class DisponibilitaPage extends StatefulWidget {
   DisponibilitaPage({Key? key}) : super(key: key);
@@ -102,24 +101,14 @@ class _DisponibilitaPageState extends State<DisponibilitaPage> {
                 Container(
                   width: 60,
                   height: 50,
-                  decoration: BoxDecoration(
-                    border: MyBorder().MyBorderOrange(),
-                    image: DecorationImage(
-                      image: AssetImage("assets/immagini/splash_screen.png"),
-                      fit: BoxFit.contain,
-                    ),
-                  ),
+                  decoration: MyBoxDecoration().MyBox(),
+                  child: Image.asset("assets/immagini/splash_screen.png"),
                 ),
                 Container(
                   width: 60,
                   height: 50,
-                  decoration: BoxDecoration(
-                    border: MyBorder().MyBorderOrange(),
-                    image: DecorationImage(
-                      image: AssetImage("assets/immagini/splash_screen.png"),
-                      fit: BoxFit.contain,
-                    ),
-                  ),
+                  decoration: MyBoxDecoration().MyBox(),
+                  child: Image.asset("assets/immagini/splash_screen.png"),
                 ),
               ],
             ),
@@ -175,14 +164,8 @@ class _DisponibilitaPageState extends State<DisponibilitaPage> {
                     return Container(
                       height: constraints.minWidth,
                       // width: 500,
-                      decoration: BoxDecoration(
-                        border: MyBorder().MyBorderOrange(),
-                        image: DecorationImage(
-                          image:
-                              AssetImage("assets/immagini/splash_screen.png"),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
+                      decoration: MyBoxDecoration().MyBox(),
+                      child: Image.asset("assets/immagini/splash_screen.png"),
                     );
                   },
                 ),
