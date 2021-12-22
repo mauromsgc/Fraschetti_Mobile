@@ -1,5 +1,16 @@
 import 'package:flutter/material.dart';
 
+class OrdineArticoloAggiungiPageArgs {
+  int codice_id;
+  int ordine_riga_id;
+
+  OrdineArticoloAggiungiPageArgs({
+    this.codice_id = 0,
+    this.ordine_riga_id = 0,
+  });
+}
+
+
 class ResoArticoloAggiungiPage extends StatefulWidget {
   ResoArticoloAggiungiPage({Key? key}) : super(key: key);
   static const String routeName = "reso_articolo_aggiungi";

@@ -119,4 +119,87 @@ class ComunicazioneModel {
 
     return comunicazioni_lista;
   }
+
+  static Future<ComunicazioneModel> scheda_form_id({
+    int id = 0,
+  }) async {
+    ComunicazioneModel comunicazione_scheda;
+
+    Database db = GetIt.instance<DbRepository>().database;
+    String sql_eseguire = """SELECT 
+    comunicazioni.id,
+    comunicazioni.oggetto,
+    comunicazioni.da_leggere,
+    comunicazioni.data,
+    comunicazioni.username,
+    comunicazioni.comunicazione_testo,
+    comunicazioni.comunicazione_blob
+     FROM comunicazioni
+    """;
+
+    List<String> sql_join = [];
+    List<String> sql_where = [];
+    List<String> sql_ordinamenti = [];
+
+    if (id != 0) {
+      sql_where.add(" comunicazioni.id = ${id} ");
+    }
+
+
+    // sql_ordinamenti.add(" comunicazioni.data DESC ");
+    sql_ordinamenti.add(" comunicazioni.id DESC ");
+
+    sql_join.forEach((element) {
+      sql_eseguire += element;
+    });
+    // il forEach per le mappe ha l'indice
+    sql_where.asMap().forEach((indice, element) {
+      sql_eseguire += (indice == 0) ? " WHERE " : " AND ";
+      sql_eseguire += element;
+    });
+    sql_ordinamenti.asMap().forEach((indice, element) {
+      sql_eseguire += (indice == 0) ? " ORDER BY  " : " , ";
+      sql_eseguire += element;
+    });
+    sql_eseguire += ";";
+    print(sql_eseguire);
+
+    final rows = await db.rawQuery(sql_eseguire);
+
+    if (rows.length > 0) {
+      comunicazione_scheda = ComunicazioneModel.fromMap(rows.first);
+      if(comunicazione_scheda.da_leggere == 1){
+        comunicazione_scheda.letta_imposta();
+      }
+    } else {
+      comunicazione_scheda = ComunicazioneModel();
+    }
+
+    return comunicazione_scheda;
+  }
+
+  Future<bool> letta_imposta() async {
+    Database db = GetIt.instance<DbRepository>().database;
+
+    int record_eleborati = 0;
+
+    try {
+      record_eleborati = await (await db.update(
+          'comunicazioni', {'da_leggere': 0},
+          where: 'id = ?', whereArgs: [this.id]));
+    } on DatabaseException catch (errore_db) {
+      if (errore_db.isNoSuchTableError()) {
+        print("Errore aggiornamento comunicazioni");
+      }
+    }
+
+    if (record_eleborati > 0) {
+
+    } else {
+      print("comunicazioni errore aggiornamento da_leggere");
+    }
+
+    return (record_eleborati > 0);
+  }
+
 }

@@ -3,16 +3,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
-import 'package:fraschetti_videocatalogo/main.dart';
-import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/promozioneModel.dart';
-import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
-import 'package:fraschetti_videocatalogo/repositories/promozioniRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:get_it/get_it.dart';
-
 import 'PromozionePage.dart';
 
 class PromozioneListaPage extends StatefulWidget {
@@ -24,16 +16,12 @@ class PromozioneListaPage extends StatefulWidget {
   _PromozioneListaPageState createState() => _PromozioneListaPageState();
 }
 
-final pageStato = PageStore().obs;
-
-class PageStore {
+class _PromozioneListaPageState extends State<PromozioneListaPage> {
   List<Map> tour_offerte_lista = [];
   List<Map> promozioni_lista = [];
 
   int lista_numero_elementi = 0;
-}
 
-class _PromozioneListaPageState extends State<PromozioneListaPage> {
   final TextEditingController descrizioneController = TextEditingController();
 
   @override
@@ -41,22 +29,21 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
     super.initState();
 
     _tour_offerte_lista_carica();
-    if(pageStato.value.lista_numero_elementi == 0){
+    if(lista_numero_elementi == 0){
     _promozioni_lista_cerca();
     }
   }
 
   Future<void> _tour_offerte_lista_carica() async {
-    pageStato.value.tour_offerte_lista =
+    tour_offerte_lista =
         await PromozioneModel.tour_offerte_lista();
-    pageStato.refresh();
+    setState(() {});
   }
 
   Future<void> _promozioni_lista_svuota() async {
-    pageStato.value.promozioni_lista = [];
-    pageStato.value.lista_numero_elementi =
-        pageStato.value.promozioni_lista.length;
-    pageStato.refresh();
+    promozioni_lista = [];
+    lista_numero_elementi = promozioni_lista.length;
+    setState(() {});
   }
 
   Future<void> _promozioni_lista_cerca({
@@ -68,18 +55,24 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
       descrizioneController.clear();
       setState(() {});
     }
-    pageStato.value.promozioni_lista = await PromozioneModel.promozioni_lista(
+    promozioni_lista = await PromozioneModel.promozioni_lista(
       nome: descrizioneController.text,
       tour_singolo: tour_singolo,
       tour_intero: tour_intero,
     );
-    pageStato.value.lista_numero_elementi = pageStato.value.promozioni_lista.length;
-    pageStato.refresh();
+    lista_numero_elementi = promozioni_lista.length;
+    setState(() {});
   }
 
-
-  void listaClick(BuildContext context) {
-    Navigator.pushNamed(context, PromozionePage.routeName);
+  void listaClick(BuildContext context, int indice) {
+    Navigator.pushNamed(
+      context,
+      PromozionePage.routeName,
+      arguments: PromozionePageArgs(
+        promozioni_lista: promozioni_lista.toList(),
+        indice: indice,
+      ),
+    );
   }
 
   void _tour_singolo_menu(BuildContext context) {
@@ -94,7 +87,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
-              children: pageStato.value.tour_offerte_lista.map((elemento) {
+              children: tour_offerte_lista.map((elemento) {
                 return Container(
                   height: 40,
                   width: double.maxFinite,
@@ -136,15 +129,13 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
           title: Column(
             children: [
               Text(widget.pagina_titolo),
-              // if(pageStato.value.lista_numero_elementi >0)
-              Obx(
-                    () => Text(
-                  "${pageStato.value.lista_numero_elementi} elementi",
+              // if(lista_numero_elementi >0)
+              Text(
+                  "${lista_numero_elementi} elementi",
                   style: TextStyle(
                     fontSize: 10,
                   ),
                 ),
-              ),
             ],
           ),
           centerTitle: true,
@@ -164,9 +155,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
                   thickness: 2,
                   // color: Theme.of(context).primaryColor,
                 ),
-                Obx(
-                  () => ListaWidget(pageStato.value.promozioni_lista),
-                ),
+                ListaWidget(promozioni_lista),
               ],
             ),
           ),
@@ -186,7 +175,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
             Expanded(
               flex: 5,
               child: TextFormField(
-                autofocus: true,
+                // autofocus: true,
                 controller: descrizioneController,
                 onChanged: (value) {
                   setState(() {});
@@ -225,7 +214,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
             //   child: ElevatedButton(
             //     style: ElevatedButton.styleFrom(elevation: 2),
             //     onPressed: () {
-            //       pageStato.value._promozioni_lista_cerca();
+            //       _promozioni_lista_cerca();
             //     },
             //     child: Text('Cerca'),
             //   ),
@@ -288,7 +277,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
-              listaClick(context);
+              listaClick(context, index);
             },
             child: Container(
               height: 50,

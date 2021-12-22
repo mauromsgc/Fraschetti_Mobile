@@ -29,13 +29,6 @@ class CatalogoPage extends StatefulWidget {
   _CatalogoPageState createState() => _CatalogoPageState();
 }
 
-// final pageStato = PageStore().obs;
-//
-// class PageStore {
-//   CatalogoModel catalogo_scheda = CatalogoModel();
-// }
-
-
 class _CatalogoPageState extends State<CatalogoPage> {
   // late CatalogoPageArgs? argomenti= ModalRoute.of(context)?.settings.arguments as CatalogoPageArgs;
   CatalogoPageArgs argomenti = CatalogoPageArgs();
@@ -68,9 +61,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
     catalogo_scheda = await CatalogoModel.scheda_form_id(
       id: id,
     );
-
-    setState(() {
-    });
+    setState(() {});
   }
 
   _scheda_precedente(){
@@ -106,24 +97,12 @@ class _CatalogoPageState extends State<CatalogoPage> {
     // Navigator.pushNamed(context, DisponibilitaPage.routeName);
     showDialog(
       context: context,
-      builder: DisponibilitaDialogWidget(codice_scheda: codice_scheda, returnValue: true),
+      builder: DisponibilitaDialogWidget(codice_id: codice_scheda.id, returnValue: true),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    print("Widget build 1");
-    // if (ModalRoute.of(context)?.settings.arguments != null) {
-    //   argomenti =
-    //       ModalRoute.of(context)?.settings.arguments as CatalogoPageArgs;
-    //   int indice = argomenti!.indice;
-    //   print("Widget build 2");
-    //   // all'apertura va caricato prima
-    //   _catalogo_scheda_carica(id: argomenti?.articoli_lista![indice]["id"]);
-    //   print("Widget build 3");
-    // }
-    // print("Widget build 4");
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -159,9 +138,6 @@ class _CatalogoPageState extends State<CatalogoPage> {
                 children: <Widget>[
                   if(catalogo_scheda.id != 0)
                     ArticoloWidget(),
-                  //   Obx(
-                  //   () => ArticoloWidget(),
-                  // ),
                   Divider(
                     height: 5,
                     thickness: 2,
@@ -175,10 +151,6 @@ class _CatalogoPageState extends State<CatalogoPage> {
                   ),
                   if(catalogo_scheda.id != 0)
                   CodiciWidget(catalogo_scheda.codici),
-                  //   Obx(() {
-                  //   print("Obx CodiciWidget 1");
-                  //   return CodiciWidget(pageStato.value.catalogo_scheda.codici);
-                  // },),
                 ],
               ),
             ),
@@ -565,14 +537,6 @@ class _CatalogoPageState extends State<CatalogoPage> {
             },
             child: Container(
               height: 50,
-              // decoration: BoxDecoration(
-              //   border: Border(
-              //     bottom: BorderSide(
-              //       color: Theme.of(context).primaryColor,
-              //       width: 2,
-              //     ),
-              //   ),
-              // ),
               child: Column(
                 children: [
                   Row(

@@ -3,11 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/components/OrdineTopMenu.dart';
-import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/clienteModel.dart';
-import 'package:fraschetti_videocatalogo/repositories/comunicazioniRepository.dart';
-import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineLista.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
@@ -23,47 +20,47 @@ class ClienteLista extends StatefulWidget {
   _ClienteListaState createState() => _ClienteListaState();
 }
 
-final pageStato = PageStore().obs;
-
-class PageStore {
-  List<Map> clienti_lista = [];
-
-  PageStore() {
-    print("PageStore inizializza ");
-    inizializza();
-  }
-
-  void inizializza() async {
-    _clienti_lista_carica();
-  }
-
-  Future<void> _clienti_lista_carica() async {
-    clienti_lista = await ClienteModel.clienti_lista();
-    print("clienti_lista: " + clienti_lista.length.toString());
-    // clienti_lista.forEach((ClienteModel cliente) async {
-    //   print(cliente.ragione_sociale);
-    // });
-    pageStato.refresh();
-  }
-
-  void clienti_cerca() async {
-    _clienti_lista_carica();
-  }
-
-  void clienti_con_ordine() async {
-    _clienti_lista_carica();
-  }
-
-  void clienti_tutti() async {
-    _clienti_lista_carica();
-  }
-}
 
 class _ClienteListaState extends State<ClienteLista> {
+  List<Map> clienti_lista = [];
+  
+  int lista_numero_elementi = 0;
+
+  final TextEditingController nominativoController = TextEditingController();
+  final TextEditingController codiceController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
   }
+
+  Future<void> _clienti_lista_svuota() async {
+    clienti_lista = [];
+    lista_numero_elementi = clienti_lista.length;
+    setState(() {});
+  }
+  
+  Future<void> _clienti_lista_cerca({
+    int id = 0,
+    String nominativo = "",
+    String codice = "",
+    String selezione = "", // selezione "tutti" "con_ordini"
+  }) async {
+    if (selezione != "") {
+      nominativoController.clear();
+      codiceController.clear();
+      setState(() {});
+    }
+    clienti_lista = await ClienteModel.clienti_lista(
+      id: id,
+      nominativo: nominativoController.text,
+      codice: codiceController.text,
+      selezione: selezione,
+    );
+    lista_numero_elementi = clienti_lista.length;
+    setState(() {});
+  }
+
 
   void listaClick(BuildContext context, int index) {
     // selezione al cliente e va in ordine
@@ -84,7 +81,17 @@ class _ClienteListaState extends State<ClienteLista> {
           //   onPressed: () {},
           //   icon: Icon(Icons.menu),
           // ),
-          title: Text(widget.pagina_titolo),
+          title: Column(
+            children: [
+              Text(widget.pagina_titolo),
+              // if(lista_numero_elementi >0)
+              Text(
+                "${lista_numero_elementi} elementi",
+                style: TextStyle(
+                  fontSize: 10,
+                ),
+              ),
+            ],),
           centerTitle: true,
           // bottom: OrdineTopMenu(context),
         ),
@@ -105,9 +112,7 @@ class _ClienteListaState extends State<ClienteLista> {
                   thickness: 2,
                   // color: Theme.of(context).primaryColor,
                 ),
-                Obx(
-                  () => ListaWidget(pageStato.value.clienti_lista),
-                ),
+                ListaWidget(clienti_lista),
               ],
             ),
           ),
@@ -127,22 +132,18 @@ class _ClienteListaState extends State<ClienteLista> {
             Expanded(
               flex: 6,
               child: TextFormField(
-                autofocus: true,
+                // autofocus: true,
+                controller: nominativoController,
+                onChanged: (value) {
+                  // Call setState to update the UI
+                  codiceController.clear();
+                  setState(() {});
+                  // if(descrizioneController.text.length >=3){
+                  _clienti_lista_cerca();
+                  // }
+                },
                 onEditingComplete: () {
-                  pageStato.value.clienti_cerca();
-
-                  showDialog<String>(
-                    context: context,
-                    builder: (BuildContext context) => AlertDialog(
-                      title: const Text('Avviare ricerca'),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('ok'),
-                        ),
-                      ],
-                    ),
-                  );
+                  _clienti_lista_cerca();
                 },
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.text,
@@ -150,6 +151,16 @@ class _ClienteListaState extends State<ClienteLista> {
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
                   hintText: 'Nominativo',
+                  suffixIcon: nominativoController.text.length == 0
+                      ? null
+                      : IconButton(
+                    icon: Icon(Icons.clear),
+                    onPressed: () {
+                      nominativoController.clear();
+                      setState(() {});
+                      _clienti_lista_svuota();
+                    },
+                  ),
                 ),
               ),
             ),
@@ -159,21 +170,17 @@ class _ClienteListaState extends State<ClienteLista> {
             Expanded(
               flex: 2,
               child: TextFormField(
+                controller: codiceController,
+                onChanged: (value) {
+                  // Call setState to update the UI
+                  nominativoController.clear();
+                  setState(() {});
+                  // if(codiceController.text.length >=2){
+                  _clienti_lista_cerca();
+                  // }
+                },
                 onEditingComplete: () {
-                  pageStato.value.clienti_cerca();
-
-                  showDialog<String>(
-                    context: context,
-                    builder: (BuildContext context) => AlertDialog(
-                      title: const Text('Avviare ricerca'),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('ok'),
-                        ),
-                      ],
-                    ),
-                  );
+                  _clienti_lista_cerca();
                 },
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.number,
@@ -181,22 +188,32 @@ class _ClienteListaState extends State<ClienteLista> {
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
                   hintText: 'Codice',
+                  suffixIcon: codiceController.text.length == 0
+                      ? null
+                      : IconButton(
+                    icon: Icon(Icons.clear),
+                    onPressed: () {
+                      codiceController.clear();
+                      setState(() {});
+                      _clienti_lista_svuota();
+                    },
+                  ),
                 ),
               ),
             ),
             SizedBox(
               width: 10,
             ),
-            Expanded(
-              flex: 2,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(elevation: 2),
-                onPressed: () {
-                  pageStato.value.clienti_cerca();
-                },
-                child: Text('Cerca'),
-              ),
-            ),
+            // Expanded(
+            //   flex: 2,
+            //   child: ElevatedButton(
+            //     style: ElevatedButton.styleFrom(elevation: 2),
+            //     onPressed: () {
+            //       _clienti_lista_cerca();
+            //     },
+            //     child: Text('Cerca'),
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -218,7 +235,7 @@ class _ClienteListaState extends State<ClienteLista> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
                 onPressed: () {
-                  pageStato.value.clienti_con_ordine();
+                  _clienti_lista_cerca(selezione: 'con_ordine');
                 },
                 child: Text('Clienti con ordini'),
               ),
@@ -231,7 +248,7 @@ class _ClienteListaState extends State<ClienteLista> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
                 onPressed: () {
-                  pageStato.value.clienti_tutti();
+                  _clienti_lista_cerca(selezione: 'tutti');
                 },
                 child: Text('Tutti'),
               ),
@@ -267,7 +284,7 @@ class _ClienteListaState extends State<ClienteLista> {
                     width: 60,
                     decoration: MyBoxDecoration().MyBox(),
                     child: Text(
-                      "${clienti_lista[index]['id']}",
+                      "${clienti_lista[index]['codice']}",
                       style: TextStyle(
                         fontSize: 18,
                       ),

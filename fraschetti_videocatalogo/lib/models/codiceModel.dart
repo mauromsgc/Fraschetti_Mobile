@@ -174,4 +174,86 @@ class CodiceModel {
     print("cod mod 5");
     return codici_lista;
   }
+
+  static Future<List<Map>> codici_lista_ricerca({
+    int id = 0,
+    String descrizione = "",
+    String codice= "",
+  }) async {
+    List<Map> codici_lista = [];
+
+    Database db = GetIt.instance<DbRepository>().database;
+    String sql_eseguire = """SELECT DISTINCT
+    codici.id,
+    codici.catalogo_id,
+    codici.numero,
+    catalogo.nome as catalogo_nome,
+    codici.descrizione,
+    codici.apribile,
+    codici.nuovo,
+    codici.sospeso,
+    codici.pezzi,
+    codici.prezzo,
+    codici.um,
+    codici.iva,
+    codici.spedizione_categoria_codice,
+    codici.quantita_massima,
+    ifnull(codici_ean.codice_ean, '') as codice_ean,
+    ifnull(disponibilita.stato, 0) as disponibilita_stato,
+    ifnull(disponibilita.data_arrivo, '00/00/0000') as disponibilita_data_arrivo,
+    ifnull(promozioni_codici.promozione_id, 0) as promozione_id,
+    ifnull(catalogo_img.immagine_preview, '') as immagine_preview
+    FROM codici
+    LEFT JOIN catalogo ON catalogo.id = codici.catalogo_id
+    LEFT JOIN catalogo_img ON catalogo_img.catalogo_id = codici.catalogo_id
+    LEFT JOIN codici_ean ON codici_ean.codice_articolo = codici.numero
+    LEFT JOIN disponibilita ON disponibilita.codice = codici.numero
+    LEFT JOIN promozioni_codici ON promozioni_codici.catalogo_id = codici.catalogo_id
+    """;
+
+
+    List<String> sql_join = [];
+    List<String> sql_where = [];
+    List<String> sql_ordinamenti = [];
+
+    if (id != 0) {
+      sql_where.add(" codici.id = ${id} ");
+    }
+    if (descrizione != "") {
+      String sql_descrizione = "";
+      descrizione.split(" ").forEach((String element) {
+        sql_descrizione += (sql_descrizione == "") ? "(" : " AND ";
+        sql_descrizione += " catalogo.nome LIKE '%${element}%' ";
+      });
+      sql_descrizione += ")";
+      sql_where.add(sql_descrizione);
+    }
+    if (codice != "") {
+      sql_where.add(" codici.numero LIKE '${codice}%' ");
+    }
+
+    sql_ordinamenti.add(" catalogo.nome ASC ");
+
+    sql_join.forEach((element) {
+      sql_eseguire += element;
+    });
+    // il forEach per le mappe ha l'indice
+    sql_where.asMap().forEach((indice, element) {
+      sql_eseguire += (indice == 0) ? " WHERE " : " AND ";
+      sql_eseguire += element;
+    });
+    sql_ordinamenti.asMap().forEach((indice, element) {
+      sql_eseguire += (indice == 0) ? " ORDER BY  " : " , ";
+      sql_eseguire += element;
+    });
+    sql_eseguire += ";";
+    // print(sql_eseguire);
+
+    final rows = await db.rawQuery(sql_eseguire);
+
+    codici_lista = rows;
+
+    return codici_lista;
+  }
+
 }

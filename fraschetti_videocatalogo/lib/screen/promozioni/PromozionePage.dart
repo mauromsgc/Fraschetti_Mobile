@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
-import 'package:fraschetti_videocatalogo/repositories/articoliRepository.dart';
+import 'package:fraschetti_videocatalogo/models/promozioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoPage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
@@ -25,25 +27,75 @@ class PromozionePage extends StatefulWidget {
 }
 
 class _PromozionePageState extends State<PromozionePage> {
-  late PromozionePageArgs? argomenti;
-  List<CatalogoModel> articoli_lista = ArticoliRepository().all_3();
+  PromozionePageArgs argomenti = PromozionePageArgs();
+  PromozioneModel promozione_scheda = PromozioneModel();
+  List<Map> articoli_lista = [];
 
-  void listaClick(BuildContext context) {
-    Navigator.pushNamed(context, CatalogoPage.routeName);
+  @override
+  void initState() {
+    super.initState();
+
+  }
+
+  @override
+  void didChangeDependencies() {
+
+    if (ModalRoute.of(context)?.settings.arguments != null) {
+      argomenti =
+      ModalRoute.of(context)?.settings.arguments as PromozionePageArgs;
+      int indice = argomenti.indice;
+      // all'apertura va caricato prima
+      _promozione_scheda_carica(id: argomenti.promozioni_lista![indice]["id"]);
+    }
+
+    super.didChangeDependencies();
+  }
+
+  Future<void> _promozione_scheda_carica({
+    int id = 0,
+  }) async {
+    promozione_scheda = await PromozioneModel.scheda_form_id(
+      id: id,
+    );
+    articoli_lista = await CatalogoModel.catalogo_lista(
+      promozione_id: promozione_scheda.id,
+    );
+    setState(() {});
+  }
+
+  _scheda_precedente(){
+    int indice = argomenti.indice;
+    if(indice != 0){
+      indice = indice-1;
+      argomenti.indice = indice;
+      _promozione_scheda_carica(id: argomenti.promozioni_lista![indice]["id"]);
+    }
+
+  }
+  _scheda_successiva(){
+    int indice = argomenti.indice;
+    if(indice < argomenti.promozioni_lista!.length){
+      indice = indice+1;
+      argomenti.indice = indice;
+      _promozione_scheda_carica(id: argomenti.promozioni_lista![indice]["id"]);
+    }
+  }
+
+  void listaClick(BuildContext context, int indice) {
+    Navigator.pushNamed(
+      context,
+      CatalogoPage.routeName,
+      arguments: CatalogoPageArgs(
+        articoli_lista: articoli_lista.toList(),
+        indice: indice,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    if (ModalRoute.of(context)?.settings.arguments != null) {
-      argomenti =
-          ModalRoute.of(context)?.settings.arguments as PromozionePageArgs;
-      print(argomenti?.promozioni_lista.toString());
-      print(argomenti?.indice.toString());
-    }
-
     return SafeArea(
       child: Scaffold(
-        // resizeToAvoidBottomInset: true,
         appBar: AppBar(
           automaticallyImplyLeading: true,
           // leading: IconButton(
@@ -60,11 +112,11 @@ class _PromozionePageState extends State<PromozionePage> {
             if (drag.primaryVelocity! < 0) {
               // drag from right to left
               print("drag from right to left");
-              // _scheda_successiva();
+              _scheda_successiva();
             } else {
               // drag from left to right
               print("drag from left to right");
-              // _scheda_precedente();
+              _scheda_precedente();
             }
           },
           child: SingleChildScrollView(
@@ -76,7 +128,6 @@ class _PromozionePageState extends State<PromozionePage> {
               child: Column(
                 children: <Widget>[
                   PromozioneWidget(),
-                  SizedBox(height: 5),
                   Divider(
                     height: 5,
                     thickness: 2,
@@ -105,7 +156,7 @@ class _PromozionePageState extends State<PromozionePage> {
                 child: Container(
                   padding: EdgeInsets.all(5),
                   child: Text(
-                    "Promozione Promozione Promozione",
+                    promozione_scheda.nome,
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
@@ -116,16 +167,22 @@ class _PromozionePageState extends State<PromozionePage> {
               ),
             ],
           ),
+          Divider(
+            height: 5,
+            thickness: 2,
+            // color: Theme.of(context).primaryColor,
+          ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(width: 5),
               Expanded(
                 child: Container(
-                  height: 500,
+                  height: 400,
                   // width: 400,
-                  decoration: MyBoxDecoration().MyBox(),
-                  child: Image.asset("assets/immagini/splash_screen.png"),
+                  child: SchedaImmagineWidget(
+                      immagine_base64:
+                      promozione_scheda.immagine),
                 ),
               ),
               SizedBox(width: 5),
@@ -136,8 +193,18 @@ class _PromozionePageState extends State<PromozionePage> {
     );
   }
 
+  Widget SchedaImmagineWidget({dynamic immagine_base64 = ""}) {
+    if ((immagine_base64 != null) && (immagine_base64 != "")) {
+      return Image.memory(
+        Base64Decoder().convert(immagine_base64),
+      );
+    } else {
+      return Image.asset("assets/immagini/splash_screen.png");
+    }
+  }
+
 // riga lista articoli
-  Widget ListaWidget(List<CatalogoModel> articoli_lista) {
+  Widget ListaWidget(List<Map> articoli_lista) {
     return Flexible(
       child: ListView.separated(
         separatorBuilder: (context, index) => Divider(
@@ -149,7 +216,7 @@ class _PromozionePageState extends State<PromozionePage> {
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
-              listaClick(context);
+              listaClick(context, index);
             },
             child: Container(
               height: 50,
@@ -159,14 +226,17 @@ class _PromozionePageState extends State<PromozionePage> {
                   Container(
                     width: 10,
                     decoration: BoxDecoration(
-                      color: Colors.orange,
-                      // "${articoli_lista[index].nome}"
+                      color: Color(
+                          int.parse(articoli_lista[index]['famiglie_colore'])
+                      ),
                     ),
                   ),
                   Container(
                     width: 60,
                     decoration: MyBoxDecoration().MyBox(),
-                    child: Image.asset("assets/immagini/splash_screen.png"),
+                    child: ListaImmagineWidget(
+                        immagine_base64: articoli_lista[index]
+                        ['immagine_preview']),
                   ),
                   Expanded(
                     child: Stack(
@@ -176,37 +246,35 @@ class _PromozionePageState extends State<PromozionePage> {
                           padding: EdgeInsets.all(5.0),
                           decoration: MyBoxDecoration().MyBox(),
                           child: Text(
-                            "${articoli_lista[index].nome}",
+                            "${articoli_lista[index]['nome']}",
                             style: TextStyle(
                               fontSize: 15.0,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ),
-                        // if (articoli_lista[index].nuovo == 1)
+                        if (articoli_lista[index]['nuovo'] == 1)
                           Positioned(
                             top: 0,
                             right: 0,
                             child: Container(
                               width: 60,
+                              height: 25,
                               decoration: MyBoxDecoration().MyBox(),
                               child: Image.asset(
-                                  "assets/immagini/splash_screen.png",
-                              fit: BoxFit.contain,
-                              ),
+                                  "assets/immagini/splash_screen.png"),
                             ),
                           ),
-                        // if (articoli_lista[index].promozione_id > 0)
+                        if (articoli_lista[index]['promozione_id'] > 0)
                           Positioned(
                             bottom: 0,
                             right: 0,
                             child: Container(
                               width: 60,
+                              height: 25,
                               decoration: MyBoxDecoration().MyBox(),
                               child: Image.asset(
-                                  "assets/immagini/splash_screen.png",
-                                fit: BoxFit.contain,
-                              ),
+                                  "assets/immagini/splash_screen.png"),
                             ),
                           ),
                       ],
@@ -220,4 +288,15 @@ class _PromozionePageState extends State<PromozionePage> {
       ),
     );
   }
+
+  Widget ListaImmagineWidget({dynamic immagine_base64 = ""}) {
+    if ((immagine_base64 != null) && (immagine_base64 != "")) {
+      return Image.memory(
+        Base64Decoder().convert(immagine_base64),
+      );
+    } else {
+      return Image.asset("assets/immagini/splash_screen.png");
+    }
+  }
+
 }

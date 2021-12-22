@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
+import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/articoliRepository.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoPage.dart';
@@ -13,7 +16,6 @@ class ComunicazionePageArgs {
     this.comunicazioni_lista = null,
     this.indice = 0,
   });
-
 }
 
 class ComunicazionePage extends StatefulWidget {
@@ -26,24 +28,59 @@ class ComunicazionePage extends StatefulWidget {
 }
 
 class _ComunicazionePageState extends State<ComunicazionePage> {
-  late ComunicazionePageArgs? argomenti;
-  List<CatalogoModel> articoli_lista = ArticoliRepository().all_3();
+  ComunicazionePageArgs argomenti = ComunicazionePageArgs();
+  ComunicazioneModel comunicazione_scheda = ComunicazioneModel();
 
-  void listaClick(BuildContext context) {
-    Navigator.pushNamed(context, CatalogoPage.routeName);
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (ModalRoute.of(context)?.settings.arguments != null) {
+      argomenti =
+          ModalRoute.of(context)?.settings.arguments as ComunicazionePageArgs;
+      int indice = argomenti.indice;
+      // all'apertura va caricato prima
+      _comunicazione_scheda_carica(
+          id: argomenti.comunicazioni_lista![indice]["id"]);
+    }
+
+    super.didChangeDependencies();
+  }
+
+  Future<void> _comunicazione_scheda_carica({
+    int id = 0,
+  }) async {
+    comunicazione_scheda = await ComunicazioneModel.scheda_form_id(
+      id: id,
+    );
+    setState(() {});
+  }
+
+  _scheda_precedente() {
+    int indice = argomenti.indice;
+    if (indice != 0) {
+      indice = indice - 1;
+      argomenti.indice = indice;
+      _comunicazione_scheda_carica(
+          id: argomenti.comunicazioni_lista![indice]["id"]);
+    }
+  }
+
+  _scheda_successiva() {
+    int indice = argomenti.indice;
+    if (indice < argomenti.comunicazioni_lista!.length) {
+      indice = indice + 1;
+      argomenti.indice = indice;
+      _comunicazione_scheda_carica(
+          id: argomenti.comunicazioni_lista![indice]["id"]);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (ModalRoute.of(context)?.settings.arguments != null) {
-      argomenti = ModalRoute
-          .of(context)
-          ?.settings
-          .arguments as ComunicazionePageArgs;
-      print(argomenti?.comunicazioni_lista.toString());
-      print(argomenti?.indice.toString());
-    }
-
     return SafeArea(
       child: Scaffold(
         // resizeToAvoidBottomInset: true,
@@ -59,26 +96,26 @@ class _ComunicazionePageState extends State<ComunicazionePage> {
         bottomNavigationBar: BottomBarWidget(),
         body: GestureDetector(
           onHorizontalDragEnd: (DragEndDetails drag) {
-            if(drag.primaryVelocity == null) return;
-            if(drag.primaryVelocity! < 0) {
+            if (drag.primaryVelocity == null) return;
+            if (drag.primaryVelocity! < 0) {
               // drag from right to left
               print("drag from right to left");
-              // _scheda_successiva();
-            }else{
+              _scheda_successiva();
+            } else {
               // drag from left to right
               print("drag from left to right");
-              // _scheda_precedente();
+              _scheda_precedente();
             }
           },
           child: SingleChildScrollView(
-              child: Container(
-                // si dovrebbe sitemare meglio
-                height: MediaQuery.of(context).size.height-(kBottomNavigationBarHeight*2),
-                // decoration: MyBoxDecoration().MyBox(),
-                child: ComunicazopneWidget(),
-
-              ),
+            child: Container(
+              // si dovrebbe sitemare meglio
+              height: MediaQuery.of(context).size.height -
+                  (kBottomNavigationBarHeight * 2),
+              // decoration: MyBoxDecoration().MyBox(),
+              child: ComunicazopneWidget(),
             ),
+          ),
         ),
       ),
     );
@@ -97,7 +134,7 @@ class _ComunicazionePageState extends State<ComunicazionePage> {
                 child: Container(
                   padding: EdgeInsets.all(5),
                   child: Text(
-                    "Comunicazione Comunicazione Comunicazione",
+                    comunicazione_scheda.oggetto,
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
@@ -109,7 +146,6 @@ class _ComunicazionePageState extends State<ComunicazionePage> {
             ],
           ),
           Divider(),
-
           SizedBox(height: 5),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -128,7 +164,7 @@ class _ComunicazionePageState extends State<ComunicazionePage> {
               ),
               SizedBox(width: 5),
               Text(
-                "000000",
+                comunicazione_scheda.id.toString(),
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   overflow: TextOverflow.ellipsis,
@@ -143,7 +179,7 @@ class _ComunicazionePageState extends State<ComunicazionePage> {
               ),
               SizedBox(width: 5),
               Text(
-                "00/00/0000",
+                comunicazione_scheda.data,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   overflow: TextOverflow.ellipsis,
@@ -154,16 +190,19 @@ class _ComunicazionePageState extends State<ComunicazionePage> {
           ),
           SizedBox(height: 5),
           Divider(),
-
           Flexible(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(width: 5),
                 Expanded(
-                  child: Container(
-                    decoration: MyBoxDecoration().MyBox(),
-                    child: Image.asset("assets/immagini/splash_screen.png"),
+                  child: SingleChildScrollView(
+                    child: Container(
+                      decoration: MyBoxDecoration().MyBox(),
+                      child: SchedaImmagineWidget(
+                          immagine_base64:
+                              comunicazione_scheda.comunicazione_blob),
+                    ),
                   ),
                 ),
                 SizedBox(width: 5),
@@ -175,5 +214,14 @@ class _ComunicazionePageState extends State<ComunicazionePage> {
     );
   }
 
-
+  Widget SchedaImmagineWidget({dynamic immagine_base64 = ""}) {
+    if ((immagine_base64 != null) && (immagine_base64 != "")) {
+      return Image.memory(
+        Base64Decoder().convert(immagine_base64),
+        fit: BoxFit.fitWidth,
+      );
+    } else {
+      return Image.asset("assets/immagini/splash_screen.png");
+    }
+  }
 }

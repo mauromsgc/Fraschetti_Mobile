@@ -3,16 +3,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
-import 'package:fraschetti_videocatalogo/main.dart';
-import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
-import 'package:fraschetti_videocatalogo/repositories/comunicazioniRepository.dart';
-import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/comunicazioni/ComunicazionePage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:get_it/get_it.dart';
 
 class ComunicazioneListaPage extends StatefulWidget {
   ComunicazioneListaPage({Key? key}) : super(key: key);
@@ -23,15 +16,12 @@ class ComunicazioneListaPage extends StatefulWidget {
   _ComunicazioneListaPageState createState() => _ComunicazioneListaPageState();
 }
 
-final pageStato = PageStore().obs;
 
-class PageStore {
+class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
   List<Map> comunicazioni_lista = [];
 
   int lista_numero_elementi = 0;
-}
 
-class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
   final TextEditingController oggettoController = TextEditingController();
   final TextEditingController idController = TextEditingController();
 
@@ -39,16 +29,15 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
   void initState() {
     super.initState();
 
-    if (pageStato.value.lista_numero_elementi == 0) {
+    if (lista_numero_elementi == 0) {
       _comunicazioni_lista_cerca(stato: "da_leggere");
     }
   }
 
   Future<void> _comunicazioni_lista_svuota() async {
-    pageStato.value.comunicazioni_lista = [];
-    pageStato.value.lista_numero_elementi =
-        pageStato.value.comunicazioni_lista.length;
-    pageStato.refresh();
+    comunicazioni_lista = [];
+    lista_numero_elementi = comunicazioni_lista.length;
+    setState(() {});
   }
 
   Future<void> _comunicazioni_lista_cerca({
@@ -61,19 +50,26 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
       idController.clear();
       setState(() {});
     }
-    pageStato.value.comunicazioni_lista =
+    comunicazioni_lista =
         await ComunicazioneModel.comunicazioni_lista(
       oggetto: oggettoController.text,
       id: (idController.text != "") ? int.parse(idController.text) : 0,
       stato: stato,
     );
-    pageStato.value.lista_numero_elementi =
-        pageStato.value.comunicazioni_lista.length;
-    pageStato.refresh();
+    lista_numero_elementi =
+        comunicazioni_lista.length;
+    setState(() {});
   }
 
-  void listaClick(BuildContext context) {
-    Navigator.pushNamed(context, ComunicazionePage.routeName);
+  void listaClick(BuildContext context, int indice) {
+    Navigator.pushNamed(
+      context,
+      ComunicazionePage.routeName,
+      arguments: ComunicazionePageArgs(
+        comunicazioni_lista: comunicazioni_lista.toList(),
+        indice: indice,
+      ),
+    );
   }
 
   @override
@@ -90,15 +86,13 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
           title: Column(
             children: [
               Text(widget.pagina_titolo),
-              // if(pageStato.value.lista_numero_elementi >0)
-              Obx(
-                () => Text(
-                  "${pageStato.value.lista_numero_elementi} elementi",
+              // if(lista_numero_elementi >0)
+              Text(
+                  "${lista_numero_elementi} elementi",
                   style: TextStyle(
                     fontSize: 10,
                   ),
                 ),
-              ),
             ],
           ),
           centerTitle: true,
@@ -118,9 +112,7 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
                   thickness: 2,
                   // color: Theme.of(context).primaryColor,
                 ),
-                Obx(
-                  () => ListaWidget(pageStato.value.comunicazioni_lista),
-                ),
+                ListaWidget(comunicazioni_lista),
               ],
             ),
           ),
@@ -140,7 +132,7 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
             Expanded(
               flex: 5,
               child: TextFormField(
-                autofocus: true,
+                // autofocus: true,
                 controller: oggettoController,
                 onChanged: (value) {
                   // Call setState to update the UI
@@ -293,7 +285,7 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
-              listaClick(context);
+              listaClick(context, index);
             },
             child: Container(
               height: 50,

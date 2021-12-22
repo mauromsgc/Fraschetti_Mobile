@@ -23,13 +23,17 @@ class CatalogoListaPage extends StatefulWidget {
   _CatalogoListaPageState createState() => _CatalogoListaPageState();
 }
 
-class _CatalogoListaPageState extends State<CatalogoListaPage> {
+final pageStato = PageStore().obs;
+
+class PageStore {
   List<FamigliaModel> famiglie_lista = [];
   List<AssortimentoModel> assortimenti_lista = [];
   List<Map> articoli_lista = [];
 
   int lista_numero_elementi = 0;
+}
 
+class _CatalogoListaPageState extends State<CatalogoListaPage> {
   final TextEditingController descrizioneController = TextEditingController();
   final TextEditingController codiceController = TextEditingController();
 
@@ -53,19 +57,21 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
   }
 
   Future<void> _famiglie_lista_carica() async {
-    famiglie_lista = await FamigliaModel.famiglie_lista();
-    setState(() {});
+    pageStato.value.famiglie_lista = await FamigliaModel.famiglie_lista();
+    pageStato.refresh();
   }
 
   Future<void> _assortimenti_lista_carica() async {
-    assortimenti_lista = await AssortimentoModel.assortimenti_lista();
-    setState(() {});
+    pageStato.value.assortimenti_lista =
+        await AssortimentoModel.assortimenti_lista();
+    pageStato.refresh();
   }
 
   Future<void> _articoli_lista_svuota() async {
-    articoli_lista = [];
-    lista_numero_elementi = articoli_lista.length;
-    setState(() {});
+    pageStato.value.articoli_lista = [];
+    pageStato.value.lista_numero_elementi =
+        pageStato.value.articoli_lista.length;
+    pageStato.refresh();
   }
 
   Future<void> _articoli_lista_cerca({
@@ -81,7 +87,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
       codiceController.clear();
       setState(() {});
     }
-    articoli_lista = await CatalogoModel.catalogo_lista(
+    pageStato.value.articoli_lista = await CatalogoModel.catalogo_lista(
       descrizione: descrizioneController.text,
       codice: codiceController.text,
       famiglia_id: famiglia_id,
@@ -90,18 +96,21 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
       ordinamento_campo: ordinamento_campo,
       ordinamento_verso: ordinamento_verso,
     );
-    lista_numero_elementi = articoli_lista.length;
-    setState(() {});
+    pageStato.value.lista_numero_elementi =
+        pageStato.value.articoli_lista.length;
+    pageStato.refresh();
   }
 
   void listaClick(BuildContext context, int indice) {
-    Navigator.pushNamed(
-      context,
-      CatalogoPage.routeName,
-      arguments: CatalogoPageArgs(
-        articoli_lista: articoli_lista.toList(),
-        indice: indice,
-      ),
+
+        Navigator.pushNamed(
+        context,
+        CatalogoPage.routeName,
+        arguments:
+        CatalogoPageArgs(
+          articoli_lista: pageStato.value.articoli_lista.toList(),
+          indice: indice,
+        ),
     );
   }
 
@@ -117,7 +126,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
-              children: assortimenti_lista.map((elemento) {
+              children: pageStato.value.assortimenti_lista.map((elemento) {
                 return Container(
                   height: 40,
                   width: double.maxFinite,
@@ -291,14 +300,17 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
           title: Column(
             children: [
               Text(widget.pagina_titolo),
-              // if(lista_numero_elementi >0)
-              Text(
-                "${lista_numero_elementi} elementi",
-                style: TextStyle(
-                  fontSize: 10,
+              // if(pageStato.value.lista_numero_elementi >0)
+              Obx(
+                () => Text(
+                  "${pageStato.value.lista_numero_elementi} elementi",
+                  style: TextStyle(
+                    fontSize: 10,
+                  ),
                 ),
               ),
-            ],),
+            ],
+          ),
           centerTitle: true,
           actions: [
             // IconButton(
@@ -331,7 +343,9 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   thickness: 2,
                   // color: Theme.of(context).primaryColor,
                 ),
-                ListaWidget(articoli_lista),
+                Obx(
+                  () => ListaWidget(pageStato.value.articoli_lista),
+                ),
               ],
             ),
           ),
@@ -492,47 +506,48 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
   }
 
 // sezione categorie
-  Widget CategorieWidget() {
-    return Row(
-      children: famiglie_lista.map((elemento) {
-        return Expanded(
-          flex: 1,
-          child: InkWell(
-            hoverColor: Color(int.parse(elemento.colore)).withAlpha(50),
-            highlightColor: Color(int.parse(elemento.colore)).withAlpha(200),
-            splashColor: Colors.grey.shade600,
-            focusColor: Color(int.parse(elemento.colore)).withAlpha(125),
-            onTap: () {
-              _articoli_lista_cerca(famiglia_id: elemento.id);
-            },
-            child: Container(
-              padding: EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                // color: Color(0xFF009900),
-                border: Border(
-                  top: BorderSide(
-                    color: Color(int.parse(elemento.colore)),
-                    width: 5,
+  Widget CategorieWidget() => Obx(
+        () => Row(
+          children: pageStato.value.famiglie_lista.map((elemento) {
+            return Expanded(
+              flex: 1,
+              child: InkWell(
+                hoverColor: Color(int.parse(elemento.colore)).withAlpha(50),
+                highlightColor:
+                    Color(int.parse(elemento.colore)).withAlpha(200),
+                splashColor: Colors.grey.shade600,
+                focusColor: Color(int.parse(elemento.colore)).withAlpha(125),
+                onTap: () {
+                  _articoli_lista_cerca(famiglia_id: elemento.id);
+                },
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    // color: Color(0xFF009900),
+                    border: Border(
+                      top: BorderSide(
+                        color: Color(int.parse(elemento.colore)),
+                        width: 5,
+                      ),
+                      bottom: BorderSide(
+                        color: Color(int.parse(elemento.colore)),
+                        width: 5,
+                      ),
+                    ),
                   ),
-                  bottom: BorderSide(
-                    color: Color(int.parse(elemento.colore)),
-                    width: 5,
+                  child: Text(
+                    elemento.abbreviazione,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        // color: Colors.white,
+                        ),
                   ),
                 ),
               ),
-              child: Text(
-                elemento.abbreviazione,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    // color: Colors.white,
-                    ),
-              ),
-            ),
-          ),
-        );
-      }).toList(),
-    );
-  }
+            );
+          }).toList(),
+        ),
+      );
 
   // riga lista
   // Widget ListaWidget(List<CatalogoModel> articoli_lista) {
@@ -558,9 +573,8 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                   Container(
                     width: 10,
                     decoration: BoxDecoration(
-                      color: Color(
-                          int.parse(articoli_lista[index]['famiglie_colore'])
-                      ),
+                      color: Color(int.parse(articoli_lista[index]['famiglie_colore'])),
+                      // "${articoli_lista[index]["nome"]}"
                     ),
                   ),
                   Container(
@@ -582,7 +596,8 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                             "${articoli_lista[index]['nome']}",
                             style: TextStyle(
                                 fontSize: 15.0,
-                                overflow: TextOverflow.ellipsis),
+                                overflow: TextOverflow.ellipsis
+                            ),
                           ),
                         ),
                         if (articoli_lista[index]['nuovo'] == 1)
@@ -592,9 +607,8 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                             child: Container(
                               width: 60,
                               height: 25,
-                              decoration: MyBoxDecoration().MyBox(),
-                              child: Image.asset(
-                                  "assets/immagini/splash_screen.png"),
+                                decoration: MyBoxDecoration().MyBox(),
+                                child: Image.asset("assets/immagini/splash_screen.png"),
                             ),
                           ),
                         if (articoli_lista[index]['promozione_id'] > 0)
@@ -605,8 +619,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                               width: 60,
                               height: 25,
                               decoration: MyBoxDecoration().MyBox(),
-                              child: Image.asset(
-                                  "assets/immagini/splash_screen.png"),
+                              child: Image.asset("assets/immagini/splash_screen.png"),
                             ),
                           ),
                       ],

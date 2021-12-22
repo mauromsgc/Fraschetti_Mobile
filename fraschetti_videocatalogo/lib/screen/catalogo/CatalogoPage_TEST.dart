@@ -104,7 +104,7 @@ class Controller extends GetxController {
     // Navigator.pushNamed(context, DisponibilitaPage.routeName);
     showDialog(
       context: context,
-      builder: DisponibilitaDialogWidget(codice_scheda: codice_scheda, returnValue: true),
+      builder: DisponibilitaDialogWidget(codice_id: codice_scheda.id, returnValue: true),
     );
   }
 

@@ -1,5 +1,4 @@
-import 'package:flutter/foundation.dart';
-import 'package:fraschetti_videocatalogo/helper/DBHelper.dart';
+
 import 'package:fraschetti_videocatalogo/models/codiceModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:get_it/get_it.dart';
@@ -112,6 +111,7 @@ class CatalogoModel {
     String codice = "",
     int famiglia_id = 0,
     int assortimento_id = 0,
+    int promozione_id = 0,
     String selezione = "",
     String ordinamento_campo = "",
     String ordinamento_verso = "",
@@ -160,6 +160,9 @@ class CatalogoModel {
       sql_join.add(
           " LEFT JOIN assortimenti ON assortimenti.id = assortimenti_codici.assortimenti_id ");
       sql_where.add(" assortimenti.id = ${assortimento_id} ");
+    }
+    if (promozione_id != 0) {
+      sql_where.add(" promozioni_codici.promozione_id = ${promozione_id} ");
     }
     if (selezione != "") {
       switch (selezione) {
@@ -260,7 +263,6 @@ class CatalogoModel {
 
     if (rows.length > 0) {
       catalogo_cheda = CatalogoModel.fromMap_con_lista(rows.first);
-
       print("cat mod 1");
       catalogo_cheda.codici = await CodiceModel.codici_lista(catalogo_id: catalogo_cheda.id);
       print("cat mod 2");

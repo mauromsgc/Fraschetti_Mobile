@@ -138,17 +138,74 @@ class ClienteModel {
     }
   }
 
-  static Future<List<Map>> clienti_lista() async {
+  static Future<List<Map>> clienti_lista({
+    int id = 0,
+    String nominativo = "",
+    String codice = "",
+    String selezione = "", // selezione "tutti" "con_ordini"
+  }) async {
     List<Map> clienti_lista = [];
 
     Database db = GetIt.instance<DbRepository>().database;
-    final rows = await db.rawQuery("""SELECT 
+    String sql_eseguire = """SELECT DISTINCT 
     clienti.id,
     clienti.agente_id,
+    clienti.codice,
     clienti.ragione_sociale,
     clienti.localita
      FROM clienti
-    ;""");
+""";
+
+    List<String> sql_join = [];
+    List<String> sql_where = [];
+    List<String> sql_ordinamenti = [];
+
+    if (id != 0) {
+      sql_where.add(" clienti.id = ${id} ");
+    }
+    if (nominativo != "") {
+      String sql_nominativo = "";
+      nominativo.split(" ").forEach((String element) {
+        sql_nominativo += (sql_nominativo == "") ? "(" : " AND ";
+        sql_nominativo += " clienti.ragione_sociale LIKE '%${element}%' ";
+      });
+      sql_nominativo += ")";
+      sql_where.add(sql_nominativo);
+    }
+    if (codice != "") {
+      sql_where.add(" clienti.codice LIKE '${codice}%' ");
+    }
+    if (selezione != "") {
+      switch (selezione) {
+        case 'tutti':
+          sql_where.add(" clienti.id > 0 ");
+          break;
+        case 'con_ordine':
+          sql_join
+              .add("LEFT JOIN ordini ON ordini.cliente_id = clienti.id");
+          sql_where.add(" ordini.id > 0 ");
+          break;
+      }
+    }
+
+    sql_ordinamenti.add(" clienti.ragione_sociale ASC ");
+
+    sql_join.forEach((element) {
+      sql_eseguire += element;
+    });
+    // il forEach per le mappe ha l'indice
+    sql_where.asMap().forEach((indice, element) {
+      sql_eseguire += (indice == 0) ? " WHERE " : " AND ";
+      sql_eseguire += element;
+    });
+    sql_ordinamenti.asMap().forEach((indice, element) {
+      sql_eseguire += (indice == 0) ? " ORDER BY  " : " , ";
+      sql_eseguire += element;
+    });
+    sql_eseguire += ";";
+    // print(sql_eseguire);
+
+    final rows = await db.rawQuery(sql_eseguire);
 
     clienti_lista = rows;
 
@@ -160,4 +217,5 @@ class ClienteModel {
     return (this.sede == 0) ? "P" : (this.sede == 1) ? "B" : "";
 
   }
+
 }
