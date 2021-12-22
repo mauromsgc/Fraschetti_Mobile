@@ -6,7 +6,7 @@ class MyBoxDecoration extends BoxDecoration{
 
   BoxDecoration MyBox() {
     return BoxDecoration(
-      border: MyBorder().MyBorderOrange(),
+      // border: MyBorder().MyBorderOrange(),
     );
   }
 

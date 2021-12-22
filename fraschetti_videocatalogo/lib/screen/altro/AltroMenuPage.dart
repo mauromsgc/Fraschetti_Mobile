@@ -45,21 +45,23 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
   }
 
   void test_2() async{
-    // final valid = await GetIt.instance<DbRepository>().immagini_aggiorna();
-    // if (valid) {
-    //   print("Aggiornamento completato");
-    // } else {
-    //   print("Errore durante l'aggiornamento, riprovare");
-    // }
+    final valid = await GetIt.instance<DbRepository>().immagini_aggiorna();
+    if (valid) {
+      print("Aggiornamento completato");
+    } else {
+      print("Errore durante l'aggiornamento, riprovare");
+    }
 
-    Navigator.pushNamed(context, TestPage.routeName);
+    // Navigator.pushNamed(context, TestPage.routeName);
 
   }
 
   void test_3() async{
-    GetIt.instance<ParametriModel>().inizializza();
+    // GetIt.instance<ParametriModel>().inizializza();
+    //
+    // print(GetIt.instance<ParametriModel>().toMap().toString());
 
-    print(GetIt.instance<ParametriModel>().toMap().toString());
+    Navigator.pushNamed(context, TestPage.routeName);
 
   }
 

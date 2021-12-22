@@ -1,5 +1,27 @@
 
 
+// --------------------------------------------------
+// RICHIESTO
+
+- allineare i testio nella riga intestazione dellla scheda catalogo
+e ingrandire il font
+
+- nella dialog della disponibilità allineare i testi al centro
+per le descrizioni (una sola riga)
+
+- per ordini, nel menu della azioni aggiungere un pulsante
+per impostare l'odine come "IN SOSPESO"
+mettere icon con spunta o senza e testo
+
+im pagine menu trasmissioni mettere uno spazio tra i primi due pulsanti e gli altri
+
+
+// --------------------------------------------------
+
+
+- per aggiornamenti fere query execute batch
+
+- in catalogo lista e altre liste dopo ricerca fare scroll on top
 
 
 - fare ricerca per comunicazioni clienti trasmissioni esito
