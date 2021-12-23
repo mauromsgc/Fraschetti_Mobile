@@ -127,7 +127,7 @@ class HttpClient {
     var response = await http.post(url, body: _oggetto_invio);
 
     final data_risposta = json.decode(response.body);
-    print(data_risposta);
+    // print(data_risposta);
 
     print("httpRepositoty utente_registra fine");
     if (response.statusCode == 200) {
@@ -155,7 +155,7 @@ class HttpClient {
     var response = await http.post(url, body: _oggetto_invio);
 
     final data_risposta = json.decode(response.body);
-    print(data_risposta);
+    // print(data_risposta);
 
     print("httpRepositoty dati_aggiorna fine");
     if (response.statusCode == 200) {
@@ -183,7 +183,7 @@ class HttpClient {
     var response = await http.post(url, body: _oggetto_invio);
 
     final data_risposta = json.decode(response.body);
-    print(data_risposta);
+    // print(data_risposta);
 
     print("httpRepositoty comunicazioni_aggiorna fine");
     if (response.statusCode == 200) {
@@ -212,7 +212,7 @@ class HttpClient {
     var response = await http.post(url, body: _oggetto_invio);
 
     final data_risposta = json.decode(response.body);
-    print(data_risposta);
+    // print(data_risposta);
 
     print("httpRepositoty immagini_aggiorna fine");
     if (response.statusCode == 200) {
@@ -241,7 +241,7 @@ class HttpClient {
     var response = await http.post(url, body: _oggetto_invio);
 
     final data_risposta = json.decode(response.body);
-    print(data_risposta);
+    // print(data_risposta);
 
     print("httpRepositoty aggiornamenti_controlla fine");
     if (response.statusCode == 200) {

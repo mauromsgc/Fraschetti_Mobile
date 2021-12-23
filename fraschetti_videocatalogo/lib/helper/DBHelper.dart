@@ -543,7 +543,7 @@ descrizione CHAR(30,0)
           print("Errore inizializzazione parametri");
         }
       }
-      print("dbRepository utente_registra: " + risposta.toString());
+      // print("dbRepository utente_registra: " + risposta.toString());
     }
     // $o_output.esito_codice:=0
     // $o_output.esito_descrizione:=""
@@ -780,8 +780,8 @@ descrizione CHAR(30,0)
           print("Errore inizializzazione parametri");
         }
       }
-      print("dbRepository comunicazioni_aggiorna_scarica: " +
-          risposta.toString());
+      // print("dbRepository comunicazioni_aggiorna_scarica: " +
+      //     risposta.toString());
     }
     //$o_output.esito_codice:=0
     //$o_output.esito_descrizione:=""
@@ -928,7 +928,7 @@ descrizione CHAR(30,0)
           print("Errore inizializzazione parametri");
         }
       }
-      print("dbRepository immagini_aggiorna_scarica: " + risposta.toString());
+      // print("dbRepository immagini_aggiorna_scarica: " + risposta.toString());
     }
     //$o_output.esito_codice:=0
     //$o_output.esito_descrizione:=""
