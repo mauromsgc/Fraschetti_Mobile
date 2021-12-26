@@ -272,4 +272,24 @@ class CatalogoModel {
 
     return catalogo_cheda;
   }
+
+  static Future<List<Map>> immagini_mancanti() async {
+    List<Map> catalogo_id = [];
+
+    Database db = GetIt.instance<DbRepository>().database;
+    String sql_eseguire = """SELECT DISTINCT 
+    catalogo.id
+    FROM catalogo
+    WHERE catalogo.id NOT IN (SELECT catalogo_img.catalogo_id FROM catalogo_img)
+    ;""";
+
+    // print(sql_eseguire);
+
+    final rows = await db.rawQuery(sql_eseguire);
+
+    catalogo_id = rows;
+
+    return catalogo_id;
+  }
+
 }

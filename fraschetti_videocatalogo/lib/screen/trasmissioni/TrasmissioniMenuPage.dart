@@ -5,6 +5,7 @@ import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/helper/DBHelper.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
+import 'package:fraschetti_videocatalogo/models/utenteCorrenteModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/trasmissioni/TrasmissioneLista.dart';
@@ -26,24 +27,111 @@ class _TrasmissioniMenuListaState extends State<TrasmissioniMenuLista> {
     // selezione al cliente e va in ordine
   }
 
-
   void aggiornamenti_controlla(BuildContext context) async {
-    final response = await GetIt.instance<ParametriModel>().aggiornamenti_controlla();
+    final response =
+        await GetIt.instance<ParametriModel>().aggiornamenti_controlla();
 
-    print("aggiornamenti_controlla: "+response.toString());
+    print("aggiornamenti_controlla: " + response.toString());
   }
 
-  void dati_aggiorna(BuildContext context) async {
+  void versione_videocatalogo_mostra(BuildContext context) async {
+    String versione_aggiornamento = """
+  Versione: ${VIDEOCATALOGO_DISPOSIVITO_TIPO} ${VIDEOCATALOGO_VERSIONE}
+  """;
+    // final valid = await GetIt.instance<DbRepository>().immagini_mancanti_aggiorna();
 
+
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) =>
+          AlertDialog(
+            title: Text("Videocatalogo"),
+            content: Text("${versione_aggiornamento}"),
+            actions: <Widget>[
+              ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("Chiudi")),
+            ],
+          ),
+    );
+  }
+
+  void aggiorna_da_server(BuildContext context) async {
+    // dop aggioranamento scrip e dati
+    // verificare se il videocatalogo è ancora  attivvo o no
+    // dopo aggiornamento dati verificare se
+    // è stato attivato il listino o le promozioni
+
+
+    // software_aggiorna(context);
+
+    await sql_aggiorna(context);
+    // ricaricare dati utente
+    GetIt.instance<UtenteCorrenteModel>().inizializza(); // ricarica anche ParametriModel
+
+    await comunicazioni_aggiorna(context);
+
+    // immagini_aggiorna(context); //NEW PROMO
+
+    await dati_aggiorna(context);
+    // ricaricare dati utente
+    GetIt.instance<UtenteCorrenteModel>().inizializza(); // ricarica anche ParametriModel
+
+    // attivazione_listino();
+
+    // attivazione promozioni();
+
+    await immagini_aggiorna(context);
+
+
+
+
+  }
+
+  Future<void> sql_aggiorna(BuildContext context) async {
+    final valid = await GetIt.instance<DbRepository>().sql_aggiorna();
+    if (valid) {
+      print("Aggiornamento completato");
+    } else {
+      print("Errore durante l'aggiornamento, riprovare");
+    }
+  }
+
+  Future<void> dati_aggiorna(BuildContext context) async {
     final valid = await GetIt.instance<DbRepository>().dati_aggiorna();
     if (valid) {
       print("Aggiornamento completato");
     } else {
       print("Errore durante l'aggiornamento, riprovare");
     }
-
   }
 
+  Future<void> comunicazioni_aggiorna(BuildContext context) async {
+    final valid = await GetIt.instance<DbRepository>().comunicazioni_aggiorna();
+    if (valid) {
+      print("Aggiornamento completato");
+    } else {
+      print("Errore durante l'aggiornamento, riprovare");
+    }
+  }
+
+  Future<void> immagini_aggiorna(BuildContext context) async {
+    final valid = await GetIt.instance<DbRepository>().immagini_aggiorna();
+    if (valid) {
+      print("Aggiornamento completato");
+    } else {
+      print("Errore durante l'aggiornamento, riprovare");
+    }
+  }
+
+  Future<void> immagini_aggiorna_mancanti(BuildContext context) async {
+    final valid = await GetIt.instance<DbRepository>().immagini_mancanti_aggiorna();
+    if (valid) {
+      print("Aggiornamento completato");
+    } else {
+      print("Errore durante l'aggiornamento, riprovare");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +154,6 @@ class _TrasmissioniMenuListaState extends State<TrasmissioniMenuLista> {
               padding: EdgeInsets.only(
                 top: 5,
               ),
-
               alignment: Alignment.center,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -93,7 +180,7 @@ class _TrasmissioniMenuListaState extends State<TrasmissioniMenuLista> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(elevation: 2),
                       onPressed: () {
-                        dati_aggiorna(context);
+                        aggiorna_da_server(context);
                       },
                       child: Text('Aggiorna da server'),
                     ),
@@ -120,7 +207,8 @@ class _TrasmissioniMenuListaState extends State<TrasmissioniMenuLista> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(elevation: 2),
                       onPressed: () {
-                        Navigator.popAndPushNamed(context, TrasmissioneLista.routeName);
+                        Navigator.popAndPushNamed(
+                            context, TrasmissioneLista.routeName);
                       },
                       child: Text('Trasmissioni esito'),
                     ),

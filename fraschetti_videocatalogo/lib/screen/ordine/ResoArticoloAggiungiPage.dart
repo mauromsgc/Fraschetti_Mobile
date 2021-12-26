@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 
-class OrdineArticoloAggiungiPageArgs {
-  int codice_id;
-  int ordine_riga_id;
+class ResoArticoloAggiungiPageArgs {
+  int reso_riga_id;
 
-  OrdineArticoloAggiungiPageArgs({
-    this.codice_id = 0,
-    this.ordine_riga_id = 0,
+  ResoArticoloAggiungiPageArgs({
+    this.reso_riga_id = 0,
   });
 }
 

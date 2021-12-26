@@ -4,11 +4,15 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
+import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/codiceModel.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaWidget.dart';
+import 'package:fraschetti_videocatalogo/screen/ordine/ClientiLista.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
+import 'package:fraschetti_videocatalogo/screen/promozioni/PromozionePage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
+import 'package:get_it/get_it.dart';
 
 class CatalogoPageArgs {
   List<Map>? articoli_lista;
@@ -82,15 +86,25 @@ class _CatalogoPageState extends State<CatalogoPage> {
     }
   }
 
-  void listaClick(BuildContext context, int indice) {
-    Navigator.pushNamed(
-      context,
-      OrdineArticoloAggiungiPage.routeName,
-      // arguments: CatalogoPageArgs(
-      //   articoli_lista: pageStato.value.articoli_lista.toList(),
-      //   indice: indice,
-      // ),
-    );
+  void listaClick(BuildContext context, int codice_id) {
+    if (GetIt.instance<SessioneModel>().cliente_id_selezionato == 0) {
+      Navigator.pushNamed(
+        context,
+        ClienteLista.routeName,
+        arguments: ClientiListaPageArgs(
+          pagina_chiamante_route: CatalogoPage.routeName,
+        ),
+      );
+    } else {
+      Navigator.pushNamed(
+        context,
+        OrdineArticoloAggiungiPage.routeName,
+        arguments: OrdineArticoloAggiungiPageArgs(
+          ordine_riga_id: 0,
+          codice_id: codice_id,
+        ),
+      );
+    }
   }
 
   void articolo_disponibilita_mostra(BuildContext context, CodiceModel codice_scheda) {
@@ -100,6 +114,17 @@ class _CatalogoPageState extends State<CatalogoPage> {
       builder: DisponibilitaDialogWidget(codice_id: codice_scheda.id, returnValue: true),
     );
   }
+
+  void promozione_mostra(BuildContext context, {int promozione_id = 0}) {
+    Navigator.pushNamed(
+      context,
+      PromozionePage.routeName,
+      arguments: PromozionePageArgs(
+        promozione_id: promozione_id,
+      ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +147,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
               // drag from right to left
               print("drag from right to left");
               _scheda_successiva();
-            } else {
+            } else if (drag.primaryVelocity! > 0){
               // drag from left to right
               print("drag from left to right");
               _scheda_precedente();
@@ -190,6 +215,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                   child: Stack(
                     children: [
                       Container(
+                        height: 50,
                         alignment: Alignment.centerLeft,
                         decoration: MyBoxDecoration().MyBox(),
                         child: Text(
@@ -211,14 +237,21 @@ class _CatalogoPageState extends State<CatalogoPage> {
                                 width: 60,
                                 height: 50,
                                 decoration: MyBoxDecoration().MyBox(),
-                                child: Image.asset("assets/immagini/splash_screen.png"),
+                                // child: Image.asset("assets/immagini/splash_screen.png"),
+                                child: Text("Nuovo"),
                               ),
                             if (catalogo_scheda.promozione_id >0)
-                              Container(
-                                width: 60,
-                                height: 50,
-                                decoration: MyBoxDecoration().MyBox(),
-                                child: Image.asset("assets/immagini/splash_screen.png"),
+                              InkWell(
+                                onTap: () {
+                                  promozione_mostra(context, promozione_id: catalogo_scheda.promozione_id);
+                                },
+                                child: Container(
+                                  width: 60,
+                                  height: 50,
+                                  // decoration: MyBoxDecoration().MyBox(),
+                                  // child: Image.asset("assets/immagini/splash_screen.png"),
+                                  child: Text("Offerta"),
+                                ),
                               ),
                           ],),
                       ),
@@ -426,7 +459,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                 width: 50,
                 decoration: MyBoxDecoration().MyBox(),
                 child: Text(
-                  "Mas.",
+                  "Master",
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -530,7 +563,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
-              listaClick(context, index);
+              listaClick(context, codice_scheda[index].id);
             },
             onLongPress: () {
               articolo_disponibilita_mostra(context, codice_scheda[index]);

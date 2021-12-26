@@ -10,6 +10,7 @@ import 'package:fraschetti_videocatalogo/models/famigliaModel.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/LoginPage.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoPage.dart';
+import 'package:fraschetti_videocatalogo/screen/promozioni/PromozionePage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 import 'package:get_it/get_it.dart';
 import 'package:get/get.dart';
@@ -101,6 +102,16 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
       arguments: CatalogoPageArgs(
         articoli_lista: articoli_lista.toList(),
         indice: indice,
+      ),
+    );
+  }
+
+  void promozione_mostra(BuildContext context, {int promozione_id = 0}) {
+    Navigator.pushNamed(
+      context,
+      PromozionePage.routeName,
+      arguments: PromozionePageArgs(
+        promozione_id: promozione_id,
       ),
     );
   }
@@ -590,23 +601,30 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                             top: 0,
                             right: 0,
                             child: Container(
-                              width: 60,
-                              height: 25,
-                              decoration: MyBoxDecoration().MyBox(),
-                              child: Image.asset(
-                                  "assets/immagini/splash_screen.png"),
-                            ),
+                                width: 60,
+                                height: 25,
+                                decoration: MyBoxDecoration().MyBox(),
+                                // child: Image.asset(
+                                //     "assets/immagini/splash_screen.png"),
+                                child: Text("Nuovo"),
+                              ),
                           ),
                         if (articoli_lista[index]['promozione_id'] > 0)
                           Positioned(
                             bottom: 0,
                             right: 0,
-                            child: Container(
-                              width: 60,
-                              height: 25,
-                              decoration: MyBoxDecoration().MyBox(),
-                              child: Image.asset(
-                                  "assets/immagini/splash_screen.png"),
+                            child: InkWell(
+                              onTap: () {
+                                promozione_mostra(context, promozione_id: articoli_lista[index]['promozione_id']);
+                              },
+                              child: Container(
+                                width: 60,
+                                height: 25,
+                                decoration: MyBoxDecoration().MyBox(),
+                                // child: Image.asset(
+                                //     "assets/immagini/splash_screen.png"),
+                                child: Text("Offerta"),
+                              ),
                             ),
                           ),
                       ],

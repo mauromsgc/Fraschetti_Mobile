@@ -8,9 +8,11 @@ import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/comunicazioniRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaPage.dart';
+import 'package:fraschetti_videocatalogo/screen/ordine/ClientiLista.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/ResoArticoloAggiungiPage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
+import 'package:get_it/get_it.dart';
 
 class OrdineResiLista extends StatefulWidget {
   OrdineResiLista({Key? key}) : super(key: key);
@@ -60,6 +62,13 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
     return;
   }
 
+  Future<void> reso_chiudi() async {
+    // chiude la dialog
+    Navigator.of(context).pop();
+    await GetIt.instance<SessioneModel>().cliente_deseleziona();
+    Navigator.popAndPushNamed(context, ClienteLista.routeName);
+
+  }
 
   void resi_azioni_mostra(BuildContext context){
 
@@ -81,7 +90,7 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(elevation: 2),
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    reso_chiudi();
                   },
                   child: Text('Reso chiudi'),
                 ),
@@ -183,7 +192,7 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
               // padding: EdgeInsets.all(3),
               child: TextFormField(
                 enabled: false,
-                initialValue: "0000 Cliente Cliente Cliente",
+                initialValue: GetIt.instance<SessioneModel>().cliente_Nominativo_selezionato,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.grey.shade200,
@@ -207,7 +216,7 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
                     child: TextFormField(
                       // readOnly: true,
                       enabled: false,
-                      initialValue: "Località cliente cliente",
+                      initialValue: GetIt.instance<SessioneModel>().cliente_Localita_selezionato,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey.shade200,
@@ -229,7 +238,7 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(elevation: 2),
                       onPressed: () => reso_numeroOnSubmit(context),
-                      child: Text('Reso numero X'),
+                      child: Text("Reso numero ${GetIt.instance<SessioneModel>().reso_numero_corrente}"),
                     ),
                   ),
                 ),

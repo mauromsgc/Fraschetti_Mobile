@@ -28,23 +28,75 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
   }
 
   void testComunicazioneOnSubmit(BuildContext context) async {
-    final response = await GetIt.instance<HttpRepository>().http!.trasmissione_test();
+    final response = await GetIt
+        .instance<HttpRepository>()
+        .http!
+        .trasmissione_test();
+  }
 
-    print(response);
+  void immagini_aggiorna_mancanti(BuildContext context) async {
+    final valid = await GetIt.instance<DbRepository>()
+        .immagini_mancanti_aggiorna();
+  }
+
+  void versione_aggiornamento_mostra(BuildContext context) async {
+    String versione_aggiornamento = """
+  agg. dati = ${GetIt.instance<ParametriModel>().agg_dati_id},
+  agg. immagini = ${GetIt.instance<ParametriModel>().agg_immagini_id},
+  agg. comunicazioni = ${GetIt.instance<ParametriModel>().agg_comunicazioni_id},
+  agg. sql = ${GetIt.instance<ParametriModel>().agg_sql_id},
+  sql. versione = ${GetIt.instance<ParametriModel>().sql_versione}.
+  """;
+    // final valid = await GetIt.instance<DbRepository>().immagini_mancanti_aggiorna();
+
+
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) =>
+          AlertDialog(
+            title: Text("Verisione aggiornamento"),
+            content: Text("${versione_aggiornamento}"),
+            actions: <Widget>[
+              ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("Chiudi")),
+            ],
+          ),
+    );
+  }
+
+  void versione_videocatalogo_mostra(BuildContext context) async {
+    String versione_aggiornamento = """
+  Versione: ${VIDEOCATALOGO_DISPOSIVITO_TIPO} ${VIDEOCATALOGO_VERSIONE}
+  """;
+    // final valid = await GetIt.instance<DbRepository>().immagini_mancanti_aggiorna();
+
+
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) =>
+          AlertDialog(
+            title: Text("Videocatalogo"),
+            content: Text("${versione_aggiornamento}"),
+            actions: <Widget>[
+              ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("Chiudi")),
+            ],
+          ),
+    );
   }
 
   void test_1() async {
-
     final valid = await GetIt.instance<DbRepository>().comunicazioni_aggiorna();
     if (valid) {
       print("Aggiornamento completato");
     } else {
       print("Errore durante l'aggiornamento, riprovare");
     }
-
   }
 
-  void test_2() async{
+  void test_2() async {
     final valid = await GetIt.instance<DbRepository>().immagini_aggiorna();
     if (valid) {
       print("Aggiornamento completato");
@@ -56,13 +108,12 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
 
   }
 
-  void test_3() async{
+  void test_3() async {
     // GetIt.instance<ParametriModel>().inizializza();
     //
     // print(GetIt.instance<ParametriModel>().toMap().toString());
 
     Navigator.pushNamed(context, TestPage.routeName);
-
   }
 
   @override
@@ -100,7 +151,8 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(elevation: 2),
                         onPressed: () {
-                          Navigator.pushNamed(context, ParametriConnesionePage.routeName);
+                          Navigator.pushNamed(
+                              context, ParametriConnesionePage.routeName);
                         },
                         child: Text('Parametri di connessione'),
                       ),
@@ -136,7 +188,7 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(elevation: 2),
                         onPressed: () {
-                          // Navigator.of(context).pop();
+                          versione_aggiornamento_mostra(context);
                         },
                         child: Text('Versioni aggiornamento'),
                       ),
@@ -149,7 +201,7 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(elevation: 2),
                         onPressed: () {
-                          // Navigator.of(context).pop();
+                          versione_videocatalogo_mostra(context);
                         },
                         child: Text('Versione videocatalogo'),
                       ),
@@ -162,7 +214,7 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(elevation: 2),
                         onPressed: () {
-                          // Navigator.of(context).pop();
+                          immagini_aggiorna_mancanti(context);
                         },
                         child: Text('Aggiorna immagini non presenti'),
                       ),

@@ -81,8 +81,6 @@ id integer NOT NULL PRIMARY KEY AUTOINCREMENT,
 agg_dati_id INTEGER, 
 agg_immagini_id INTEGER, 
 agg_comunicazioni_id INTEGER,
-agg_codici_ean_id INTEGER, 
-agg_script_id INTEGER, 
 agg_sql_id INTEGER, 
 aggiornamento_obbligatorio INTEGER, 
 anagrafica_aggiornamento INTEGER, 
@@ -97,7 +95,7 @@ log_attivo INTEGER
 )""");
 
         await db.execute(
-            "insert into parametri (id, agg_dati_id, agg_immagini_id, agg_comunicazioni_id, agg_codici_ean_id, agg_script_id, agg_sql_id, aggiornamento_obbligatorio, anagrafica_aggiornamento, promozioni_attivazione, sql_versione, host_server, codice_macchina, username, password, videocatalogo_uid, log_attivo )  values (  1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 'http://www.fraschetti.com:8080', '', '', '', '', 0 );");
+            "insert into parametri (id, agg_dati_id, agg_immagini_id, agg_comunicazioni_id, agg_sql_id, aggiornamento_obbligatorio, anagrafica_aggiornamento, promozioni_attivazione, sql_versione, host_server, codice_macchina, username, password, videocatalogo_uid, log_attivo )  values (  1, 0, 0, 0, 0, 1, 0, 0, 1, 'http://www.fraschetti.com:8080', '', '', '', '', 0 );");
 
 // aggiornamento_dati_id - aggiornamento di tutto,
 // in caso imposta anagrafica_aggiornamento e promozioni_attivazione a 1

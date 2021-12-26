@@ -10,10 +10,12 @@ import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 class PromozionePageArgs {
   List<Map>? promozioni_lista;
   int indice;
+  int promozione_id;
 
   PromozionePageArgs({
     this.promozioni_lista = null,
     this.indice = 0,
+    this.promozione_id = 0,
   });
 }
 
@@ -43,9 +45,14 @@ class _PromozionePageState extends State<PromozionePage> {
     if (ModalRoute.of(context)?.settings.arguments != null) {
       argomenti =
       ModalRoute.of(context)?.settings.arguments as PromozionePageArgs;
+      if(argomenti.promozioni_lista != null){
       int indice = argomenti.indice;
       // all'apertura va caricato prima
       _promozione_scheda_carica(id: argomenti.promozioni_lista![indice]["id"]);
+      }
+      if((argomenti.promozione_id != 0) && (argomenti.promozioni_lista == null)){
+        _promozione_scheda_carica(id: argomenti.promozione_id);
+      }
     }
 
     super.didChangeDependencies();
@@ -113,7 +120,7 @@ class _PromozionePageState extends State<PromozionePage> {
               // drag from right to left
               print("drag from right to left");
               _scheda_successiva();
-            } else {
+            } else if (drag.primaryVelocity! > 0) {
               // drag from left to right
               print("drag from left to right");
               _scheda_precedente();

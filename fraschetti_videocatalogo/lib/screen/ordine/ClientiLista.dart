@@ -5,11 +5,22 @@ import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/components/OrdineTopMenu.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/clienteModel.dart';
+import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoPage.dart';
+import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
+import 'package:fraschetti_videocatalogo/screen/ordine/OrdineCodiceCercaPage.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineLista.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get_it/get_it.dart';
+
+class ClientiListaPageArgs {
+  String? pagina_chiamante_route;
+
+  ClientiListaPageArgs({
+    this.pagina_chiamante_route = "",
+  });
+}
 
 class ClienteLista extends StatefulWidget {
   ClienteLista({Key? key}) : super(key: key);
@@ -20,10 +31,10 @@ class ClienteLista extends StatefulWidget {
   _ClienteListaState createState() => _ClienteListaState();
 }
 
-
 class _ClienteListaState extends State<ClienteLista> {
+  ClientiListaPageArgs argomenti = ClientiListaPageArgs();
   List<Map> clienti_lista = [];
-  
+
   int lista_numero_elementi = 0;
 
   final TextEditingController nominativoController = TextEditingController();
@@ -32,6 +43,18 @@ class _ClienteListaState extends State<ClienteLista> {
   @override
   void initState() {
     super.initState();
+    GetIt.instance<SessioneModel>().ordine_top_menu_indice = 0;
+  }
+
+  @override
+  void didChangeDependencies() {
+
+    if (ModalRoute.of(context)?.settings.arguments != null) {
+      argomenti =
+      ModalRoute.of(context)?.settings.arguments as ClientiListaPageArgs;
+    }
+
+    super.didChangeDependencies();
   }
 
   Future<void> _clienti_lista_svuota() async {
@@ -39,7 +62,7 @@ class _ClienteListaState extends State<ClienteLista> {
     lista_numero_elementi = clienti_lista.length;
     setState(() {});
   }
-  
+
   Future<void> _clienti_lista_cerca({
     int id = 0,
     String nominativo = "",
@@ -61,14 +84,26 @@ class _ClienteListaState extends State<ClienteLista> {
     setState(() {});
   }
 
+  Future<void> listaClick(BuildContext context, {int clienti_id = 0}) async {
+    bool cliente_selezionato = await GetIt.instance<SessioneModel>()
+        .cliente_seleziona(cliente_id: clienti_id);
 
-  void listaClick(BuildContext context, int index) {
-    // selezione al cliente e va in ordine
-    GetIt.instance<SessioneModel>().ordine_top_menu_indice = 1;
-    // poi spostarlo un utente corrente
-    GetIt.instance<SessioneModel>().cliente_id_selezionato = index;
+    if (cliente_selezionato == true) {
+      // selezione al cliente e va in ordine
+      GetIt.instance<SessioneModel>().ordine_top_menu_indice = 1;
 
-    Navigator.popAndPushNamed(context, OrdineLista.routeName);
+      switch (argomenti.pagina_chiamante_route) {
+        case CatalogoPage.routeName:
+          Navigator.pop(context);
+          break;
+        case OrdineCodiceCercaPage.routeName:
+          Navigator.pop(context);
+          break;
+
+        default:
+          Navigator.popAndPushNamed(context, OrdineLista.routeName);
+      }
+    }
   }
 
   @override
@@ -91,7 +126,8 @@ class _ClienteListaState extends State<ClienteLista> {
                   fontSize: 10,
                 ),
               ),
-            ],),
+            ],
+          ),
           centerTitle: true,
           // bottom: OrdineTopMenu(context),
         ),
@@ -154,13 +190,13 @@ class _ClienteListaState extends State<ClienteLista> {
                   suffixIcon: nominativoController.text.length == 0
                       ? null
                       : IconButton(
-                    icon: Icon(Icons.clear),
-                    onPressed: () {
-                      nominativoController.clear();
-                      setState(() {});
-                      _clienti_lista_svuota();
-                    },
-                  ),
+                          icon: Icon(Icons.clear),
+                          onPressed: () {
+                            nominativoController.clear();
+                            setState(() {});
+                            _clienti_lista_svuota();
+                          },
+                        ),
                 ),
               ),
             ),
@@ -191,13 +227,13 @@ class _ClienteListaState extends State<ClienteLista> {
                   suffixIcon: codiceController.text.length == 0
                       ? null
                       : IconButton(
-                    icon: Icon(Icons.clear),
-                    onPressed: () {
-                      codiceController.clear();
-                      setState(() {});
-                      _clienti_lista_svuota();
-                    },
-                  ),
+                          icon: Icon(Icons.clear),
+                          onPressed: () {
+                            codiceController.clear();
+                            setState(() {});
+                            _clienti_lista_svuota();
+                          },
+                        ),
                 ),
               ),
             ),
@@ -272,7 +308,7 @@ class _ClienteListaState extends State<ClienteLista> {
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
-              listaClick(context, index);
+              listaClick(context, clienti_id: clienti_lista[index]['id']);
             },
             child: Container(
               height: 50,

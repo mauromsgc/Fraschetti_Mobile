@@ -8,9 +8,11 @@ import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/comunicazioniRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaPage.dart';
+import 'package:fraschetti_videocatalogo/screen/ordine/ClientiLista.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineNoteAggiungiPage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
+import 'package:get_it/get_it.dart';
 
 class OrdineLista extends StatefulWidget {
   OrdineLista({Key? key}) : super(key: key);
@@ -60,16 +62,21 @@ class _OrdineListaState extends State<OrdineLista> {
         ],
       ),
     );
-
   }
 
+  Future<void> ordine_chiudi() async {
+    // chiude la dialog
+    Navigator.of(context).pop();
+     await GetIt.instance<SessioneModel>().cliente_deseleziona();
+    Navigator.popAndPushNamed(context, ClienteLista.routeName);
+
+  }
 
   void ordine_numeroOnSubmit(BuildContext context) {
     return;
   }
 
-  void ordine_azioni_mostra(){
-
+  void ordine_azioni_mostra() {
     showDialog<String>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -88,7 +95,7 @@ class _OrdineListaState extends State<OrdineLista> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(elevation: 2),
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    ordine_chiudi();
                   },
                   child: Text('Ordine chiudi'),
                 ),
@@ -106,7 +113,6 @@ class _OrdineListaState extends State<OrdineLista> {
                   child: Text('Ordine elimina'),
                 ),
               ),
-
               Container(
                 // solo per agenti
                 height: 40,
@@ -121,7 +127,6 @@ class _OrdineListaState extends State<OrdineLista> {
                   child: Text('Totale ordine'),
                 ),
               ),
-
               Container(
                 // lo fa già il server
                 height: 40,
@@ -136,7 +141,6 @@ class _OrdineListaState extends State<OrdineLista> {
                   child: Text('Invia email con prezzi'),
                 ),
               ),
-
               Container(
                 // lo fa già il server
                 height: 40,
@@ -151,8 +155,6 @@ class _OrdineListaState extends State<OrdineLista> {
                   child: Text('Invia email senza prezzi'),
                 ),
               ),
-
-
             ],
           ),
         ),
@@ -164,10 +166,7 @@ class _OrdineListaState extends State<OrdineLista> {
         ],
       ),
     );
-
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -229,13 +228,16 @@ class _OrdineListaState extends State<OrdineLista> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 10,),
+            SizedBox(
+              height: 10,
+            ),
             Container(
               // cliente nominativo
               // padding: EdgeInsets.all(3),
               child: TextFormField(
                 enabled: false,
-                initialValue: "0000 Cliente Cliente Cliente",
+                initialValue: GetIt.instance<SessioneModel>()
+                    .cliente_Nominativo_selezionato,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.grey.shade200,
@@ -245,7 +247,9 @@ class _OrdineListaState extends State<OrdineLista> {
                 ),
               ),
             ),
-            SizedBox(height: 10,),
+            SizedBox(
+              height: 10,
+            ),
             Row(
               children: [
                 Expanded(
@@ -257,7 +261,8 @@ class _OrdineListaState extends State<OrdineLista> {
                     child: TextFormField(
                       // readOnly: true,
                       enabled: false,
-                      initialValue: "Località cliente cliente",
+                      initialValue: GetIt.instance<SessioneModel>()
+                          .cliente_Localita_selezionato,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey.shade200,
@@ -269,7 +274,9 @@ class _OrdineListaState extends State<OrdineLista> {
                     ),
                   ),
                 ),
-                SizedBox(width: 5,),
+                SizedBox(
+                  width: 5,
+                ),
                 Expanded(
                   flex: 2,
                   child: Container(
@@ -277,7 +284,8 @@ class _OrdineListaState extends State<OrdineLista> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(elevation: 2),
                       onPressed: () => ordine_numeroOnSubmit(context),
-                      child: Text('Ordine numero X'),
+                      child: Text(
+                          "Ordine numero ${GetIt.instance<SessioneModel>().ordine_numero_corrente}"),
                     ),
                   ),
                 ),
@@ -355,14 +363,14 @@ class _OrdineListaState extends State<OrdineLista> {
               });
             },
             child: InkWell(
-            onTap: () {
-              listaClick(context);
-            },
-            onLongPress: () {
-              articolo_disponibilita_mostra(context);
-            },
-            child: Container(
-              child: Row(
+              onTap: () {
+                listaClick(context);
+              },
+              onLongPress: () {
+                articolo_disponibilita_mostra(context);
+              },
+              child: Container(
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
@@ -450,8 +458,8 @@ class _OrdineListaState extends State<OrdineLista> {
                     ),
                   ],
                 ),
+              ),
             ),
-          ),
           );
         },
       ),

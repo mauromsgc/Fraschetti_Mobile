@@ -8,9 +8,10 @@ import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/codiceModel.dart';
 import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaWidget.dart';
+import 'package:fraschetti_videocatalogo/screen/ordine/ClientiLista.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
-import 'package:fraschetti_videocatalogo/screen/ordine/ResoArticoloAggiungiPage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
+import 'package:get_it/get_it.dart';
 
 class OrdineCodiceCercaPage extends StatefulWidget {
   OrdineCodiceCercaPage({Key? key}) : super(key: key);
@@ -54,15 +55,26 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
     setState(() {});
   }
 
-  void listaClick(BuildContext context, int indice) {
-    Navigator.pushNamed(
-      context,
-      OrdineArticoloAggiungiPage.routeName,
-      arguments: OrdineArticoloAggiungiPageArgs(
-        codice_id: codici_lista[indice]["id"],
-        ordine_riga_id: 0,
-      ),
-    );
+  void listaClick(BuildContext context, int codice_id) {
+    if(GetIt.instance<SessioneModel>().cliente_id_selezionato == 0){
+      Navigator.pushNamed(
+        context,
+        ClienteLista.routeName,
+        arguments: ClientiListaPageArgs(
+          pagina_chiamante_route: OrdineCodiceCercaPage.routeName,
+        ),
+      );
+    }else{
+      Navigator.pushNamed(
+        context,
+        OrdineArticoloAggiungiPage.routeName,
+        arguments: OrdineArticoloAggiungiPageArgs(
+          ordine_riga_id: 0,
+          codice_id: codice_id,
+        ),
+      );
+    }
+
   }
 
   void articolo_disponibilita_mostra(
@@ -138,7 +150,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
             // padding: EdgeInsets.all(5),
             child: TextFormField(
               enabled: false,
-              initialValue: "0000 Cliente Cliente Cliente",
+              initialValue: GetIt.instance<SessioneModel>().cliente_Nominativo_selezionato,
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.grey.shade200,
@@ -266,7 +278,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
-              listaClick(context, index);
+              listaClick(context, codici_lista[index]["id"]);
             },
             onLongPress: () {
               articolo_disponibilita_mostra(context, codici_lista[index]["id"]);

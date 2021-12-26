@@ -200,4 +200,23 @@ ORDER BY tour asc
   }
 
 
+  static Future<List<Map>> immagini_mancanti() async {
+    List<Map> promozioni_id = [];
+
+    Database db = GetIt.instance<DbRepository>().database;
+    String sql_eseguire = """SELECT DISTINCT 
+    promozioni.id
+    FROM promozioni
+    WHERE promozioni.id NOT IN (SELECT promozioni_img.promozione_id FROM promozioni_img)
+    ;""";
+
+    // print(sql_eseguire);
+
+    final rows = await db.rawQuery(sql_eseguire);
+
+    promozioni_id = rows;
+
+    return promozioni_id;
+  }
+
 }

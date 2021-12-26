@@ -1,5 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
+import 'package:get_it/get_it.dart';
+
+class OrdineArticoloAggiungiPageArgs {
+  int ordine_riga_id;
+  int codice_id;
+
+  OrdineArticoloAggiungiPageArgs({
+    this.ordine_riga_id = 0,
+    this.codice_id = 0,
+  });
+}
+
 
 class OrdineArticoloAggiungiPage extends StatefulWidget {
   OrdineArticoloAggiungiPage({Key? key}) : super(key: key);
@@ -11,6 +24,7 @@ class OrdineArticoloAggiungiPage extends StatefulWidget {
 }
 
 class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage> {
+
   void savalOnSubmit(BuildContext context) async {
     // final username = usernameController.text.trim();
     // final password = passwordController.text.trim();
@@ -82,7 +96,7 @@ class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage>
                     child: TextFormField(
                       // readOnly: true,
                       enabled: false,
-                      initialValue: "0000 Cliente Cliente Cliente",
+                      initialValue: GetIt.instance<SessioneModel>().cliente_Nominativo_selezionato,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey.shade200,

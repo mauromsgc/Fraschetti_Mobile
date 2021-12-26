@@ -7,6 +7,7 @@ import 'package:fraschetti_videocatalogo/repositories/articoliRepository.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoPage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
+import 'package:photo_view/photo_view.dart';
 
 class ComunicazionePageArgs {
   List<Map>? comunicazioni_lista;
@@ -101,7 +102,7 @@ class _ComunicazionePageState extends State<ComunicazionePage> {
               // drag from right to left
               print("drag from right to left");
               _scheda_successiva();
-            } else {
+            } else if (drag.primaryVelocity! > 0) {
               // drag from left to right
               print("drag from left to right");
               _scheda_precedente();
@@ -220,6 +221,17 @@ class _ComunicazionePageState extends State<ComunicazionePage> {
         Base64Decoder().convert(immagine_base64),
         fit: BoxFit.fitWidth,
       );
+
+      // return Container(
+      //   height: 400,
+      //   width: 400,
+      //   child: PhotoView.customChild(child: Image.memory(
+      //     Base64Decoder().convert(immagine_base64),
+      //     fit: BoxFit.fitWidth,
+      //   ),),
+      // );
+
+
     } else {
       return Image.asset("assets/immagini/splash_screen.png");
     }

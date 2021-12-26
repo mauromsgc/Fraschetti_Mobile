@@ -7,7 +7,7 @@ import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sqflite/sqflite.dart';
 
-const double VIDEOCATALOGO_VERSIONE = 0.01;
+const String VIDEOCATALOGO_VERSIONE = "0,01";
 const String VIDEOCATALOGO_DISPOSIVITO_TIPO = "mobile_2";
 
 // nella tabella parametri esisterà un solo record con id = 1
@@ -40,8 +40,6 @@ class ParametriModel {
   int agg_dati_id = 0;
   int agg_immagini_id = 0;
   int agg_comunicazioni_id = 0;
-  int agg_codici_ean_id = 0;
-  int agg_script_id = 0;
   int agg_sql_id = 0;
   int aggiornamento_obbligatorio = 0;
   int anagrafica_aggiornamento = 0;
@@ -76,8 +74,6 @@ class ParametriModel {
       this.agg_dati_id = results[0]["agg_dati_id"];
       this.agg_immagini_id = results[0]["agg_immagini_id"];
       this.agg_comunicazioni_id = results[0]["agg_comunicazioni_id"];
-      this.agg_codici_ean_id = results[0]["agg_codici_ean_id"];
-      this.agg_script_id = results[0]["agg_script_id"];
       this.agg_sql_id = results[0]["agg_sql_id"];
       this.aggiornamento_obbligatorio =
           results[0]["aggiornamento_obbligatorio"];
@@ -102,8 +98,6 @@ class ParametriModel {
     this.agg_dati_id = 0;
     this.agg_immagini_id = 0;
     this.agg_comunicazioni_id = 0;
-    this.agg_codici_ean_id = 0;
-    this.agg_script_id = 0;
     this.agg_sql_id = 0;
     this.aggiornamento_obbligatorio = 0;
     this.anagrafica_aggiornamento = 0;
@@ -122,8 +116,6 @@ class ParametriModel {
     this.agg_dati_id = 0,
     this.agg_immagini_id = 0,
     this.agg_comunicazioni_id = 0,
-    this.agg_codici_ean_id = 0,
-    this.agg_script_id = 0,
     this.agg_sql_id = 0,
     this.aggiornamento_obbligatorio = 0,
     this.anagrafica_aggiornamento = 0,
@@ -142,8 +134,6 @@ class ParametriModel {
     final agg_dati_id = map["agg_dati_id"];
     final agg_immagini_id = map["agg_immagini_id"];
     final agg_comunicazioni_id = map["agg_comunicazioni_id"];
-    final agg_codici_ean_id = map["agg_codici_ean_id"];
-    final agg_script_id = map["agg_script_id"];
     final agg_sql_id = map["agg_sql_id"];
     final aggiornamento_obbligatorio = map["aggiornamento_obbligatorio"];
     final anagrafica_aggiornamento = map["anagrafica_aggiornamento"];
@@ -161,8 +151,6 @@ class ParametriModel {
       agg_dati_id: agg_dati_id,
       agg_immagini_id: agg_immagini_id,
       agg_comunicazioni_id: agg_comunicazioni_id,
-      agg_codici_ean_id: agg_codici_ean_id,
-      agg_script_id: agg_script_id,
       agg_sql_id: agg_sql_id,
       aggiornamento_obbligatorio: aggiornamento_obbligatorio,
       anagrafica_aggiornamento: anagrafica_aggiornamento,
@@ -182,8 +170,6 @@ class ParametriModel {
         "agg_dati_id": agg_dati_id,
         "agg_immagini_id": agg_immagini_id,
         "agg_comunicazioni_id": agg_comunicazioni_id,
-        "agg_codici_ean_id": agg_codici_ean_id,
-        "agg_script_id": agg_script_id,
         "agg_sql_id": agg_sql_id,
         "aggiornamento_obbligatorio": aggiornamento_obbligatorio,
         "anagrafica_aggiornamento": anagrafica_aggiornamento,
@@ -241,6 +227,32 @@ class ParametriModel {
       await this.inizializza();
     } else {
       print("ParametriModel errore aggiornamento host_server");
+    }
+
+    return (record_eleborati > 0);
+  }
+
+  Future<bool> agg_sql_id_aggiorna(int? agg_sql_id) async {
+    // aggiorna la proprieta agg_sql_id
+
+    int record_eleborati = 0;
+
+    try {
+      record_eleborati = await (await db!.update(
+          'parametri', {'agg_sql_id': agg_sql_id},
+          where: 'id = ?', whereArgs: ["1"]));
+    } on DatabaseException catch (errore_db) {
+      if (errore_db.isNoSuchTableError()) {
+        print("Errore aggiornamento parametri");
+      }
+    }
+
+    if (record_eleborati > 0) {
+      print("parametri agg_sql_id_aggiorna 1");
+      await this.inizializza();
+      print("parametri agg_sql_id_aggiorna 2");
+    } else {
+      print("ParametriModel errore aggiornamento agg_sql_id_aggiorna");
     }
 
     return (record_eleborati > 0);
@@ -360,8 +372,6 @@ class ParametriModel {
     data_invio["agg_dati_id"] = this.agg_dati_id;
     data_invio["agg_immagini_id"] = this.agg_immagini_id;
     data_invio["agg_comunicazioni_id"] = this.agg_comunicazioni_id;
-    data_invio["agg_codici_ean_id"] = this.agg_codici_ean_id;
-    data_invio["agg_script_id"] = this.agg_script_id;
     data_invio["agg_sql_id"] = this.agg_sql_id; // non utilizzato
 
     try {

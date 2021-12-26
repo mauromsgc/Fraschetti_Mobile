@@ -52,6 +52,9 @@ WidgetBuilder DisponibilitaDialogWidget({
                       // readOnly: true,
                       enabled: false,
                       initialValue: codice_scheda["numero"],
+                      style: TextStyle(
+                        overflow: TextOverflow.ellipsis,
+                      ),
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey.shade200,
@@ -65,15 +68,15 @@ WidgetBuilder DisponibilitaDialogWidget({
                 ],
               ),
               Container(
-                // codic e descrizione
+                // codice
                 padding: EdgeInsets.all(5),
                 child: TextFormField(
                   // readOnly: true,
-                  keyboardType: TextInputType.multiline,
-                  minLines: 2,
-                  maxLines: 3,
                   enabled: false,
                   initialValue: codice_scheda["catalogo_nome"],
+                  style: TextStyle(
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.grey.shade200,
@@ -85,15 +88,15 @@ WidgetBuilder DisponibilitaDialogWidget({
               ),
               if(codice_scheda["descrizione"] != "")
               Container(
-                // codic e descrizione
+                // codice descrizione
                 padding: EdgeInsets.all(5),
                 child: TextFormField(
                   // readOnly: true,
-                  keyboardType: TextInputType.multiline,
-                  minLines: 2,
-                  maxLines: 3,
                   enabled: false,
                   initialValue: codice_scheda["descrizione"],
+                  style: TextStyle(
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.grey.shade200,

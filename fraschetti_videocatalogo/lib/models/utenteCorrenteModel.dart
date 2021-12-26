@@ -72,6 +72,7 @@ class UtenteCorrenteModel {
 
   void inizializza() {
     String username_tipo = "";
+    GetIt.instance<ParametriModel>().inizializza(); // ricarica i dati
     ParametriModel parametri = GetIt.instance<ParametriModel>();
 
     if (parametri.username.length > 0) {
