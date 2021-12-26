@@ -25,10 +25,13 @@ class _RegistazionePageState extends State<RegistazionePage> {
   // controller per i campi del form
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController password_verificaController = TextEditingController();
-  final TextEditingController codice_attivazioneController = TextEditingController();
+  final TextEditingController password_verificaController =
+      TextEditingController();
+  final TextEditingController codice_attivazioneController =
+      TextEditingController();
 
   // variabili per errori
+  String errore_generico = "";
   String usernameError = "";
   String passwordError = "";
   String password_verificaError = "";
@@ -46,6 +49,7 @@ class _RegistazionePageState extends State<RegistazionePage> {
     final codice_attivazione = codice_attivazioneController.text.trim();
 
     setState(() {
+      errore_generico = "";
       usernameError = "";
       passwordError = "";
       password_verificaError = "";
@@ -54,21 +58,33 @@ class _RegistazionePageState extends State<RegistazionePage> {
 
     bool valid = validationBlock((when) {
       when(username.isEmpty,
-              () => setState(() => usernameError = "Campo obbligatorio"));
+          () => setState(() => usernameError = "Campo obbligatorio"));
       when(password.isEmpty,
-              () => setState(() => passwordError = "Campo obbligatorio"));
+          () => setState(() => passwordError = "Campo obbligatorio"));
       when(password_verifica.isEmpty,
-              () => setState(() => password_verificaError = "Campo obbligatorio"));
-      when(((password.isNotEmpty & password_verifica.isNotEmpty) &(password != password_verifica)),
-              () => setState(() => password_verificaError = "Le password non coincidono"));
+          () => setState(() => password_verificaError = "Campo obbligatorio"));
+      when(
+          ((password.isNotEmpty & password_verifica.isNotEmpty) &
+              (password != password_verifica)),
+          () => setState(
+              () => password_verificaError = "Le password non coincidono"));
       when(codice_attivazione.isEmpty,
-              () => setState(() => codice_attivazioneError = "Campo obbligatorio"));
+          () => setState(() => codice_attivazioneError = "Campo obbligatorio"));
     });
 
-    if (valid) {
+    if (GetIt.instance<ParametriModel>().host_server == "") {
+      valid = false;
+      setState(() {
+        errore_generico = "Parametri di comunicazione non presenti";
+      });
+    }
 
-      valid = await GetIt.instance<DbRepository>().utente_registra(username: username, password: password, codice_attivazione: codice_attivazione);
-      print("valid: "+valid.toString());
+    if (valid) {
+      valid = await GetIt.instance<DbRepository>().utente_registra(
+          username: username,
+          password: password,
+          codice_attivazione: codice_attivazione);
+      print("valid: " + valid.toString());
       if (valid) {
 // aggiorna la pasword nei parametri e ricaricai parametri
 
@@ -76,9 +92,9 @@ class _RegistazionePageState extends State<RegistazionePage> {
 
         Navigator.popAndPushNamed(context, LoginPage.routeName);
       } else {
-        setState(() => codice_attivazioneError = "Errore durante la registrazione, riprovare");
+        setState(() =>
+            errore_generico = "Errore durante la registrazione, riprovare");
       }
-
     } else {
       print("Registrazione fallita");
     }
@@ -89,9 +105,10 @@ class _RegistazionePageState extends State<RegistazionePage> {
   }
 
   void test_comunicazine(BuildContext context) async {
-      final response = await GetIt.instance<HttpRepository>().http!.trasmissione_test();
+    final response =
+        await GetIt.instance<HttpRepository>().http!.trasmissione_test();
 
-    print(response);
+    // print(response);
   }
 
   @override
@@ -115,7 +132,8 @@ class _RegistazionePageState extends State<RegistazionePage> {
                       textCapitalization: TextCapitalization.characters,
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                        contentPadding:
+                            EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                         border: OutlineInputBorder(),
                         labelText: 'Username',
                         errorText: (usernameError == "") ? null : usernameError,
@@ -132,7 +150,8 @@ class _RegistazionePageState extends State<RegistazionePage> {
                       obscureText: true,
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                        contentPadding:
+                            EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                         border: OutlineInputBorder(),
                         labelText: 'Password',
                         errorText: (passwordError == "") ? null : passwordError,
@@ -149,10 +168,13 @@ class _RegistazionePageState extends State<RegistazionePage> {
                       obscureText: true,
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                        contentPadding:
+                            EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                         border: OutlineInputBorder(),
                         labelText: 'Conferma Password',
-                        errorText: (password_verificaError == "") ? null : password_verificaError,
+                        errorText: (password_verificaError == "")
+                            ? null
+                            : password_verificaError,
                         icon: Icon(
                           Icons.password,
                         ),
@@ -170,13 +192,26 @@ class _RegistazionePageState extends State<RegistazionePage> {
                       // keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.done,
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                        contentPadding:
+                            EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                         border: OutlineInputBorder(),
                         labelText: 'Codice attivazione',
-                        errorText: (codice_attivazioneError == "") ? null : codice_attivazioneError,
+                        errorText: (codice_attivazioneError == "")
+                            ? null
+                            : codice_attivazioneError,
                         icon: Icon(
                           Icons.vpn_key,
                         ),
+                      ),
+                    ),
+                  ),
+                  if(errore_generico != "")
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      errore_generico,
+                      style: TextStyle(
+                        color: Colors.red,
                       ),
                     ),
                   ),

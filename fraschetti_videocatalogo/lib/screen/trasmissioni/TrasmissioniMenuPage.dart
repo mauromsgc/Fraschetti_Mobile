@@ -66,17 +66,24 @@ class _TrasmissioniMenuListaState extends State<TrasmissioniMenuLista> {
     // software_aggiorna(context);
 
     await sql_aggiorna(context);
-    // ricaricare dati utente
-    GetIt.instance<UtenteCorrenteModel>().inizializza(); // ricarica anche ParametriModel
+    // ricaricare dati utente e controllare prametri
+    // GetIt.instance<UtenteCorrenteModel>().inizializza(); // ricarica anche ParametriModel
+    if((GetIt.instance<UtenteCorrenteModel>().utente_username == "") || (GetIt.instance<UtenteCorrenteModel>().utente_in_attivita == 0)){
+      print("Videocatalogo disattivato");
+      return;
+    }
 
     await comunicazioni_aggiorna(context);
 
     // immagini_aggiorna(context); //NEW PROMO
 
     await dati_aggiorna(context);
-    // ricaricare dati utente
+    // ricaricare dati utente econtrollare parametri e se utente ancora attivo
     GetIt.instance<UtenteCorrenteModel>().inizializza(); // ricarica anche ParametriModel
-
+    if((GetIt.instance<UtenteCorrenteModel>().utente_username == "") || (GetIt.instance<UtenteCorrenteModel>().utente_in_attivita == 0)){
+      print("Videocatalogo disattivato");
+      return;
+    }
     // attivazione_listino();
 
     // attivazione promozioni();

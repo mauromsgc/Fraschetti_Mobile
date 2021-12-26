@@ -388,7 +388,7 @@ class ParametriModel {
     // $o_output.esito_descrizione:=""
     // $o_output.errori:=New collection
     // $o_output.sql_eseguire:=New collection
-    // $o_output.codice_attivazione_nuvo:=""
+    // $o_output.codice_attivazione_nuovo:=""
     // $o_output.videocatalogo_uid:=""
 
     if (risposta["aggiornabenti_disponibili"] == true) {

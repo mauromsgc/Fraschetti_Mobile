@@ -7,6 +7,7 @@ import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/famigliaModel.dart';
 import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
 import 'package:fraschetti_videocatalogo/models/promozioneModel.dart';
+import 'package:fraschetti_videocatalogo/models/utenteCorrenteModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:fraschetti_videocatalogo/utils/Utility.dart';
 import 'package:get_it/get_it.dart';
@@ -515,7 +516,7 @@ descrizione CHAR(30,0)
     // $o_output.esito_descrizione:=""
     // $o_output.errori:=New collection
     // $o_output.sql_eseguire:=New collection
-    // $o_output.codice_attivazione_nuvo:=""
+    // $o_output.codice_attivazione_nuovo:=""
     // $o_output.videocatalogo_uid:=""
 
     if (esito == true) {
@@ -534,6 +535,8 @@ descrizione CHAR(30,0)
           // ricaricare i parametri
           await GetIt.instance<ParametriModel>().inizializza();
           await GetIt.instance<ParametriModel>().password_aggiorna(password);
+          ParametriModel parametri = GetIt.instance<ParametriModel>();
+          final t1 = 0;
         } on DatabaseException catch (errore_db) {
           esito = false;
           print("Errore sql: " + errore_db.toString());
@@ -603,6 +606,13 @@ descrizione CHAR(30,0)
             final valid = await GetIt.instance<DbRepository>()
                 .sql_aggiorna_scarica(
                 sql_id_aggiornare: sql_id);
+
+            GetIt.instance<UtenteCorrenteModel>().inizializza(); // ricarica anche ParametriModel
+            if((GetIt.instance<UtenteCorrenteModel>().utente_username == "") || (GetIt.instance<UtenteCorrenteModel>().utente_in_attivita == 0)){
+              print("Videocatalogo disattivato");
+              return true;
+            }
+
             if (valid) {
               print("Aggiornamento completato");
             } else {
@@ -683,6 +693,7 @@ descrizione CHAR(30,0)
             GetIt.instance<ParametriModel>()
                 .agg_sql_id_aggiorna(aggiornamento_id_ultimo_int);
           }
+
         } on DatabaseException catch (errore_db) {
           esito = false;
           print("Errore sql: " + errore_db.toString());

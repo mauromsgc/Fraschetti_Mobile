@@ -28,10 +28,8 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
   }
 
   void testComunicazioneOnSubmit(BuildContext context) async {
-    final response = await GetIt
-        .instance<HttpRepository>()
-        .http!
-        .trasmissione_test();
+    final response = await GetIt.instance<HttpRepository>().http!.trasmissione_test();
+
   }
 
   void immagini_aggiorna_mancanti(BuildContext context) async {

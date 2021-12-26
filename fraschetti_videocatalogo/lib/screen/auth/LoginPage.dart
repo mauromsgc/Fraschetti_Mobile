@@ -2,11 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
+import 'package:fraschetti_videocatalogo/models/utenteCorrenteModel.dart';
+import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/RegistrazionePage.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoLista.dart';
 import 'package:fraschetti_videocatalogo/utils/ValidationBlock.dart';
 import 'package:get_it/get_it.dart';
-
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -24,6 +25,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
 
   // variabili per errori
+  String errore_generico = "";
   String usernameError = "";
   String passwordError = "";
 
@@ -32,8 +34,8 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
 
     usernameController.text = GetIt.instance<ParametriModel>().username;
-    setState(() {    });
-    print("username: "+usernameController.text);
+    setState(() {});
+    print("username: " + usernameController.text);
     log(GetIt.instance<ParametriModel>().password);
   }
 
@@ -42,11 +44,12 @@ class _LoginPageState extends State<LoginPage> {
     final password = passwordController.text.trim();
 
     setState(() {
+      errore_generico = "";
       usernameError = "";
       passwordError = "";
     });
 
-    final valid = validationBlock((when) {
+    bool valid = validationBlock((when) {
       when(username.isEmpty,
           () => setState(() => usernameError = "Campo obbligatorio"));
       when(password.isEmpty,
@@ -54,10 +57,26 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     if (valid) {
-      // print("Username $username Password = $password");
-      Navigator.popAndPushNamed(context, CatalogoListaPage.routeName);
+      if ((GetIt.instance<ParametriModel>().username == username) &&
+          (GetIt.instance<ParametriModel>().password == password)) {
+        valid = true;
+      } else {
+        valid = false;
+        setState(() {
+          errore_generico = "Dati utente non corretti";
+        });
+      }
+
+      print("valid: " + valid.toString());
+      if (valid) {
+        // print("Username $username Password = $password");
+        GetIt.instance<UtenteCorrenteModel>().inizializza();
+        Navigator.popAndPushNamed(context, CatalogoListaPage.routeName);
+      } else {
+        print("Login fallito");
+      }
     } else {
-      print("Login fallito");
+      print("Registrazione fallita");
     }
   }
 
@@ -119,7 +138,16 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  Container(
+                  if(errore_generico != "")
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        errore_generico,
+                        style: TextStyle(
+                          color: Colors.red,
+                        ),
+                      ),
+                    ), Container(
                     padding: EdgeInsets.all(5),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(elevation: 2),
