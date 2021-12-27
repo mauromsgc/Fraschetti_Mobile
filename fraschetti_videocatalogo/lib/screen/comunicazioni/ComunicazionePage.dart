@@ -72,7 +72,7 @@ class _ComunicazionePageState extends State<ComunicazionePage> {
 
   _scheda_successiva() {
     int indice = argomenti.indice;
-    if (indice < argomenti.comunicazioni_lista!.length) {
+    if ((indice+1) < argomenti.comunicazioni_lista!.length) {
       indice = indice + 1;
       argomenti.indice = indice;
       _comunicazione_scheda_carica(

@@ -18,6 +18,8 @@ class CatalogoModel {
   String famiglie_colore = "";
   String immagine = "";
   String immagine_preview = "";
+  int scheda_tecnica_id = 0;
+  int scheda_sicurezza_id = 0;
   List<CodiceModel> codici = [];
 
   CatalogoModel({
@@ -34,6 +36,8 @@ class CatalogoModel {
     this.famiglie_colore = "",
     this.immagine = "",
     this.immagine_preview = "",
+    this.scheda_tecnica_id = 0,
+    this.scheda_sicurezza_id = 0,
     // this.codici,
   });
 
@@ -53,6 +57,8 @@ class CatalogoModel {
     final famiglie_colore = map["famiglie_colore"];
     final immagine = map["immagine"];
     final immagine_preview = map["immagine_preview"];
+    final scheda_tecnica_id = map["scheda_tecnica_id"];
+    final scheda_sicurezza_id = map["scheda_sicurezza_id"];
 
     oggetto = CatalogoModel(
       id: id,
@@ -68,6 +74,8 @@ class CatalogoModel {
       famiglie_colore: famiglie_colore,
       immagine: immagine,
       immagine_preview: immagine_preview,
+      scheda_tecnica_id: scheda_tecnica_id,
+      scheda_sicurezza_id: scheda_sicurezza_id,
     );
 
     return oggetto;
@@ -227,11 +235,15 @@ class CatalogoModel {
     famiglie.descrizione as famiglie_descrizione,
     famiglie.colore as famiglie_colore,
     ifnull(catalogo_img.immagine, '') as immagine,
-    ifnull(catalogo_img.immagine_preview, '') as immagine_preview
+    ifnull(catalogo_img.immagine_preview, '') as immagine_preview,
+    ifnull(schede_tecnica.id, '') as scheda_tecnica_id,
+    ifnull(schede_sicurezza.id, '') as scheda_sicurezza_id
     FROM catalogo
     LEFT JOIN famiglie ON famiglie.id = catalogo.famiglia
     LEFT JOIN catalogo_img ON catalogo_img.catalogo_id = catalogo.id
     LEFT JOIN promozioni_codici ON promozioni_codici.catalogo_id = catalogo.id 
+    LEFT JOIN schede AS schede_tecnica ON schede_tecnica.catalogo_id = catalogo.id AND schede_tecnica.tipo = "tecnica"
+    LEFT JOIN schede AS schede_sicurezza ON schede_sicurezza.catalogo_id = catalogo.id AND schede_sicurezza.tipo = "sicurezza"
     """;
 
     List<String> sql_join = [];

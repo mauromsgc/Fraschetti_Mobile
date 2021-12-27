@@ -56,7 +56,7 @@ class HttpClient {
     throw RequestError(data["error"]);
   }
 
-  Future<Map<String, dynamic>> trasmissione_test(
+  Future<Map<String, dynamic>> connessione_test(
       {String p_host_server = ""}) async {
     // effettua un test di trasmissione
 

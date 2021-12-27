@@ -68,8 +68,8 @@ class _ParametriConnesionePageState extends State<ParametriConnesionePage> {
 
   }
 
-  void test_comunicazione_ui(BuildContext context) async {
-    test_comunicazione_alert(context);
+  void connessione_test_ui(BuildContext context) async {
+    connessione_test_alert(context);
   }
 
 
@@ -144,8 +144,8 @@ class _ParametriConnesionePageState extends State<ParametriConnesionePage> {
                         padding: EdgeInsets.all(5),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(elevation: 2),
-                          onPressed: () => test_comunicazione_ui(context),
-                          child: Text('Test trasmissione'),
+                          onPressed: () => connessione_test_ui(context),
+                          child: Text('Test connessione'),
                         ),
                       ),
                     ],

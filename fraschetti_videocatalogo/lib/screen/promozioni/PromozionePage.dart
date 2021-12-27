@@ -33,25 +33,32 @@ class _PromozionePageState extends State<PromozionePage> {
   PromozioneModel promozione_scheda = PromozioneModel();
   List<Map> articoli_lista = [];
 
+  int lista_elementi_numero = 0;
+  int lista_elementi_indice = 0;
+
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
   void didChangeDependencies() {
-
     if (ModalRoute.of(context)?.settings.arguments != null) {
       argomenti =
-      ModalRoute.of(context)?.settings.arguments as PromozionePageArgs;
-      if(argomenti.promozioni_lista != null){
-      int indice = argomenti.indice;
-      // all'apertura va caricato prima
-      _promozione_scheda_carica(id: argomenti.promozioni_lista![indice]["id"]);
+          ModalRoute.of(context)?.settings.arguments as PromozionePageArgs;
+      if (argomenti.promozioni_lista != null) {
+        int indice = argomenti.indice;
+        // all'apertura va caricato prima
+        _promozione_scheda_carica(
+            id: argomenti.promozioni_lista![indice]["id"]);
+        lista_elementi_numero = argomenti.promozioni_lista!.length;
+        lista_elementi_indice = argomenti.indice;
       }
-      if((argomenti.promozione_id != 0) && (argomenti.promozioni_lista == null)){
+      if ((argomenti.promozione_id != 0) &&
+          (argomenti.promozioni_lista == null)) {
         _promozione_scheda_carica(id: argomenti.promozione_id);
+        lista_elementi_numero = 1;
+        lista_elementi_indice = 0;
       }
     }
 
@@ -70,21 +77,23 @@ class _PromozionePageState extends State<PromozionePage> {
     setState(() {});
   }
 
-  _scheda_precedente(){
+  _scheda_precedente() {
     int indice = argomenti.indice;
-    if(indice != 0){
-      indice = indice-1;
+    if (indice != 0) {
+      indice = indice - 1;
       argomenti.indice = indice;
       _promozione_scheda_carica(id: argomenti.promozioni_lista![indice]["id"]);
+      lista_elementi_indice = argomenti.indice;
     }
-
   }
-  _scheda_successiva(){
+
+  _scheda_successiva() {
     int indice = argomenti.indice;
-    if(indice < argomenti.promozioni_lista!.length){
-      indice = indice+1;
+    if ((indice+1) < argomenti.promozioni_lista!.length) {
+      indice = indice + 1;
       argomenti.indice = indice;
       _promozione_scheda_carica(id: argomenti.promozioni_lista![indice]["id"]);
+      lista_elementi_indice = argomenti.indice;
     }
   }
 
@@ -109,7 +118,18 @@ class _PromozionePageState extends State<PromozionePage> {
           //   onPressed: () {},
           //   icon: Icon(Icons.menu),
           // ),
-          title: Text(widget.pagina_titolo),
+          title: Column(
+            children: [
+              Text(widget.pagina_titolo),
+              // if(lista_elementi_numero >0)
+              Text(
+                "${lista_elementi_indice+1} di ${lista_elementi_numero}",
+                style: TextStyle(
+                  fontSize: 10,
+                ),
+              ),
+            ],
+          ),
           centerTitle: true,
         ),
         bottomNavigationBar: BottomBarWidget(),
@@ -188,8 +208,7 @@ class _PromozionePageState extends State<PromozionePage> {
                   height: 400,
                   // width: 400,
                   child: SchedaImmagineWidget(
-                      immagine_base64:
-                      promozione_scheda.immagine),
+                      immagine_base64: promozione_scheda.immagine),
                 ),
               ),
               SizedBox(width: 5),
@@ -234,8 +253,7 @@ class _PromozionePageState extends State<PromozionePage> {
                     width: 10,
                     decoration: BoxDecoration(
                       color: Color(
-                          int.parse(articoli_lista[index]['famiglie_colore'])
-                      ),
+                          int.parse(articoli_lista[index]['famiglie_colore'])),
                     ),
                   ),
                   Container(
@@ -243,7 +261,7 @@ class _PromozionePageState extends State<PromozionePage> {
                     decoration: MyBoxDecoration().MyBox(),
                     child: ListaImmagineWidget(
                         immagine_base64: articoli_lista[index]
-                        ['immagine_preview']),
+                            ['immagine_preview']),
                   ),
                   Expanded(
                     child: Stack(
@@ -267,9 +285,17 @@ class _PromozionePageState extends State<PromozionePage> {
                             child: Container(
                               width: 60,
                               height: 25,
-                              decoration: MyBoxDecoration().MyBox(),
-                              child: Image.asset(
-                                  "assets/immagini/splash_screen.png"),
+                              color: Colors.green.shade800,
+                              // child: Image.asset("assets/immagini/splash_screen.png"),
+                              child: Center(
+                                child: Text(
+                                  "Nuovo",
+                                  style: TextStyle(
+                                    color: Colors.yellow,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         if (articoli_lista[index]['promozione_id'] > 0)
@@ -279,9 +305,17 @@ class _PromozionePageState extends State<PromozionePage> {
                             child: Container(
                               width: 60,
                               height: 25,
-                              decoration: MyBoxDecoration().MyBox(),
-                              child: Image.asset(
-                                  "assets/immagini/splash_screen.png"),
+                              color: Colors.blue.shade800,
+                              // child: Image.asset("assets/immagini/splash_screen.png"),
+                              child: Center(
+                                child: Text(
+                                  "Offerta",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                       ],
@@ -305,5 +339,4 @@ class _PromozionePageState extends State<PromozionePage> {
       return Image.asset("assets/immagini/splash_screen.png");
     }
   }
-
 }

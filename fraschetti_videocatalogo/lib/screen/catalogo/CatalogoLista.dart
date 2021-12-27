@@ -29,7 +29,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
   List<AssortimentoModel> assortimenti_lista = [];
   List<Map> articoli_lista = [];
 
-  int lista_numero_elementi = 0;
+  int lista_elementi_numero = 0;
 
   final TextEditingController descrizioneController = TextEditingController();
   final TextEditingController codiceController = TextEditingController();
@@ -65,7 +65,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
 
   Future<void> _articoli_lista_svuota() async {
     articoli_lista = [];
-    lista_numero_elementi = articoli_lista.length;
+    lista_elementi_numero = articoli_lista.length;
     setState(() {});
   }
 
@@ -91,7 +91,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
       ordinamento_campo: ordinamento_campo,
       ordinamento_verso: ordinamento_verso,
     );
-    lista_numero_elementi = articoli_lista.length;
+    lista_elementi_numero = articoli_lista.length;
     setState(() {});
   }
 
@@ -302,14 +302,15 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
           title: Column(
             children: [
               Text(widget.pagina_titolo),
-              // if(lista_numero_elementi >0)
+              // if(lista_elementi_numero >0)
               Text(
-                "${lista_numero_elementi} elementi",
+                "${lista_elementi_numero} elementi",
                 style: TextStyle(
                   fontSize: 10,
                 ),
               ),
-            ],),
+            ],
+          ),
           centerTitle: true,
           actions: [
             // IconButton(
@@ -570,8 +571,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                     width: 10,
                     decoration: BoxDecoration(
                       color: Color(
-                          int.parse(articoli_lista[index]['famiglie_colore'])
-                      ),
+                          int.parse(articoli_lista[index]['famiglie_colore'])),
                     ),
                   ),
                   Container(
@@ -601,13 +601,20 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                             top: 0,
                             right: 0,
                             child: Container(
-                                width: 60,
-                                height: 25,
-                                decoration: MyBoxDecoration().MyBox(),
-                                // child: Image.asset(
-                                //     "assets/immagini/splash_screen.png"),
-                                child: Text("Nuovo"),
+                              width: 60,
+                              height: 25,
+                              color: Colors.green.shade800,
+                              // child: Image.asset("assets/immagini/splash_screen.png"),
+                              child: Center(
+                                child: Text(
+                                  "Nuovo",
+                                  style: TextStyle(
+                                    color: Colors.yellow,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
+                            ),
                           ),
                         if (articoli_lista[index]['promozione_id'] > 0)
                           Positioned(
@@ -615,15 +622,24 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                             right: 0,
                             child: InkWell(
                               onTap: () {
-                                promozione_mostra(context, promozione_id: articoli_lista[index]['promozione_id']);
+                                promozione_mostra(context,
+                                    promozione_id: articoli_lista[index]
+                                        ['promozione_id']);
                               },
                               child: Container(
                                 width: 60,
                                 height: 25,
-                                decoration: MyBoxDecoration().MyBox(),
-                                // child: Image.asset(
-                                //     "assets/immagini/splash_screen.png"),
-                                child: Text("Offerta"),
+                                color: Colors.blue.shade800,
+                                // child: Image.asset("assets/immagini/splash_screen.png"),
+                                child: Center(
+                                  child: Text(
+                                    "Offerta",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ),

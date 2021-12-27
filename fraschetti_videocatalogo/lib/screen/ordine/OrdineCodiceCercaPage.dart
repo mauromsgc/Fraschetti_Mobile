@@ -25,7 +25,7 @@ class OrdineCodiceCercaPage extends StatefulWidget {
 class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
   List<Map> codici_lista = [];
 
-  int lista_numero_elementi = 0;
+  int lista_elementi_numero = 0;
 
   final TextEditingController descrizioneController = TextEditingController();
   final TextEditingController codiceController = TextEditingController();
@@ -37,7 +37,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
 
   Future<void> _codici__lista_svuota() async {
     codici_lista = [];
-    lista_numero_elementi = codici_lista.length;
+    lista_elementi_numero = codici_lista.length;
     setState(() {});
   }
 
@@ -51,7 +51,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
       descrizione: descrizioneController.text,
       codice: codiceController.text,
     );
-    lista_numero_elementi = codici_lista.length;
+    lista_elementi_numero = codici_lista.length;
     setState(() {});
   }
 
@@ -100,9 +100,9 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
           title: Column(
             children: [
               Text(widget.pagina_titolo),
-              // if(lista_numero_elementi >0)
+              // if(lista_elementi_numero >0)
               Text(
-                "${lista_numero_elementi} elementi",
+                "${lista_elementi_numero} elementi",
                 style: TextStyle(
                   fontSize: 10,
                 ),

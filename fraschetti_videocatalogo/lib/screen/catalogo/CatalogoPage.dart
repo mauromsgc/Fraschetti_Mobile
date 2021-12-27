@@ -38,6 +38,9 @@ class _CatalogoPageState extends State<CatalogoPage> {
   CatalogoPageArgs argomenti = CatalogoPageArgs();
   CatalogoModel catalogo_scheda = CatalogoModel();
 
+  int lista_elementi_numero = 0;
+  int lista_elementi_indice = 0;
+
   @override
   void initState() {
     super.initState();
@@ -53,6 +56,8 @@ class _CatalogoPageState extends State<CatalogoPage> {
       int indice = argomenti.indice;
       // all'apertura va caricato prima
       _catalogo_scheda_carica(id: argomenti.articoli_lista![indice]["id"]);
+      lista_elementi_numero = argomenti.articoli_lista!.length;
+      lista_elementi_indice = argomenti.indice;
     }
 
     super.didChangeDependencies();
@@ -74,15 +79,17 @@ class _CatalogoPageState extends State<CatalogoPage> {
       indice = indice-1;
       argomenti.indice = indice;
     _catalogo_scheda_carica(id: argomenti.articoli_lista![indice]["id"]);
+      lista_elementi_indice = argomenti.indice;
     }
 
   }
-  _scheda_successiva(){
+  _scheda_successiva() {
     int indice = argomenti.indice;
-    if(indice < argomenti.articoli_lista!.length){
+    if((indice+1) < argomenti.articoli_lista!.length){
       indice = indice+1;
       argomenti.indice = indice;
       _catalogo_scheda_carica(id: argomenti.articoli_lista![indice]["id"]);
+      lista_elementi_indice = argomenti.indice;
     }
   }
 
@@ -125,6 +132,35 @@ class _CatalogoPageState extends State<CatalogoPage> {
     );
   }
 
+  void scheda_tecnica_mostra () {
+    // If (Is compiled mode)
+    // C_TEXT($vtSoapTrasm)
+    // $vtSoapTrasm:=Parametro ("ServerSoap";"")
+    // $vtLinkAprire:="http://"+$vtSoapTrasm+"/4DACTION/W_PortaleLogIn/"+<>vUserName+"_"+$vPass+"_"+$vtMacAddress
+    //
+    // Else
+    // $vtLinkAprire:="http://localhost:8080/4DACTION/W_PortaleLogIn/"+<>vUserName+"_"+$vPass+"_"+$vtMacAddress
+    //
+    // End if
+
+    // OPEN URL(PortaleFraschetti (True)+"_SchedaTecSic_"+String([Schede]ID))
+
+  }
+
+  void scheda_tecnica_sicurezza () {
+    // If (Is compiled mode)
+    // C_TEXT($vtSoapTrasm)
+    // $vtSoapTrasm:=Parametro ("ServerSoap";"")
+    // $vtLinkAprire:="http://"+$vtSoapTrasm+"/4DACTION/W_PortaleLogIn/"+<>vUserName+"_"+$vPass+"_"+$vtMacAddress
+    //
+    // Else
+    // $vtLinkAprire:="http://localhost:8080/4DACTION/W_PortaleLogIn/"+<>vUserName+"_"+$vPass+"_"+$vtMacAddress
+    //
+    // End if
+
+    // OPEN URL(PortaleFraschetti (True)+"_SchedaTecSic_"+String([Schede]ID))
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +172,18 @@ class _CatalogoPageState extends State<CatalogoPage> {
           //   onPressed: () {},
           //   icon: Icon(Icons.menu),
           // ),
-          title: Text(widget.pagina_titolo),
+          title: Column(
+            children: [
+              Text(widget.pagina_titolo),
+              // if(lista_elementi_numero >0)
+              Text(
+                "${lista_elementi_indice+1} di ${lista_elementi_numero}",
+                style: TextStyle(
+                  fontSize: 10,
+                ),
+              ),
+            ],
+          ),
           centerTitle: true,
         ),
         bottomNavigationBar: BottomBarWidget(),
@@ -236,9 +283,17 @@ class _CatalogoPageState extends State<CatalogoPage> {
                               Container(
                                 width: 60,
                                 height: 50,
-                                decoration: MyBoxDecoration().MyBox(),
+                                color: Colors.green.shade800,
                                 // child: Image.asset("assets/immagini/splash_screen.png"),
-                                child: Text("Nuovo"),
+                                child: Center(
+                                  child: Text(
+                                    "Nuovo",
+                                    style: TextStyle(
+                                      color: Colors.yellow,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
                               ),
                             if (catalogo_scheda.promozione_id >0)
                               InkWell(
@@ -248,9 +303,17 @@ class _CatalogoPageState extends State<CatalogoPage> {
                                 child: Container(
                                   width: 60,
                                   height: 50,
-                                  // decoration: MyBoxDecoration().MyBox(),
+                                  color: Colors.blue.shade800,
                                   // child: Image.asset("assets/immagini/splash_screen.png"),
-                                  child: Text("Offerta"),
+                                  child: Center(
+                                      child: Text(
+                                          "Offerta",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      ),
+                                  ),
                                 ),
                               ),
                           ],),
@@ -331,22 +394,106 @@ class _CatalogoPageState extends State<CatalogoPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                flex: 1,
                 child: Container(
-                  padding: EdgeInsets.all(5),
-                  decoration: MyBoxDecoration().MyBox(),
-                  child: SizedBox(
-                    height: 300,
-                    child: SingleChildScrollView(
-                      child: Text(
-                        catalogo_scheda.descrizione,
-                        textAlign: TextAlign.justify,
-                        // style: TextStyle(fontSize: 12.0),
+                  // height: MediaQuery.of(context).size.height,
+                  padding: EdgeInsets.only(left: 5),
+                  child: Column(
+                    // mainAxisSize: MainAxisSize.max,
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+
+                      // new LayoutBuilder(
+                      //     builder: (BuildContext context, BoxConstraints constraints) {
+                      //       return Container(
+                      //         height: 200,
+                      //         decoration: MyBoxDecoration().MyBox(),
+                      //         child: Text(
+                      //           catalogo_scheda.descrizione,
+                      //           textAlign: TextAlign.justify,
+                      //           // style: TextStyle(fontSize: 12.0),
+                      //         ),
+                      //       );
+                      //
+                      //       // if(constraints.maxWidth > 200.0) {
+                      //       //   return new Text("BIG ${constraints.maxHeight}");
+                      //       // } else {
+                      //       //   return new Text("SMALL ${constraints.maxHeight}");
+                      //       // }
+                      //     }
+                      // ),
+
+                        Container(
+                          padding: EdgeInsets.all(5),
+                          decoration: MyBoxDecoration().MyBox(),
+                          child: SizedBox(
+                            height: 300,
+                            child: SingleChildScrollView(
+                              child: Text(
+                                catalogo_scheda.descrizione,
+                                textAlign: TextAlign.justify,
+                                // style: TextStyle(fontSize: 12.0),
+                              ),
+                            ),
+                          ),
+                        ),
+                      Container(
+                        decoration: MyBoxDecoration().MyBox(),
+                        child: Column(
+                          children: [
+
+                            if(catalogo_scheda.scheda_tecnica_id != 0)
+                            Container(
+                              // height: 50,
+                              width: 170,
+                              padding: EdgeInsets.all(5),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(elevation: 2),
+                                onPressed: () {
+                                  // versione_aggiornamento_mostra(context);
+                                },
+                                child: Text('Scheda tecnica'),
+                              ),
+                            ),
+                            if(catalogo_scheda.scheda_sicurezza_id != 0)
+                              Container(
+                              // height: 50,
+                              width: 170,
+                              padding: EdgeInsets.all(5),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(elevation: 2),
+                                onPressed: () {
+                                  // versione_aggiornamento_mostra(context);
+                                },
+                                child: Text('Scheda sicurezza'),
+                              ),
+                            ),
+
+                          ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
               ),
+
+              // Expanded(
+              //   flex: 1,
+              //   child: Container(
+              //     padding: EdgeInsets.all(5),
+              //     decoration: MyBoxDecoration().MyBox(),
+              //     child: SizedBox(
+              //       height: 300,
+              //       child: SingleChildScrollView(
+              //         child: Text(
+              //           catalogo_scheda.descrizione,
+              //           textAlign: TextAlign.justify,
+              //           // style: TextStyle(fontSize: 12.0),
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+
               SizedBox(width: 5),
               Expanded(
                 flex: 2,

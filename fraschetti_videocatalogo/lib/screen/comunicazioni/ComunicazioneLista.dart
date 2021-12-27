@@ -20,7 +20,7 @@ class ComunicazioneListaPage extends StatefulWidget {
 class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
   List<Map> comunicazioni_lista = [];
 
-  int lista_numero_elementi = 0;
+  int lista_elementi_numero = 0;
 
   final TextEditingController oggettoController = TextEditingController();
   final TextEditingController idController = TextEditingController();
@@ -29,14 +29,14 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
   void initState() {
     super.initState();
 
-    if (lista_numero_elementi == 0) {
+    if (lista_elementi_numero == 0) {
       _comunicazioni_lista_cerca(stato: "da_leggere");
     }
   }
 
   Future<void> _comunicazioni_lista_svuota() async {
     comunicazioni_lista = [];
-    lista_numero_elementi = comunicazioni_lista.length;
+    lista_elementi_numero = comunicazioni_lista.length;
     setState(() {});
   }
 
@@ -56,7 +56,7 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
       id: (idController.text != "") ? int.parse(idController.text) : 0,
       stato: stato,
     );
-    lista_numero_elementi =
+    lista_elementi_numero =
         comunicazioni_lista.length;
     setState(() {});
   }
@@ -86,9 +86,9 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
           title: Column(
             children: [
               Text(widget.pagina_titolo),
-              // if(lista_numero_elementi >0)
+              // if(lista_elementi_numero >0)
               Text(
-                  "${lista_numero_elementi} elementi",
+                  "${lista_elementi_numero} elementi",
                   style: TextStyle(
                     fontSize: 10,
                   ),

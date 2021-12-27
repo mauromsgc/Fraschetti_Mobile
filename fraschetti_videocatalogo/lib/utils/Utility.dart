@@ -26,23 +26,23 @@ Future<String> get_mac_address() async {
 }
 
 
-Future<bool> test_comunicazione(BuildContext context) async {
-  bool test_comunicazione = false;
+Future<bool> connessione_test(BuildContext context) async {
+  bool connessione_test = false;
   final response =
-  await GetIt.instance<HttpRepository>().http!.trasmissione_test();
+  await GetIt.instance<HttpRepository>().http!.connessione_test();
 
   if(response["data"] == "OK"){
-    test_comunicazione = true;
+    connessione_test = true;
   }
 
-  return test_comunicazione;
+  return connessione_test;
 }
 
-void test_comunicazione_alert(BuildContext context) async {
+void connessione_test_alert(BuildContext context) async {
   bool test_esito = false;
   String test_esito_testo = "";
 
-  test_esito = await test_comunicazione(context);
+  test_esito = await connessione_test(context);
 
   if(test_esito == true){
     test_esito_testo = """Test di connessione eseguito con esito positivo""";
@@ -56,7 +56,7 @@ e riprovare""";
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text("Test trasmissione"),
+        title: Text("Test connessione"),
         content: Text("${test_esito_testo}"),
         actions: <Widget>[
           ElevatedButton(

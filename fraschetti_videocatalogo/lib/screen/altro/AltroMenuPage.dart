@@ -28,11 +28,6 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
     // selezione al cliente e va in ordine
   }
 
-  void test_comunicazione_ui(BuildContext context) async {
-    test_comunicazione_alert(context);
-  }
-
-
   void immagini_aggiorna_mancanti(BuildContext context) async {
     final valid =
         await GetIt.instance<DbRepository>().immagini_mancanti_aggiorna();
@@ -137,26 +132,16 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
+                      // solo per agenti
                       height: 50,
                       width: double.maxFinite,
                       padding: EdgeInsets.all(5),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(elevation: 2),
                         onPressed: () {
-                          Navigator.pushNamed(
-                              context, ParametriConnesionePage.routeName);
+                          versione_aggiornamento_mostra(context);
                         },
-                        child: Text('Parametri di connessione'),
-                      ),
-                    ),
-                    Container(
-                      height: 50,
-                      width: double.maxFinite,
-                      padding: EdgeInsets.all(5),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(elevation: 2),
-                        onPressed: () => test_comunicazione_ui(context),
-                        child: Text('Test trasmissione'),
+                        child: Text('Versioni aggiornamento'),
                       ),
                     ),
                     Container(
@@ -171,19 +156,6 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
                       //   },
                       //   child: Text('Invia email senza prezzi'),
                       // ),
-                    ),
-                    Container(
-                      // solo per agenti
-                      height: 50,
-                      width: double.maxFinite,
-                      padding: EdgeInsets.all(5),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(elevation: 2),
-                        onPressed: () {
-                          versione_aggiornamento_mostra(context);
-                        },
-                        child: Text('Versioni aggiornamento'),
-                      ),
                     ),
                     Container(
                       // lo fa già il server

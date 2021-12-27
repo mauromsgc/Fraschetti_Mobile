@@ -35,7 +35,7 @@ class _ClienteListaState extends State<ClienteLista> {
   ClientiListaPageArgs argomenti = ClientiListaPageArgs();
   List<Map> clienti_lista = [];
 
-  int lista_numero_elementi = 0;
+  int lista_elementi_numero = 0;
 
   final TextEditingController nominativoController = TextEditingController();
   final TextEditingController codiceController = TextEditingController();
@@ -59,7 +59,7 @@ class _ClienteListaState extends State<ClienteLista> {
 
   Future<void> _clienti_lista_svuota() async {
     clienti_lista = [];
-    lista_numero_elementi = clienti_lista.length;
+    lista_elementi_numero = clienti_lista.length;
     setState(() {});
   }
 
@@ -80,7 +80,7 @@ class _ClienteListaState extends State<ClienteLista> {
       codice: codiceController.text,
       selezione: selezione,
     );
-    lista_numero_elementi = clienti_lista.length;
+    lista_elementi_numero = clienti_lista.length;
     setState(() {});
   }
 
@@ -119,9 +119,9 @@ class _ClienteListaState extends State<ClienteLista> {
           title: Column(
             children: [
               Text(widget.pagina_titolo),
-              // if(lista_numero_elementi >0)
+              // if(lista_elementi_numero >0)
               Text(
-                "${lista_numero_elementi} elementi",
+                "${lista_elementi_numero} elementi",
                 style: TextStyle(
                   fontSize: 10,
                 ),

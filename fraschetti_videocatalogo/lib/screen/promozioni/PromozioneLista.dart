@@ -20,7 +20,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
   List<Map> tour_offerte_lista = [];
   List<Map> promozioni_lista = [];
 
-  int lista_numero_elementi = 0;
+  int lista_elementi_numero = 0;
 
   final TextEditingController descrizioneController = TextEditingController();
 
@@ -29,7 +29,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
     super.initState();
 
     _tour_offerte_lista_carica();
-    if(lista_numero_elementi == 0){
+    if(lista_elementi_numero == 0){
     _promozioni_lista_cerca();
     }
   }
@@ -42,7 +42,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
 
   Future<void> _promozioni_lista_svuota() async {
     promozioni_lista = [];
-    lista_numero_elementi = promozioni_lista.length;
+    lista_elementi_numero = promozioni_lista.length;
     setState(() {});
   }
 
@@ -60,7 +60,7 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
       tour_singolo: tour_singolo,
       tour_intero: tour_intero,
     );
-    lista_numero_elementi = promozioni_lista.length;
+    lista_elementi_numero = promozioni_lista.length;
     setState(() {});
   }
 
@@ -129,9 +129,9 @@ class _PromozioneListaPageState extends State<PromozioneListaPage> {
           title: Column(
             children: [
               Text(widget.pagina_titolo),
-              // if(lista_numero_elementi >0)
+              // if(lista_elementi_numero >0)
               Text(
-                  "${lista_numero_elementi} elementi",
+                  "${lista_elementi_numero} elementi",
                   style: TextStyle(
                     fontSize: 10,
                   ),

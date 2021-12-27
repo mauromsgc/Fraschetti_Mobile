@@ -53,7 +53,7 @@ class _TestPageState extends State<TestPage> {
     pageStato.value.catalogo_scheda = await CatalogoModel.scheda_form_id(
       id: id,
     );
-    // pageStato.value.lista_numero_elementi =
+    // pageStato.value.lista_elementi_numero =
     //     pageStato.value.articoli_lista.length;
     pageStato.refresh();
   }
