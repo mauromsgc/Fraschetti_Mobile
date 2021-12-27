@@ -11,6 +11,7 @@ import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/altro/TestPage.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/ParametriConnesionePage.dart';
+import 'package:fraschetti_videocatalogo/utils/Utility.dart';
 import 'package:get_it/get_it.dart';
 
 class AltroMenuLista extends StatefulWidget {
@@ -27,14 +28,14 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
     // selezione al cliente e va in ordine
   }
 
-  void testComunicazioneOnSubmit(BuildContext context) async {
-    final response = await GetIt.instance<HttpRepository>().http!.trasmissione_test();
-
+  void test_comunicazione_ui(BuildContext context) async {
+    test_comunicazione_alert(context);
   }
 
+
   void immagini_aggiorna_mancanti(BuildContext context) async {
-    final valid = await GetIt.instance<DbRepository>()
-        .immagini_mancanti_aggiorna();
+    final valid =
+        await GetIt.instance<DbRepository>().immagini_mancanti_aggiorna();
   }
 
   void versione_aggiornamento_mostra(BuildContext context) async {
@@ -47,19 +48,16 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
   """;
     // final valid = await GetIt.instance<DbRepository>().immagini_mancanti_aggiorna();
 
-
     showDialog<String>(
       context: context,
-      builder: (BuildContext context) =>
-          AlertDialog(
-            title: Text("Verisione aggiornamento"),
-            content: Text("${versione_aggiornamento}"),
-            actions: <Widget>[
-              ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text("Chiudi")),
-            ],
-          ),
+      builder: (BuildContext context) => AlertDialog(
+        title: Text("Verisione aggiornamento"),
+        content: Text("${versione_aggiornamento}"),
+        actions: <Widget>[
+          ElevatedButton(
+              onPressed: () => Navigator.pop(context), child: Text("Chiudi")),
+        ],
+      ),
     );
   }
 
@@ -69,19 +67,16 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
   """;
     // final valid = await GetIt.instance<DbRepository>().immagini_mancanti_aggiorna();
 
-
     showDialog<String>(
       context: context,
-      builder: (BuildContext context) =>
-          AlertDialog(
-            title: Text("Videocatalogo"),
-            content: Text("${versione_aggiornamento}"),
-            actions: <Widget>[
-              ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text("Chiudi")),
-            ],
-          ),
+      builder: (BuildContext context) => AlertDialog(
+        title: Text("Videocatalogo"),
+        content: Text("${versione_aggiornamento}"),
+        actions: <Widget>[
+          ElevatedButton(
+              onPressed: () => Navigator.pop(context), child: Text("Chiudi")),
+        ],
+      ),
     );
   }
 
@@ -103,7 +98,6 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
     }
 
     // Navigator.pushNamed(context, TestPage.routeName);
-
   }
 
   void test_3() async {
@@ -161,7 +155,7 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
                       padding: EdgeInsets.all(5),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(elevation: 2),
-                        onPressed: () => testComunicazioneOnSubmit(context),
+                        onPressed: () => test_comunicazione_ui(context),
                         child: Text('Test trasmissione'),
                       ),
                     ),
@@ -261,7 +255,6 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
                       height: 100,
                       width: double.maxFinite,
                       padding: EdgeInsets.all(5),
-
                     ),
                     Container(
                       // lo fa già il server

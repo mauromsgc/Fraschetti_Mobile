@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
+import 'package:fraschetti_videocatalogo/utils/Utility.dart';
 import 'package:fraschetti_videocatalogo/utils/ValidationBlock.dart';
 import 'package:get_it/get_it.dart';
 
@@ -67,22 +68,11 @@ class _ParametriConnesionePageState extends State<ParametriConnesionePage> {
 
   }
 
-  void test_comunicazine(BuildContext context) async {
-    try {
-      final response = await GetIt
-          .instance<HttpRepository>()
-          .http!
-          .trasmissione_test(p_host_server: host_serverController.text);
-      print(response);
-
-      if (response["data"] == "OK") {
-        print("Trasmissione OK");
-      }
-    }catch(e){
-      print("Trasmissione Fallita");
-    }
-
+  void test_comunicazione_ui(BuildContext context) async {
+    test_comunicazione_alert(context);
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +144,7 @@ class _ParametriConnesionePageState extends State<ParametriConnesionePage> {
                         padding: EdgeInsets.all(5),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(elevation: 2),
-                          onPressed: () => test_comunicazine(context),
+                          onPressed: () => test_comunicazione_ui(context),
                           child: Text('Test trasmissione'),
                         ),
                       ),

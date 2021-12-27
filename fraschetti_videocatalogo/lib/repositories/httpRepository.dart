@@ -9,8 +9,6 @@ import 'package:logger/logger.dart';
 // import 'package:focus_login_sessioni_utente/repositories/SessionRepository.dart';
 // import 'package:focus_login_sessioni_utente/repositories/UserRepository.dart';
 
-
-
 // Questa è una delle classi più importanti di tutta l'applicazione.
 //
 // In generale il HttpRepository è la classe di riferimento per fare chiamate HTTP verso l'esterno, ed implementa
@@ -58,41 +56,51 @@ class HttpClient {
     throw RequestError(data["error"]);
   }
 
-
-  Future<Map<String, dynamic>> trasmissione_test({String p_host_server = ""}) async {
+  Future<Map<String, dynamic>> trasmissione_test(
+      {String p_host_server = ""}) async {
     // effettua un test di trasmissione
 
-    String host_server = GetIt.instance<ParametriModel>().host_server;
-    if(p_host_server != ""){
-      host_server = p_host_server;
-    }
+    Map<String, dynamic> data = {};
+    try {
+      String host_server = GetIt.instance<ParametriModel>().host_server;
+      if (p_host_server != "") {
+        host_server = p_host_server;
+      }
 
-    final String _api = "/4daction/Post_mv1_ConnessioneTest";
-    var url = Uri.parse(host_server + _api);
+      final String _api = "/4daction/Post_mv1_ConnessioneTest";
+      var url = Uri.parse(host_server + _api);
 
-    Map<String, dynamic> data_invio = {};
-    data_invio["data"] = "Post.Test";
-    data_invio["parametri"] = GetIt.instance<ParametriModel>().toMap().toString();
+      Map<String, dynamic> data_invio = {};
+      data_invio["data"] = "Post.Test";
+      data_invio["parametri"] =
+          GetIt.instance<ParametriModel>().toMap().toString();
 
-    // var response = await http.post(url, body: data_invio);
+      // var response = await http.post(url, body: data_invio);
 
-    // trasformando in json mi arrivano i dati nel body
-    final _oggetto_invio = json.encode(data_invio);
-    var response = await http.post(url, body: _oggetto_invio);
+      // trasformando in json mi arrivano i dati nel body
+      final _oggetto_invio = json.encode(data_invio);
+      var response = await http.post(url, body: _oggetto_invio);
 
-    print(response.body);
-    print(response.statusCode);
+      print("response.body: ${response.body}");
+      print("response.statusCode: ${response.statusCode}");
 
-    final data = json.decode(response.body);
-    print(data);
+      if (response.statusCode == 200) {
+        data = json.decode(response.body);
+        print("data = json.decode(response.body): ${data}");
 
-    if (response.statusCode == 200) {
+        return data;
+      }
+    } catch (exception) {
+      // print("Errore test di connessione: ${exception}");
+      print("Errore test di connessione");
+      // data = json.decode("{'data': 'KO'}");
+      data["data"] = "KO";
+    } finally {
       return data;
     }
 
     throw RequestError(data["error"]);
   }
-
 
   void mac_address_leggi() {
     // legge i mac address
@@ -110,7 +118,8 @@ class HttpClient {
     // verifica se ci sono aggiornamenti da scaricare
   }
 
-  Future<Map<String, dynamic>> utente_registra ({required Map<String, dynamic> data_invio}) async {
+  Future<Map<String, dynamic>> utente_registra(
+      {required Map<String, dynamic> data_invio}) async {
     // effettua la registrazione del videocatalogo
     print("httpRepositoty utente_registra inizio");
 
@@ -135,10 +144,10 @@ class HttpClient {
     }
 
     throw RequestError(data_risposta["error"]);
-
   }
 
-  Future<Map<String, dynamic>> sql_aggiorna ({required Map<String, dynamic> data_invio}) async {
+  Future<Map<String, dynamic>> sql_aggiorna(
+      {required Map<String, dynamic> data_invio}) async {
     // scarica le comunicazioni
     print("httpRepositoty sql_aggiorna inizio");
 
@@ -163,10 +172,10 @@ class HttpClient {
     }
 
     throw RequestError(data_risposta["error"]);
-
   }
 
-  Future<Map<String, dynamic>> dati_aggiorna ({required Map<String, dynamic> data_invio}) async {
+  Future<Map<String, dynamic>> dati_aggiorna(
+      {required Map<String, dynamic> data_invio}) async {
     // scarica gli aggiornamenti
     print("httpRepositoty dati_aggiorna inizio");
 
@@ -191,10 +200,10 @@ class HttpClient {
     }
 
     throw RequestError(data_risposta["error"]);
-
   }
 
-  Future<Map<String, dynamic>> comunicazioni_aggiorna ({required Map<String, dynamic> data_invio}) async {
+  Future<Map<String, dynamic>> comunicazioni_aggiorna(
+      {required Map<String, dynamic> data_invio}) async {
     // scarica le comunicazioni
     print("httpRepositoty comunicazioni_aggiorna inizio");
 
@@ -219,11 +228,10 @@ class HttpClient {
     }
 
     throw RequestError(data_risposta["error"]);
-
   }
 
-
-  Future<Map<String, dynamic>> immagini_aggiorna ({required Map<String, dynamic> data_invio}) async {
+  Future<Map<String, dynamic>> immagini_aggiorna(
+      {required Map<String, dynamic> data_invio}) async {
     // scarica le immagini
     print("httpRepositoty immagini_aggiorna inizio");
 
@@ -248,11 +256,10 @@ class HttpClient {
     }
 
     throw RequestError(data_risposta["error"]);
-
   }
 
-
-  Future<Map<String, dynamic>> aggiornamenti_controlla ({required Map<String, dynamic> data_invio}) async {
+  Future<Map<String, dynamic>> aggiornamenti_controlla(
+      {required Map<String, dynamic> data_invio}) async {
     // controlla se ci sono aggiornamenti da scaricare
     print("httpRepositoty aggiornamenti_controlla inizio");
 
@@ -277,16 +284,11 @@ class HttpClient {
     }
 
     throw RequestError(data_risposta["error"]);
-
   }
 
   void videocatalogo_disinstalla() {
     // disinstalla il videocatalogo
   }
-
-
-
-
 
   void aggiornamenti_scarica() {
     // scarica gli aggiornamenti

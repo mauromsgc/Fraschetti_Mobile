@@ -359,7 +359,7 @@ class ParametriModel {
 
     // dati generali
     Map<String, dynamic> data_invio = {};
-    data_invio["azione"] = "Post.Aggior.AggiornamentiVerifica";
+    data_invio["azione"] = "Post.Aggior.AggiornamentiControlla";
     data_invio["azione_versione"] = 1;
     data_invio["username"] = username;
     data_invio["videocatalogo_versione"] = VIDEOCATALOGO_VERSIONE;
@@ -369,10 +369,11 @@ class ParametriModel {
 
     // presenti in base al tipo di chimata
     // aggiungo tutti i campi dei parametri da verificare
-    data_invio["agg_dati_id"] = this.agg_dati_id;
-    data_invio["agg_immagini_id"] = this.agg_immagini_id;
-    data_invio["agg_comunicazioni_id"] = this.agg_comunicazioni_id;
-    data_invio["agg_sql_id"] = this.agg_sql_id; // non utilizzato
+    data_invio["aggiornamento_id_ultimo_immagini"] = this.agg_immagini_id;
+    data_invio["aggiornamento_id_ultimo_dati"] = this.agg_dati_id;
+    data_invio["aggiornamento_id_ultimo_script"] = this.agg_sql_id; // non utilizzato
+    data_invio["aggiornamento_id_ultimo_comunicazioni"] = this.agg_comunicazioni_id;
+
 
     try {
       risposta = await GetIt.instance<HttpRepository>()
@@ -387,11 +388,10 @@ class ParametriModel {
     // $o_output.esito_codice:=0
     // $o_output.esito_descrizione:=""
     // $o_output.errori:=New collection
-    // $o_output.sql_eseguire:=New collection
-    // $o_output.codice_attivazione_nuovo:=""
+    // $o_output.aggiornamenti_presenti:=boolean
     // $o_output.videocatalogo_uid:=""
 
-    if (risposta["aggiornabenti_disponibili"] == true) {
+    if (risposta["aggiornamenti_presenti"] == true) {
       esito = true;
     } else {
       print(risposta["errori"].toString());

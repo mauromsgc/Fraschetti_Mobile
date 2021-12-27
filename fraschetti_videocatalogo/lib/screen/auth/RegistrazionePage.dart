@@ -8,6 +8,7 @@ import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/LoginPage.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/ParametriConnesionePage.dart';
+import 'package:fraschetti_videocatalogo/utils/Utility.dart';
 import 'package:fraschetti_videocatalogo/utils/ValidationBlock.dart';
 import 'package:get_it/get_it.dart';
 
@@ -104,12 +105,10 @@ class _RegistazionePageState extends State<RegistazionePage> {
     Navigator.of(context).pushNamed("parametri_connessione");
   }
 
-  void test_comunicazine(BuildContext context) async {
-    final response =
-        await GetIt.instance<HttpRepository>().http!.trasmissione_test();
-
-    // print(response);
+  void test_comunicazione_ui(BuildContext context) async {
+    test_comunicazione_alert(context);
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -227,8 +226,8 @@ class _RegistazionePageState extends State<RegistazionePage> {
                     padding: EdgeInsets.all(5),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(elevation: 2),
-                      onPressed: () => test_comunicazine(context),
-                      child: Text('Test comunicazione'),
+                      onPressed: () => test_comunicazione_ui(context),
+                      child: Text('Test trasmissione'),
                     ),
                   ),
                   Container(
