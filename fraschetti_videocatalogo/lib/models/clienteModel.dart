@@ -45,48 +45,32 @@ class ClienteModel {
     this.giacenze_disattivate = 0,
   });
 
-  ClienteModel.cliente_cerca({int cliente_id = 0, String codice = ""}) {
-    ClienteModel.cliente_da(cliente_id: cliente_id, codice: codice);
-  }
+  // ClienteModel.cliente_cerca({int cliente_id = 0, String codice = ""}) {
+  //   ClienteModel.cliente_da(cliente_id: cliente_id, codice: codice);
+  // }
 
   factory ClienteModel.fromMap(Map<String, dynamic> map) {
-    final id = map["id"];
-    final agente_id = map["agente_id"];
-    final ragione_sociale = map["ragione_sociale"];
-    final localita = map["localita"];
-    final indirizzo = map["indirizzo"];
-    final username = map["username"];
-    final sede = map["sede"];
-    final codice = map["codice"];
-    final stato = map["stato"];
-    final videocatalogo_disattivato = map["videocatalogo_disattivato"];
-    final offerte_disattivate = map["offerte_disattivate"];
-    final comunicazioni_disattivate = map["comunicazioni_disattivate"];
-    final ordini_disattivati = map["ordini_disattivati"];
-    final servizi_disattivati = map["servizi_disattivati"];
-    final disponibilita_disattivate = map["disponibilita_disattivate"];
-    final prezzi_non_visibili = map["prezzi_non_visibili"];
-    final giacenze_disattivate = map["giacenze_disattivate"];
+    ClienteModel oggetto = ClienteModel();
 
-    return ClienteModel(
-      id: id,
-      agente_id: agente_id,
-      ragione_sociale: ragione_sociale,
-      localita: localita,
-      indirizzo: indirizzo,
-      username: username,
-      sede: sede,
-      codice: codice,
-      stato: stato,
-      videocatalogo_disattivato: videocatalogo_disattivato,
-      offerte_disattivate: offerte_disattivate,
-      comunicazioni_disattivate: comunicazioni_disattivate,
-      ordini_disattivati: ordini_disattivati,
-      servizi_disattivati: servizi_disattivati,
-      disponibilita_disattivate: disponibilita_disattivate,
-      prezzi_non_visibili: prezzi_non_visibili,
-      giacenze_disattivate: giacenze_disattivate,
-    );
+    oggetto.id = map["id"];
+    oggetto.agente_id = map["agente_id"];
+    oggetto.ragione_sociale = map["ragione_sociale"];
+    oggetto.localita = map["localita"];
+    oggetto.indirizzo = map["indirizzo"];
+    oggetto.username = map["username"];
+    oggetto.sede = map["sede"];
+    oggetto.codice = map["codice"];
+    oggetto.stato = map["stato"];
+    oggetto.videocatalogo_disattivato = map["videocatalogo_disattivato"];
+    oggetto.offerte_disattivate = map["offerte_disattivate"];
+    oggetto.comunicazioni_disattivate = map["comunicazioni_disattivate"];
+    oggetto.ordini_disattivati = map["ordini_disattivati"];
+    oggetto.servizi_disattivati = map["servizi_disattivati"];
+    oggetto.disponibilita_disattivate = map["disponibilita_disattivate"];
+    oggetto.prezzi_non_visibili = map["prezzi_non_visibili"];
+    oggetto.giacenze_disattivate = map["giacenze_disattivate"];
+
+    return oggetto;
   }
 
   Map<String, dynamic> toMap() => {

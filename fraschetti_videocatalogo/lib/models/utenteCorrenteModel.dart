@@ -70,21 +70,21 @@ class UtenteCorrenteModel {
   int moduli_disattivati = 0;
   int giacenze_disattivate = 0;
 
-  void inizializza() {
+  void inizializza() async {
     String username_tipo = "";
     GetIt.instance<ParametriModel>().inizializza(); // ricarica i dati
     ParametriModel parametri = GetIt.instance<ParametriModel>();
 
     if (parametri.username.length > 0) {
-      username_tipo = parametri.username.substring(1, 2);
+      username_tipo = parametri.username.substring(0, 1);
       this.utente_username = parametri.username;
-      this.utente_codice = parametri.username.substring(2);
+      this.utente_codice = parametri.username.substring(1);
     }
 
     switch (username_tipo) {
       case "A":
-        AgenteModel agente_record =
-            AgenteModel.agente_cerca(codice: this.utente_codice);
+        // AgenteModel agente_record = AgenteModel.agente_cerca(codice: this.utente_codice);
+        AgenteModel agente_record = await AgenteModel.agente_da(codice: this.utente_codice);
 
         this.agente_id = agente_record.id;
         this.utente_id = agente_record.id;
@@ -110,8 +110,8 @@ class UtenteCorrenteModel {
 
         break;
       case "S":
-        AgenteModel agente_record =
-            AgenteModel.agente_cerca(codice: this.utente_codice);
+        // AgenteModel agente_record = AgenteModel.agente_cerca(codice: this.utente_codice);
+        AgenteModel agente_record = await AgenteModel.agente_da(codice: this.utente_codice);
 
         this.agente_id = agente_record.id;
         this.utente_id = agente_record.id;
@@ -146,8 +146,8 @@ class UtenteCorrenteModel {
       case "P":
       case "B":
         // lo eseguirà per P e B
-        ClienteModel cliente_record =
-            ClienteModel.cliente_cerca(codice: this.utente_codice);
+        // ClienteModel cliente_record = ClienteModel.cliente_cerca(codice: this.utente_codice);
+        ClienteModel cliente_record = await ClienteModel.cliente_da(codice: this.utente_codice);
 
         this.agente_id = cliente_record.agente_id;
         this.utente_id = cliente_record.id;
@@ -173,4 +173,39 @@ class UtenteCorrenteModel {
         break;
     }
   }
+
+  String url_schede_tecniche_sicurezza (){
+
+
+    // If (Is compiled mode)
+    // C_TEXT($vtSoapTrasm)
+    // $vtSoapTrasm:=Parametro ("ServerSoap";"")
+    // $vtLinkAprire:="http://"+$vtSoapTrasm+"/4DACTION/W_PortaleLogIn/"+<>vUserName+"_"+$vPass+"_"+$vtMacAddress
+    //
+    // Else
+    // $vtLinkAprire:="http://localhost:8080/4DACTION/W_PortaleLogIn/"+<>vUserName+"_"+$vPass+"_"+$vtMacAddress
+    //
+    // End if
+
+    // OPEN URL(PortaleFraschetti (True)+"_SchedaTecSic_"+String([Schede]ID))
+
+    String url = "";
+
+    url = GetIt.instance<ParametriModel>().host_server;
+
+    url +="/4DACTION/W_PortaleLogIn/"+this.utente_username;
+    if(this.utente_id != 0){
+      url +="_"+this.utente_id.toString();
+    }else{
+      url +="_msgc03025";
+    }
+    // url +="_"+this.mac_address;  // non ho il mac_address
+    url +="_";  // al posto del mac_address altrimenti sul server non va bene
+
+    // url_aprire +="_SchedaTecSic_"+scheda_id.toString();
+
+    return url;
+
+  }
+
 }

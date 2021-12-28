@@ -111,58 +111,26 @@ class ParametriModel {
     this.log_attivo = 0;
   }
 
-  ParametriModel.per_from_map({
-    this.id = 0,
-    this.agg_dati_id = 0,
-    this.agg_immagini_id = 0,
-    this.agg_comunicazioni_id = 0,
-    this.agg_sql_id = 0,
-    this.aggiornamento_obbligatorio = 0,
-    this.anagrafica_aggiornamento = 0,
-    this.promozioni_attivazione = 0,
-    this.sql_versione = 0,
-    this.host_server = "http://www.fraschetti.com:8080",
-    this.codice_macchina = "",
-    this.username = "",
-    this.password = "",
-    this.videocatalogo_uid = "",
-    this.log_attivo = 0,
-  });
-
   factory ParametriModel.fromMap(Map<String, dynamic> map) {
-    final id = map["id"];
-    final agg_dati_id = map["agg_dati_id"];
-    final agg_immagini_id = map["agg_immagini_id"];
-    final agg_comunicazioni_id = map["agg_comunicazioni_id"];
-    final agg_sql_id = map["agg_sql_id"];
-    final aggiornamento_obbligatorio = map["aggiornamento_obbligatorio"];
-    final anagrafica_aggiornamento = map["anagrafica_aggiornamento"];
-    final promozioni_attivazione = map["promozioni_attivazione"];
-    final sql_versione = map["sql_versione"];
-    final host_server = map["host_server"];
-    final codice_macchina = map["codice_macchina"];
-    final username = map["username"];
-    final password = map["password"];
-    final videocatalogo_uid = map["videocatalogo_uid"];
-    final log_attivo = map["log_attivo"];
+    ParametriModel oggetto = ParametriModel();
 
-    return ParametriModel.per_from_map(
-      id: id,
-      agg_dati_id: agg_dati_id,
-      agg_immagini_id: agg_immagini_id,
-      agg_comunicazioni_id: agg_comunicazioni_id,
-      agg_sql_id: agg_sql_id,
-      aggiornamento_obbligatorio: aggiornamento_obbligatorio,
-      anagrafica_aggiornamento: anagrafica_aggiornamento,
-      promozioni_attivazione: promozioni_attivazione,
-      sql_versione: sql_versione,
-      host_server: host_server,
-      codice_macchina: codice_macchina,
-      username: username,
-      password: password,
-      videocatalogo_uid: videocatalogo_uid,
-      log_attivo: log_attivo,
-    );
+    oggetto.id = map["id"];
+    oggetto.agg_dati_id = map["agg_dati_id"];
+    oggetto.agg_immagini_id = map["agg_immagini_id"];
+    oggetto.agg_comunicazioni_id = map["agg_comunicazioni_id"];
+    oggetto.agg_sql_id = map["agg_sql_id"];
+    oggetto.aggiornamento_obbligatorio = map["aggiornamento_obbligatorio"];
+    oggetto.anagrafica_aggiornamento = map["anagrafica_aggiornamento"];
+    oggetto.promozioni_attivazione = map["promozioni_attivazione"];
+    oggetto.sql_versione = map["sql_versione"];
+    oggetto.host_server = map["host_server"];
+    oggetto.codice_macchina = map["codice_macchina"];
+    oggetto.username = map["username"];
+    oggetto.password = map["password"];
+    oggetto.videocatalogo_uid = map["videocatalogo_uid"];
+    oggetto.log_attivo = map["log_attivo"];
+
+    return oggetto;
   }
 
   Map<String, dynamic> toMap() => {
@@ -402,6 +370,7 @@ class ParametriModel {
 
     return esito;
   }
+
 
 
 }

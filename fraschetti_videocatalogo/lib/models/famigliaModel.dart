@@ -21,19 +21,15 @@ class FamigliaModel {
   String abbreviazione = "";
 
   factory FamigliaModel.fromMap(Map<String, dynamic> map) {
-    final id = map["id"];
-    final codice = map["codice"];
-    final descrizione = map["descrizione"];
-    final colore = map["colore"];
-    final abbreviazione = map["abbreviazione"];
+    FamigliaModel oggetto = FamigliaModel();
 
-    return FamigliaModel(
-      id: id,
-      codice: codice,
-      descrizione: descrizione,
-      colore: colore,
-      abbreviazione: abbreviazione,
-    );
+    oggetto.id = map["id"];
+    oggetto.codice = map["codice"];
+    oggetto.descrizione = map["descrizione"];
+    oggetto.colore = map["colore"];
+    oggetto.abbreviazione = map["abbreviazione"];
+
+    return oggetto;
   }
 
   Map<String, dynamic> toMap() => {

@@ -29,25 +29,18 @@ class PromozioneModel {
   });
 
   factory PromozioneModel.fromMap(Map<String, dynamic> map) {
-    final id = map["id"];
-    final nome = map["nome"];
-    final sconto = map["sconto"];
-    final permanente = map["permanente"];
-    final tour = map["tour"];
-    final ordinatore = map["ordinatore"];
-    final immagine = map["immagine"];
-    final immagine_preview = map["immagine_preview"];
+    PromozioneModel oggetto = PromozioneModel();
 
-    return PromozioneModel(
-      id: id,
-      nome: nome,
-      sconto: sconto,
-      permanente: permanente,
-      tour: tour,
-      ordinatore: ordinatore,
-      immagine: immagine,
-      immagine_preview: immagine_preview,
-    );
+    oggetto.id = map["id"];
+    oggetto.nome = map["nome"];
+    oggetto.sconto = map["sconto"];
+    oggetto.permanente = map["permanente"];
+    oggetto.tour = map["tour"];
+    oggetto.ordinatore = map["ordinatore"];
+    oggetto.immagine = map["immagine"];
+    oggetto.immagine_preview = map["immagine_preview"];
+
+    return oggetto;
   }
 
   Map<String, dynamic> toMap() => {

@@ -89,7 +89,7 @@ class _ClienteListaState extends State<ClienteLista> {
         .cliente_seleziona(cliente_id: clienti_id);
 
     if (cliente_selezionato == true) {
-      // selezione al cliente e va in ordine
+      // seleziona il cliente e va in ordine
       GetIt.instance<SessioneModel>().ordine_top_menu_indice = 1;
 
       switch (argomenti.pagina_chiamante_route) {

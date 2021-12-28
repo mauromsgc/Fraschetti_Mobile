@@ -18,8 +18,23 @@ im pagine menu trasmissioni mettere uno spazio tra i primi due pulsanti e gli al
 
 // --------------------------------------------------
 
+- caricare la lista ordine cliente selezionato
+- creare record riga ordine
+- cancellazone riga ordine
+- modifica riga ordine
 
-- per aggiornamenti fere query execute batch
+- inserimento e modifica note
+
+- nuovo ordine
+- elimina ordine e note
+
+- gestione ordine in sospeso, creazione e eliminazione record (creare tabella)
+
+
+
+
+
+- per aggiornamenti fare query execute batch
 
 - in catalogo lista e altre liste dopo ricerca fare scroll on top
 

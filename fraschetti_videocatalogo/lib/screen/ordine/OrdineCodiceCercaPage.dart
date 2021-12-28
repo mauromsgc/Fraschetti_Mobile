@@ -23,7 +23,7 @@ class OrdineCodiceCercaPage extends StatefulWidget {
 }
 
 class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
-  List<Map> codici_lista = [];
+  List<CodiceModel> codici_lista = [];
 
   int lista_elementi_numero = 0;
 
@@ -46,7 +46,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
     String descrizione = "",
     String codice = "",
   }) async {
-    codici_lista = await CodiceModel.codici_lista_ricerca(
+    codici_lista = await CodiceModel.codici_lista(
       id: 0,
       descrizione: descrizioneController.text,
       codice: codiceController.text,
@@ -265,7 +265,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
   }
 
 // riga lista
-  Widget ListaWidget(List<Map> codici_lista) {
+  Widget ListaWidget(List<CodiceModel> codici_lista) {
     return Flexible(
       child: ListView.separated(
         separatorBuilder: (context, index) => Divider(
@@ -278,10 +278,10 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
-              listaClick(context, codici_lista[index]["id"]);
+              listaClick(context, codici_lista[index].id);
             },
             onLongPress: () {
-              articolo_disponibilita_mostra(context, codici_lista[index]["id"]);
+              articolo_disponibilita_mostra(context, codici_lista[index].id);
             },
             child: Container(
               // height: 50,
@@ -297,8 +297,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
                       // height: 40,
                       decoration: MyBoxDecoration().MyBox(),
                       child: ListaImmagineWidget(
-                          immagine_base64: codici_lista[index]
-                              ['immagine_preview']),
+                          immagine_base64: codici_lista[index].immagine_preview),
                     ),
                   ),
                   Expanded(
@@ -326,7 +325,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
                                 // color: Colors.orange,
                                 decoration: MyBoxDecoration().MyBox(),
                                 child: Text(
-                                  codici_lista[index]["numero"],
+                                  codici_lista[index].numero,
                                   // style: TextStyle(fontSize: 14.0),
                                 ),
                               ),
@@ -337,7 +336,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
                                   alignment: Alignment.centerLeft,
                                   decoration: MyBoxDecoration().MyBox(),
                                   child: Text(
-                                    codici_lista[index]["catalogo_nome"],
+                                    codici_lista[index].catalogo_nome,
                                     style: TextStyle(
                                       // fontSize: 14.0,
                                       overflow: TextOverflow.ellipsis,
@@ -347,7 +346,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
                               ),
                             ],
                           ),
-                          if (codici_lista[index]["descrizione"] != "")
+                          if (codici_lista[index].descrizione != "")
                             Row(
                               children: <Widget>[
                                 Expanded(
@@ -357,7 +356,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
                                     alignment: Alignment.centerLeft,
                                     decoration: MyBoxDecoration().MyBox(),
                                     child: Text(
-                                      codici_lista[index]["descrizione"],
+                                      codici_lista[index].descrizione,
                                       style: TextStyle(
                                         // fontSize: 14.0,
                                         overflow: TextOverflow.ellipsis,
@@ -370,7 +369,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
-                              if (codici_lista[index]["quantita_massima"] > 0)
+                              if (codici_lista[index].quantita_massima > 0)
                                 Container(
                                   // quantità
                                   padding: EdgeInsets.all(2),
@@ -378,12 +377,11 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
                                   width: 50,
                                   decoration: MyBoxDecoration().MyBox(),
                                   child: Text(
-                                    codici_lista[index]["quantita_massima"]
-                                        .toString(),
+                                    codici_lista[index].quantita_massima.toString(),
                                     // style: TextStyle(fontSize: 18.0),
                                   ),
                                 ),
-                              if (codici_lista[index]["quantita_massima"] > 0)
+                              if (codici_lista[index].quantita_massima > 0)
                                 Text(" x "),
                               Container(
                                 // quantità
@@ -392,7 +390,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
                                 width: 50,
                                 decoration: MyBoxDecoration().MyBox(),
                                 child: Text(
-                                  codici_lista[index]["pezzi"].toString(),
+                                  codici_lista[index].pezzi.toString(),
                                   // style: TextStyle(fontSize: 18.0),
                                 ),
                               ),
@@ -403,7 +401,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
                                 width: 20,
                                 decoration: MyBoxDecoration().MyBox(),
                                 child: Text(
-                                  (codici_lista[index]["apribile"] == 1)
+                                  (codici_lista[index].apribile == 1)
                                       ? "*"
                                       : "",
                                   // style: TextStyle(fontSize: 18.0),
@@ -416,7 +414,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
                                 width: 30,
                                 decoration: MyBoxDecoration().MyBox(),
                                 child: Text(
-                                  codici_lista[index]["um"],
+                                  codici_lista[index].um,
                                   // style: TextStyle(fontSize: 18.0),
                                 ),
                               ),
@@ -427,7 +425,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
                                 width: 80,
                                 decoration: MyBoxDecoration().MyBox(),
                                 child: Text(
-                                  codici_lista[index]["prezzo"].toString(),
+                                  codici_lista[index].prezzo.toString(),
                                   // style: TextStyle(fontSize: 18.0),
                                 ),
                               ),
@@ -438,7 +436,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
                                 width: 25,
                                 decoration: MyBoxDecoration().MyBox(),
                                 child: Text(
-                                  codici_lista[index]["iva"].toString(),
+                                  codici_lista[index].iva.toString(),
                                   // style: TextStyle(fontSize: 18.0),
                                 ),
                               ),

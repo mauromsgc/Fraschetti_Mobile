@@ -7,12 +7,15 @@ import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/codiceModel.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
+import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
+import 'package:fraschetti_videocatalogo/models/utenteCorrenteModel.dart';
 import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaWidget.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/ClientiLista.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
 import 'package:fraschetti_videocatalogo/screen/promozioni/PromozionePage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 import 'package:get_it/get_it.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CatalogoPageArgs {
   List<Map>? articoli_lista;
@@ -44,15 +47,13 @@ class _CatalogoPageState extends State<CatalogoPage> {
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
   void didChangeDependencies() {
-
     if (ModalRoute.of(context)?.settings.arguments != null) {
       argomenti =
-      ModalRoute.of(context)?.settings.arguments as CatalogoPageArgs;
+          ModalRoute.of(context)?.settings.arguments as CatalogoPageArgs;
       int indice = argomenti.indice;
       // all'apertura va caricato prima
       _catalogo_scheda_carica(id: argomenti.articoli_lista![indice]["id"]);
@@ -63,7 +64,6 @@ class _CatalogoPageState extends State<CatalogoPage> {
     super.didChangeDependencies();
   }
 
-
   Future<void> _catalogo_scheda_carica({
     int id = 0,
   }) async {
@@ -73,20 +73,20 @@ class _CatalogoPageState extends State<CatalogoPage> {
     setState(() {});
   }
 
-  _scheda_precedente(){
+  _scheda_precedente() {
     int indice = argomenti.indice;
-    if(indice != 0){
-      indice = indice-1;
+    if (indice != 0) {
+      indice = indice - 1;
       argomenti.indice = indice;
-    _catalogo_scheda_carica(id: argomenti.articoli_lista![indice]["id"]);
+      _catalogo_scheda_carica(id: argomenti.articoli_lista![indice]["id"]);
       lista_elementi_indice = argomenti.indice;
     }
-
   }
+
   _scheda_successiva() {
     int indice = argomenti.indice;
-    if((indice+1) < argomenti.articoli_lista!.length){
-      indice = indice+1;
+    if ((indice + 1) < argomenti.articoli_lista!.length) {
+      indice = indice + 1;
       argomenti.indice = indice;
       _catalogo_scheda_carica(id: argomenti.articoli_lista![indice]["id"]);
       lista_elementi_indice = argomenti.indice;
@@ -114,11 +114,13 @@ class _CatalogoPageState extends State<CatalogoPage> {
     }
   }
 
-  void articolo_disponibilita_mostra(BuildContext context, CodiceModel codice_scheda) {
+  void articolo_disponibilita_mostra(
+      BuildContext context, CodiceModel codice_scheda) {
     // Navigator.pushNamed(context, DisponibilitaPage.routeName);
     showDialog(
       context: context,
-      builder: DisponibilitaDialogWidget(codice_id: codice_scheda.id, returnValue: true),
+      builder: DisponibilitaDialogWidget(
+          codice_id: codice_scheda.id, returnValue: true),
     );
   }
 
@@ -132,34 +134,17 @@ class _CatalogoPageState extends State<CatalogoPage> {
     );
   }
 
-  void scheda_tecnica_mostra () {
-    // If (Is compiled mode)
-    // C_TEXT($vtSoapTrasm)
-    // $vtSoapTrasm:=Parametro ("ServerSoap";"")
-    // $vtLinkAprire:="http://"+$vtSoapTrasm+"/4DACTION/W_PortaleLogIn/"+<>vUserName+"_"+$vPass+"_"+$vtMacAddress
-    //
-    // Else
-    // $vtLinkAprire:="http://localhost:8080/4DACTION/W_PortaleLogIn/"+<>vUserName+"_"+$vPass+"_"+$vtMacAddress
-    //
-    // End if
-
-    // OPEN URL(PortaleFraschetti (True)+"_SchedaTecSic_"+String([Schede]ID))
-
-  }
-
-  void scheda_tecnica_sicurezza () {
-    // If (Is compiled mode)
-    // C_TEXT($vtSoapTrasm)
-    // $vtSoapTrasm:=Parametro ("ServerSoap";"")
-    // $vtLinkAprire:="http://"+$vtSoapTrasm+"/4DACTION/W_PortaleLogIn/"+<>vUserName+"_"+$vPass+"_"+$vtMacAddress
-    //
-    // Else
-    // $vtLinkAprire:="http://localhost:8080/4DACTION/W_PortaleLogIn/"+<>vUserName+"_"+$vPass+"_"+$vtMacAddress
-    //
-    // End if
-
-    // OPEN URL(PortaleFraschetti (True)+"_SchedaTecSic_"+String([Schede]ID))
-
+  void scheda_tecnica_sicurezza_mostra({int scheda_id = 0}) async {
+    bool url_aperto = false;
+    String url_aprire = GetIt.instance<UtenteCorrenteModel>().url_schede_tecniche_sicurezza();
+    url_aprire += "_SchedaTecSic_" + scheda_id.toString();
+    print("url_aprire: ${url_aprire}");
+    if (url_aprire != "") {
+      url_aperto = await launch(url_aprire);
+      if (url_aperto == false) {
+        print("url " "${url_aprire}" " non aperto");
+      }
+    }
   }
 
   @override
@@ -177,7 +162,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
               Text(widget.pagina_titolo),
               // if(lista_elementi_numero >0)
               Text(
-                "${lista_elementi_indice+1} di ${lista_elementi_numero}",
+                "${lista_elementi_indice + 1} di ${lista_elementi_numero}",
                 style: TextStyle(
                   fontSize: 10,
                 ),
@@ -194,7 +179,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
               // drag from right to left
               print("drag from right to left");
               _scheda_successiva();
-            } else if (drag.primaryVelocity! > 0){
+            } else if (drag.primaryVelocity! > 0) {
               // drag from left to right
               print("drag from left to right");
               _scheda_precedente();
@@ -208,8 +193,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
               // decoration: MyBoxDecoration().MyBox(),
               child: Column(
                 children: <Widget>[
-                  if(catalogo_scheda.id != 0)
-                    ArticoloWidget(),
+                  if (catalogo_scheda.id != 0) ArticoloWidget(),
                   Divider(
                     height: 5,
                     thickness: 2,
@@ -221,8 +205,8 @@ class _CatalogoPageState extends State<CatalogoPage> {
                     thickness: 2,
                     // color: Theme.of(context).primaryColor,
                   ),
-                  if(catalogo_scheda.id != 0)
-                  CodiciWidget(catalogo_scheda.codici),
+                  if (catalogo_scheda.id != 0)
+                    CodiciWidget(catalogo_scheda.codici),
                 ],
               ),
             ),
@@ -232,9 +216,8 @@ class _CatalogoPageState extends State<CatalogoPage> {
     );
   }
 
-
 // dati articolo catalogo
-  Widget  ArticoloWidget() {
+  Widget ArticoloWidget() {
     return Container(
       // height: 500,
       // padding: EdgeInsets.all(5),
@@ -253,7 +236,8 @@ class _CatalogoPageState extends State<CatalogoPage> {
             child: Row(
               children: [
                 CircleAvatar(
-                  backgroundColor: Color(int.parse(catalogo_scheda.famiglie_colore)),
+                  backgroundColor:
+                      Color(int.parse(catalogo_scheda.famiglie_colore)),
                 ),
                 SizedBox(
                   width: 5,
@@ -295,10 +279,12 @@ class _CatalogoPageState extends State<CatalogoPage> {
                                   ),
                                 ),
                               ),
-                            if (catalogo_scheda.promozione_id >0)
+                            if (catalogo_scheda.promozione_id > 0)
                               InkWell(
                                 onTap: () {
-                                  promozione_mostra(context, promozione_id: catalogo_scheda.promozione_id);
+                                  promozione_mostra(context,
+                                      promozione_id:
+                                          catalogo_scheda.promozione_id);
                                 },
                                 child: Container(
                                   width: 60,
@@ -306,17 +292,18 @@ class _CatalogoPageState extends State<CatalogoPage> {
                                   color: Colors.blue.shade800,
                                   // child: Image.asset("assets/immagini/splash_screen.png"),
                                   child: Center(
-                                      child: Text(
-                                          "Offerta",
+                                    child: Text(
+                                      "Offerta",
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
                                       ),
-                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                          ],),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -401,7 +388,6 @@ class _CatalogoPageState extends State<CatalogoPage> {
                     // mainAxisSize: MainAxisSize.max,
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-
                       // new LayoutBuilder(
                       //     builder: (BuildContext context, BoxConstraints constraints) {
                       //       return Container(
@@ -422,52 +408,50 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       //     }
                       // ),
 
-                        Container(
-                          padding: EdgeInsets.all(5),
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: SizedBox(
-                            height: 300,
-                            child: SingleChildScrollView(
-                              child: Text(
-                                catalogo_scheda.descrizione,
-                                textAlign: TextAlign.justify,
-                                // style: TextStyle(fontSize: 12.0),
-                              ),
+                      Container(
+                        padding: EdgeInsets.all(5),
+                        decoration: MyBoxDecoration().MyBox(),
+                        child: SizedBox(
+                          height: 300,
+                          child: SingleChildScrollView(
+                            child: Text(
+                              catalogo_scheda.descrizione,
+                              textAlign: TextAlign.justify,
+                              // style: TextStyle(fontSize: 12.0),
                             ),
                           ),
                         ),
+                      ),
                       Container(
                         decoration: MyBoxDecoration().MyBox(),
                         child: Column(
                           children: [
-
-                            if(catalogo_scheda.scheda_tecnica_id != 0)
-                            Container(
-                              // height: 50,
-                              width: 170,
-                              padding: EdgeInsets.all(5),
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(elevation: 2),
-                                onPressed: () {
-                                  // versione_aggiornamento_mostra(context);
-                                },
-                                child: Text('Scheda tecnica'),
-                              ),
-                            ),
-                            if(catalogo_scheda.scheda_sicurezza_id != 0)
+                            if (catalogo_scheda.scheda_tecnica_id != 0)
                               Container(
-                              // height: 50,
-                              width: 170,
-                              padding: EdgeInsets.all(5),
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(elevation: 2),
-                                onPressed: () {
-                                  // versione_aggiornamento_mostra(context);
-                                },
-                                child: Text('Scheda sicurezza'),
+                                // height: 50,
+                                width: 170,
+                                padding: EdgeInsets.all(5),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(elevation: 2),
+                                  onPressed: () {
+                                    scheda_tecnica_sicurezza_mostra(scheda_id: catalogo_scheda.scheda_tecnica_id);
+                                  },
+                                  child: Text('Scheda tecnica'),
+                                ),
                               ),
-                            ),
-
+                            if (catalogo_scheda.scheda_sicurezza_id != 0)
+                              Container(
+                                // height: 50,
+                                width: 170,
+                                padding: EdgeInsets.all(5),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(elevation: 2),
+                                  onPressed: () {
+                                    scheda_tecnica_sicurezza_mostra(scheda_id: catalogo_scheda.scheda_sicurezza_id);
+                                  },
+                                  child: Text('Scheda sicurezza'),
+                                ),
+                              ),
                           ],
                         ),
                       ),
@@ -504,8 +488,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       // width: 500,
                       decoration: MyBoxDecoration().MyBox(),
                       child: SchedaImmagineWidget(
-                          immagine_base64:
-                          catalogo_scheda.immagine),
+                          immagine_base64: catalogo_scheda.immagine),
                     );
                   },
                 ),
@@ -765,17 +748,17 @@ class _CatalogoPageState extends State<CatalogoPage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       if (codice_scheda[index].quantita_massima > 0)
-                      Container(
-                        // quantità
-                        padding: EdgeInsets.all(2),
-                        alignment: Alignment.centerRight,
-                        width: 50,
-                        decoration: MyBoxDecoration().MyBox(),
-                        child: Text(
-                          codice_scheda[index].quantita_massima.toString(),
-                          // style: TextStyle(fontSize: 18.0),
+                        Container(
+                          // quantità
+                          padding: EdgeInsets.all(2),
+                          alignment: Alignment.centerRight,
+                          width: 50,
+                          decoration: MyBoxDecoration().MyBox(),
+                          child: Text(
+                            codice_scheda[index].quantita_massima.toString(),
+                            // style: TextStyle(fontSize: 18.0),
+                          ),
                         ),
-                      ),
                       if (codice_scheda[index].quantita_massima > 0)
                         Text(" x "),
                       Container(
@@ -835,7 +818,8 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       ),
                     ],
                   ),
-                ],),
+                ],
+              ),
             ),
           );
         },

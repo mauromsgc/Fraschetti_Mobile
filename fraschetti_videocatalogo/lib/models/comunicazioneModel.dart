@@ -25,23 +25,17 @@ class ComunicazioneModel {
   });
 
   factory ComunicazioneModel.fromMap(Map<String, dynamic> map) {
-    final id = map["id"];
-    final oggetto = map["oggetto"];
-    final da_leggere = map["da_leggere"];
-    final data = map["data"];
-    final username = map["username"];
-    final comunicazione_testo = map["comunicazione_testo"];
-    final comunicazione_blob = map["comunicazione_blob"];
+    ComunicazioneModel oggetto = ComunicazioneModel();
 
-    return ComunicazioneModel(
-      id: id,
-      oggetto: oggetto,
-      da_leggere: da_leggere,
-      data: data,
-      username: username,
-      comunicazione_testo: comunicazione_testo,
-      comunicazione_blob: comunicazione_blob,
-    );
+    oggetto.id = map["id"];
+    oggetto.oggetto = map["oggetto"];
+    oggetto.da_leggere = map["da_leggere"];
+    oggetto.data = map["data"];
+    oggetto.username = map["username"];
+    oggetto.comunicazione_testo = map["comunicazione_testo"];
+    oggetto.comunicazione_blob = map["comunicazione_blob"];
+
+    return oggetto;
   }
 
   Map<String, dynamic> toMap() => {

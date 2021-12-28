@@ -52,6 +52,11 @@ class SessioneModel {
       // cercare il numero di ordine e reso maggiore
       this.ordine_numero_corrente = 1;
       this.reso_numero_corrente = 1;
+
+
+      await ordine_numero_imposta(ordine_numero: 1);
+      await reso_numero_imposta(reso_numero: 1);
+
     }
 
     return cliente_selezionato;

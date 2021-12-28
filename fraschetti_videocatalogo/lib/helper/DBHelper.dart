@@ -309,7 +309,7 @@ descrizione TEXT,
 um CHAR(2,0), 
 quantita REAL, 
 prezzo REAL, 
-prezzoordine REAL
+prezzo_ordine REAL
 )""");
 
         await db.execute("DROP TABLE IF EXISTS promozioni");

@@ -17,15 +17,13 @@ class AssortimentoModel {
   });
 
   factory AssortimentoModel.fromMap(Map<String, dynamic> map) {
-    final id = map["id"];
-    final descrizione = map["descrizione"];
-    final ordinatore = map["ordinatore"];
+    AssortimentoModel oggetto = AssortimentoModel();
 
-    return AssortimentoModel(
-      id: id,
-      descrizione: descrizione,
-      ordinatore: ordinatore,
-    );
+    oggetto.id = map["id"];
+    oggetto.descrizione = map["descrizione"];
+    oggetto.ordinatore = map["ordinatore"];
+
+    return oggetto;
   }
 
   Map<String, dynamic> toMap() => {

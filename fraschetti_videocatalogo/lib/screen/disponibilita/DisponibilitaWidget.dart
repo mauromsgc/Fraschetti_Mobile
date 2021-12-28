@@ -8,11 +8,11 @@ WidgetBuilder DisponibilitaDialogWidget({
   int codice_id = 0,
   dynamic returnValue,
 }) {
-  late Map codice_scheda;
+  late CodiceModel codice_scheda;
 
   Future<void> _codice_cerca({int id = 0}) async {
-    List<Map> result;
-    result = await CodiceModel.codici_lista_ricerca(id: id);
+    List<CodiceModel> result;
+    result = await CodiceModel.codici_lista(id: id);
 
     codice_scheda = result.first;
   }
@@ -41,7 +41,7 @@ WidgetBuilder DisponibilitaDialogWidget({
                       // height: 40,
                       decoration: MyBoxDecoration().MyBox(),
                       child: ListaImmagineWidget(
-                          immagine_base64: codice_scheda['immagine_preview']),
+                          immagine_base64: codice_scheda.immagine_preview),
                     ),
                   ),
                   Container(
@@ -51,7 +51,7 @@ WidgetBuilder DisponibilitaDialogWidget({
                     child: TextFormField(
                       // readOnly: true,
                       enabled: false,
-                      initialValue: codice_scheda["numero"],
+                      initialValue: codice_scheda.numero,
                       style: TextStyle(
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -73,7 +73,7 @@ WidgetBuilder DisponibilitaDialogWidget({
                 child: TextFormField(
                   // readOnly: true,
                   enabled: false,
-                  initialValue: codice_scheda["catalogo_nome"],
+                  initialValue: codice_scheda.catalogo_nome,
                   style: TextStyle(
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -86,14 +86,14 @@ WidgetBuilder DisponibilitaDialogWidget({
                   ),
                 ),
               ),
-              if(codice_scheda["descrizione"] != "")
+              if(codice_scheda.descrizione != "")
               Container(
                 // codice descrizione
                 padding: EdgeInsets.all(5),
                 child: TextFormField(
                   // readOnly: true,
                   enabled: false,
-                  initialValue: codice_scheda["descrizione"],
+                  initialValue: codice_scheda.descrizione,
                   style: TextStyle(
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -112,7 +112,7 @@ WidgetBuilder DisponibilitaDialogWidget({
                 child: TextFormField(
                   // readOnly: true,
                   enabled: false,
-                  initialValue: codice_scheda["disponibilita_stato"].toString(),
+                  initialValue: codice_scheda.disponibilita_stato.toString(),
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.grey.shade200,
@@ -128,7 +128,7 @@ WidgetBuilder DisponibilitaDialogWidget({
                 child: TextFormField(
                   // readOnly: true,
                   enabled: false,
-                  initialValue: codice_scheda["disponibilita_data_arrivo"],
+                  initialValue: codice_scheda.disponibilita_data_arrivo,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.grey.shade200,

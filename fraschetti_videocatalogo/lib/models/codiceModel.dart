@@ -6,6 +6,7 @@ import 'package:sqflite/sqflite.dart';
 class CodiceModel {
   int id = 0;
   int catalogo_id = 0;
+  String catalogo_nome = "";
   String numero = "";
   String descrizione = "";
   int apribile = 0;
@@ -21,10 +22,12 @@ class CodiceModel {
   int disponibilita_stato = 0;
   String disponibilita_data_arrivo = "";
   int promozione_id = 0;
+  String immagine_preview = "";
 
   CodiceModel({
     this.id = 0,
     this.catalogo_id = 0,
+    this.catalogo_nome = "",
     this.numero = "",
     this.descrizione = "",
     this.apribile = 0,
@@ -40,46 +43,33 @@ class CodiceModel {
     this.disponibilita_stato = 0,
     this.disponibilita_data_arrivo = "",
     this.promozione_id = 0,
+    this.immagine_preview = "",
   });
 
   factory CodiceModel.fromMap(Map<String, dynamic> map) {
-    final id = map["id"];
-    final catalogo_id = map["catalogo_id"];
-    final numero = map["numero"];
-    final descrizione = map["descrizione"];
-    final apribile = map["apribile"];
-    final nuovo = map["nuovo"];
-    final sospeso = map["sospeso"];
-    final pezzi = map["pezzi"];
-    final prezzo = map["prezzo"];
-    final um = map["um"];
-    final iva = map["iva"];
-    final spedizione_categoria_codice = map["spedizione_categoria_codice"];
-    final quantita_massima = map["quantita_massima"];
-    final codice_ean = map["codice_ean"];
-    final disponibilita_stato = map["disponibilita_stato"];
-    final disponibilita_data_arrivo = map["disponibilita_data_arrivo"];
-    final promozione_id = map["promozione_id"];
+    CodiceModel oggetto = CodiceModel();
 
-    return CodiceModel(
-      id: id,
-      catalogo_id: catalogo_id,
-      numero: numero,
-      descrizione: descrizione,
-      apribile: apribile,
-      nuovo: nuovo,
-      sospeso: sospeso,
-      pezzi: pezzi,
-      prezzo: prezzo,
-      um: um,
-      iva: iva,
-      spedizione_categoria_codice: spedizione_categoria_codice,
-      quantita_massima: quantita_massima,
-      codice_ean : codice_ean,
-      disponibilita_stato : disponibilita_stato,
-      disponibilita_data_arrivo : disponibilita_data_arrivo,
-      promozione_id : promozione_id,
-    );
+    oggetto.id = map["id"];
+    oggetto.catalogo_id = map["catalogo_id"];
+    oggetto.catalogo_nome = map["catalogo_nome"];
+    oggetto.numero = map["numero"];
+    oggetto.descrizione = map["descrizione"];
+    oggetto.apribile = map["apribile"];
+    oggetto.nuovo = map["nuovo"];
+    oggetto.sospeso = map["sospeso"];
+    oggetto.pezzi = map["pezzi"];
+    oggetto.prezzo = map["prezzo"];
+    oggetto.um = map["um"];
+    oggetto.iva = map["iva"];
+    oggetto.spedizione_categoria_codice = map["spedizione_categoria_codice"];
+    oggetto.quantita_massima = map["quantita_massima"];
+    oggetto.codice_ean = map["codice_ean"];
+    oggetto.disponibilita_stato = map["disponibilita_stato"];
+    oggetto.disponibilita_data_arrivo = map["disponibilita_data_arrivo"];
+    oggetto.promozione_id = map["promozione_id"];
+    oggetto.immagine_preview = map["immagine_preview"];
+
+    return oggetto;
   }
 
   Map<String, dynamic> toMap() => {
@@ -105,6 +95,8 @@ class CodiceModel {
   static Future<List<CodiceModel>> codici_lista({
     int id = 0,
     int catalogo_id = 0,
+    String descrizione = "",
+    String codice= "",
   }) async {
     List<CodiceModel> codici_lista = [];
 
@@ -113,6 +105,7 @@ class CodiceModel {
     String sql_eseguire = """SELECT DISTINCT
     codici.id,
     codici.catalogo_id,
+    catalogo.nome as catalogo_nome,
     codici.numero,
     codici.descrizione,
     codici.apribile,
@@ -127,8 +120,11 @@ class CodiceModel {
     ifnull(codici_ean.codice_ean, '') as codice_ean,
     ifnull(disponibilita.stato, 0) as disponibilita_stato,
     ifnull(disponibilita.data_arrivo, '00/00/0000') as disponibilita_data_arrivo,
-    ifnull(promozioni_codici.promozione_id, 0) as promozione_id
+    ifnull(promozioni_codici.promozione_id, 0) as promozione_id,
+    ifnull(catalogo_img.immagine_preview, '') as immagine_preview
     FROM codici
+    LEFT JOIN catalogo ON catalogo.id = codici.catalogo_id
+    LEFT JOIN catalogo_img ON catalogo_img.catalogo_id = codici.catalogo_id
     LEFT JOIN codici_ean ON codici_ean.codice_articolo = codici.numero
     LEFT JOIN disponibilita ON disponibilita.codice = codici.numero
     LEFT JOIN promozioni_codici ON promozioni_codici.catalogo_id = codici.catalogo_id
@@ -144,7 +140,18 @@ class CodiceModel {
     if (catalogo_id != 0) {
       sql_where.add(" codici.catalogo_id = ${catalogo_id} ");
     }
-
+    if (descrizione != "") {
+      String sql_descrizione = "";
+      descrizione.split(" ").forEach((String element) {
+        sql_descrizione += (sql_descrizione == "") ? "(" : " AND ";
+        sql_descrizione += " catalogo.nome LIKE '%${element}%' ";
+      });
+      sql_descrizione += ")";
+      sql_where.add(sql_descrizione);
+    }
+    if (codice != "") {
+      sql_where.add(" codici.numero LIKE '${codice}%' ");
+    }
 
     sql_ordinamenti.add(" codici.numero ASC ");
 
@@ -175,85 +182,5 @@ class CodiceModel {
     return codici_lista;
   }
 
-  static Future<List<Map>> codici_lista_ricerca({
-    int id = 0,
-    String descrizione = "",
-    String codice= "",
-  }) async {
-    List<Map> codici_lista = [];
-
-    Database db = GetIt.instance<DbRepository>().database;
-    String sql_eseguire = """SELECT DISTINCT
-    codici.id,
-    codici.catalogo_id,
-    codici.numero,
-    catalogo.nome as catalogo_nome,
-    codici.descrizione,
-    codici.apribile,
-    codici.nuovo,
-    codici.sospeso,
-    codici.pezzi,
-    codici.prezzo,
-    codici.um,
-    codici.iva,
-    codici.spedizione_categoria_codice,
-    codici.quantita_massima,
-    ifnull(codici_ean.codice_ean, '') as codice_ean,
-    ifnull(disponibilita.stato, 0) as disponibilita_stato,
-    ifnull(disponibilita.data_arrivo, '00/00/0000') as disponibilita_data_arrivo,
-    ifnull(promozioni_codici.promozione_id, 0) as promozione_id,
-    ifnull(catalogo_img.immagine_preview, '') as immagine_preview
-    FROM codici
-    LEFT JOIN catalogo ON catalogo.id = codici.catalogo_id
-    LEFT JOIN catalogo_img ON catalogo_img.catalogo_id = codici.catalogo_id
-    LEFT JOIN codici_ean ON codici_ean.codice_articolo = codici.numero
-    LEFT JOIN disponibilita ON disponibilita.codice = codici.numero
-    LEFT JOIN promozioni_codici ON promozioni_codici.catalogo_id = codici.catalogo_id
-    """;
-
-
-    List<String> sql_join = [];
-    List<String> sql_where = [];
-    List<String> sql_ordinamenti = [];
-
-    if (id != 0) {
-      sql_where.add(" codici.id = ${id} ");
-    }
-    if (descrizione != "") {
-      String sql_descrizione = "";
-      descrizione.split(" ").forEach((String element) {
-        sql_descrizione += (sql_descrizione == "") ? "(" : " AND ";
-        sql_descrizione += " catalogo.nome LIKE '%${element}%' ";
-      });
-      sql_descrizione += ")";
-      sql_where.add(sql_descrizione);
-    }
-    if (codice != "") {
-      sql_where.add(" codici.numero LIKE '${codice}%' ");
-    }
-
-    sql_ordinamenti.add(" catalogo.nome ASC ");
-
-    sql_join.forEach((element) {
-      sql_eseguire += element;
-    });
-    // il forEach per le mappe ha l'indice
-    sql_where.asMap().forEach((indice, element) {
-      sql_eseguire += (indice == 0) ? " WHERE " : " AND ";
-      sql_eseguire += element;
-    });
-    sql_ordinamenti.asMap().forEach((indice, element) {
-      sql_eseguire += (indice == 0) ? " ORDER BY  " : " , ";
-      sql_eseguire += element;
-    });
-    sql_eseguire += ";";
-    // print(sql_eseguire);
-
-    final rows = await db.rawQuery(sql_eseguire);
-
-    codici_lista = rows;
-
-    return codici_lista;
-  }
 
 }

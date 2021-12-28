@@ -41,78 +41,28 @@ class CatalogoModel {
     // this.codici,
   });
 
-  factory CatalogoModel.fromMap_con_lista(Map<String, dynamic> map) {
-    CatalogoModel oggetto;
+  factory CatalogoModel.fromMap(Map<String, dynamic> map) {
+    CatalogoModel oggetto = CatalogoModel();
 
-    final id = map["id"];
-    final nome = map["nome"];
-    final descrizione = map["descrizione"];
-    final famiglia = map["famiglia"];
-    final nuovo = map["nuovo"];
-    final sospeso = map["sospeso"];
-    final ordinatore = map["ordinatore"];
-    final primo_codice = map["primo_codice"];
-    final promozione_id = map["promozione_id"];
-    final famiglie_descrizione = map["famiglie_descrizione"];
-    final famiglie_colore = map["famiglie_colore"];
-    final immagine = map["immagine"];
-    final immagine_preview = map["immagine_preview"];
-    final scheda_tecnica_id = map["scheda_tecnica_id"];
-    final scheda_sicurezza_id = map["scheda_sicurezza_id"];
-
-    oggetto = CatalogoModel(
-      id: id,
-      nome: nome,
-      descrizione: descrizione,
-      famiglia: famiglia,
-      nuovo: nuovo,
-      sospeso: sospeso,
-      ordinatore: ordinatore,
-      primo_codice: primo_codice,
-      promozione_id: promozione_id,
-      famiglie_descrizione: famiglie_descrizione,
-      famiglie_colore: famiglie_colore,
-      immagine: immagine,
-      immagine_preview: immagine_preview,
-      scheda_tecnica_id: scheda_tecnica_id,
-      scheda_sicurezza_id: scheda_sicurezza_id,
-    );
+    oggetto.id = map["id"];
+    oggetto.nome = map["nome"];
+    oggetto.descrizione = map["descrizione"];
+    oggetto.famiglia = map["famiglia"];
+    oggetto.nuovo = map["nuovo"];
+    oggetto.sospeso = map["sospeso"];
+    oggetto.ordinatore = map["ordinatore"];
+    oggetto.primo_codice = map["primo_codice"];
+    oggetto.promozione_id = map["promozione_id"];
+    oggetto.famiglie_descrizione = map["famiglie_descrizione"];
+    oggetto.famiglie_colore = map["famiglie_colore"];
+    oggetto.immagine = map["immagine"];
+    oggetto.immagine_preview = map["immagine_preview"];
+    oggetto.scheda_tecnica_id = map["scheda_tecnica_id"];
+    oggetto.scheda_sicurezza_id = map["scheda_sicurezza_id"];
 
     return oggetto;
   }
 
-  // factory CatalogoModel.fromMap(Map<String, dynamic> map) {
-  //   final id = map["id"];
-  //   final nome = map["nome"];
-  //   final descrizione = map["descrizione"];
-  //   final famiglia = map["famiglia"];
-  //   final nuovo = map["nuovo"];
-  //   final sospeso = map["sospeso"];
-  //   final ordinatore = map["ordinatore"];
-  //   final primo_codice = map["primo_codice"];
-  //
-  //   return CatalogoModel(
-  //     id: id,
-  //     nome: nome,
-  //     descrizione: descrizione,
-  //     famiglia: famiglia,
-  //     nuovo: nuovo,
-  //     sospeso: sospeso,
-  //     ordinatore: ordinatore,
-  //     primo_codice: primo_codice,
-  //   );
-  // }
-  //
-  // Map<String, dynamic> toMap() => {
-  //       "id": id,
-  //       "nome": nome,
-  //       "descrizione": descrizione,
-  //       "famiglia": famiglia,
-  //       "nuovo": nuovo,
-  //       "sospeso": sospeso,
-  //       "ordinatore": ordinatore,
-  //       "primo_codice": primo_codice,
-  //     };
 
   static Future<List<Map>> catalogo_lista({
     String descrizione = "",
@@ -236,8 +186,8 @@ class CatalogoModel {
     famiglie.colore as famiglie_colore,
     ifnull(catalogo_img.immagine, '') as immagine,
     ifnull(catalogo_img.immagine_preview, '') as immagine_preview,
-    ifnull(schede_tecnica.id, '') as scheda_tecnica_id,
-    ifnull(schede_sicurezza.id, '') as scheda_sicurezza_id
+    ifnull(schede_tecnica.id, 0) as scheda_tecnica_id,
+    ifnull(schede_sicurezza.id, 0) as scheda_sicurezza_id
     FROM catalogo
     LEFT JOIN famiglie ON famiglie.id = catalogo.famiglia
     LEFT JOIN catalogo_img ON catalogo_img.catalogo_id = catalogo.id
@@ -274,7 +224,7 @@ class CatalogoModel {
     final rows = await db.rawQuery(sql_eseguire);
 
     if (rows.length > 0) {
-      catalogo_cheda = CatalogoModel.fromMap_con_lista(rows.first);
+      catalogo_cheda = CatalogoModel.fromMap(rows.first);
       print("cat mod 1");
       catalogo_cheda.codici = await CodiceModel.codici_lista(catalogo_id: catalogo_cheda.id);
       print("cat mod 2");
