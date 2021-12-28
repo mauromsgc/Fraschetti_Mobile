@@ -86,33 +86,36 @@ WidgetBuilder DisponibilitaDialogWidget({
                   ),
                 ),
               ),
-              if(codice_scheda.descrizione != "")
-              Container(
-                // codice descrizione
-                padding: EdgeInsets.all(5),
-                child: TextFormField(
-                  // readOnly: true,
-                  enabled: false,
-                  initialValue: codice_scheda.descrizione,
-                  style: TextStyle(
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.grey.shade200,
-                    contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                    border: OutlineInputBorder(),
-                    labelText: "Codice descrizione",
+              if (codice_scheda.descrizione.trim() != "")
+                Container(
+                  // codice descrizione
+                  padding: EdgeInsets.all(5),
+                  child: TextFormField(
+                    // readOnly: true,
+                    enabled: false,
+                    initialValue: codice_scheda.descrizione,
+                    style: TextStyle(
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.grey.shade200,
+                      contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                      border: OutlineInputBorder(),
+                      labelText: "Codice descrizione",
+                    ),
                   ),
                 ),
-              ),
               Container(
                 // stato disponibilità
                 padding: EdgeInsets.all(5),
                 child: TextFormField(
                   // readOnly: true,
+                  style: TextStyle(
+                    color: (codice_scheda.disponibilita_stato == 1) ? Colors.green : Colors.red,
+                  ),
                   enabled: false,
-                  initialValue: codice_scheda.disponibilita_stato.toString(),
+                  initialValue: codice_scheda.disponibilita_stato_testo,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.grey.shade200,
@@ -122,22 +125,22 @@ WidgetBuilder DisponibilitaDialogWidget({
                   ),
                 ),
               ),
-              Container(
-                // unità di misura
-                padding: EdgeInsets.all(5),
-                child: TextFormField(
-                  // readOnly: true,
-                  enabled: false,
-                  initialValue: codice_scheda.disponibilita_data_arrivo,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.grey.shade200,
-                    contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                    border: OutlineInputBorder(),
-                    labelText: "Data arrivo prevista",
+              if (codice_scheda.disponibilita_data_arrivo != "")
+                Container(
+                  padding: EdgeInsets.all(5),
+                  child: TextFormField(
+                    // readOnly: true,
+                    enabled: false,
+                    initialValue: codice_scheda.disponibilita_data_arrivo,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.grey.shade200,
+                      contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                      border: OutlineInputBorder(),
+                      labelText: "Data arrivo prevista",
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
         ),

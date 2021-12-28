@@ -186,7 +186,7 @@ class _ClienteListaState extends State<ClienteLista> {
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
-                  hintText: 'Nominativo',
+                  hintText: "Nominativo",
                   suffixIcon: nominativoController.text.length == 0
                       ? null
                       : IconButton(
@@ -223,7 +223,7 @@ class _ClienteListaState extends State<ClienteLista> {
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),
-                  hintText: 'Codice',
+                  hintText: "Codice",
                   suffixIcon: codiceController.text.length == 0
                       ? null
                       : IconButton(
@@ -271,9 +271,9 @@ class _ClienteListaState extends State<ClienteLista> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
                 onPressed: () {
-                  _clienti_lista_cerca(selezione: 'con_ordine');
+                  _clienti_lista_cerca(selezione: "con_ordine");
                 },
-                child: Text('Clienti con ordini'),
+                child: Text("Clienti con ordini"),
               ),
             ),
             SizedBox(
@@ -284,7 +284,7 @@ class _ClienteListaState extends State<ClienteLista> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 2),
                 onPressed: () {
-                  _clienti_lista_cerca(selezione: 'tutti');
+                  _clienti_lista_cerca(selezione: "tutti");
                 },
                 child: Text('Tutti'),
               ),
@@ -308,7 +308,7 @@ class _ClienteListaState extends State<ClienteLista> {
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
-              listaClick(context, clienti_id: clienti_lista[index]['id']);
+              listaClick(context, clienti_id: clienti_lista[index]["id"]);
             },
             child: Container(
               height: 50,
@@ -320,7 +320,7 @@ class _ClienteListaState extends State<ClienteLista> {
                     width: 60,
                     decoration: MyBoxDecoration().MyBox(),
                     child: Text(
-                      "${clienti_lista[index]['codice']}",
+                      "${clienti_lista[index]["codice"]}",
                       style: TextStyle(
                         fontSize: 18,
                       ),
@@ -335,14 +335,14 @@ class _ClienteListaState extends State<ClienteLista> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "${clienti_lista[index]['ragione_sociale']}",
+                            "${clienti_lista[index]["ragione_sociale"]}",
                             style: TextStyle(
                               fontSize: 18.0,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           Text(
-                            "${clienti_lista[index]['localita']}",
+                            "${clienti_lista[index]["localita"]}",
                             style: TextStyle(
                               fontSize: 10.0,
                               overflow: TextOverflow.ellipsis,

@@ -198,7 +198,7 @@ descrizione TEXT,
 apribile INTEGER, 
 nuovo INTEGER, 
 sospeso INTEGER, 
-pezzi INTEGER, 
+pezzi REAL, 
 prezzo REAL, 
 um CHAR(2,0), 
 iva INTEGER,
@@ -353,7 +353,7 @@ CREATE TABLE resi (
 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
 cliente_id INTEGER, 
 agente_id INTEGER, 
-resinumero INTEGER, 
+resi_numero INTEGER, 
 articolo_codice CHAR(6,0), 
 descrizione TEXT, 
 um CHAR(2,0), 
@@ -491,7 +491,7 @@ descrizione CHAR(30,0)
         await db.execute(
             "CREATE INDEX resi_agente_id_indice ON resi (agente_id ASC)");
         await db.execute(
-            "CREATE INDEX resi_resinumero_indice ON resi (resinumero ASC)");
+            "CREATE INDEX resi_resi_numero_indice ON resi (resi_numero ASC)");
         await db.execute(
             "CREATE INDEX resi_articolo_codice_indice ON resi (articolo_codice ASC)");
       },

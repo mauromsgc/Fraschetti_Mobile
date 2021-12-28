@@ -5,14 +5,21 @@ import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/components/OrdineTopMenu.dart';
 import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
+import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
+import 'package:fraschetti_videocatalogo/models/codiceModel.dart';
 import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
+import 'package:fraschetti_videocatalogo/models/ordineModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/comunicazioniRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaPage.dart';
+import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaWidget.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/ClientiLista.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineNoteAggiungiPage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 import 'package:get_it/get_it.dart';
+
+
+
 
 class OrdineLista extends StatefulWidget {
   OrdineLista({Key? key}) : super(key: key);
@@ -24,50 +31,91 @@ class OrdineLista extends StatefulWidget {
 }
 
 class _OrdineListaState extends State<OrdineLista> {
-  List<ComunicazioneModel> ordine_righe_lista =
-      ComunicazioniRepository().all_2();
+  List<OrdineModel> ordine_righe_lista = [];
+
+  int lista_elementi_numero = 0;
+
 
   @override
   void initState() {
     super.initState();
+    GetIt.instance<SessioneModel>().ordine_top_menu_indice = 1;
+    _clienti_lista_cerca();
   }
 
-  void listaClick(BuildContext context) {
+
+  Future<void> _clienti_lista_cerca() async {
+
+    ordine_righe_lista = await OrdineModel.ordini_lista(
+      cliente_id: GetIt.instance<SessioneModel>().cliente_id_selezionato,
+      ordini_numero: GetIt.instance<SessioneModel>().ordine_numero_corrente,
+    );
+    lista_elementi_numero = ordine_righe_lista.length;
+    setState(() {});
+  }
+
+  Future<void> listaClick(BuildContext context, {int id = 0}) async {
+
     Navigator.pushNamed(context, OrdineArticoloAggiungiPage.routeName);
+
+    // bool cliente_selezionato = await GetIt.instance<SessioneModel>()
+    //     .cliente_seleziona(cliente_id: clienti_id);
+    //
+    // if (cliente_selezionato == true) {
+    //   // seleziona il cliente e va in ordine
+    //   GetIt.instance<SessioneModel>().ordine_top_menu_indice = 1;
+    //
+    //   switch (argomenti.pagina_chiamante_route) {
+    //     case CatalogoPage.routeName:
+    //       Navigator.pop(context);
+    //       break;
+    //     case OrdineCodiceCercaPage.routeName:
+    //       Navigator.pop(context);
+    //       break;
+    //
+    //     default:
+    //       Navigator.popAndPushNamed(context, OrdineLista.routeName);
+    //   }
+    // }
   }
 
-  void articolo_disponibilita_mostra(BuildContext context) {
-    Navigator.pushNamed(context, DisponibilitaPage.routeName);
+  void articolo_disponibilita_mostra(
+      BuildContext context,
+      int codice_id,
+      ) {
+    // Navigator.pushNamed(context, DisponibilitaPage.routeName);
+    showDialog(
+      context: context,
+      builder: DisponibilitaDialogWidget(
+          codice_id: codice_id, returnValue: true),
+    );
   }
+
 
   void ordine_note_aggiungi(BuildContext context) {
     Navigator.pushNamed(context, OrdineNoteAggiungiPage.routeName);
   }
 
-  void lista_elemento_elimina(BuildContext context) {
-    showDialog<String>(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: const Text('Elimina riga ordine'),
-        content: const Text('Eliminare la riga ordine?'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Elimna'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Annulla'),
-          ),
-        ],
-      ),
-    );
+  Future<void> ordine_chiudi() async {
+     await GetIt.instance<SessioneModel>().cliente_deseleziona();
+    Navigator.popAndPushNamed(context, ClienteLista.routeName);
+
   }
 
-  Future<void> ordine_chiudi() async {
-    // chiude la dialog
-    Navigator.of(context).pop();
-     await GetIt.instance<SessioneModel>().cliente_deseleziona();
+  Future<void> ordine_riga_elimina({int id = 0}) async {
+    await GetIt.instance<SessioneModel>().cliente_deseleziona();
+    Navigator.popAndPushNamed(context, ClienteLista.routeName);
+
+  }
+
+  Future<void> ordine_elimina() async {
+    await GetIt.instance<SessioneModel>().cliente_deseleziona();
+    Navigator.popAndPushNamed(context, ClienteLista.routeName);
+
+  }
+
+  Future<void> ordine_totale_mostra() async {
+    await GetIt.instance<SessioneModel>().cliente_deseleziona();
     Navigator.popAndPushNamed(context, ClienteLista.routeName);
 
   }
@@ -95,6 +143,7 @@ class _OrdineListaState extends State<OrdineLista> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(elevation: 2),
                   onPressed: () {
+                    Navigator.of(context).pop();
                     ordine_chiudi();
                   },
                   child: Text('Ordine chiudi'),
@@ -109,6 +158,7 @@ class _OrdineListaState extends State<OrdineLista> {
                   style: ElevatedButton.styleFrom(elevation: 2),
                   onPressed: () {
                     Navigator.of(context).pop();
+                    ordine_elimina();
                   },
                   child: Text('Ordine elimina'),
                 ),
@@ -123,38 +173,39 @@ class _OrdineListaState extends State<OrdineLista> {
                   style: ElevatedButton.styleFrom(elevation: 2),
                   onPressed: () {
                     Navigator.of(context).pop();
+                    ordine_totale_mostra();
                   },
                   child: Text('Totale ordine'),
                 ),
               ),
-              Container(
-                // lo fa già il server
-                height: 40,
-                // width: double.maxFinite,
-                width: 300,
-                padding: EdgeInsets.all(5),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(elevation: 2),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('Invia email con prezzi'),
-                ),
-              ),
-              Container(
-                // lo fa già il server
-                height: 40,
-                // width: double.maxFinite,
-                width: 300,
-                padding: EdgeInsets.all(5),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(elevation: 2),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('Invia email senza prezzi'),
-                ),
-              ),
+              // Container(
+              //   // lo fa già il server
+              //   height: 40,
+              //   // width: double.maxFinite,
+              //   width: 300,
+              //   padding: EdgeInsets.all(5),
+              //   child: ElevatedButton(
+              //     style: ElevatedButton.styleFrom(elevation: 2),
+              //     onPressed: () {
+              //       Navigator.of(context).pop();
+              //     },
+              //     child: Text('Invia email con prezzi'),
+              //   ),
+              // ),
+              // Container(
+              //   // lo fa già il server
+              //   height: 40,
+              //   // width: double.maxFinite,
+              //   width: 300,
+              //   padding: EdgeInsets.all(5),
+              //   child: ElevatedButton(
+              //     style: ElevatedButton.styleFrom(elevation: 2),
+              //     onPressed: () {
+              //       Navigator.of(context).pop();
+              //     },
+              //     child: Text('Invia email senza prezzi'),
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -178,7 +229,18 @@ class _OrdineListaState extends State<OrdineLista> {
           //   onPressed: () {},
           //   icon: Icon(Icons.menu),
           // ),
-          title: Text(widget.pagina_titolo),
+          title: Column(
+            children: [
+              Text(widget.pagina_titolo),
+              // if(lista_elementi_numero >0)
+              Text(
+                "${lista_elementi_numero} elementi",
+                style: TextStyle(
+                  fontSize: 10,
+                ),
+              ),
+            ],
+          ),
           centerTitle: true,
           actions: [
             IconButton(
@@ -298,7 +360,7 @@ class _OrdineListaState extends State<OrdineLista> {
   }
 
 // riga lista
-  Widget ListaWidget(List<ComunicazioneModel> ordine_righe_lista) {
+  Widget ListaWidget(List<OrdineModel> ordine_righe_lista) {
     return Expanded(
       child: ListView.separated(
         separatorBuilder: (context, index) => Divider(
@@ -306,8 +368,7 @@ class _OrdineListaState extends State<OrdineLista> {
           thickness: 2,
           // color: Theme.of(context).primaryColor,
         ),
-        // itemCount: ordine_righe_lista.length,
-        itemCount: 10,
+        itemCount: ordine_righe_lista.length,
         itemBuilder: (context, index) {
           return Dismissible(
             key: Key("${index}"),
@@ -339,11 +400,16 @@ class _OrdineListaState extends State<OrdineLista> {
                     content: const Text("Eliminara la riga corrente?"),
                     actions: <Widget>[
                       ElevatedButton(
-                        onPressed: () => Navigator.of(context).pop(false),
+                        onPressed: () {
+                          Navigator.of(context).pop(false);
+                        },
                         child: const Text("Annulla"),
                       ),
                       ElevatedButton(
-                          onPressed: () => Navigator.of(context).pop(true),
+                          onPressed: () {
+                            Navigator.of(context).pop(true);
+                            ordine_riga_elimina(id: ordine_righe_lista[index].id);
+                          },
                           child: const Text("Elimina")),
                     ],
                   );
@@ -358,16 +424,14 @@ class _OrdineListaState extends State<OrdineLista> {
               }
 
               setState(() {
-                ordine_righe_lista.removeAt(index);
-                lista_elemento_elimina(context);
               });
             },
             child: InkWell(
               onTap: () {
-                listaClick(context);
+                listaClick(context, id: ordine_righe_lista[index].id);
               },
               onLongPress: () {
-                articolo_disponibilita_mostra(context);
+                articolo_disponibilita_mostra(context, ordine_righe_lista[index].codice_scheda.id);
               },
               child: Container(
                 child: Row(
@@ -380,7 +444,7 @@ class _OrdineListaState extends State<OrdineLista> {
                       // color: Colors.orange,
                       decoration: MyBoxDecoration().MyBox(),
                       child: Text(
-                        "000000",
+                        ordine_righe_lista[index].articolo_codice,
                         // style: TextStyle(fontSize: 14.0),
                       ),
                     ),
@@ -391,25 +455,13 @@ class _OrdineListaState extends State<OrdineLista> {
                         padding: EdgeInsets.all(2),
                         alignment: Alignment(-1.0, 0.0),
                         decoration: MyBoxDecoration().MyBox(),
-                        child: Column(
-                          children: [
-                            Text(
-                              "Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione",
-                              maxLines: 1,
-                              style: TextStyle(
-                                // fontSize: 12,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            Text(
-                              "Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione ",
-                              maxLines: 2,
-                              style: TextStyle(
-                                // fontSize: 12,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
+                        child: Text(
+                          ordine_righe_lista[index].descrizione,
+                          maxLines: 1,
+                          style: TextStyle(
+                            // fontSize: 12,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ),
                     ),
@@ -419,7 +471,7 @@ class _OrdineListaState extends State<OrdineLista> {
                       width: 25,
                       decoration: MyBoxDecoration().MyBox(),
                       child: Text(
-                        "XC",
+                        ordine_righe_lista[index].um,
                         // style: TextStyle(fontSize: 18.0),
                       ),
                     ),
@@ -430,7 +482,7 @@ class _OrdineListaState extends State<OrdineLista> {
                       width: 45,
                       decoration: MyBoxDecoration().MyBox(),
                       child: Text(
-                        "1500",
+                        ordine_righe_lista[index].quantita.toStringAsFixed(2),
                         // style: TextStyle(fontSize: 18.0),
                       ),
                     ),
@@ -441,7 +493,7 @@ class _OrdineListaState extends State<OrdineLista> {
                       width: 75,
                       decoration: MyBoxDecoration().MyBox(),
                       child: Text(
-                        "99999,00",
+                        ordine_righe_lista[index].prezzo_ordine.toStringAsFixed(2),
                         // style: TextStyle(fontSize: 18.0),
                       ),
                     ),
@@ -452,7 +504,7 @@ class _OrdineListaState extends State<OrdineLista> {
                       width: 80,
                       decoration: MyBoxDecoration().MyBox(),
                       child: Text(
-                        "999999,00",
+                        ordine_righe_lista[index].prezzo_riga_totale.toStringAsFixed(2),
                         // style: TextStyle(fontSize: 18.0),
                       ),
                     ),

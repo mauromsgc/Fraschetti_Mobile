@@ -11,7 +11,7 @@ class OrdineModel {
   int ordini_numero = 0;
   String articolo_codice = "";
   String descrizione = "";
-  String unita_misura = "";
+  String um = "";
   double quantita = 0;
   double prezzo = 0;
   double prezzo_ordine = 0;
@@ -24,7 +24,7 @@ class OrdineModel {
     this.ordini_numero = 0,
     this.articolo_codice = "",
     this.descrizione = "",
-    this.unita_misura = "",
+    this.um = "",
     this.quantita = 0,
     this.prezzo = 0,
     this.prezzo_ordine = 0,
@@ -39,12 +39,17 @@ class OrdineModel {
     oggetto.ordini_numero = map["ordini_numero"];
     oggetto.articolo_codice = map["articolo_codice"];
     oggetto.descrizione = map["descrizione"];
-    oggetto.unita_misura = map["unita_misura"];
+    oggetto.um = map["um"];
     oggetto.quantita = map["quantita"];
     oggetto.prezzo = map["prezzo"];
     oggetto.prezzo_ordine = map["prezzo_ordine"];
 
     return oggetto;
+  }
+
+  double get prezzo_riga_totale {
+    double prezzo_riga_totale = (this.quantita * this.prezzo_ordine);
+    return double.parse(prezzo_riga_totale.toStringAsFixed(2));
   }
 
   static Future<List<OrdineModel>> ordini_lista({
@@ -68,7 +73,7 @@ class OrdineModel {
     ordini.um, 
     ordini.quantita, 
     ordini.prezzo, 
-    ordini.prezzoordine
+    ordini.prezzo_ordine
     FROM ordini
     """;
 
@@ -111,7 +116,6 @@ class OrdineModel {
     final rows = await db.rawQuery(sql_eseguire);
 
     ordini_lista = rows.map((row) => OrdineModel.fromMap(row)).toList();
-    ;
 
     return ordini_lista;
   }

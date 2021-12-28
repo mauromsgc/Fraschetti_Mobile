@@ -12,7 +12,7 @@ class CodiceModel {
   int apribile = 0;
   int nuovo = 0;
   int sospeso = 0;
-  int pezzi = 0;
+  double pezzi = 0;
   double prezzo = 0;
   String um = "";
   int iva = 0;
@@ -92,14 +92,43 @@ class CodiceModel {
         "promozione_id": promozione_id,
       };
 
+  String get disponibilita_stato_testo {
+
+    String disponibilita_stato_testo = "";
+
+    switch (this.disponibilita_stato) {
+      case 1:
+        disponibilita_stato_testo = "disponibile";
+        // data non presente lo svuoto per sicurezza
+        this.disponibilita_data_arrivo = "";
+        break;
+      case 2:
+        disponibilita_stato_testo = "non disponibile";
+        // la data è presente non la svuoto
+        // this.disponibilita_data_arrivo = "";
+        break;
+      case 3:
+        disponibilita_stato_testo = "non disponibile";
+        // data non presente mostro "data da comunicare"
+        this.disponibilita_data_arrivo = "data da comunicare";
+        break;
+      default:
+        // svuoro tutto
+        disponibilita_stato_testo = "";
+        this.disponibilita_data_arrivo = "";
+        break;
+    }
+
+    return disponibilita_stato_testo;
+  }
+
   static Future<List<CodiceModel>> codici_lista({
     int id = 0,
     int catalogo_id = 0,
     String descrizione = "",
-    String codice= "",
+    String codice = "",
   }) async {
     List<CodiceModel> codici_lista = [];
-
 
     Database db = GetIt.instance<DbRepository>().database;
     String sql_eseguire = """SELECT DISTINCT
@@ -119,7 +148,7 @@ class CodiceModel {
     codici.quantita_massima,
     ifnull(codici_ean.codice_ean, '') as codice_ean,
     ifnull(disponibilita.stato, 0) as disponibilita_stato,
-    ifnull(disponibilita.data_arrivo, '00/00/0000') as disponibilita_data_arrivo,
+    ifnull(disponibilita.data_arrivo, '') as disponibilita_data_arrivo,
     ifnull(promozioni_codici.promozione_id, 0) as promozione_id,
     ifnull(catalogo_img.immagine_preview, '') as immagine_preview
     FROM codici
@@ -181,6 +210,4 @@ class CodiceModel {
     print("cod mod 5");
     return codici_lista;
   }
-
-
 }
