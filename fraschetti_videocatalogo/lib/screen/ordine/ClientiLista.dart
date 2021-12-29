@@ -99,6 +99,9 @@ class _ClienteListaState extends State<ClienteLista> {
         case OrdineCodiceCercaPage.routeName:
           Navigator.pop(context);
           break;
+        case OrdineArticoloAggiungiPage.routeName:
+          Navigator.pop(context);
+          break;
 
         default:
           Navigator.popAndPushNamed(context, OrdineLista.routeName);

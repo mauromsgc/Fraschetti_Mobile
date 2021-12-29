@@ -1,4 +1,5 @@
 import 'package:fraschetti_videocatalogo/models/clienteModel.dart';
+import 'package:fraschetti_videocatalogo/models/ordineModel.dart';
 
 class SessioneModel {
   static final SessioneModel _istanza = SessioneModel._costruttore_privato();
@@ -33,29 +34,24 @@ class SessioneModel {
 
   Future<bool> cliente_seleziona({int clienti_id = 0}) async {
     // seleziona il cliente se lo trova
-    // e selezione/ crea il numero di ordine e reso a 1
+    // e seleziona/crea il numero di ordine
     // se non ci sono odini/resi o se c'è già un ordine
     // se ci sono più ordini seleziona il più recente
     // quello con il numero maggiore
     bool cliente_selezionato = false;
 
     // cerco il cliente per leggere i suoi dati
-    ClienteModel cliente =
-        await ClienteModel.cliente_da(clienti_id: clienti_id);
+    ClienteModel cliente = await ClienteModel.cliente_da(
+            clienti_id: clienti_id,
+        );
 
     if (cliente.id != 0) {
       cliente_selezionato = true;
       this.clienti_id_selezionato = cliente.id;
       this.cliente_Nominativo_selezionato = cliente.codice + " " + cliente.ragione_sociale;
       this.cliente_Localita_selezionato = cliente.localita;
-
-      // cercare il numero di ordine e reso maggiore
-      this.ordine_id_corrente = 0;
-      this.reso_id_corrente = 0;
-
-      // await reso_id_imposta(id: 1);
-
     }
+
 
     return cliente_selezionato;
   }

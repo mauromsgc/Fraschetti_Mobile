@@ -16,7 +16,7 @@ class OrdineRigaModel {
   double quantita = 0;
   double prezzo = 0;
   double prezzo_ordine = 0;
-  late CodiceModel codice_scheda;
+  late CodiceModel codice_scheda = CodiceModel();
 
   OrdineRigaModel({
     this.id = 0,
@@ -42,6 +42,76 @@ class OrdineRigaModel {
     oggetto.prezzo_ordine = map["prezzo_ordine"];
 
     return oggetto;
+  }
+
+  Map<String, Object?> toMap_record() {
+    // deve contenere solo i campi della tabella
+    var map = <String, dynamic>{
+    "id": (id != 0) ? id : null,
+    "ordini_id": ordini_id,
+    "codice": codice,
+    "descrizione": descrizione,
+    "um": um,
+    "quantita": quantita,
+    "prezzo": prezzo,
+    "prezzo_ordine": prezzo_ordine,
+    };
+
+    return map;
+  }
+
+  Future<int> record_salva() async {
+    // restituisco l'id del record creato o aggiornato
+    // se ritorna 0 il salvataggio o l'aggiornamento non sono a dati a buon fine
+    int record_id = 0;
+    if (this.id == 0) {
+      record_id = await record_inserisci();
+      this.id = record_id;
+    } else {
+      final record_aggiornati = await record_aggiorna();
+      if (record_aggiornati > 0) {
+        record_id = record_id;
+      }
+    }
+
+    return record_id;
+  }
+
+  Future<int> record_inserisci() async {
+    Database db = GetIt.instance<DbRepository>().database;
+
+    int record_id = await db.insert(
+      'ordini_righe',
+      this.toMap_record(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+
+    return record_id;
+  }
+
+  Future<int> record_aggiorna() async {
+    Database db = GetIt.instance<DbRepository>().database;
+
+    int record_aggiornati = await db.update(
+      'ordini_righe',
+      this.toMap_record(),
+      where: 'id = ?',
+      whereArgs: [this.id],
+    );
+
+    return record_aggiornati;
+  }
+
+  static Future<int> record_elimina(int id) async {
+    Database db = GetIt.instance<DbRepository>().database;
+
+    int record_eliminati = await db.delete(
+      'ordini_righe',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    return record_eliminati;
   }
 
   double get prezzo_riga_totale {
@@ -146,6 +216,7 @@ class OrdineRigaModel {
     // int clienti_id = 0,
     // String codice = "",
   }) async {
+    print("ordini_righe_cerca_singolo inizio");
     // cerca un record esistente
     // e restituisce l'oggetto relativo al record
     OrdineRigaModel ordine_riga_scheda;
@@ -159,13 +230,16 @@ class OrdineRigaModel {
       // oppure errore
       ordine_riga_scheda = OrdineRigaModel();
     }
+    print("ordini_righe_cerca_singolo fine");
 
     return ordine_riga_scheda;
   }
 
   static Future<OrdineRigaModel> nuovo_da_codice({
+    int codice_id = 0,
     String codice = "",
   }) async {
+    print("nuovo_da_codice inizio");
     // in caso di nuovo record
     // crea un nuovo oggetto con i dati di
     // agente, cliente, numero ordine e codice articolo
@@ -173,29 +247,30 @@ class OrdineRigaModel {
     // e compila i campi codice, descrizione, um, quantita, prezzo
     // dalla proprietà del codice
 
-    OrdineRigaModel ordine_scheda = OrdineRigaModel();
+    OrdineRigaModel ordine_riga_scheda = OrdineRigaModel();
 
-    List<CodiceModel> result = await CodiceModel.codici_lista(codice: codice);
+    List<CodiceModel> result = await CodiceModel.codici_lista(id: codice_id, codice: codice);
     if (result.length > 0) {
-      ordine_scheda.codice_scheda = result.first;
+      ordine_riga_scheda.codice_scheda = result.first;
     } else {
-      ordine_scheda.codice_scheda = CodiceModel();
+      ordine_riga_scheda.codice_scheda = CodiceModel();
 
       // compilo i dati della riga ordine
-      ordine_scheda.ordini_id = GetIt.instance<SessioneModel>().ordine_id_corrente;
-      ordine_scheda.codice = ordine_scheda.codice_scheda.numero;
-      ordine_scheda.descrizione =
-          ordine_scheda.codice_scheda.catalogo_nome.trim();
-      if (ordine_scheda.codice_scheda.descrizione != "") {
-        ordine_scheda.descrizione +=
-            " " + ordine_scheda.codice_scheda.descrizione.trim();
+      ordine_riga_scheda.ordini_id = GetIt.instance<SessioneModel>().ordine_id_corrente;
+      ordine_riga_scheda.codice = ordine_riga_scheda.codice_scheda.numero;
+      ordine_riga_scheda.descrizione =
+          ordine_riga_scheda.codice_scheda.catalogo_nome.trim();
+      if (ordine_riga_scheda.codice_scheda.descrizione != "") {
+        ordine_riga_scheda.descrizione +=
+            " " + ordine_riga_scheda.codice_scheda.descrizione.trim();
       }
-      ordine_scheda.um = ordine_scheda.codice_scheda.um;
-      ordine_scheda.quantita = ordine_scheda.codice_scheda.pezzi;
-      ordine_scheda.prezzo = ordine_scheda.codice_scheda.prezzo;
-      ordine_scheda.prezzo_ordine = ordine_scheda.codice_scheda.prezzo;
+      ordine_riga_scheda.um = ordine_riga_scheda.codice_scheda.um;
+      ordine_riga_scheda.quantita = ordine_riga_scheda.codice_scheda.pezzi;
+      ordine_riga_scheda.prezzo = ordine_riga_scheda.codice_scheda.prezzo;
+      ordine_riga_scheda.prezzo_ordine = ordine_riga_scheda.codice_scheda.prezzo;
     }
+    print("nuovo_da_codice fine");
 
-    return ordine_scheda;
+    return ordine_riga_scheda;
   }
 }

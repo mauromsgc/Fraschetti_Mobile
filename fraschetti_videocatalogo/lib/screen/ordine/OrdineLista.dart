@@ -347,7 +347,7 @@ class _OrdineListaState extends State<OrdineLista> {
                       style: ElevatedButton.styleFrom(elevation: 2),
                       onPressed: () => numeroOnSubmit(context),
                       child: Text(
-                          "Ordine numero ${GetIt.instance<SessioneModel>().ordine_id_corrente}"),
+                          "Ordine numero ${ordine_scheda.numero.toString()}"),
                     ),
                   ),
                 ),

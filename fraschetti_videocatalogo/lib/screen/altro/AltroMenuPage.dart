@@ -5,6 +5,8 @@ import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/helper/DBHelper.dart';
 import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
+import 'package:fraschetti_videocatalogo/models/ordineModel.dart';
+import 'package:fraschetti_videocatalogo/models/ordineRigaModel.dart';
 import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
 import 'package:fraschetti_videocatalogo/models/utenteCorrenteModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
@@ -76,12 +78,43 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
   }
 
   void test_1() async {
-    final valid = await GetIt.instance<DbRepository>().comunicazioni_aggiorna();
-    if (valid) {
-      print("Aggiornamento completato");
-    } else {
-      print("Errore durante l'aggiornamento, riprovare");
-    }
+    // final valid = await GetIt.instance<DbRepository>().comunicazioni_aggiorna();
+    // if (valid) {
+    //   print("Aggiornamento completato");
+    // } else {
+    //   print("Errore durante l'aggiornamento, riprovare");
+    // }
+
+
+    // creare un oggeto riga ordine salvarlo aggiornarlo elim inarlo
+
+    // OrdineRigaModel riga1 = OrdineRigaModel();
+    //
+    // riga1.ordini_id = 1;
+    // riga1.descrizione = "descrizzione";
+    // riga1.codice = "151003";
+    // riga1.um = "PZ";
+    // riga1.quantita = 12;
+    // riga1.prezzo = 1.50;
+    // riga1.prezzo_ordine = 0.75;
+    //
+    // int record_id = await riga1.record_salva();
+
+
+    OrdineModel ordine1 = OrdineModel();
+
+    ordine1.agenti_id = 51;
+    ordine1.clienti_id = 17370;
+
+    int record_id1 = await ordine1.record_salva();
+
+    OrdineModel ordine2 = OrdineModel();
+
+    ordine2.agenti_id = 51;
+    ordine2.clienti_id = 17373;
+
+    int record_id2 = await ordine2.record_salva();
+
   }
 
   void test_2() async {
@@ -225,7 +258,7 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
                         onPressed: () {
                           test_1();
                         },
-                        child: Text('Test 1 comunicazioni'),
+                        child: Text('Test 1'),
                       ),
                     ),
                     Container(
