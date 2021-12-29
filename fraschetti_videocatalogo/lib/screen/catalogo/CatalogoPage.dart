@@ -67,7 +67,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
   Future<void> _catalogo_scheda_carica({
     int id = 0,
   }) async {
-    catalogo_scheda = await CatalogoModel.scheda_form_id(
+    catalogo_scheda = await CatalogoModel.cerca_id(
       id: id,
     );
     setState(() {});
@@ -94,7 +94,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
   }
 
   void listaClick(BuildContext context, int codice_id) {
-    if (GetIt.instance<SessioneModel>().cliente_id_selezionato == 0) {
+    if (GetIt.instance<SessioneModel>().clienti_id_selezionato == 0) {
       Navigator.pushNamed(
         context,
         ClienteLista.routeName,
@@ -107,7 +107,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
         context,
         OrdineArticoloAggiungiPage.routeName,
         arguments: OrdineArticoloAggiungiPageArgs(
-          ordine_riga_id: 0,
+          id: 0,
           codice_id: codice_id,
         ),
       );
@@ -124,12 +124,12 @@ class _CatalogoPageState extends State<CatalogoPage> {
     );
   }
 
-  void promozione_mostra(BuildContext context, {int promozione_id = 0}) {
+  void promozione_mostra(BuildContext context, {int promozioni_id = 0}) {
     Navigator.pushNamed(
       context,
       PromozionePage.routeName,
       arguments: PromozionePageArgs(
-        promozione_id: promozione_id,
+        promozioni_id: promozioni_id,
       ),
     );
   }
@@ -279,12 +279,12 @@ class _CatalogoPageState extends State<CatalogoPage> {
                                   ),
                                 ),
                               ),
-                            if (catalogo_scheda.promozione_id > 0)
+                            if (catalogo_scheda.promozioni_id > 0)
                               InkWell(
                                 onTap: () {
                                   promozione_mostra(context,
-                                      promozione_id:
-                                          catalogo_scheda.promozione_id);
+                                      promozioni_id:
+                                          catalogo_scheda.promozioni_id);
                                 },
                                 child: Container(
                                   width: 60,

@@ -53,7 +53,7 @@ class _ComunicazionePageState extends State<ComunicazionePage> {
   Future<void> _comunicazione_scheda_carica({
     int id = 0,
   }) async {
-    comunicazione_scheda = await ComunicazioneModel.scheda_form_id(
+    comunicazione_scheda = await ComunicazioneModel.nuovo_da_id(
       id: id,
     );
     setState(() {});

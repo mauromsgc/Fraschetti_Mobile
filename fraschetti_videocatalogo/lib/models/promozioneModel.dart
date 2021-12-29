@@ -67,7 +67,7 @@ class PromozioneModel {
     promozioni.ordinatore,
     ifnull(promozioni_img.immagine_preview, '') as immagine_preview
     FROM promozioni
-    LEFT JOIN promozioni_img ON promozioni_img.promozione_id = promozioni.id
+    LEFT JOIN promozioni_img ON promozioni_img.promozioni_id = promozioni.id
     """;
 
 
@@ -133,7 +133,7 @@ ORDER BY tour asc
     return tour_offerte_lista;
   }
 
-  static Future<PromozioneModel> scheda_form_id({
+  static Future<PromozioneModel> nuovo_da_id({
     int id = 0,
   }) async {
     PromozioneModel promozione_scheda;
@@ -149,7 +149,7 @@ ORDER BY tour asc
     ifnull(promozioni_img.immagine, '') as immagine,
     ifnull(promozioni_img.immagine_preview, '') as immagine_preview
     FROM promozioni
-    LEFT JOIN promozioni_img ON promozioni_img.promozione_id = promozioni.id
+    LEFT JOIN promozioni_img ON promozioni_img.promozioni_id = promozioni.id
     """;
 
 
@@ -200,7 +200,7 @@ ORDER BY tour asc
     String sql_eseguire = """SELECT DISTINCT 
     promozioni.id
     FROM promozioni
-    WHERE promozioni.id NOT IN (SELECT promozioni_img.promozione_id FROM promozioni_img)
+    WHERE promozioni.id NOT IN (SELECT promozioni_img.promozioni_id FROM promozioni_img)
     ;""";
 
     // print(sql_eseguire);

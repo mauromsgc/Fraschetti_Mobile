@@ -13,7 +13,7 @@ class CatalogoModel {
   int sospeso = 0;
   int ordinatore = 0;
   int primo_codice = 0;
-  int promozione_id = 0;
+  int promozioni_id = 0;
   String famiglie_descrizione = "";
   String famiglie_colore = "";
   String immagine = "";
@@ -31,7 +31,7 @@ class CatalogoModel {
     this.sospeso = 0,
     this.ordinatore = 0,
     this.primo_codice = 0,
-    this.promozione_id = 0,
+    this.promozioni_id = 0,
     this.famiglie_descrizione = "",
     this.famiglie_colore = "",
     this.immagine = "",
@@ -52,7 +52,7 @@ class CatalogoModel {
     oggetto.sospeso = map["sospeso"];
     oggetto.ordinatore = map["ordinatore"];
     oggetto.primo_codice = map["primo_codice"];
-    oggetto.promozione_id = map["promozione_id"];
+    oggetto.promozioni_id = map["promozioni_id"];
     oggetto.famiglie_descrizione = map["famiglie_descrizione"];
     oggetto.famiglie_colore = map["famiglie_colore"];
     oggetto.immagine = map["immagine"];
@@ -69,7 +69,7 @@ class CatalogoModel {
     String codice = "",
     int famiglia_id = 0,
     int assortimento_id = 0,
-    int promozione_id = 0,
+    int promozioni_id = 0,
     String selezione = "",
     String ordinamento_campo = "",
     String ordinamento_verso = "",
@@ -84,7 +84,7 @@ class CatalogoModel {
     catalogo.sospeso,
     catalogo.ordinatore,
     famiglie.colore as famiglie_colore,
-    ifnull(promozioni_codici.promozione_id, 0) as promozione_id,
+    ifnull(promozioni_codici.promozioni_id, 0) as promozioni_id,
     ifnull(catalogo_img.immagine_preview, '') as immagine_preview
     FROM catalogo
     LEFT JOIN famiglie ON famiglie.id = catalogo.famiglia
@@ -119,8 +119,8 @@ class CatalogoModel {
           " LEFT JOIN assortimenti ON assortimenti.id = assortimenti_codici.assortimenti_id ");
       sql_where.add(" assortimenti.id = ${assortimento_id} ");
     }
-    if (promozione_id != 0) {
-      sql_where.add(" promozioni_codici.promozione_id = ${promozione_id} ");
+    if (promozioni_id != 0) {
+      sql_where.add(" promozioni_codici.promozioni_id = ${promozioni_id} ");
     }
     if (selezione != "") {
       switch (selezione) {
@@ -136,8 +136,8 @@ class CatalogoModel {
           sql_where.add(" codici.nuovo > 0 ");
           break;
         case 'in_offerta':
-          // il join per promozioni_codici c'è già per la proprietà promozione_id della lista
-          sql_where.add(" promozione_id > 0 ");
+          // il join per promozioni_codici c'è già per la proprietà promozioni_id della lista
+          sql_where.add(" promozioni_id > 0 ");
           break;
       }
     }
@@ -166,7 +166,7 @@ class CatalogoModel {
     return catalogo_lista;
   }
 
-  static Future<CatalogoModel> scheda_form_id({
+  static Future<CatalogoModel> cerca_id({
     int id = 0,
   }) async {
     CatalogoModel catalogo_cheda;
@@ -181,7 +181,7 @@ class CatalogoModel {
     catalogo.sospeso,
     catalogo.ordinatore,
     catalogo.primo_codice,
-    ifnull(promozioni_codici.promozione_id, 0) as promozione_id,
+    ifnull(promozioni_codici.promozioni_id, 0) as promozioni_id,
     famiglie.descrizione as famiglie_descrizione,
     famiglie.colore as famiglie_colore,
     ifnull(catalogo_img.immagine, '') as immagine,
@@ -225,9 +225,7 @@ class CatalogoModel {
 
     if (rows.length > 0) {
       catalogo_cheda = CatalogoModel.fromMap(rows.first);
-      print("cat mod 1");
       catalogo_cheda.codici = await CodiceModel.codici_lista(catalogo_id: catalogo_cheda.id);
-      print("cat mod 2");
     } else {
       catalogo_cheda = CatalogoModel();
     }

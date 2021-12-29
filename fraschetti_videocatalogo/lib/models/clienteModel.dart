@@ -7,7 +7,7 @@ import 'package:sqflite/sqflite.dart';
 class ClienteModel {
 
   int id = 0;
-  int agente_id = 0;
+  int agenti_id = 0;
   String ragione_sociale = "";
   String localita = "";
   String indirizzo = "";
@@ -27,7 +27,7 @@ class ClienteModel {
   // il costruttore con tutti i parametri lo uso solo per creare i record fake
   ClienteModel({
     this.id = 0,
-    this.agente_id = 0,
+    this.agenti_id = 0,
     this.ragione_sociale = "",
     this.localita = "",
     this.indirizzo = "",
@@ -45,15 +45,15 @@ class ClienteModel {
     this.giacenze_disattivate = 0,
   });
 
-  // ClienteModel.cliente_cerca({int cliente_id = 0, String codice = ""}) {
-  //   ClienteModel.cliente_da(cliente_id: cliente_id, codice: codice);
+  // ClienteModel.cliente_cerca({int clienti_id = 0, String codice = ""}) {
+  //   ClienteModel.cliente_da(clienti_id: clienti_id, codice: codice);
   // }
 
   factory ClienteModel.fromMap(Map<String, dynamic> map) {
     ClienteModel oggetto = ClienteModel();
 
     oggetto.id = map["id"];
-    oggetto.agente_id = map["agente_id"];
+    oggetto.agenti_id = map["agenti_id"];
     oggetto.ragione_sociale = map["ragione_sociale"];
     oggetto.localita = map["localita"];
     oggetto.indirizzo = map["indirizzo"];
@@ -75,7 +75,7 @@ class ClienteModel {
 
   Map<String, dynamic> toMap() => {
         "id": id,
-        "agente_id": agente_id,
+        "agenti_id": agenti_id,
         "ragione_sociale": ragione_sociale,
         "localita": localita,
         "indirizzo": indirizzo,
@@ -94,16 +94,16 @@ class ClienteModel {
       };
 
 
-  static Future<ClienteModel> cliente_da({int cliente_id = 0, String codice = ""}) async {
+  static Future<ClienteModel> cliente_da({int clienti_id = 0, String codice = ""}) async {
     Database db = GetIt.instance<DbRepository>()
         .database;
 
     String sql_where = "";
     List sql_argomenti = [];
 
-    if(cliente_id != 0){
+    if(clienti_id != 0){
       sql_where += "id = ?";
-      sql_argomenti.add(cliente_id);
+      sql_argomenti.add(clienti_id);
     }
     if(codice != ""){
       if (sql_where != ""){
@@ -133,7 +133,7 @@ class ClienteModel {
     Database db = GetIt.instance<DbRepository>().database;
     String sql_eseguire = """SELECT DISTINCT 
     clienti.id,
-    clienti.agente_id,
+    clienti.agenti_id,
     clienti.codice,
     clienti.ragione_sociale,
     clienti.localita
@@ -166,7 +166,7 @@ class ClienteModel {
           break;
         case 'con_ordine':
           sql_join
-              .add("LEFT JOIN ordini ON ordini.cliente_id = clienti.id");
+              .add("LEFT JOIN ordini ON ordini.clienti_id = clienti.id");
           sql_where.add(" ordini.id > 0 ");
           break;
       }

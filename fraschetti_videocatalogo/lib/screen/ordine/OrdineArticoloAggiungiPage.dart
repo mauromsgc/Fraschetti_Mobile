@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
+import 'package:fraschetti_videocatalogo/models/ordineModel.dart';
 import 'package:get_it/get_it.dart';
 
 class OrdineArticoloAggiungiPageArgs {
-  int ordine_riga_id;
+  int id;
   int codice_id;
 
   OrdineArticoloAggiungiPageArgs({
-    this.ordine_riga_id = 0,
+    this.id = 0,
     this.codice_id = 0,
   });
 }
@@ -24,8 +25,38 @@ class OrdineArticoloAggiungiPage extends StatefulWidget {
 }
 
 class _OrdineArticoloAggiungiPageState extends State<OrdineArticoloAggiungiPage> {
+  OrdineArticoloAggiungiPageArgs argomenti = OrdineArticoloAggiungiPageArgs();
 
-  void savalOnSubmit(BuildContext context) async {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+
+  @override
+  void didChangeDependencies() {
+    if (ModalRoute.of(context)?.settings.arguments != null) {
+      argomenti = ModalRoute.of(context)?.settings.arguments as OrdineArticoloAggiungiPageArgs;
+    }
+
+    _ordine_riga_carica();
+
+    super.didChangeDependencies();
+  }
+
+  Future<void> _ordine_riga_carica() async {
+    // se argomenti.id != 0 carico la riga del record
+    // se argomenti.id == 0 e argomenti.codice != "" cerco il codice e creo un nuovo oggetto
+
+    // ordine_righe_lista = await OrdineModel.ordini_lista(
+    //   clienti_id: GetIt.instance<SessioneModel>().clienti_id_selezionato,
+    //   numero: GetIt.instance<SessioneModel>().ordine_id_corrente,
+    // );
+    // lista_elementi_numero = ordine_righe_lista.length;
+    // setState(() {});
+  }
+
+    void savalOnSubmit(BuildContext context) async {
     // final username = usernameController.text.trim();
     // final password = passwordController.text.trim();
     // final password_verifica = password_verificaController.text.trim();

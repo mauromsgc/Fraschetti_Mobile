@@ -114,7 +114,7 @@ class ComunicazioneModel {
     return comunicazioni_lista;
   }
 
-  static Future<ComunicazioneModel> scheda_form_id({
+  static Future<ComunicazioneModel> nuovo_da_id({
     int id = 0,
   }) async {
     ComunicazioneModel comunicazione_scheda;

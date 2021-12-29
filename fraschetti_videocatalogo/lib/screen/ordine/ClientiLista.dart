@@ -86,7 +86,7 @@ class _ClienteListaState extends State<ClienteLista> {
 
   Future<void> listaClick(BuildContext context, {int clienti_id = 0}) async {
     bool cliente_selezionato = await GetIt.instance<SessioneModel>()
-        .cliente_seleziona(cliente_id: clienti_id);
+        .cliente_seleziona(clienti_id: clienti_id);
 
     if (cliente_selezionato == true) {
       // seleziona il cliente e va in ordine

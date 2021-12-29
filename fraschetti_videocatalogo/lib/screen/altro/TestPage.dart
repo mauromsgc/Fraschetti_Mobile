@@ -49,7 +49,7 @@ class _TestPageState extends State<TestPage> {
   Future<void> _catalogo_scheda_carica({
     int id = 0,
   }) async {
-    pageStato.value.catalogo_scheda = await CatalogoModel.scheda_form_id(
+    pageStato.value.catalogo_scheda = await CatalogoModel.cerca_id(
       id: id,
     );
     // pageStato.value.lista_elementi_numero =

@@ -21,7 +21,7 @@ class CodiceModel {
   String codice_ean = "";
   int disponibilita_stato = 0;
   String disponibilita_data_arrivo = "";
-  int promozione_id = 0;
+  int promozioni_id = 0;
   String immagine_preview = "";
 
   CodiceModel({
@@ -42,7 +42,7 @@ class CodiceModel {
     this.codice_ean = "",
     this.disponibilita_stato = 0,
     this.disponibilita_data_arrivo = "",
-    this.promozione_id = 0,
+    this.promozioni_id = 0,
     this.immagine_preview = "",
   });
 
@@ -66,7 +66,7 @@ class CodiceModel {
     oggetto.codice_ean = map["codice_ean"];
     oggetto.disponibilita_stato = map["disponibilita_stato"];
     oggetto.disponibilita_data_arrivo = map["disponibilita_data_arrivo"];
-    oggetto.promozione_id = map["promozione_id"];
+    oggetto.promozioni_id = map["promozioni_id"];
     oggetto.immagine_preview = map["immagine_preview"];
 
     return oggetto;
@@ -89,7 +89,7 @@ class CodiceModel {
         "codice_ean": codice_ean,
         "disponibilita_stato": disponibilita_stato,
         "disponibilita_data_arrivo": disponibilita_data_arrivo,
-        "promozione_id": promozione_id,
+        "promozioni_id": promozioni_id,
       };
 
   String get disponibilita_stato_testo {
@@ -149,7 +149,7 @@ class CodiceModel {
     ifnull(codici_ean.codice_ean, '') as codice_ean,
     ifnull(disponibilita.stato, 0) as disponibilita_stato,
     ifnull(disponibilita.data_arrivo, '') as disponibilita_data_arrivo,
-    ifnull(promozioni_codici.promozione_id, 0) as promozione_id,
+    ifnull(promozioni_codici.promozioni_id, 0) as promozioni_id,
     ifnull(catalogo_img.immagine_preview, '') as immagine_preview
     FROM codici
     LEFT JOIN catalogo ON catalogo.id = codici.catalogo_id

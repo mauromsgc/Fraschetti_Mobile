@@ -47,8 +47,8 @@ class AgenteModel {
     int giacenze_disattivate = 0,
   });
 
-  // AgenteModel.agente_cerca({int agente_id = 0, String codice = ""}) {
-  //     AgenteModel.agente_da(agente_id: agente_id, codice: codice);
+  // AgenteModel.agente_cerca({int agenti_id = 0, String codice = ""}) {
+  //     AgenteModel.agente_da(agenti_id: agenti_id, codice: codice);
   // }
 
   factory AgenteModel.fromMap(Map<String, dynamic> map) {
@@ -100,15 +100,15 @@ class AgenteModel {
       };
 
   static Future<AgenteModel> agente_da(
-      {int agente_id = 0, String codice = ""}) async {
+      {int agenti_id = 0, String codice = ""}) async {
     Database db = GetIt.instance<DbRepository>().database;
 
     String sql_where = "";
     List sql_argomenti = [];
 
-    if (agente_id != 0) {
+    if (agenti_id != 0) {
       sql_where += "id = ?";
-      sql_argomenti.add(agente_id);
+      sql_argomenti.add(agenti_id);
     }
     if (codice != "") {
       if (sql_where != "") {

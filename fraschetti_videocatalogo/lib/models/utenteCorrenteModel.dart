@@ -45,9 +45,9 @@ class UtenteCorrenteModel {
     this.inizializza();
   }
 
-  int agente_id =
+  int agenti_id =
       0; // id agente per utente agente, id agente del cliente per utente cliente
-  int cliente_id = 0; // id cliente per utente cliente
+  int clienti_id = 0; // id cliente per utente cliente
   int utente_id = 0;
   String cognome = "";
   String nome = "";
@@ -86,7 +86,7 @@ class UtenteCorrenteModel {
         // AgenteModel agente_record = AgenteModel.agente_cerca(codice: this.utente_codice);
         AgenteModel agente_record = await AgenteModel.agente_da(codice: this.utente_codice);
 
-        this.agente_id = agente_record.id;
+        this.agenti_id = agente_record.id;
         this.utente_id = agente_record.id;
         this.utente_sede_codice = agente_record.sede;
         this.utente_sede_sigla = agente_record.sede_sigla;
@@ -113,7 +113,7 @@ class UtenteCorrenteModel {
         // AgenteModel agente_record = AgenteModel.agente_cerca(codice: this.utente_codice);
         AgenteModel agente_record = await AgenteModel.agente_da(codice: this.utente_codice);
 
-        this.agente_id = agente_record.id;
+        this.agenti_id = agente_record.id;
         this.utente_id = agente_record.id;
         this.utente_sede_codice = agente_record.sede;
         this.utente_sede_sigla = agente_record.sede_sigla;
@@ -149,7 +149,7 @@ class UtenteCorrenteModel {
         // ClienteModel cliente_record = ClienteModel.cliente_cerca(codice: this.utente_codice);
         ClienteModel cliente_record = await ClienteModel.cliente_da(codice: this.utente_codice);
 
-        this.agente_id = cliente_record.agente_id;
+        this.agenti_id = cliente_record.agenti_id;
         this.utente_id = cliente_record.id;
         this.utente_sede_codice = cliente_record.sede;
         this.utente_sede_sigla = cliente_record.sede_sigla;

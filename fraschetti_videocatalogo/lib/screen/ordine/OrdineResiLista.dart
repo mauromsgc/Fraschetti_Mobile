@@ -58,7 +58,7 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
     );
   }
 
-  void reso_numeroOnSubmit(BuildContext context) {
+  void numeroOnSubmit(BuildContext context) {
     return;
   }
 
@@ -237,8 +237,8 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
                     // padding: EdgeInsets.all(5),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(elevation: 2),
-                      onPressed: () => reso_numeroOnSubmit(context),
-                      child: Text("Reso numero ${GetIt.instance<SessioneModel>().reso_numero_corrente}"),
+                      onPressed: () => numeroOnSubmit(context),
+                      child: Text("Reso numero ${GetIt.instance<SessioneModel>().reso_id_corrente}"),
                     ),
                   ),
                 ),

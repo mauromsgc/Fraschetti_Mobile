@@ -10,12 +10,12 @@ import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 class PromozionePageArgs {
   List<Map>? promozioni_lista;
   int indice;
-  int promozione_id;
+  int promozioni_id;
 
   PromozionePageArgs({
     this.promozioni_lista = null,
     this.indice = 0,
-    this.promozione_id = 0,
+    this.promozioni_id = 0,
   });
 }
 
@@ -54,9 +54,9 @@ class _PromozionePageState extends State<PromozionePage> {
         lista_elementi_numero = argomenti.promozioni_lista!.length;
         lista_elementi_indice = argomenti.indice;
       }
-      if ((argomenti.promozione_id != 0) &&
+      if ((argomenti.promozioni_id != 0) &&
           (argomenti.promozioni_lista == null)) {
-        _promozione_scheda_carica(id: argomenti.promozione_id);
+        _promozione_scheda_carica(id: argomenti.promozioni_id);
         lista_elementi_numero = 1;
         lista_elementi_indice = 0;
       }
@@ -68,11 +68,11 @@ class _PromozionePageState extends State<PromozionePage> {
   Future<void> _promozione_scheda_carica({
     int id = 0,
   }) async {
-    promozione_scheda = await PromozioneModel.scheda_form_id(
+    promozione_scheda = await PromozioneModel.nuovo_da_id(
       id: id,
     );
     articoli_lista = await CatalogoModel.catalogo_lista(
-      promozione_id: promozione_scheda.id,
+      promozioni_id: promozione_scheda.id,
     );
     setState(() {});
   }
@@ -298,7 +298,7 @@ class _PromozionePageState extends State<PromozionePage> {
                               ),
                             ),
                           ),
-                        if (articoli_lista[index]['promozione_id'] > 0)
+                        if (articoli_lista[index]['promozioni_id'] > 0)
                           Positioned(
                             bottom: 0,
                             right: 0,

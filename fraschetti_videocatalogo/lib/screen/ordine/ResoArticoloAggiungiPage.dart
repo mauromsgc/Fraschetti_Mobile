@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class ResoArticoloAggiungiPageArgs {
-  int reso_riga_id;
+  int id;
 
   ResoArticoloAggiungiPageArgs({
-    this.reso_riga_id = 0,
+    this.id = 0,
   });
 }
 

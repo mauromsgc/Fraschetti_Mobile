@@ -9,6 +9,7 @@ import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/models/codiceModel.dart';
 import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/ordineModel.dart';
+import 'package:fraschetti_videocatalogo/models/ordineRigaModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/comunicazioniRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaPage.dart';
 import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaWidget.dart';
@@ -31,7 +32,7 @@ class OrdineLista extends StatefulWidget {
 }
 
 class _OrdineListaState extends State<OrdineLista> {
-  List<OrdineModel> ordine_righe_lista = [];
+  OrdineModel ordine_scheda = OrdineModel();
 
   int lista_elementi_numero = 0;
 
@@ -40,17 +41,16 @@ class _OrdineListaState extends State<OrdineLista> {
   void initState() {
     super.initState();
     GetIt.instance<SessioneModel>().ordine_top_menu_indice = 1;
-    _clienti_lista_cerca();
+    _ordine_cliente_seleziona();
   }
 
 
-  Future<void> _clienti_lista_cerca() async {
+  Future<void> _ordine_cliente_seleziona() async {
 
-    ordine_righe_lista = await OrdineModel.ordini_lista(
-      cliente_id: GetIt.instance<SessioneModel>().cliente_id_selezionato,
-      ordini_numero: GetIt.instance<SessioneModel>().ordine_numero_corrente,
+    ordine_scheda = await OrdineModel.ordine_cliente_seleziona(
+      cliente_id: GetIt.instance<SessioneModel>().clienti_id_selezionato,
     );
-    lista_elementi_numero = ordine_righe_lista.length;
+    lista_elementi_numero = ordine_scheda.righe.length;
     setState(() {});
   }
 
@@ -59,7 +59,7 @@ class _OrdineListaState extends State<OrdineLista> {
     Navigator.pushNamed(context, OrdineArticoloAggiungiPage.routeName);
 
     // bool cliente_selezionato = await GetIt.instance<SessioneModel>()
-    //     .cliente_seleziona(cliente_id: clienti_id);
+    //     .cliente_seleziona(clienti_id: clienti_id);
     //
     // if (cliente_selezionato == true) {
     //   // seleziona il cliente e va in ordine
@@ -97,30 +97,30 @@ class _OrdineListaState extends State<OrdineLista> {
   }
 
   Future<void> ordine_chiudi() async {
-     await GetIt.instance<SessioneModel>().cliente_deseleziona();
+    GetIt.instance<SessioneModel>().cliente_deseleziona();
     Navigator.popAndPushNamed(context, ClienteLista.routeName);
 
   }
 
   Future<void> ordine_riga_elimina({int id = 0}) async {
-    await GetIt.instance<SessioneModel>().cliente_deseleziona();
+    GetIt.instance<SessioneModel>().cliente_deseleziona();
     Navigator.popAndPushNamed(context, ClienteLista.routeName);
 
   }
 
   Future<void> ordine_elimina() async {
-    await GetIt.instance<SessioneModel>().cliente_deseleziona();
+    GetIt.instance<SessioneModel>().cliente_deseleziona();
     Navigator.popAndPushNamed(context, ClienteLista.routeName);
 
   }
 
   Future<void> ordine_totale_mostra() async {
-    await GetIt.instance<SessioneModel>().cliente_deseleziona();
+    GetIt.instance<SessioneModel>().cliente_deseleziona();
     Navigator.popAndPushNamed(context, ClienteLista.routeName);
 
   }
 
-  void ordine_numeroOnSubmit(BuildContext context) {
+  void numeroOnSubmit(BuildContext context) {
     return;
   }
 
@@ -273,7 +273,7 @@ class _OrdineListaState extends State<OrdineLista> {
                   thickness: 2,
                   // color: Theme.of(context).primaryColor,
                 ),
-                ListaWidget(ordine_righe_lista),
+                ListaWidget(ordine_scheda.righe),
               ],
             ),
           ),
@@ -345,9 +345,9 @@ class _OrdineListaState extends State<OrdineLista> {
                     // padding: EdgeInsets.all(5),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(elevation: 2),
-                      onPressed: () => ordine_numeroOnSubmit(context),
+                      onPressed: () => numeroOnSubmit(context),
                       child: Text(
-                          "Ordine numero ${GetIt.instance<SessioneModel>().ordine_numero_corrente}"),
+                          "Ordine numero ${GetIt.instance<SessioneModel>().ordine_id_corrente}"),
                     ),
                   ),
                 ),
@@ -360,7 +360,7 @@ class _OrdineListaState extends State<OrdineLista> {
   }
 
 // riga lista
-  Widget ListaWidget(List<OrdineModel> ordine_righe_lista) {
+  Widget ListaWidget(List<OrdineRigaModel> ordine_righe_lista) {
     return Expanded(
       child: ListView.separated(
         separatorBuilder: (context, index) => Divider(
@@ -444,7 +444,7 @@ class _OrdineListaState extends State<OrdineLista> {
                       // color: Colors.orange,
                       decoration: MyBoxDecoration().MyBox(),
                       child: Text(
-                        ordine_righe_lista[index].articolo_codice,
+                        ordine_righe_lista[index].codice,
                         // style: TextStyle(fontSize: 14.0),
                       ),
                     ),

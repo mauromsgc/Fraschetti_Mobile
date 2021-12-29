@@ -106,12 +106,12 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
     );
   }
 
-  void promozione_mostra(BuildContext context, {int promozione_id = 0}) {
+  void promozione_mostra(BuildContext context, {int promozioni_id = 0}) {
     Navigator.pushNamed(
       context,
       PromozionePage.routeName,
       arguments: PromozionePageArgs(
-        promozione_id: promozione_id,
+        promozioni_id: promozioni_id,
       ),
     );
   }
@@ -616,15 +616,15 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                               ),
                             ),
                           ),
-                        if (articoli_lista[index]['promozione_id'] > 0)
+                        if (articoli_lista[index]['promozioni_id'] > 0)
                           Positioned(
                             bottom: 0,
                             right: 0,
                             child: InkWell(
                               onTap: () {
                                 promozione_mostra(context,
-                                    promozione_id: articoli_lista[index]
-                                        ['promozione_id']);
+                                    promozioni_id: articoli_lista[index]
+                                        ['promozioni_id']);
                               },
                               child: Container(
                                 width: 60,

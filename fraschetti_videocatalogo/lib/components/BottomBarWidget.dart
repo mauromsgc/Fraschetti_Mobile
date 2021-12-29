@@ -55,7 +55,7 @@ class _BottomBarWidgetState extends State<BottomBarWidget> {
         Navigator.popAndPushNamed(context, ComunicazioneListaPage.routeName);
         break;
       case 3:
-        if (GetIt.instance<SessioneModel>().cliente_id_selezionato == 0) {
+        if (GetIt.instance<SessioneModel>().clienti_id_selezionato == 0) {
           // se il cliente NON è selezionato va in elenco clienti
           GetIt.instance<SessioneModel>().ordine_top_menu_indice = 0;
           Navigator.popAndPushNamed(context, ClienteLista.routeName);

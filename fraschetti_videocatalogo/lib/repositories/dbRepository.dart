@@ -139,7 +139,7 @@ immagine_preview TEXT
         await db.execute("""
 CREATE TABLE clienti ( 
 id INTEGER NOT NULL PRIMARY KEY, 
-agente_id INTEGER,
+agenti_id INTEGER,
 ragione_sociale CHAR(50,0), 
 localita CHAR(40,0), 
 indirizzo TEXT, 
@@ -256,24 +256,25 @@ descrizione CHAR(50,0),
 modulo TEXT
 )""");
 
-        await db.execute("DROP TABLE IF EXISTS note");
-        await db.execute("""
-CREATE TABLE note ( 
-id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
-agente_id INTEGER, 
-cliente_id INTEGER, 
-ordini_numero INTEGER, 
-note TEXT
-)""");
 
         await db.execute("DROP TABLE IF EXISTS ordini");
         await db.execute("""
 CREATE TABLE ordini ( 
 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
-cliente_id INTEGER, 
-agente_id INTEGER, 
-ordini_numero INTEGER, 
-articolo_codice CHAR(6,0), 
+agenti_id INTEGER, 
+clienti_id INTEGER, 
+numero INTEGER, 
+note TEXT,
+sospeso INTEGER, 
+email_cliente_non_inviare INTEGER 
+)""");
+
+        await db.execute("DROP TABLE IF EXISTS ordini_righe");
+        await db.execute("""
+CREATE TABLE ordini_righe ( 
+id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+ordini_id INTEGER, 
+codice CHAR(6,0), 
 descrizione TEXT, 
 um CHAR(2,0), 
 quantita REAL, 
@@ -295,7 +296,7 @@ ordinatore integer
         await db.execute("DROP TABLE IF EXISTS promozioni_codici");
         await db.execute("""
 CREATE TABLE promozioni_codici ( 
-promozione_id INTEGER, 
+promozioni_id INTEGER, 
 catalogo_id integer, 
 ordinatore integer
 )""");
@@ -303,7 +304,7 @@ ordinatore integer
         await db.execute("DROP TABLE IF EXISTS promozioni_img");
         await db.execute("""
 CREATE TABLE promozioni_img ( 
-promozione_id INTEGER NOT NULL PRIMARY KEY, 
+promozioni_id INTEGER NOT NULL PRIMARY KEY, 
 immagine TEXT, 
 immagine_preview TEXT
 )""");
@@ -311,7 +312,7 @@ immagine_preview TEXT
         await db.execute("DROP TABLE IF EXISTS promozioni_new");
         await db.execute("""
 CREATE TABLE promozioni_new ( 
-promozione_id INTEGER NOT NULL PRIMARY KEY, 
+promozioni_id INTEGER NOT NULL PRIMARY KEY, 
 immagine TEXT, 
 immagine_preview TEXT
 )""");
@@ -320,10 +321,17 @@ immagine_preview TEXT
         await db.execute("""
 CREATE TABLE resi ( 
 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
-cliente_id INTEGER, 
-agente_id INTEGER, 
-resi_numero INTEGER, 
-articolo_codice CHAR(6,0), 
+clienti_id INTEGER, 
+agenti_id INTEGER, 
+numero INTEGER
+)""");
+
+        await db.execute("DROP TABLE IF EXISTS resi_righe");
+        await db.execute("""
+CREATE TABLE resi_righe ( 
+id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+resi_id INTEGER, 
+codice CHAR(6,0), 
 descrizione TEXT, 
 um CHAR(2,0), 
 quantita REAL, 
@@ -438,31 +446,25 @@ descrizione CHAR(30,0)
         await db.execute(
             "CREATE INDEX invio_mittente_tipo_indice ON invio (mittente_tipo ASC)");
         await db.execute(
-            "CREATE INDEX note_cliente_id_indice ON note (cliente_id ASC)");
+            "CREATE INDEX ordini_clienti_id_indice ON ordini (clienti_id ASC)");
         await db.execute(
-            "CREATE INDEX note_agente_id_indice ON note (agente_id ASC)");
+            "CREATE INDEX ordini_agenti_id_indice ON ordini (agenti_id ASC)");
         await db.execute(
-            "CREATE INDEX note_ordini_numero_indice ON note (ordini_numero ASC)");
+            "CREATE INDEX ordini_numero_indice ON ordini (numero ASC)");
         await db.execute(
-            "CREATE INDEX ordini_cliente_id_indice ON ordini (cliente_id ASC)");
-        await db.execute(
-            "CREATE INDEX ordini_agente_id_indice ON ordini (agente_id ASC)");
-        await db.execute(
-            "CREATE INDEX ordini_ordini_numero_indice ON ordini (ordini_numero ASC)");
-        await db.execute(
-            "CREATE INDEX ordini_articolo_codice_indice ON ordini (articolo_codice ASC)");
+            "CREATE INDEX ordini_righe_codice_indice ON ordini_righe (codice ASC)");
         await db.execute(
             "CREATE INDEX promozioni_nome_indice ON promozioni (nome ASC)");
         await db.execute(
-            "CREATE INDEX promozioni_codici_promozione_id_indice ON promozioni_codici (promozione_id ASC)");
+            "CREATE INDEX promozioni_codici_promozioni_id_indice ON promozioni_codici (promozioni_id ASC)");
         await db.execute(
-            "CREATE INDEX resi_cliente_id_indice ON resi (cliente_id ASC)");
+            "CREATE INDEX resi_clienti_id_indice ON resi (clienti_id ASC)");
         await db.execute(
-            "CREATE INDEX resi_agente_id_indice ON resi (agente_id ASC)");
+            "CREATE INDEX resi_agenti_id_indice ON resi (agenti_id ASC)");
         await db.execute(
-            "CREATE INDEX resi_resi_numero_indice ON resi (resi_numero ASC)");
+            "CREATE INDEX resi_numero_indice ON resi (numero ASC)");
         await db.execute(
-            "CREATE INDEX resi_articolo_codice_indice ON resi (articolo_codice ASC)");
+            "CREATE INDEX resi_righe_codice_indice ON resi_righe (codice ASC)");
       },
     );
 

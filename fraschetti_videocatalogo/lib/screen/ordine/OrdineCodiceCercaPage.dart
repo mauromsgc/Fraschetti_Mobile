@@ -56,7 +56,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
   }
 
   void listaClick(BuildContext context, int codice_id) {
-    if(GetIt.instance<SessioneModel>().cliente_id_selezionato == 0){
+    if(GetIt.instance<SessioneModel>().clienti_id_selezionato == 0){
       Navigator.pushNamed(
         context,
         ClienteLista.routeName,
@@ -69,7 +69,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
         context,
         OrdineArticoloAggiungiPage.routeName,
         arguments: OrdineArticoloAggiungiPageArgs(
-          ordine_riga_id: 0,
+          id: 0,
           codice_id: codice_id,
         ),
       );
