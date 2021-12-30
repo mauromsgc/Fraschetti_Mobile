@@ -127,6 +127,7 @@ class OrdineModel {
     int sospeso = -1,
     int email_cliente_non_inviare = -1,
   }) async {
+    print("ordini_cerca inizio");
     // uso questa ricerca sia per la lista delle gighe oridine
     // sia per quando mi servono tutti gli ordini da inviare
     List<OrdineModel> ordini_lista = [];
@@ -189,14 +190,24 @@ class OrdineModel {
 
     // ordini_lista = rows.map((row) => OrdineModel.fromMap(row)).toList();
 
-    rows.forEach((row) async {
+    print("ordini_cerca rows.length ${rows.length}");
+
+    await Future.forEach(rows, (Map<String, dynamic> row) async {
+      // rows.forEach((row) async {
+      print("ordini_cerca fromMap inizio");
       OrdineModel oggetto = OrdineModel.fromMap(row);
+      print("ordini_cerca fromMap fine");
 
-      oggetto.righe =
-          await OrdineRigaModel.ordini_righe_cerca(ordini_id: oggetto.id);
+      print("ordini_cerca oggetto.righe inizio");
+      oggetto.righe = await OrdineRigaModel.ordini_righe_cerca(ordini_id: oggetto.id);
+      print("ordini_cerca oggetto.righe fine");
 
+      print("ordini_cerca oggetto ${oggetto.toMap_record()}");
       ordini_lista.add(oggetto);
     });
+    print("ordini_cerca ordini_lista.length ${ordini_lista.length}");
+
+    print("ordini_cerca fine");
 
     return ordini_lista;
   }
@@ -209,6 +220,7 @@ class OrdineModel {
     int sospeso = -1,
     int email_cliente_non_inviare = -1,
   }) async {
+    print("ordini_cerca_singolo inizio");
     // cerca un record esistente
     // e restituisce l'oggetto relativo al record
     OrdineModel ordine_scheda;
@@ -222,6 +234,7 @@ class OrdineModel {
       email_cliente_non_inviare: email_cliente_non_inviare,
     );
 
+    print("ordini_cerca_singolo ordini_lista.length ${ordini_lista.length}");
     if (ordini_lista.length > 0) {
       ordine_scheda = ordini_lista.first;
     } else {
@@ -229,6 +242,7 @@ class OrdineModel {
       ordine_scheda = OrdineModel();
     }
 
+    print("ordini_cerca_singolo fine");
     return ordine_scheda;
   }
 

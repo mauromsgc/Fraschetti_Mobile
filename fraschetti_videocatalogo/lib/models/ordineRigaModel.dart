@@ -127,6 +127,7 @@ class OrdineRigaModel {
     int clienti_id = 0,
     String codice = "",
   }) async {
+    print("ordini_righe_cerca inizio");
     List<OrdineRigaModel> ordini_righe_lista = [];
 
     Database db = GetIt.instance<DbRepository>().database;
@@ -190,9 +191,8 @@ class OrdineRigaModel {
 
     // ordini_righe_lista = rows.map((row) => OrdineRigaModel.fromMap(row)).toList();
 
-    ordini_righe_lista = rows.map((row) => OrdineRigaModel.fromMap(row)).toList();
-
-    rows.forEach((row) async {
+    await Future.forEach(rows, (Map<String, dynamic> row) async {
+      // rows.forEach((row) async {
       OrdineRigaModel oggetto = OrdineRigaModel.fromMap(row);
 
       List<CodiceModel> result = await CodiceModel.codici_lista(codice: oggetto.codice);
@@ -201,9 +201,11 @@ class OrdineRigaModel {
       } else {
         oggetto.codice_scheda = CodiceModel();
       }
+      print("ordini_righe_cerca oggetto ${oggetto.toMap_record()}");
       ordini_righe_lista.add(oggetto);
     });
 
+    print("ordini_righe_cerca fine");
     return ordini_righe_lista;
   }
 
