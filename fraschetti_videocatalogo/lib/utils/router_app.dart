@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/screen/altro/AltroMenuPage.dart';
 import 'package:fraschetti_videocatalogo/screen/altro/TestPage.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/SplashPage.dart';
-import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaPage.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/ClientiLista.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoPage.dart';
@@ -80,9 +79,6 @@ class RouterApp {
 
       case AltroMenuLista.routeName:
         return MaterialPageRoute(settings: settings, builder: (context) => AltroMenuLista());
-
-      case DisponibilitaPage.routeName:
-        return MaterialPageRoute(settings: settings, builder: (context) => DisponibilitaPage());
 
       case TestPage.routeName:
         return MaterialPageRoute(settings: settings, builder: (context) => TestPage());

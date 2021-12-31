@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 import 'package:macadress_gen/macadress_gen.dart';
 
 
@@ -70,3 +71,29 @@ e riprovare""";
     },
   );
 }
+
+void test (){
+
+print(NumberFormat.currency(locale: 'eu', symbol: '').format(123456)); // 123.456,00
+}
+
+extension NumberParsing_double on double {
+  String toImporti() {
+    return NumberFormat.currency(locale: 'eu', symbol: '').format(this);
+  }
+
+  String toQuantita() {
+    var NumQuantita = NumberFormat("###.##", "it");
+    return NumQuantita.format(this);
+  }
+}
+
+
+extension NumberParsing_int on int {
+
+  String toQuantita() {
+  var NumQuantita = NumberFormat("###.##", "it");
+    return NumQuantita.format(this);
+  }
+}
+

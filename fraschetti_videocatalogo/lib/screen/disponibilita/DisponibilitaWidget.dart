@@ -12,7 +12,7 @@ WidgetBuilder DisponibilitaDialogWidget({
 
   Future<void> _codice_cerca({int id = 0}) async {
     List<CodiceModel> result;
-    result = await CodiceModel.codici_lista(id: id);
+    result = await CodiceModel.codici_cerca(id: id);
 
     codice_scheda = result.first;
   }

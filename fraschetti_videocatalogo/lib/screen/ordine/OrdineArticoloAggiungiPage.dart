@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/ordineModel.dart';
 import 'package:fraschetti_videocatalogo/models/ordineRigaModel.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/ClientiLista.dart';
+import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
+import 'package:fraschetti_videocatalogo/utils/Utility.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 
 class OrdineArticoloAggiungiPageArgs {
   int id;
@@ -30,6 +35,21 @@ class _OrdineArticoloAggiungiPageState
     extends State<OrdineArticoloAggiungiPage> {
   OrdineArticoloAggiungiPageArgs argomenti = OrdineArticoloAggiungiPageArgs();
   OrdineRigaModel ordine_riga_scheda = OrdineRigaModel();
+
+  final TextEditingController cliente_nominatico_con = TextEditingController();
+  final TextEditingController articolo_con = TextEditingController();
+  final TextEditingController codice_con = TextEditingController();
+  final TextEditingController codice_descrizione_con = TextEditingController();
+  final TextEditingController apribile_con = TextEditingController();
+  final TextEditingController unita_misura_con = TextEditingController();
+  final TextEditingController quantita_master_con = TextEditingController();
+  final TextEditingController pezzi_con = TextEditingController();
+  final TextEditingController prezzo_base_con = TextEditingController();
+  final TextEditingController quantita_con = TextEditingController();
+  final TextEditingController quantita_presente_con = TextEditingController();
+  final TextEditingController sconto_con = TextEditingController();
+  final TextEditingController prezzo_con = TextEditingController();
+  final TextEditingController prezzo_presente_con = TextEditingController();
 
   @override
   void initState() {
@@ -105,9 +125,34 @@ class _OrdineArticoloAggiungiPageState
         );
       }
     }
-
+    NumberFormat numberFormat = NumberFormat.decimalPattern('it');
+    print("ordine_riga_scheda ${ordine_riga_scheda.toMap_record().toString()}");
+    print(
+        "ordine_riga_scheda.codice_scheda ${ordine_riga_scheda.codice_scheda.toMap().toString()}");
     print("_ordine_riga_carica setState inizio");
-    setState(() {});
+    setState(() {
+      cliente_nominatico_con.text =
+          GetIt.instance<SessioneModel>().cliente_Nominativo_selezionato;
+      articolo_con.text = ordine_riga_scheda.codice_scheda.catalogo_nome;
+      codice_con.text = ordine_riga_scheda.codice;
+      codice_descrizione_con.text =
+          ordine_riga_scheda.codice_scheda.descrizione;
+      apribile_con.text =
+          (ordine_riga_scheda.codice_scheda.apribile == 1) ? "*" : "";
+      unita_misura_con.text = ordine_riga_scheda.um;
+      quantita_master_con.text = (ordine_riga_scheda.codice_scheda.quantita_massima != 0) ? ordine_riga_scheda.codice_scheda.quantita_massima.toQuantita() : "";
+      pezzi_con.text = ordine_riga_scheda.codice_scheda.pezzi.toQuantita();
+      prezzo_base_con.text = ordine_riga_scheda.codice_scheda.prezzo.toImporti();
+      quantita_con.text = ordine_riga_scheda.quantita.toQuantita();
+      quantita_presente_con.text = (ordine_riga_scheda.id != 0)
+          ? ordine_riga_scheda.quantita.toQuantita()
+          : "";
+      sconto_con.text = "0";
+      prezzo_con.text = ordine_riga_scheda.codice_scheda.prezzo.toImporti();
+      prezzo_presente_con.text = (ordine_riga_scheda.id != 0)
+          ? ordine_riga_scheda.prezzo.toImporti()
+          : "";
+    });
     print("_ordine_riga_carica setState fine");
 
     print("_ordine_riga_carica fine");
@@ -146,6 +191,10 @@ class _OrdineArticoloAggiungiPageState
     // }
 
     // t2 = await OrdineRigaModel.ordini_righe_cerca_singolo(id: record_id);
+    ordine_riga_scheda.quantita = double.parse(quantita_con.text);
+    ordine_riga_scheda.prezzo = double.parse(prezzo_con.text);
+    int record_id = await ordine_riga_scheda.record_salva();
+
 
     Navigator.of(context).pop();
   }
@@ -160,6 +209,7 @@ class _OrdineArticoloAggiungiPageState
 
   @override
   Widget build(BuildContext context) {
+    print("OrdineArticoloAggiungi Widget build");
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -183,10 +233,9 @@ class _OrdineArticoloAggiungiPageState
                     // cliente nominativo
                     padding: EdgeInsets.all(5),
                     child: TextFormField(
+                      controller: cliente_nominatico_con,
                       // readOnly: true,
                       enabled: false,
-                      initialValue: GetIt.instance<SessioneModel>()
-                          .cliente_Nominativo_selezionato,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey.shade200,
@@ -197,23 +246,43 @@ class _OrdineArticoloAggiungiPageState
                       ),
                     ),
                   ),
-                  Container(
-                    // articolo descrizione
-                    padding: EdgeInsets.all(5),
-                    child: TextFormField(
-                      // readOnly: true,
-                      enabled: false,
-                      initialValue:
-                          ordine_riga_scheda.codice_scheda.catalogo_nome,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey.shade200,
-                        contentPadding:
-                            EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                        border: OutlineInputBorder(),
-                        labelText: "Articolo",
+                  Row(
+                    children: [
+                      if(ordine_riga_scheda.codice_scheda.immagine_preview != "")
+                      Padding(
+                        padding: EdgeInsets.all(5),
+                        child: SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: Container(
+                            // width: 60,
+                            // height: 40,
+                            decoration: MyBoxDecoration().MyBox(),
+                            child: ListaImmagineWidget(
+                                immagine_base64: ordine_riga_scheda.codice_scheda.immagine_preview),
+                          ),
+                        ),
                       ),
-                    ),
+                      Expanded(
+                        child: Container(
+                          // articolo descrizione
+                          padding: EdgeInsets.all(5),
+                          child: TextFormField(
+                            controller: articolo_con,
+                            // readOnly: true,
+                            enabled: false,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.grey.shade200,
+                              contentPadding:
+                                  EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                              border: OutlineInputBorder(),
+                              labelText: "Articolo ",
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   Row(
                     children: [
@@ -222,9 +291,9 @@ class _OrdineArticoloAggiungiPageState
                         width: 100,
                         padding: EdgeInsets.all(5),
                         child: TextFormField(
+                          controller: codice_con,
                           // readOnly: true,
                           enabled: false,
-                          initialValue: ordine_riga_scheda.codice,
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.grey.shade200,
@@ -242,10 +311,9 @@ class _OrdineArticoloAggiungiPageState
                             // articolo codice descrizione
                             padding: EdgeInsets.all(5),
                             child: TextFormField(
+                              controller: codice_descrizione_con,
                               // readOnly: true,
                               enabled: false,
-                              initialValue:
-                                  ordine_riga_scheda.codice_scheda.descrizione,
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Colors.grey.shade200,
@@ -266,13 +334,9 @@ class _OrdineArticoloAggiungiPageState
                         width: 60,
                         padding: EdgeInsets.all(5),
                         child: TextFormField(
+                          controller: apribile_con,
                           // readOnly: true,
                           enabled: false,
-                          initialValue:
-                              (ordine_riga_scheda.codice_scheda.apribile ==
-                                      true)
-                                  ? "*"
-                                  : "",
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.grey.shade200,
@@ -288,9 +352,9 @@ class _OrdineArticoloAggiungiPageState
                         width: 70,
                         padding: EdgeInsets.all(5),
                         child: TextFormField(
+                          controller: unita_misura_con,
                           // readOnly: true,
                           enabled: false,
-                          initialValue: ordine_riga_scheda.codice_scheda.um,
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.grey.shade200,
@@ -301,15 +365,34 @@ class _OrdineArticoloAggiungiPageState
                           ),
                         ),
                       ),
+                      if(quantita_master_con.text != "")
                       Container(
                         // confezione
-                        width: 80,
+                        width: 90,
                         padding: EdgeInsets.all(5),
                         child: TextFormField(
+                          controller: quantita_master_con,
                           // readOnly: true,
                           enabled: false,
-                          initialValue: ordine_riga_scheda.codice_scheda.pezzi
-                              .toStringAsFixed(2),
+                          textAlign: TextAlign.right,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.grey.shade200,
+                            contentPadding:
+                            EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                            border: OutlineInputBorder(),
+                            labelText: "Master",
+                          ),
+                        ),
+                      ),
+                      Container(
+                        // confezione
+                        width: 90,
+                        padding: EdgeInsets.all(5),
+                        child: TextFormField(
+                          controller: pezzi_con,
+                          // readOnly: true,
+                          enabled: false,
                           textAlign: TextAlign.right,
                           decoration: InputDecoration(
                             filled: true,
@@ -326,10 +409,9 @@ class _OrdineArticoloAggiungiPageState
                         width: 120,
                         padding: EdgeInsets.all(5),
                         child: TextFormField(
+                          controller: prezzo_base_con,
                           // readOnly: true,
                           enabled: false,
-                          initialValue: ordine_riga_scheda.codice_scheda.prezzo
-                              .toStringAsFixed(2),
                           textAlign: TextAlign.right,
                           decoration: InputDecoration(
                             filled: true,
@@ -350,8 +432,7 @@ class _OrdineArticoloAggiungiPageState
                         width: 100,
                         padding: EdgeInsets.all(5),
                         child: TextFormField(
-                          initialValue:
-                              ordine_riga_scheda.quantita.toStringAsFixed(2),
+                          controller: quantita_con,
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.next,
                           textAlign: TextAlign.right,
@@ -363,16 +444,15 @@ class _OrdineArticoloAggiungiPageState
                           ),
                         ),
                       ),
-                      if (ordine_riga_scheda.quantita != 0)
+                      if (quantita_presente_con.text != "")
                         Container(
                           // quantità già presente
                           width: 100,
                           padding: EdgeInsets.all(5),
                           child: TextFormField(
+                            controller: quantita_presente_con,
                             // readOnly: true,
                             enabled: false,
-                            initialValue:
-                                ordine_riga_scheda.quantita.toStringAsFixed(2),
                             style: TextStyle(
                               color: Colors.red,
                             ),
@@ -403,7 +483,7 @@ class _OrdineArticoloAggiungiPageState
                         width: 80,
                         padding: EdgeInsets.all(5),
                         child: TextFormField(
-                          initialValue: "",
+                          controller: sconto_con,
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.next,
                           textAlign: TextAlign.right,
@@ -424,8 +504,7 @@ class _OrdineArticoloAggiungiPageState
                         width: 120,
                         padding: EdgeInsets.all(5),
                         child: TextFormField(
-                          initialValue: ordine_riga_scheda.codice_scheda.prezzo
-                              .toStringAsFixed(2),
+                          controller: prezzo_con,
                           onEditingComplete: () {
                             _form_salva(context);
                           },
@@ -440,17 +519,15 @@ class _OrdineArticoloAggiungiPageState
                           ),
                         ),
                       ),
-                      if (ordine_riga_scheda.prezzo != 0)
+                      if (prezzo_presente_con.text != "")
                         Container(
                           // confezione
                           width: 120,
                           padding: EdgeInsets.all(5),
                           child: TextFormField(
+                            controller: prezzo_presente_con,
                             // readOnly: true,
-
                             enabled: false,
-                            initialValue:
-                                ordine_riga_scheda.prezzo.toStringAsFixed(2),
                             style: TextStyle(
                               color: Colors.red,
                             ),
@@ -518,5 +595,15 @@ class _OrdineArticoloAggiungiPageState
         ),
       ),
     );
+  }
+
+  Widget ListaImmagineWidget({dynamic immagine_base64 = ""}) {
+    if ((immagine_base64 != null) && (immagine_base64 != "")) {
+      return Image.memory(
+        Base64Decoder().convert(immagine_base64),
+      );
+    } else {
+      return Image.asset("assets/immagini/splash_screen.png");
+    }
   }
 }

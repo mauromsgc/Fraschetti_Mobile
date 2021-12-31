@@ -14,6 +14,7 @@ import 'package:fraschetti_videocatalogo/screen/ordine/ClientiLista.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
 import 'package:fraschetti_videocatalogo/screen/promozioni/PromozionePage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
+import 'package:fraschetti_videocatalogo/utils/Utility.dart';
 import 'package:get_it/get_it.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -116,7 +117,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
 
   void articolo_disponibilita_mostra(
       BuildContext context, CodiceModel codice_scheda) {
-    // Navigator.pushNamed(context, DisponibilitaPage.routeName);
+
     showDialog(
       context: context,
       builder: DisponibilitaDialogWidget(
@@ -755,7 +756,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                           width: 50,
                           decoration: MyBoxDecoration().MyBox(),
                           child: Text(
-                            codice_scheda[index].quantita_massima.toString(),
+                            codice_scheda[index].quantita_massima.toQuantita(),
                             // style: TextStyle(fontSize: 18.0),
                           ),
                         ),
@@ -768,7 +769,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                         width: 50,
                         decoration: MyBoxDecoration().MyBox(),
                         child: Text(
-                          codice_scheda[index].pezzi.toString(),
+                          codice_scheda[index].pezzi.toQuantita(),
                           // style: TextStyle(fontSize: 18.0),
                         ),
                       ),
@@ -801,7 +802,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                         width: 80,
                         decoration: MyBoxDecoration().MyBox(),
                         child: Text(
-                          codice_scheda[index].prezzo.toString(),
+                          codice_scheda[index].prezzo.toImporti(),
                           // style: TextStyle(fontSize: 18.0),
                         ),
                       ),

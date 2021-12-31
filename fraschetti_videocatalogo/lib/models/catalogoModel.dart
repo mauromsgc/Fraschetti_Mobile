@@ -67,6 +67,7 @@ class CatalogoModel {
   static Future<List<Map>> catalogo_lista({
     String descrizione = "",
     String codice = "",
+    String codice_ean = "",
     int famiglia_id = 0,
     int assortimento_id = 0,
     int promozioni_id = 0,
@@ -109,6 +110,13 @@ class CatalogoModel {
       sql_join.add(" LEFT JOIN codici ON codici.catalogo_id = catalogo.id ");
       sql_where.add(" codici.numero LIKE '${codice}%' ");
     }
+
+    if (codice_ean != "") {
+      sql_join.add(" LEFT JOIN codici ON codici.catalogo_id = catalogo.id ");
+      sql_join.add(" LEFT JOIN codice_ean ON codice_ean.codice_articolo = codici.numero ");
+      sql_where.add(" codice_ean.codice_ean LIKE '%${codice_ean}%' ");
+    }
+
     if (famiglia_id != 0) {
       sql_where.add(" famiglie.id = ${famiglia_id} ");
     }
@@ -225,7 +233,7 @@ class CatalogoModel {
 
     if (rows.length > 0) {
       catalogo_cheda = CatalogoModel.fromMap(rows.first);
-      catalogo_cheda.codici = await CodiceModel.codici_lista(catalogo_id: catalogo_cheda.id);
+      catalogo_cheda.codici = await CodiceModel.codici_cerca(catalogo_id: catalogo_cheda.id);
     } else {
       catalogo_cheda = CatalogoModel();
     }

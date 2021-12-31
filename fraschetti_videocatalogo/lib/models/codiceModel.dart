@@ -47,6 +47,7 @@ class CodiceModel {
   });
 
   factory CodiceModel.fromMap(Map<String, dynamic> map) {
+    // print("CodiceModel.fromMap inizio");
     CodiceModel oggetto = CodiceModel();
 
     oggetto.id = map["id"];
@@ -69,12 +70,14 @@ class CodiceModel {
     oggetto.promozioni_id = map["promozioni_id"];
     oggetto.immagine_preview = map["immagine_preview"];
 
+    // print("CodiceModel.fromMap fine");
     return oggetto;
   }
 
   Map<String, dynamic> toMap() => {
         "id": id,
         "catalogo_id": catalogo_id,
+        "catalogo_nome": catalogo_nome,
         "numero": numero,
         "descrizione": descrizione,
         "apribile": apribile,
@@ -89,6 +92,7 @@ class CodiceModel {
         "codice_ean": codice_ean,
         "disponibilita_stato": disponibilita_stato,
         "disponibilita_data_arrivo": disponibilita_data_arrivo,
+        "immagine_preview": immagine_preview,
         "promozioni_id": promozioni_id,
       };
 
@@ -122,12 +126,14 @@ class CodiceModel {
     return disponibilita_stato_testo;
   }
 
-  static Future<List<CodiceModel>> codici_lista({
+  static Future<List<CodiceModel>> codici_cerca({
     int id = 0,
     int catalogo_id = 0,
     String descrizione = "",
     String codice = "",
+    String codice_ean = "",
   }) async {
+    print("codici_cerca inizio");
     List<CodiceModel> codici_lista = [];
 
     Database db = GetIt.instance<DbRepository>().database;
@@ -182,6 +188,11 @@ class CodiceModel {
       sql_where.add(" codici.numero LIKE '${codice}%' ");
     }
 
+    if (codice_ean != "") {
+      sql_join.add(" LEFT JOIN codice_ean ON codice_ean.codice_articolo = codici.numero ");
+      sql_where.add(" codice_ean.codice_ean LIKE '%${codice_ean}%' ");
+    }
+
     sql_ordinamenti.add(" codici.numero ASC ");
 
     sql_join.forEach((element) {
@@ -203,6 +214,33 @@ class CodiceModel {
 
     codici_lista = rows.map((row) => CodiceModel.fromMap(row)).toList();
 
+    print("codici_cerca fine");
     return codici_lista;
   }
+
+  static Future<CodiceModel> codici_cerca_singolo({
+    int id = 0,
+    int catalogo_id = 0,
+    String descrizione = "",
+    String codice = "",
+  }) async {
+    print("codici_cerca_singolo inizio");
+    // cerca un record esistente
+    // e restituisce l'oggetto relativo al record
+    CodiceModel codice_scheda;
+
+    List<CodiceModel> codici_lista =
+    await CodiceModel.codici_cerca(id: id);
+
+    if (codici_lista.length > 0) {
+      codice_scheda = codici_lista.first;
+    } else {
+      // oppure errore
+      codice_scheda = CodiceModel();
+    }
+    print("codici_cerca_singolo fine");
+
+    return codice_scheda;
+  }
+
 }

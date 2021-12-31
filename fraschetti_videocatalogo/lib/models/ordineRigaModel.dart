@@ -195,13 +195,10 @@ class OrdineRigaModel {
       // rows.forEach((row) async {
       OrdineRigaModel oggetto = OrdineRigaModel.fromMap(row);
 
-      List<CodiceModel> result = await CodiceModel.codici_lista(codice: oggetto.codice);
-      if (result.length > 0) {
-        oggetto.codice_scheda = result.first;
-      } else {
-        oggetto.codice_scheda = CodiceModel();
-      }
+      oggetto.codice_scheda = await CodiceModel.codici_cerca_singolo(codice: oggetto.codice);
+
       print("ordini_righe_cerca oggetto ${oggetto.toMap_record()}");
+      print("ordini_righe_cerca oggetto.codice_scheda ${oggetto.codice_scheda.toMap()}");
       ordini_righe_lista.add(oggetto);
     });
 
@@ -251,11 +248,7 @@ class OrdineRigaModel {
 
     OrdineRigaModel ordine_riga_scheda = OrdineRigaModel();
 
-    List<CodiceModel> result = await CodiceModel.codici_lista(id: codice_id, codice: codice);
-    if (result.length > 0) {
-      ordine_riga_scheda.codice_scheda = result.first;
-    } else {
-      ordine_riga_scheda.codice_scheda = CodiceModel();
+    ordine_riga_scheda.codice_scheda = await CodiceModel.codici_cerca_singolo(id: codice_id, codice: codice);
 
       // compilo i dati della riga ordine
       ordine_riga_scheda.ordini_id = GetIt.instance<SessioneModel>().ordine_id_corrente;
@@ -270,7 +263,6 @@ class OrdineRigaModel {
       ordine_riga_scheda.quantita = ordine_riga_scheda.codice_scheda.pezzi;
       ordine_riga_scheda.prezzo = ordine_riga_scheda.codice_scheda.prezzo;
       ordine_riga_scheda.prezzo_ordine = ordine_riga_scheda.codice_scheda.prezzo;
-    }
     print("nuovo_da_codice fine");
 
     return ordine_riga_scheda;

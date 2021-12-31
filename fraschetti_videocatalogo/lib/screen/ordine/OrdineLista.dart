@@ -10,8 +10,6 @@ import 'package:fraschetti_videocatalogo/models/codiceModel.dart';
 import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/ordineModel.dart';
 import 'package:fraschetti_videocatalogo/models/ordineRigaModel.dart';
-import 'package:fraschetti_videocatalogo/repositories/comunicazioniRepository.dart';
-import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaPage.dart';
 import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaWidget.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/ClientiLista.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
@@ -83,7 +81,6 @@ class _OrdineListaState extends State<OrdineLista> {
       BuildContext context,
       int codice_id,
       ) {
-    // Navigator.pushNamed(context, DisponibilitaPage.routeName);
     showDialog(
       context: context,
       builder: DisponibilitaDialogWidget(

@@ -46,7 +46,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
     String descrizione = "",
     String codice = "",
   }) async {
-    codici_lista = await CodiceModel.codici_lista(
+    codici_lista = await CodiceModel.codici_cerca(
       id: 0,
       descrizione: descrizioneController.text,
       codice: codiceController.text,
@@ -79,7 +79,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
 
   void articolo_disponibilita_mostra(
       BuildContext context, int codice_id) {
-    // Navigator.pushNamed(context, DisponibilitaPage.routeName);
+
     showDialog(
       context: context,
       builder: DisponibilitaDialogWidget(

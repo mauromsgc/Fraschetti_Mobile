@@ -4,8 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
-import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaPage.dart';
-import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaWidget.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 import 'package:get/get.dart';
@@ -69,8 +67,7 @@ class _TestPageState extends State<TestPage> {
   }
 
   void articolo_disponibilita_mostra(BuildContext context) {
-    // Navigator.pushNamed(context, DisponibilitaPage.routeName);
-    // showDialog(
+     // showDialog(
     //   context: context,
     //   // builder: DisponibilitaDialogWidget(codice_id: 1, returnValue: true),
     // );
