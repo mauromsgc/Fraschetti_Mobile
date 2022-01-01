@@ -77,6 +77,31 @@ void test (){
 print(NumberFormat.currency(locale: 'eu', symbol: '').format(123456)); // 123.456,00
 }
 
+
+extension StringExtension on String {
+  int toInt() {
+    return (int.tryParse(this) != null) ? int.tryParse(this)! : 0;
+  }
+
+  double toDouble() {
+    return (double.tryParse(this) != null) ? double.tryParse(this)! : 0;
+  }
+
+  double toDoubleSql() {
+    String input = "";
+    double output = 0;
+    input = this.replaceAll(".", "").replaceAll(",", ".");
+    output = (double.tryParse(input) != null) ? double.tryParse(input)! : 0;
+
+    return output;
+  }
+
+
+  num? toNumber() {
+    return (num.tryParse(this) != null) ? num.tryParse(this)! : 0;
+  }
+}
+
 extension NumberParsing_double on double {
   String toImporti() {
     return NumberFormat.currency(locale: 'eu', symbol: '').format(this);

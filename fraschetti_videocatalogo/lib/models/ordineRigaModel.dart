@@ -47,14 +47,14 @@ class OrdineRigaModel {
   Map<String, Object?> toMap_record() {
     // deve contenere solo i campi della tabella
     var map = <String, dynamic>{
-    "id": (id != 0) ? id : null,
-    "ordini_id": ordini_id,
-    "codice": codice,
-    "descrizione": descrizione,
-    "um": um,
-    "quantita": quantita,
-    "prezzo": prezzo,
-    "prezzo_ordine": prezzo_ordine,
+      "id": (id != 0) ? id : null,
+      "ordini_id": ordini_id,
+      "codice": codice,
+      "descrizione": descrizione,
+      "um": um,
+      "quantita": quantita,
+      "prezzo": prezzo,
+      "prezzo_ordine": prezzo_ordine,
     };
 
     return map;
@@ -64,14 +64,15 @@ class OrdineRigaModel {
     // restituisco l'id del record creato o aggiornato
     // se ritorna 0 il salvataggio o l'aggiornamento non sono a dati a buon fine
     int record_id = 0;
-    if (this.id == 0) {
-      record_id = await record_inserisci();
-      this.id = record_id;
-    } else {
-      final record_aggiornati = await record_aggiorna();
-      if (record_aggiornati > 0) {
-        record_id = record_id;
+    try {
+      if (this.id == 0) {
+        record_id = await record_inserisci();
+        this.id = record_id;
+      } else {
+        record_id = await record_aggiorna();
       }
+    } catch (e) {
+      print("errore ${e.toString()}");
     }
 
     return record_id;
@@ -121,6 +122,7 @@ class OrdineRigaModel {
 
   static Future<List<OrdineRigaModel>> ordini_righe_cerca({
     int id = 0,
+    int codice_id = 0,
     int ordini_id = 0,
     int numero = 0,
     int agenti_id = 0,
@@ -150,6 +152,14 @@ class OrdineRigaModel {
     if (id != 0) {
       sql_where.add(" ordini_righe.id = ${id} ");
     }
+    if (codice_id != 0) {
+      sql_join.add(" LEFT JOIN codici ON codici.numero = ordini_righe.codice ");
+      sql_where.add(" codici.id = ${codice_id} ");
+    }
+
+    if (id != 0) {
+      sql_where.add(" ordini_righe.id = ${id} ");
+    }
     if (ordini_id != 0) {
       sql_where.add(" ordini_righe.ordini_id = ${ordini_id} ");
     }
@@ -167,7 +177,11 @@ class OrdineRigaModel {
     }
 
     if (codice != "") {
-      sql_where.add(" ordini_righe.codice LIKE '${codice}%' ");
+      if (codice.length == 6) {
+        sql_where.add(" ordini_righe.codice = '${codice}' ");
+      } else {
+        sql_where.add(" ordini_righe.codice LIKE '${codice}%' ");
+      }
     }
 
     sql_ordinamenti.add(" ordini_righe.id ASC ");
@@ -195,10 +209,12 @@ class OrdineRigaModel {
       // rows.forEach((row) async {
       OrdineRigaModel oggetto = OrdineRigaModel.fromMap(row);
 
-      oggetto.codice_scheda = await CodiceModel.codici_cerca_singolo(codice: oggetto.codice);
+      oggetto.codice_scheda =
+          await CodiceModel.codici_cerca_singolo(codice: oggetto.codice);
 
       print("ordini_righe_cerca oggetto ${oggetto.toMap_record()}");
-      print("ordini_righe_cerca oggetto.codice_scheda ${oggetto.codice_scheda.toMap()}");
+      print(
+          "ordini_righe_cerca oggetto.codice_scheda ${oggetto.codice_scheda.toMap()}");
       ordini_righe_lista.add(oggetto);
     });
 
@@ -206,14 +222,14 @@ class OrdineRigaModel {
     return ordini_righe_lista;
   }
 
-
   static Future<OrdineRigaModel> ordini_righe_cerca_singolo({
     int id = 0,
-    // int ordini_id = 0,
-    // int numero = 0,
-    // int agenti_id = 0,
-    // int clienti_id = 0,
-    // String codice = "",
+    int codice_id = 0,
+    int ordini_id = 0,
+    int numero = 0,
+    int agenti_id = 0,
+    int clienti_id = 0,
+    String codice = "",
   }) async {
     print("ordini_righe_cerca_singolo inizio");
     // cerca un record esistente
@@ -221,7 +237,15 @@ class OrdineRigaModel {
     OrdineRigaModel ordine_riga_scheda;
 
     List<OrdineRigaModel> ordini_righe_lista =
-        await OrdineRigaModel.ordini_righe_cerca(id: id);
+        await OrdineRigaModel.ordini_righe_cerca(
+      id: id,
+      codice_id: codice_id,
+      ordini_id: ordini_id,
+      numero: numero,
+      agenti_id: agenti_id,
+      clienti_id: clienti_id,
+      codice: codice,
+    );
 
     if (ordini_righe_lista.length > 0) {
       ordine_riga_scheda = ordini_righe_lista.first;
@@ -248,21 +272,25 @@ class OrdineRigaModel {
 
     OrdineRigaModel ordine_riga_scheda = OrdineRigaModel();
 
-    ordine_riga_scheda.codice_scheda = await CodiceModel.codici_cerca_singolo(id: codice_id, codice: codice);
+    ordine_riga_scheda.codice_scheda = await CodiceModel.codici_cerca_singolo(
+      codice_id: codice_id,
+      codice: codice,
+    );
 
-      // compilo i dati della riga ordine
-      ordine_riga_scheda.ordini_id = GetIt.instance<SessioneModel>().ordine_id_corrente;
-      ordine_riga_scheda.codice = ordine_riga_scheda.codice_scheda.numero;
-      ordine_riga_scheda.descrizione =
-          ordine_riga_scheda.codice_scheda.catalogo_nome.trim();
-      if (ordine_riga_scheda.codice_scheda.descrizione != "") {
-        ordine_riga_scheda.descrizione +=
-            " " + ordine_riga_scheda.codice_scheda.descrizione.trim();
-      }
-      ordine_riga_scheda.um = ordine_riga_scheda.codice_scheda.um;
-      ordine_riga_scheda.quantita = ordine_riga_scheda.codice_scheda.pezzi;
-      ordine_riga_scheda.prezzo = ordine_riga_scheda.codice_scheda.prezzo;
-      ordine_riga_scheda.prezzo_ordine = ordine_riga_scheda.codice_scheda.prezzo;
+    // compilo i dati della riga ordine
+    ordine_riga_scheda.ordini_id =
+        GetIt.instance<SessioneModel>().ordine_id_corrente;
+    ordine_riga_scheda.codice = ordine_riga_scheda.codice_scheda.numero;
+    ordine_riga_scheda.descrizione =
+        ordine_riga_scheda.codice_scheda.catalogo_nome.trim();
+    if (ordine_riga_scheda.codice_scheda.descrizione != "") {
+      ordine_riga_scheda.descrizione +=
+          " " + ordine_riga_scheda.codice_scheda.descrizione.trim();
+    }
+    ordine_riga_scheda.um = ordine_riga_scheda.codice_scheda.um;
+    ordine_riga_scheda.quantita = ordine_riga_scheda.codice_scheda.pezzi;
+    ordine_riga_scheda.prezzo = ordine_riga_scheda.codice_scheda.prezzo;
+    ordine_riga_scheda.prezzo_ordine = ordine_riga_scheda.codice_scheda.prezzo;
     print("nuovo_da_codice fine");
 
     return ordine_riga_scheda;

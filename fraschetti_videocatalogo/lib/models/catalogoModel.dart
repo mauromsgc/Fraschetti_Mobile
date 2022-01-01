@@ -108,7 +108,11 @@ class CatalogoModel {
     }
     if (codice != "") {
       sql_join.add(" LEFT JOIN codici ON codici.catalogo_id = catalogo.id ");
-      sql_where.add(" codici.numero LIKE '${codice}%' ");
+      if(codice.length == 6 ){
+        sql_where.add(" codici.numero = '${codice}' ");
+      } else {
+        sql_where.add(" codici.numero LIKE '${codice}%' ");
+      }
     }
 
     if (codice_ean != "") {

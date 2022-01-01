@@ -94,7 +94,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
     }
   }
 
-  void listaClick(BuildContext context, int codice_id) {
+  void listaClick(BuildContext context, {String codice = ""}) {
     if (GetIt.instance<SessioneModel>().clienti_id_selezionato == 0) {
       Navigator.pushNamed(
         context,
@@ -108,8 +108,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
         context,
         OrdineArticoloAggiungiPage.routeName,
         arguments: OrdineArticoloAggiungiPageArgs(
-          id: 0,
-          codice_id: codice_id,
+          codice: codice,
         ),
       );
     }
@@ -694,7 +693,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
-              listaClick(context, codice_scheda[index].id);
+              listaClick(context, codice: codice_scheda[index].numero);
             },
             onLongPress: () {
               articolo_disponibilita_mostra(context, codice_scheda[index]);

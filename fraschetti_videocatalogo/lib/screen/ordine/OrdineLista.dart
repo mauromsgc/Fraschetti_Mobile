@@ -15,9 +15,8 @@ import 'package:fraschetti_videocatalogo/screen/ordine/ClientiLista.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/OrdineNoteAggiungiPage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
+import 'package:fraschetti_videocatalogo/utils/Utility.dart';
 import 'package:get_it/get_it.dart';
-
-
 
 
 class OrdineLista extends StatefulWidget {
@@ -38,23 +37,31 @@ class _OrdineListaState extends State<OrdineLista> {
   @override
   void initState() {
     super.initState();
-    GetIt.instance<SessioneModel>().ordine_top_menu_indice = 1;
+    GetIt
+        .instance<SessioneModel>()
+        .ordine_top_menu_indice = 1;
     _ordine_cliente_seleziona();
   }
 
 
   Future<void> _ordine_cliente_seleziona() async {
-
     ordine_scheda = await OrdineModel.ordine_cliente_seleziona(
-      cliente_id: GetIt.instance<SessioneModel>().clienti_id_selezionato,
+      cliente_id: GetIt
+          .instance<SessioneModel>()
+          .clienti_id_selezionato,
     );
     lista_elementi_numero = ordine_scheda.righe.length;
     setState(() {});
   }
 
-  Future<void> listaClick(BuildContext context, {int id = 0}) async {
-
-    Navigator.pushNamed(context, OrdineArticoloAggiungiPage.routeName);
+  Future<void> listaClick(BuildContext context, {String codice = ""}) async {
+    Navigator.pushNamed(
+      context,
+      OrdineArticoloAggiungiPage.routeName,
+      arguments: OrdineArticoloAggiungiPageArgs(
+        codice: codice,
+      ),
+    );
 
     // bool cliente_selezionato = await GetIt.instance<SessioneModel>()
     //     .cliente_seleziona(clienti_id: clienti_id);
@@ -77,10 +84,8 @@ class _OrdineListaState extends State<OrdineLista> {
     // }
   }
 
-  void articolo_disponibilita_mostra(
-      BuildContext context,
-      int codice_id,
-      ) {
+  void articolo_disponibilita_mostra(BuildContext context,
+      int codice_id,) {
     showDialog(
       context: context,
       builder: DisponibilitaDialogWidget(
@@ -96,25 +101,21 @@ class _OrdineListaState extends State<OrdineLista> {
   Future<void> ordine_chiudi() async {
     GetIt.instance<SessioneModel>().cliente_deseleziona();
     Navigator.popAndPushNamed(context, ClienteLista.routeName);
-
   }
 
   Future<void> ordine_riga_elimina({int id = 0}) async {
     GetIt.instance<SessioneModel>().cliente_deseleziona();
     Navigator.popAndPushNamed(context, ClienteLista.routeName);
-
   }
 
   Future<void> ordine_elimina() async {
     GetIt.instance<SessioneModel>().cliente_deseleziona();
     Navigator.popAndPushNamed(context, ClienteLista.routeName);
-
   }
 
   Future<void> ordine_totale_mostra() async {
     GetIt.instance<SessioneModel>().cliente_deseleziona();
     Navigator.popAndPushNamed(context, ClienteLista.routeName);
-
   }
 
   void numeroOnSubmit(BuildContext context) {
@@ -124,95 +125,96 @@ class _OrdineListaState extends State<OrdineLista> {
   void ordine_azioni_mostra() {
     showDialog<String>(
       context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: const Text("Seleziona un'azione"),
-        content: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                height: 40,
-                // width: double.maxFinite,
-                width: 300,
-                padding: EdgeInsets.all(5),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(elevation: 2),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    ordine_chiudi();
-                  },
-                  child: Text('Ordine chiudi'),
-                ),
+      builder: (BuildContext context) =>
+          AlertDialog(
+            title: const Text("Seleziona un'azione"),
+            content: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    height: 40,
+                    // width: double.maxFinite,
+                    width: 300,
+                    padding: EdgeInsets.all(5),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(elevation: 2),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        ordine_chiudi();
+                      },
+                      child: Text('Ordine chiudi'),
+                    ),
+                  ),
+                  Container(
+                    height: 40,
+                    // width: double.maxFinite,
+                    width: 300,
+                    padding: EdgeInsets.all(5),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(elevation: 2),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        ordine_elimina();
+                      },
+                      child: Text('Ordine elimina'),
+                    ),
+                  ),
+                  Container(
+                    // solo per agenti
+                    height: 40,
+                    // width: double.maxFinite,
+                    width: 300,
+                    padding: EdgeInsets.all(5),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(elevation: 2),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        ordine_totale_mostra();
+                      },
+                      child: Text('Totale ordine'),
+                    ),
+                  ),
+                  // Container(
+                  //   // lo fa già il server
+                  //   height: 40,
+                  //   // width: double.maxFinite,
+                  //   width: 300,
+                  //   padding: EdgeInsets.all(5),
+                  //   child: ElevatedButton(
+                  //     style: ElevatedButton.styleFrom(elevation: 2),
+                  //     onPressed: () {
+                  //       Navigator.of(context).pop();
+                  //     },
+                  //     child: Text('Invia email con prezzi'),
+                  //   ),
+                  // ),
+                  // Container(
+                  //   // lo fa già il server
+                  //   height: 40,
+                  //   // width: double.maxFinite,
+                  //   width: 300,
+                  //   padding: EdgeInsets.all(5),
+                  //   child: ElevatedButton(
+                  //     style: ElevatedButton.styleFrom(elevation: 2),
+                  //     onPressed: () {
+                  //       Navigator.of(context).pop();
+                  //     },
+                  //     child: Text('Invia email senza prezzi'),
+                  //   ),
+                  // ),
+                ],
               ),
-              Container(
-                height: 40,
-                // width: double.maxFinite,
-                width: 300,
-                padding: EdgeInsets.all(5),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(elevation: 2),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    ordine_elimina();
-                  },
-                  child: Text('Ordine elimina'),
-                ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Chiudi'),
               ),
-              Container(
-                // solo per agenti
-                height: 40,
-                // width: double.maxFinite,
-                width: 300,
-                padding: EdgeInsets.all(5),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(elevation: 2),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    ordine_totale_mostra();
-                  },
-                  child: Text('Totale ordine'),
-                ),
-              ),
-              // Container(
-              //   // lo fa già il server
-              //   height: 40,
-              //   // width: double.maxFinite,
-              //   width: 300,
-              //   padding: EdgeInsets.all(5),
-              //   child: ElevatedButton(
-              //     style: ElevatedButton.styleFrom(elevation: 2),
-              //     onPressed: () {
-              //       Navigator.of(context).pop();
-              //     },
-              //     child: Text('Invia email con prezzi'),
-              //   ),
-              // ),
-              // Container(
-              //   // lo fa già il server
-              //   height: 40,
-              //   // width: double.maxFinite,
-              //   width: 300,
-              //   padding: EdgeInsets.all(5),
-              //   child: ElevatedButton(
-              //     style: ElevatedButton.styleFrom(elevation: 2),
-              //     onPressed: () {
-              //       Navigator.of(context).pop();
-              //     },
-              //     child: Text('Invia email senza prezzi'),
-              //   ),
-              // ),
             ],
           ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Chiudi'),
-          ),
-        ],
-      ),
     );
   }
 
@@ -295,7 +297,8 @@ class _OrdineListaState extends State<OrdineLista> {
               // padding: EdgeInsets.all(3),
               child: TextFormField(
                 enabled: false,
-                initialValue: GetIt.instance<SessioneModel>()
+                initialValue: GetIt
+                    .instance<SessioneModel>()
                     .cliente_Nominativo_selezionato,
                 decoration: InputDecoration(
                   filled: true,
@@ -320,13 +323,14 @@ class _OrdineListaState extends State<OrdineLista> {
                     child: TextFormField(
                       // readOnly: true,
                       enabled: false,
-                      initialValue: GetIt.instance<SessioneModel>()
+                      initialValue: GetIt
+                          .instance<SessioneModel>()
                           .cliente_Localita_selezionato,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey.shade200,
                         contentPadding:
-                            EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                        EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                         border: OutlineInputBorder(),
                         labelText: "Località",
                       ),
@@ -360,11 +364,12 @@ class _OrdineListaState extends State<OrdineLista> {
   Widget ListaWidget(List<OrdineRigaModel> ordine_righe_lista) {
     return Expanded(
       child: ListView.separated(
-        separatorBuilder: (context, index) => Divider(
-          height: 5,
-          thickness: 2,
-          // color: Theme.of(context).primaryColor,
-        ),
+        separatorBuilder: (context, index) =>
+            Divider(
+              height: 5,
+              thickness: 2,
+              // color: Theme.of(context).primaryColor,
+            ),
         itemCount: ordine_righe_lista.length,
         itemBuilder: (context, index) {
           return Dismissible(
@@ -405,7 +410,8 @@ class _OrdineListaState extends State<OrdineLista> {
                       ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).pop(true);
-                            ordine_riga_elimina(id: ordine_righe_lista[index].id);
+                            ordine_riga_elimina(
+                                id: ordine_righe_lista[index].id);
                           },
                           child: const Text("Elimina")),
                     ],
@@ -420,15 +426,15 @@ class _OrdineListaState extends State<OrdineLista> {
                 print('Remove item');
               }
 
-              setState(() {
-              });
+              setState(() {});
             },
             child: InkWell(
               onTap: () {
-                listaClick(context, id: ordine_righe_lista[index].id);
+                listaClick(context, codice: ordine_righe_lista[index].codice);
               },
               onLongPress: () {
-                articolo_disponibilita_mostra(context, ordine_righe_lista[index].codice_scheda.id);
+                articolo_disponibilita_mostra(
+                    context, ordine_righe_lista[index].codice_scheda.id);
               },
               child: Container(
                 child: Row(
@@ -479,7 +485,7 @@ class _OrdineListaState extends State<OrdineLista> {
                       width: 45,
                       decoration: MyBoxDecoration().MyBox(),
                       child: Text(
-                        ordine_righe_lista[index].quantita.toStringAsFixed(2),
+                        ordine_righe_lista[index].quantita.toQuantita(),
                         // style: TextStyle(fontSize: 18.0),
                       ),
                     ),
@@ -490,7 +496,7 @@ class _OrdineListaState extends State<OrdineLista> {
                       width: 75,
                       decoration: MyBoxDecoration().MyBox(),
                       child: Text(
-                        ordine_righe_lista[index].prezzo_ordine.toStringAsFixed(2),
+                        ordine_righe_lista[index].prezzo_ordine.toImporti(),
                         // style: TextStyle(fontSize: 18.0),
                       ),
                     ),
@@ -501,7 +507,7 @@ class _OrdineListaState extends State<OrdineLista> {
                       width: 80,
                       decoration: MyBoxDecoration().MyBox(),
                       child: Text(
-                        ordine_righe_lista[index].prezzo_riga_totale.toStringAsFixed(2),
+                        ordine_righe_lista[index].prezzo_riga_totale.toImporti(),
                         // style: TextStyle(fontSize: 18.0),
                       ),
                     ),

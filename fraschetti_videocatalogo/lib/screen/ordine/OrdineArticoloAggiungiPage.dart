@@ -8,16 +8,17 @@ import 'package:fraschetti_videocatalogo/models/ordineRigaModel.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/ClientiLista.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 import 'package:fraschetti_videocatalogo/utils/Utility.dart';
+import 'package:fraschetti_videocatalogo/utils/ValidationBlock.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
 class OrdineArticoloAggiungiPageArgs {
   int id;
-  int codice_id;
+  String codice;
 
   OrdineArticoloAggiungiPageArgs({
     this.id = 0,
-    this.codice_id = 0,
+    this.codice = "",
   });
 }
 
@@ -33,6 +34,8 @@ class OrdineArticoloAggiungiPage extends StatefulWidget {
 
 class _OrdineArticoloAggiungiPageState
     extends State<OrdineArticoloAggiungiPage> {
+  late FocusNode myFocusNode;
+
   OrdineArticoloAggiungiPageArgs argomenti = OrdineArticoloAggiungiPageArgs();
   OrdineRigaModel ordine_riga_scheda = OrdineRigaModel();
 
@@ -51,11 +54,14 @@ class _OrdineArticoloAggiungiPageState
   final TextEditingController prezzo_con = TextEditingController();
   final TextEditingController prezzo_presente_con = TextEditingController();
 
+  String errore_generico = "";
+  String quantita_errore = "";
+
   @override
   void initState() {
     super.initState();
-    print("Inizializza");
-    // _inizializza();
+
+    print("_OrdineArticoloAggiungiPageState initState");
   }
 
   @override
@@ -111,21 +117,24 @@ class _OrdineArticoloAggiungiPageState
 
   Future<void> _ordine_riga_carica() async {
     print("_ordine_riga_carica inizio");
-    // se argomenti.id != 0 carico la riga del record
-    // se argomenti.id == 0 e argomenti.codice != "" cerco il codice e creo un nuovo oggetto
+    // cerco il codice per vedere se già presente
+    // con id ordine
+    // creo una nuova se non presente
+    // modifico la riga esistente se già presente il codice
 
-    if (argomenti.id != 0) {
+    if (argomenti.codice != "") {
       ordine_riga_scheda = await OrdineRigaModel.ordini_righe_cerca_singolo(
-        id: argomenti.id,
+        codice: argomenti.codice,
+        ordini_id: GetIt.instance<SessioneModel>().ordine_id_corrente,
       );
-    } else {
-      if (argomenti.codice_id != 0) {
-        ordine_riga_scheda = await OrdineRigaModel.nuovo_da_codice(
-          codice_id: argomenti.codice_id,
-        );
-      }
     }
-    NumberFormat numberFormat = NumberFormat.decimalPattern('it');
+
+    if ((ordine_riga_scheda.id == 0) | (ordine_riga_scheda.id == null)) {
+      ordine_riga_scheda = await OrdineRigaModel.nuovo_da_codice(
+        codice: argomenti.codice,
+      );
+    }
+
     print("ordine_riga_scheda ${ordine_riga_scheda.toMap_record().toString()}");
     print(
         "ordine_riga_scheda.codice_scheda ${ordine_riga_scheda.codice_scheda.toMap().toString()}");
@@ -140,9 +149,13 @@ class _OrdineArticoloAggiungiPageState
       apribile_con.text =
           (ordine_riga_scheda.codice_scheda.apribile == 1) ? "*" : "";
       unita_misura_con.text = ordine_riga_scheda.um;
-      quantita_master_con.text = (ordine_riga_scheda.codice_scheda.quantita_massima != 0) ? ordine_riga_scheda.codice_scheda.quantita_massima.toQuantita() : "";
+      quantita_master_con.text =
+          (ordine_riga_scheda.codice_scheda.quantita_massima != 0)
+              ? ordine_riga_scheda.codice_scheda.quantita_massima.toQuantita()
+              : "";
       pezzi_con.text = ordine_riga_scheda.codice_scheda.pezzi.toQuantita();
-      prezzo_base_con.text = ordine_riga_scheda.codice_scheda.prezzo.toImporti();
+      prezzo_base_con.text =
+          ordine_riga_scheda.codice_scheda.prezzo.toImporti();
       quantita_con.text = ordine_riga_scheda.quantita.toQuantita();
       quantita_presente_con.text = (ordine_riga_scheda.id != 0)
           ? ordine_riga_scheda.quantita.toQuantita()
@@ -159,52 +172,73 @@ class _OrdineArticoloAggiungiPageState
   }
 
   void _form_salva(BuildContext context) async {
-    // final username = usernameController.text.trim();
-    // final password = passwordController.text.trim();
-    // final password_verifica = password_verificaController.text.trim();
-    // final codice_attivazione = codice_attivazioneController.text.trim();
-    //
-    // setState(() {
-    //   usernameError = "";
-    //   passwordError = "";
-    //   password_verificaError = "";
-    //   codice_attivazioneError = "";
-    // });
-    //
-    // final valid = validationBlock((when) {
-    //   when(username.isEmpty,
-    //           () => setState(() => usernameError = "Campo obbligatorio"));
-    //   when(password.isEmpty,
-    //           () => setState(() => passwordError = "Campo obbligatorio"));
-    //   when(password_verifica.isEmpty,
-    //           () => setState(() => password_verificaError = "Campo obbligatorio"));
-    //   when(((password.isNotEmpty & password_verifica.isNotEmpty) &(password != password_verifica)),
-    //           () => setState(() => password_verificaError = "Le password non coincidono"));
-    //   when(codice_attivazione.isEmpty,
-    //           () => setState(() => codice_attivazioneError = "Campo obbligatorio"));
-    // });
-    //
-    // if (valid) {
-    // Navigator.of(context).pop();
-    // } else {
-    //   print("Registrazione fallita");
-    // }
+    setState(() {
+      errore_generico = "";
+      quantita_errore = "";
+    });
 
-    // t2 = await OrdineRigaModel.ordini_righe_cerca_singolo(id: record_id);
-    ordine_riga_scheda.quantita = double.parse(quantita_con.text);
-    ordine_riga_scheda.prezzo = double.parse(prezzo_con.text);
-    int record_id = await ordine_riga_scheda.record_salva();
+    final valid = validationBlock((when) {
+      when(
+          (quantita_con.text.toDouble() <= 0),
+          () => setState(
+              () => errore_generico = "La quantità deve essere maggiore di 0"));
+    });
 
+    if (valid) {
+      ordine_riga_scheda.quantita = quantita_con.text.toDoubleSql();
+      ordine_riga_scheda.prezzo = prezzo_con.text.toDoubleSql();
+      int record_id = await ordine_riga_scheda.record_salva();
+      print("record_id ${record_id}");
 
-    Navigator.of(context).pop();
+      if (record_id > 0) {
+        Navigator.of(context).pop();
+      } else {
+        setState(() {
+          errore_generico = "Errore durante il salvataggio, annulla o riprova";
+        });
+      }
+    }
   }
 
   void _form_successivo(BuildContext context) async {
-    // vado al campo successivo
+    FocusScope.of(context).requestFocus();
   }
 
   void _form_annulla(BuildContext context) async {
     Navigator.of(context).pop();
+  }
+
+  void _quantita_verifica(BuildContext context) {
+    print("1");
+    if (quantita_con.text.toDouble() <= 0) {
+      print("2");
+      setState(() => errore_generico = "La quantità deve essere maggiore di 0");
+    } else {
+      print("3");
+      if (ordine_riga_scheda.codice_scheda.um == "XC") {
+        print("4");
+        quantita_con.text = quantita_con.text.toDoubleSql().toStringAsFixed(0);
+      }
+      if (ordine_riga_scheda.codice_scheda.apribile != 0) {
+        print("5");
+        quantita_con.text = (quantita_con.text.toDoubleSql() *
+                ordine_riga_scheda.codice_scheda.pezzi)
+            .toQuantita();
+      }
+    }
+
+    // If (vrQuantita<=0)
+    // ALERT("La quantità deve essere maggiore di zero")
+    // vrQuantita:=vroldqua
+    // GOTO OBJECT(vrQuantita)
+    // Else
+    // If (vtUm#"XC")
+    // vrQuantita:=Round(vrQuantita;0)
+    // End if
+    // If (vrApribile#0)
+    // vrQuantita:=vrQuantita*vrApribile
+    // End if
+    // End if
   }
 
   @override
@@ -248,21 +282,23 @@ class _OrdineArticoloAggiungiPageState
                   ),
                   Row(
                     children: [
-                      if(ordine_riga_scheda.codice_scheda.immagine_preview != "")
-                      Padding(
-                        padding: EdgeInsets.all(5),
-                        child: SizedBox(
-                          width: 50,
-                          height: 50,
-                          child: Container(
-                            // width: 60,
-                            // height: 40,
-                            decoration: MyBoxDecoration().MyBox(),
-                            child: ListaImmagineWidget(
-                                immagine_base64: ordine_riga_scheda.codice_scheda.immagine_preview),
+                      if (ordine_riga_scheda.codice_scheda.immagine_preview !=
+                          "")
+                        Padding(
+                          padding: EdgeInsets.all(5),
+                          child: SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: Container(
+                              // width: 60,
+                              // height: 40,
+                              decoration: MyBoxDecoration().MyBox(),
+                              child: ListaImmagineWidget(
+                                  immagine_base64: ordine_riga_scheda
+                                      .codice_scheda.immagine_preview),
+                            ),
                           ),
                         ),
-                      ),
                       Expanded(
                         child: Container(
                           // articolo descrizione
@@ -365,26 +401,26 @@ class _OrdineArticoloAggiungiPageState
                           ),
                         ),
                       ),
-                      if(quantita_master_con.text != "")
-                      Container(
-                        // confezione
-                        width: 90,
-                        padding: EdgeInsets.all(5),
-                        child: TextFormField(
-                          controller: quantita_master_con,
-                          // readOnly: true,
-                          enabled: false,
-                          textAlign: TextAlign.right,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.grey.shade200,
-                            contentPadding:
-                            EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-                            border: OutlineInputBorder(),
-                            labelText: "Master",
+                      if (quantita_master_con.text != "")
+                        Container(
+                          // confezione
+                          width: 90,
+                          padding: EdgeInsets.all(5),
+                          child: TextFormField(
+                            controller: quantita_master_con,
+                            // readOnly: true,
+                            enabled: false,
+                            textAlign: TextAlign.right,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.grey.shade200,
+                              contentPadding:
+                                  EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                              border: OutlineInputBorder(),
+                              labelText: "Master",
+                            ),
                           ),
                         ),
-                      ),
                       Container(
                         // confezione
                         width: 90,
@@ -436,11 +472,18 @@ class _OrdineArticoloAggiungiPageState
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.next,
                           textAlign: TextAlign.right,
+                          onEditingComplete: () {
+                            // _quantita_verifica(context);
+                          },
+                          validator: (valore) {
+                            print("validatore ${valore}");
+                          },
                           decoration: InputDecoration(
                             contentPadding:
                                 EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(),
                             labelText: "Quantità",
+                            // errorText: (quantita_errore == "") ? null : quantita_errore,
                           ),
                         ),
                       ),
@@ -551,6 +594,16 @@ class _OrdineArticoloAggiungiPageState
                         ),
                     ],
                   ),
+                  if (errore_generico != "")
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        errore_generico,
+                        style: TextStyle(
+                          color: Colors.red,
+                        ),
+                      ),
+                    ),
                   Row(
                     children: [
                       Expanded(
@@ -568,11 +621,11 @@ class _OrdineArticoloAggiungiPageState
                         flex: 1,
                         child: Padding(
                           padding: EdgeInsets.all(5),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(elevation: 2),
-                            onPressed: () => _form_successivo(context),
-                            child: Text('Successivo'),
-                          ),
+                          // child: ElevatedButton(
+                          //   style: ElevatedButton.styleFrom(elevation: 2),
+                          //   onPressed: () => _form_successivo(context),
+                          //   child: Text('Successivo'),
+                          // ),
                         ),
                       ),
                       Expanded(

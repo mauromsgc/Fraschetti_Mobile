@@ -65,10 +65,7 @@ class OrdineModel {
       record_id = await record_inserisci();
       this.id = record_id;
     } else {
-      final record_aggiornati = await record_aggiorna();
-      if (record_aggiornati > 0) {
-        record_id = record_id;
-      }
+      record_id = await record_aggiorna();
     }
     return record_id;
   }

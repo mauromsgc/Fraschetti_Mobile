@@ -97,7 +97,6 @@ class CodiceModel {
       };
 
   String get disponibilita_stato_testo {
-
     String disponibilita_stato_testo = "";
 
     switch (this.disponibilita_stato) {
@@ -128,6 +127,7 @@ class CodiceModel {
 
   static Future<List<CodiceModel>> codici_cerca({
     int id = 0,
+    int codice_id = 0,
     int catalogo_id = 0,
     String descrizione = "",
     String codice = "",
@@ -185,11 +185,16 @@ class CodiceModel {
       sql_where.add(sql_descrizione);
     }
     if (codice != "") {
-      sql_where.add(" codici.numero LIKE '${codice}%' ");
+      if(codice.length == 6 ){
+        sql_where.add(" codici.numero = '${codice}' ");
+      } else {
+        sql_where.add(" codici.numero LIKE '${codice}%' ");
+      }
     }
 
     if (codice_ean != "") {
-      sql_join.add(" LEFT JOIN codice_ean ON codice_ean.codice_articolo = codici.numero ");
+      sql_join.add(
+          " LEFT JOIN codice_ean ON codice_ean.codice_articolo = codici.numero ");
       sql_where.add(" codice_ean.codice_ean LIKE '%${codice_ean}%' ");
     }
 
@@ -220,17 +225,25 @@ class CodiceModel {
 
   static Future<CodiceModel> codici_cerca_singolo({
     int id = 0,
+    int codice_id = 0,
     int catalogo_id = 0,
     String descrizione = "",
     String codice = "",
+    String codice_ean = "",
   }) async {
     print("codici_cerca_singolo inizio");
     // cerca un record esistente
     // e restituisce l'oggetto relativo al record
     CodiceModel codice_scheda;
 
-    List<CodiceModel> codici_lista =
-    await CodiceModel.codici_cerca(id: id);
+    List<CodiceModel> codici_lista = await CodiceModel.codici_cerca(
+      id: id,
+      codice_id: codice_id,
+      catalogo_id: catalogo_id,
+      descrizione: descrizione,
+      codice: codice,
+      codice_ean: codice_ean,
+    );
 
     if (codici_lista.length > 0) {
       codice_scheda = codici_lista.first;
@@ -242,5 +255,4 @@ class CodiceModel {
 
     return codice_scheda;
   }
-
 }

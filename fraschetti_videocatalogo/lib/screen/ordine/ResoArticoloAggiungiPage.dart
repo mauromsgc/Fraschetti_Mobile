@@ -286,11 +286,11 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                         flex: 1,
                         child: Container(
                           padding: EdgeInsets.all(5),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(elevation: 2),
-                            onPressed: () => successivoOnSubmit(context),
-                            child: Text('Successivo'),
-                          ),
+                          // child: ElevatedButton(
+                          //   style: ElevatedButton.styleFrom(elevation: 2),
+                          //   onPressed: () => successivoOnSubmit(context),
+                          //   child: Text('Successivo'),
+                          // ),
                         ),
                       ),
                       Expanded(
