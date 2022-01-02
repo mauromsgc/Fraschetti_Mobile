@@ -288,7 +288,7 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
                 builder: (BuildContext context) {
                   return AlertDialog(
                     title: const Text("Attenzione"),
-                    content: const Text("Eliminara la riga corrente?"),
+                    content: const Text("Eliminare la riga corrente?"),
                     actions: <Widget>[
                       ElevatedButton(
                         onPressed: () => Navigator.of(context).pop(false),

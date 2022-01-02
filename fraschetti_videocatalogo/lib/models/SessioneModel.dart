@@ -40,6 +40,9 @@ class SessioneModel {
     // quello con il numero maggiore
     bool cliente_selezionato = false;
 
+    // prima svuota le variabili dell'utente e ordine
+    cliente_deseleziona();
+
     // cerco il cliente per leggere i suoi dati
     ClienteModel cliente = await ClienteModel.cliente_da(
             clienti_id: clienti_id,
@@ -70,21 +73,21 @@ class SessioneModel {
     return cliente_deselezionato;
   }
 
-  bool ordine_id_imposta({int id = 0}) {
-    // imposta l'id per l'ordine
-    bool esito = true;
+  // bool ordine_id_imposta({int id = 0}) {
+  //   // imposta l'id per l'ordine
+  //   bool esito = true;
+  //
+  //   this.ordine_id_corrente = id;
+  //
+  //   return esito;
+  // }
 
-    this.ordine_id_corrente = id;
-
-    return esito;
-  }
-
-  bool reso_id_imposta({int id = 0}) {
-    // imposta l'id per il reso
-    bool esito = true;
-
-    this.reso_id_corrente = id;
-
-    return esito;
-  }
+  // bool reso_id_imposta({int id = 0}) {
+  //   // imposta l'id per il reso
+  //   bool esito = true;
+  //
+  //   this.reso_id_corrente = id;
+  //
+  //   return esito;
+  // }
 }

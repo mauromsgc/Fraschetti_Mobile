@@ -15,6 +15,7 @@ import 'package:fraschetti_videocatalogo/screen/altro/TestPage.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/ParametriConnesionePage.dart';
 import 'package:fraschetti_videocatalogo/utils/Utility.dart';
 import 'package:get_it/get_it.dart';
+import 'package:sqflite/sqflite.dart';
 
 class AltroMenuLista extends StatefulWidget {
   AltroMenuLista({Key? key}) : super(key: key);
@@ -101,19 +102,38 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
     // int record_id = await riga1.record_salva();
 
 
-    OrdineModel ordine1 = OrdineModel();
+    // OrdineModel ordine1 = OrdineModel();
+    //
+    // ordine1.agenti_id = 51;
+    // ordine1.clienti_id = 17370;
+    //
+    // int record_id1 = await ordine1.record_salva();
+    //
+    // OrdineModel ordine2 = OrdineModel();
+    //
+    // ordine2.agenti_id = 51;
+    // ordine2.clienti_id = 17373;
+    //
+    // int record_id2 = await ordine2.record_salva();
 
-    ordine1.agenti_id = 51;
-    ordine1.clienti_id = 17370;
 
-    int record_id1 = await ordine1.record_salva();
+    Database db = GetIt.instance<DbRepository>().database;
 
-    OrdineModel ordine2 = OrdineModel();
+    int id = 0;
+    // elimina le righe dell'ordine
+    int record_eliminati_righe = await db.delete(
+      'ordini_righe',
+      where: 'ordini_id = ?',
+      whereArgs: [id],
+    );
+    print("record_eliminati_righe ${record_eliminati_righe}");
 
-    ordine2.agenti_id = 51;
-    ordine2.clienti_id = 17373;
-
-    int record_id2 = await ordine2.record_salva();
+    int record_eliminati = await db.delete(
+      'ordini',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    print("record_eliminati ${record_eliminati}");
 
   }
 

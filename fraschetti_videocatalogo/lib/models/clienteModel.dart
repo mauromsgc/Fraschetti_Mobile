@@ -126,7 +126,7 @@ class ClienteModel {
     int id = 0,
     String nominativo = "",
     String codice = "",
-    String selezione = "", // selezione "tutti" "con_ordini"
+    String selezione = "", // selezione "tutti" "con_ordine"
   }) async {
     List<Map> clienti_lista = [];
 
@@ -165,9 +165,11 @@ class ClienteModel {
           sql_where.add(" clienti.id > 0 ");
           break;
         case 'con_ordine':
-          sql_join
-              .add("LEFT JOIN ordini ON ordini.clienti_id = clienti.id");
-          sql_where.add(" ordini.id > 0 ");
+          sql_join.add("LEFT JOIN ordini ON ordini.clienti_id = clienti.id ");
+          sql_join.add("LEFT JOIN ordini_righe ON ordini_righe.ordini_id = ordini.id ");
+          sql_join.add("LEFT JOIN resi ON resi.clienti_id = clienti.id ");
+          sql_join.add("LEFT JOIN resi_righe ON resi_righe.resi_id = resi.id ");
+          sql_where.add(" ((ordini.id > 0 AND ordini_righe.id > 0) OR (resi.id > 0 AND resi_righe.id > 0 ))");
           break;
       }
     }
@@ -187,7 +189,7 @@ class ClienteModel {
       sql_eseguire += element;
     });
     sql_eseguire += ";";
-    // print(sql_eseguire);
+    print(sql_eseguire);
 
     final rows = await db.rawQuery(sql_eseguire);
 

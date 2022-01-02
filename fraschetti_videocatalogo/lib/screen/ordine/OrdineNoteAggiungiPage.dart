@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
+import 'package:fraschetti_videocatalogo/models/ordineModel.dart';
+import 'package:fraschetti_videocatalogo/utils/ValidationBlock.dart';
+import 'package:get_it/get_it.dart';
+
+import 'ClientiLista.dart';
+import 'OrdineArticoloAggiungiPage.dart';
 
 class OrdineNoteAggiungiPage extends StatefulWidget {
   OrdineNoteAggiungiPage({Key? key}) : super(key: key);
@@ -10,47 +17,99 @@ class OrdineNoteAggiungiPage extends StatefulWidget {
 }
 
 class _OrdineNoteAggiungiPageState extends State<OrdineNoteAggiungiPage> {
-  void savalOnSubmit(BuildContext context) async {
-    // final username = usernameController.text.trim();
-    // final password = passwordController.text.trim();
-    // final password_verifica = password_verificaController.text.trim();
-    // final codice_attivazione = codice_attivazioneController.text.trim();
-    //
-    // setState(() {
-    //   usernameError = "";
-    //   passwordError = "";
-    //   password_verificaError = "";
-    //   codice_attivazioneError = "";
-    // });
-    //
-    // final valid = validationBlock((when) {
-    //   when(username.isEmpty,
-    //           () => setState(() => usernameError = "Campo obbligatorio"));
-    //   when(password.isEmpty,
-    //           () => setState(() => passwordError = "Campo obbligatorio"));
-    //   when(password_verifica.isEmpty,
-    //           () => setState(() => password_verificaError = "Campo obbligatorio"));
-    //   when(((password.isNotEmpty & password_verifica.isNotEmpty) &(password != password_verifica)),
-    //           () => setState(() => password_verificaError = "Le password non coincidono"));
-    //   when(codice_attivazione.isEmpty,
-    //           () => setState(() => codice_attivazioneError = "Campo obbligatorio"));
-    // });
-    //
-    // if (valid) {
-    //    Navigator.of(context).pop();
-    // } else {
-    //   print("Registrazione fallita");
-    // }
+  OrdineModel ordine_scheda = OrdineModel();
 
-    Navigator.of(context).pop();
+  final TextEditingController note_con = TextEditingController();
 
+  String errore_generico = "";
+
+  @override
+  void initState() {
+    super.initState();
+
+    print("_OrdineNoteAggiungiPageState initState");
   }
 
-  void successivoOnSubmit(BuildContext context) async {
+  @override
+  void didChangeDependencies() async {
+    await _cliente_ordine_seleziona();
+    await _ordine_carica_dati();
+
+    super.didChangeDependencies();
+  }
+
+  Future<void> _cliente_ordine_seleziona() async {
+    print("_cliente_ordine_seleziona inizio");
+
+    // controlla se è selezionato un cliente e un ordine
+    // se non c'è un cliente selezionato
+    // apre la page della selezione del cliente
+    // se non c'è un ordine id selezionato crea l'ordine
+    // e lo imoposta
+
+    if (GetIt.instance<SessioneModel>().clienti_id_selezionato == 0) {
+      Navigator.pushNamed(
+        context,
+        ClienteLista.routeName,
+        arguments: ClientiListaPageArgs(
+          pagina_chiamante_route: OrdineNoteAggiungiPage.routeName,
+        ),
+      );
+    } else {
+      ordine_scheda = await OrdineModel.ordine_cliente_seleziona(
+        cliente_id: GetIt.instance<SessioneModel>().clienti_id_selezionato,
+      );
+
+      print("ordine_scheda.id ${ordine_scheda.id}");
+      print(
+          "GetIt.instance<SessioneModel>().ordine_id_corrente ${GetIt.instance<SessioneModel>().ordine_id_corrente}");
+    }
+
+    print("ordine_scheda.note ${ordine_scheda.note}");
+    print("_cliente_ordine_seleziona fine");
+  }
+
+  Future<void> _ordine_carica_dati() async {
+    print("ordine_scheda.note ${ordine_scheda.note}");
+    setState(() {
+      note_con.text = ordine_scheda.note;
+    });
+  }
+
+  void _form_salva(BuildContext context) async {
+    setState(() {
+      errore_generico = "";
+    });
+
+    bool valid = true;
+    // non faccio controlli altrimenti non posso svuotare le note
+    // final valid = validationBlock((when) {
+    //   when(
+    //       (note_con.text = ""),
+    //           () => setState(
+    //               () => errore_generico = "Nessuna nota inserita"));
+    // });
+
+    if (valid) {
+      ordine_scheda.note = note_con.text;
+      int record_id = await ordine_scheda.record_salva();
+      print("record_id ${record_id}");
+
+      if (record_id > 0) {
+        Navigator.of(context).pop();
+      } else {
+        setState(() {
+          errore_generico = "Errore durante il salvataggio, annulla o riprova";
+        });
+      }
+    }
+  }
+
+  void _form_successivo(BuildContext context) async {
     // vadio al campo successivo
   }
 
-  void annullaOnSubmit(BuildContext context) async {
+  void _form_annulla(BuildContext context) async {
     Navigator.of(context).pop();
   }
 
@@ -79,8 +138,9 @@ class _OrdineNoteAggiungiPageState extends State<OrdineNoteAggiungiPage> {
                     // reso note
                     padding: EdgeInsets.all(5),
                     child: TextFormField(
+                      controller: note_con,
                       onEditingComplete: () {
-                        savalOnSubmit(context);
+                        _form_salva(context);
                       },
 
                       minLines: 6,
@@ -95,7 +155,6 @@ class _OrdineNoteAggiungiPageState extends State<OrdineNoteAggiungiPage> {
                       ),
                     ),
                   ),
-
                   Row(
                     children: [
                       Expanded(
@@ -104,7 +163,7 @@ class _OrdineNoteAggiungiPageState extends State<OrdineNoteAggiungiPage> {
                           padding: EdgeInsets.all(5),
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(elevation: 2),
-                            onPressed: () => annullaOnSubmit(context),
+                            onPressed: () => _form_annulla(context),
                             child: Text('Annulla'),
                           ),
                         ),
@@ -119,7 +178,7 @@ class _OrdineNoteAggiungiPageState extends State<OrdineNoteAggiungiPage> {
                           padding: EdgeInsets.all(5),
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(elevation: 2),
-                            onPressed: () => savalOnSubmit(context),
+                            onPressed: () => _form_salva(context),
                             child: Text('Salva'),
                           ),
                         ),

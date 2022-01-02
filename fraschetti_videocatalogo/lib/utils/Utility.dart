@@ -1,14 +1,9 @@
-
-
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:macadress_gen/macadress_gen.dart';
-
 
 // per il momento non funziona
 // utilizzo
@@ -23,16 +18,14 @@ Future<String> get_mac_address() async {
   _mac_address = await macadressGen.getMac();
 
   return _mac_address;
-
 }
-
 
 Future<bool> connessione_test(BuildContext context) async {
   bool connessione_test = false;
   final response =
-  await GetIt.instance<HttpRepository>().http!.connessione_test();
+      await GetIt.instance<HttpRepository>().http!.connessione_test();
 
-  if(response["data"] == "OK"){
+  if (response["data"] == "OK") {
     connessione_test = true;
   }
 
@@ -45,9 +38,9 @@ void connessione_test_alert(BuildContext context) async {
 
   test_esito = await connessione_test(context);
 
-  if(test_esito == true){
+  if (test_esito == true) {
     test_esito_testo = """Test di connessione eseguito con esito positivo""";
-  }else{
+  } else {
     test_esito_testo = """
 Test FALLITO,
 Verificare il collegamento ad internet
@@ -72,11 +65,10 @@ e riprovare""";
   );
 }
 
-void test (){
-
-print(NumberFormat.currency(locale: 'eu', symbol: '').format(123456)); // 123.456,00
+void test() {
+  print(NumberFormat.currency(locale: 'eu', symbol: '')
+      .format(123456)); // 123.456,00
 }
-
 
 extension StringExtension on String {
   int toInt() {
@@ -96,7 +88,6 @@ extension StringExtension on String {
     return output;
   }
 
-
   num? toNumber() {
     return (num.tryParse(this) != null) ? num.tryParse(this)! : 0;
   }
@@ -113,12 +104,9 @@ extension NumberParsing_double on double {
   }
 }
 
-
 extension NumberParsing_int on int {
-
   String toQuantita() {
-  var NumQuantita = NumberFormat("###.##", "it");
+    var NumQuantita = NumberFormat("###.##", "it");
     return NumQuantita.format(this);
   }
 }
-

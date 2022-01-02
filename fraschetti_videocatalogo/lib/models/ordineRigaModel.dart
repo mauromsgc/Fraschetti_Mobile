@@ -103,7 +103,7 @@ class OrdineRigaModel {
     return record_aggiornati;
   }
 
-  static Future<int> record_elimina(int id) async {
+  static Future<int> record_elimina({int id = 0}) async {
     Database db = GetIt.instance<DbRepository>().database;
 
     int record_eliminati = await db.delete(

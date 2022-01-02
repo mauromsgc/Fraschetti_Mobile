@@ -95,25 +95,33 @@ class OrdineModel {
     return record_aggiornati;
   }
 
-  static Future<int> record_elimina(int id) async {
+  static Future<int> record_elimina({int id = 0}) async {
     Database db = GetIt.instance<DbRepository>().database;
+
+    // elimina le righe dell'ordine
+    int record_eliminati_righe = await db.delete(
+      'ordini_righe',
+      where: 'ordini_id = ?',
+      whereArgs: [id],
+    );
+    print("record_eliminati_righe ${record_eliminati_righe}");
 
     int record_eliminati = await db.delete(
       'ordini',
       where: 'id = ?',
       whereArgs: [id],
     );
+    print("record_eliminati ${record_eliminati}");
 
     return record_eliminati;
   }
 
   double get totale_imponibile {
-    // double prezzo_riga_totale = (this.sospeso * this.email_cliente_non_inviare);
-    // return double.parse(prezzo_riga_totale.toStringAsFixed(2));
 
-    // fare un map sulle righe con la somma
+    double totale_imponibile = 0;
+    totale_imponibile = righe.fold(0, (sum, next) => sum + next.prezzo_riga_totale);
 
-    return 0;
+    return totale_imponibile;
   }
 
   static Future<List<OrdineModel>> ordini_cerca({
@@ -196,7 +204,8 @@ class OrdineModel {
       print("ordini_cerca fromMap fine");
 
       print("ordini_cerca oggetto.righe inizio");
-      oggetto.righe = await OrdineRigaModel.ordini_righe_cerca(ordini_id: oggetto.id);
+      oggetto.righe =
+          await OrdineRigaModel.ordini_righe_cerca(ordini_id: oggetto.id);
       print("ordini_cerca oggetto.righe fine");
 
       print("ordini_cerca oggetto ${oggetto.toMap_record()}");
@@ -243,18 +252,21 @@ class OrdineModel {
     return ordine_scheda;
   }
 
-  static Future<OrdineModel> ordine_cliente_seleziona({
+  static Future<OrdineModel> ordine_cliente_carica({
     int cliente_id = 0,
+    int numero = 0,
   }) async {
-    print("ordine_cliente_seleziona inizio");
-    // cerco eventuali ordini cliente
+    print("ordine_cliente_carica inizio");
+    // cerco eventuali ordini del cliente
     // se ne trovo più di uno seleziono quello con il numero più grande
-    // se non ne trovo nessuno ne creo uno con numero uguale a 1
+    // o se presente il numero quello con il numero indicato
+    // se non trovo niente restituisco l'oggetto vuoto
+    // imposto le variabili di sessione con ordine_id = 0
     int ordine_id = 0;
     int ordine_numero = 0;
     OrdineModel ordine_scheda = OrdineModel();
 
-
+    // aggiungere la ricerca anche non numero per numero > 0
     Database db = GetIt.instance<DbRepository>().database;
     String sql_eseguire = """SELECT ordini.id, ordini.numero
 FROM ordini
@@ -269,29 +281,57 @@ ORDER BY ordini.numero DESC""";
       // lo riassegno in caso non ho trovato nessun ordine
       ordine_id = ordine_scheda.id;
       ordine_numero = ordine_scheda.numero;
-    } else {
-      ordine_id = 0;
-      ordine_numero = 1;
     }
 
+    // reimposto l'id dell'ordine nelle variabili disessione
+    GetIt.instance<SessioneModel>().ordine_id_corrente = ordine_scheda.id;
 
-    if (ordine_id == 0) {
+    print("ordine_id ${ordine_id}");
+    print("ordine_numero ${ordine_numero}");
+    print("ordine_scheda.id ${ordine_scheda.id}");
+
+    print("ordine_cliente_carica fine");
+
+    return ordine_scheda;
+  }
+
+  static Future<OrdineModel> ordine_cliente_seleziona({
+    int cliente_id = 0,
+    int numero = 0,
+  }) async {
+    print("ordine_cliente_seleziona inizio");
+    // prima cerco eventuali ordini cliente con ordine_cliente_carica()
+    // se ordine_cliente_carica() restituisce un ordine valido (id>0) uso quello
+    // altrimenti se non ne trovo nessuno ne creo uno
+    // con numero uguale a 1 ne numero = 0 altrimenti co il numero indicato
+    int ordine_id = 0;
+
+    OrdineModel ordine_scheda = await OrdineModel.ordine_cliente_carica(
+      cliente_id: cliente_id,
+      numero: numero,
+    );
+
+    if (ordine_scheda.id == 0) {
+      if(numero == 0){
+        numero = 1;
+      }
       // devo creare un nuovo ordine e salvarlo
       ordine_scheda = OrdineModel();
 
       ordine_scheda.agenti_id = GetIt.instance<UtenteCorrenteModel>().agenti_id;
       ordine_scheda.clienti_id = cliente_id;
-      ordine_scheda.numero = ordine_numero;
+      ordine_scheda.numero = numero;
       ordine_id = await ordine_scheda.record_salva();
 
       // ricarico il record per le altre variabili
       ordine_scheda = await OrdineModel.ordini_cerca_singolo(id: ordine_id);
       ordine_id = ordine_scheda.id;
-      ordine_numero = ordine_scheda.numero;
-    }
+      // reimposto l'id dell'ordine nelle variabili disessione
+      // in caso ordine_scheda.id == 0 sarà stato impostatato da OrdineModel.ordine_cliente_carica
+      GetIt.instance<SessioneModel>().ordine_id_corrente = ordine_scheda.id;
 
-    print("ordine_id ${ordine_id}");
-    print("ordine_numero ${ordine_numero}");
+    }
+    print("ordine_numero ${ordine_scheda.numero}");
     print("ordine_scheda.id ${ordine_scheda.id}");
 
     print("ordine_cliente_seleziona fine");

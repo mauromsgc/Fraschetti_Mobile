@@ -18,7 +18,6 @@ import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 import 'package:fraschetti_videocatalogo/utils/Utility.dart';
 import 'package:get_it/get_it.dart';
 
-
 class OrdineLista extends StatefulWidget {
   OrdineLista({Key? key}) : super(key: key);
   static const String routeName = "ordini_clienti";
@@ -33,24 +32,24 @@ class _OrdineListaState extends State<OrdineLista> {
 
   int lista_elementi_numero = 0;
 
-
   @override
   void initState() {
     super.initState();
-    GetIt
-        .instance<SessioneModel>()
-        .ordine_top_menu_indice = 1;
-    _ordine_cliente_seleziona();
+    GetIt.instance<SessioneModel>().ordine_top_menu_indice = 1;
+    _ordine_cliente_carica();
   }
 
+  @override
+  void didChangeDependencies() {
+    print("didChangeDependencies OrdineLista");
+  }
 
-  Future<void> _ordine_cliente_seleziona() async {
-    ordine_scheda = await OrdineModel.ordine_cliente_seleziona(
-      cliente_id: GetIt
-          .instance<SessioneModel>()
-          .clienti_id_selezionato,
+  Future<void> _ordine_cliente_carica() async {
+    ordine_scheda = await OrdineModel.ordine_cliente_carica(
+      cliente_id: GetIt.instance<SessioneModel>().clienti_id_selezionato,
     );
     lista_elementi_numero = ordine_scheda.righe.length;
+
     setState(() {});
   }
 
@@ -84,15 +83,16 @@ class _OrdineListaState extends State<OrdineLista> {
     // }
   }
 
-  void articolo_disponibilita_mostra(BuildContext context,
-      int codice_id,) {
+  void articolo_disponibilita_mostra(
+    BuildContext context,
+    int codice_id,
+  ) {
     showDialog(
       context: context,
-      builder: DisponibilitaDialogWidget(
-          codice_id: codice_id, returnValue: true),
+      builder:
+          DisponibilitaDialogWidget(codice_id: codice_id, returnValue: true),
     );
   }
-
 
   void ordine_note_aggiungi(BuildContext context) {
     Navigator.pushNamed(context, OrdineNoteAggiungiPage.routeName);
@@ -103,20 +103,61 @@ class _OrdineListaState extends State<OrdineLista> {
     Navigator.popAndPushNamed(context, ClienteLista.routeName);
   }
 
-  Future<void> ordine_riga_elimina({int id = 0}) async {
-    GetIt.instance<SessioneModel>().cliente_deseleziona();
-    Navigator.popAndPushNamed(context, ClienteLista.routeName);
+  Future<void> ordine_riga_elimina({int id = 0, int index = 0}) async {
+    int record_elaborati = await OrdineRigaModel.record_elimina(id: id);
+    print("record_elaborati ${record_elaborati}");
+
+    if (record_elaborati > 0) {
+      setState(() {
+        ordine_scheda.righe.removeAt(index);
+      });
+    } else {
+      // setState(() {
+      //   errore_generico = "Errore durante il salvataggio, annulla o riprova";
+      // });
+    }
   }
 
   Future<void> ordine_elimina() async {
+    int ordine_id = GetIt.instance<SessioneModel>().ordine_id_corrente;
+    print("eliminare ordine_id ${ordine_id}");
+
+    try{
+    int record_elaborati = await OrdineModel.record_elimina(
+        id: GetIt.instance<SessioneModel>().ordine_id_corrente);
+    print("record_elaborati ${record_elaborati}");
+
     GetIt.instance<SessioneModel>().cliente_deseleziona();
     Navigator.popAndPushNamed(context, ClienteLista.routeName);
+    } catch (exception) {
+      print('errore cancelllazione ordine: $exception');
+    }
+
   }
 
-  Future<void> ordine_totale_mostra() async {
-    GetIt.instance<SessioneModel>().cliente_deseleziona();
-    Navigator.popAndPushNamed(context, ClienteLista.routeName);
+  void ordine_totale_mostra() async {
+
+    double totale_imponibile = ordine_scheda.totale_imponibile;
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Totale ordine"),
+          content: Text("${totale_imponibile.toImporti()}"),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: Text("Chiudi"),
+            ),
+          ],
+        );
+      },
+    );
   }
+
 
   void numeroOnSubmit(BuildContext context) {
     return;
@@ -125,96 +166,122 @@ class _OrdineListaState extends State<OrdineLista> {
   void ordine_azioni_mostra() {
     showDialog<String>(
       context: context,
-      builder: (BuildContext context) =>
-          AlertDialog(
-            title: const Text("Seleziona un'azione"),
-            content: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    height: 40,
-                    // width: double.maxFinite,
-                    width: 300,
-                    padding: EdgeInsets.all(5),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(elevation: 2),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        ordine_chiudi();
-                      },
-                      child: Text('Ordine chiudi'),
-                    ),
-                  ),
-                  Container(
-                    height: 40,
-                    // width: double.maxFinite,
-                    width: 300,
-                    padding: EdgeInsets.all(5),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(elevation: 2),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        ordine_elimina();
-                      },
-                      child: Text('Ordine elimina'),
-                    ),
-                  ),
-                  Container(
-                    // solo per agenti
-                    height: 40,
-                    // width: double.maxFinite,
-                    width: 300,
-                    padding: EdgeInsets.all(5),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(elevation: 2),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        ordine_totale_mostra();
-                      },
-                      child: Text('Totale ordine'),
-                    ),
-                  ),
-                  // Container(
-                  //   // lo fa già il server
-                  //   height: 40,
-                  //   // width: double.maxFinite,
-                  //   width: 300,
-                  //   padding: EdgeInsets.all(5),
-                  //   child: ElevatedButton(
-                  //     style: ElevatedButton.styleFrom(elevation: 2),
-                  //     onPressed: () {
-                  //       Navigator.of(context).pop();
-                  //     },
-                  //     child: Text('Invia email con prezzi'),
-                  //   ),
-                  // ),
-                  // Container(
-                  //   // lo fa già il server
-                  //   height: 40,
-                  //   // width: double.maxFinite,
-                  //   width: 300,
-                  //   padding: EdgeInsets.all(5),
-                  //   child: ElevatedButton(
-                  //     style: ElevatedButton.styleFrom(elevation: 2),
-                  //     onPressed: () {
-                  //       Navigator.of(context).pop();
-                  //     },
-                  //     child: Text('Invia email senza prezzi'),
-                  //   ),
-                  // ),
-                ],
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text("Seleziona un'azione"),
+        content: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: 40,
+                // width: double.maxFinite,
+                width: 300,
+                padding: EdgeInsets.all(5),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(elevation: 2),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    ordine_chiudi();
+                  },
+                  child: Text('Ordine chiudi'),
+                ),
               ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Chiudi'),
+              Container(
+                height: 40,
+                // width: double.maxFinite,
+                width: 300,
+                padding: EdgeInsets.all(5),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(elevation: 2),
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+
+                    return await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text("Attenzione"),
+                          content: const Text("Eliminare l'ordine corrente?"),
+                          actions: <Widget>[
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(false);
+                              },
+                              child: const Text("Annulla"),
+                            ),
+                            ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  ordine_elimina();
+                                },
+                                child: const Text("Elimina")),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  // onPressed: () {
+                  //   Navigator.of(context).pop();
+                  //   ordine_elimina();
+                  // },
+                  child: Text('Ordine elimina'),
+                ),
               ),
+              Container(
+                // solo per agenti
+                height: 40,
+                // width: double.maxFinite,
+                width: 300,
+                padding: EdgeInsets.all(5),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(elevation: 2),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    ordine_totale_mostra();
+                  },
+                  child: Text('Totale ordine'),
+                ),
+              ),
+              // Container(
+              //   // lo fa già il server
+              //   height: 40,
+              //   // width: double.maxFinite,
+              //   width: 300,
+              //   padding: EdgeInsets.all(5),
+              //   child: ElevatedButton(
+              //     style: ElevatedButton.styleFrom(elevation: 2),
+              //     onPressed: () {
+              //       Navigator.of(context).pop();
+              //     },
+              //     child: Text('Invia email con prezzi'),
+              //   ),
+              // ),
+              // Container(
+              //   // lo fa già il server
+              //   height: 40,
+              //   // width: double.maxFinite,
+              //   width: 300,
+              //   padding: EdgeInsets.all(5),
+              //   child: ElevatedButton(
+              //     style: ElevatedButton.styleFrom(elevation: 2),
+              //     onPressed: () {
+              //       Navigator.of(context).pop();
+              //     },
+              //     child: Text('Invia email senza prezzi'),
+              //   ),
+              // ),
             ],
           ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Chiudi'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -297,8 +364,7 @@ class _OrdineListaState extends State<OrdineLista> {
               // padding: EdgeInsets.all(3),
               child: TextFormField(
                 enabled: false,
-                initialValue: GetIt
-                    .instance<SessioneModel>()
+                initialValue: GetIt.instance<SessioneModel>()
                     .cliente_Nominativo_selezionato,
                 decoration: InputDecoration(
                   filled: true,
@@ -323,14 +389,13 @@ class _OrdineListaState extends State<OrdineLista> {
                     child: TextFormField(
                       // readOnly: true,
                       enabled: false,
-                      initialValue: GetIt
-                          .instance<SessioneModel>()
+                      initialValue: GetIt.instance<SessioneModel>()
                           .cliente_Localita_selezionato,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey.shade200,
                         contentPadding:
-                        EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                            EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                         border: OutlineInputBorder(),
                         labelText: "Località",
                       ),
@@ -364,22 +429,33 @@ class _OrdineListaState extends State<OrdineLista> {
   Widget ListaWidget(List<OrdineRigaModel> ordine_righe_lista) {
     return Expanded(
       child: ListView.separated(
-        separatorBuilder: (context, index) =>
-            Divider(
-              height: 5,
-              thickness: 2,
-              // color: Theme.of(context).primaryColor,
-            ),
+        separatorBuilder: (context, index) => Divider(
+          height: 5,
+          thickness: 2,
+          // color: Theme.of(context).primaryColor,
+        ),
         itemCount: ordine_righe_lista.length,
         itemBuilder: (context, index) {
           return Dismissible(
-            key: Key("${index}"),
+            key: UniqueKey(),
             background: Container(
-              child: Padding(
-                padding: const EdgeInsets.all(15),
-                // child: Icon(Icons.favorite, color: Colors.white),
-              ),
-            ),
+                // child: Padding(
+                //   padding: const EdgeInsets.all(15),
+                //   // child: Icon(Icons.favorite, color: Colors.white),
+                // ),
+                ),
+            // background: Container(
+            //   color: Colors.green,
+            //   child: Padding(
+            //     padding: const EdgeInsets.all(15),
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.start,
+            //       children: <Widget>[
+            //         Text('Disponibilità', style: TextStyle(color: Colors.white)),
+            //       ],
+            //     ),
+            //   ),
+            // ),
             secondaryBackground: Container(
               color: Colors.red,
               child: Padding(
@@ -394,39 +470,59 @@ class _OrdineListaState extends State<OrdineLista> {
               ),
             ),
             confirmDismiss: (DismissDirection direction) async {
-              return await showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text("Attenzione"),
-                    content: const Text("Eliminara la riga corrente?"),
-                    actions: <Widget>[
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop(false);
-                        },
-                        child: const Text("Annulla"),
-                      ),
-                      ElevatedButton(
+              print("${direction}");
+              if (direction == DismissDirection.endToStart) {
+                return await showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text("Attenzione"),
+                      content: const Text("Eliminare la riga corrente?"),
+                      actions: <Widget>[
+                        ElevatedButton(
                           onPressed: () {
-                            Navigator.of(context).pop(true);
-                            ordine_riga_elimina(
-                                id: ordine_righe_lista[index].id);
+                            Navigator.of(context).pop(false);
                           },
-                          child: const Text("Elimina")),
-                    ],
-                  );
-                },
-              );
+                          child: const Text("Annulla"),
+                        ),
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(true);
+                              ordine_riga_elimina(
+                                id: ordine_righe_lista[index].id,
+                                index: index,
+                              );
+                            },
+                            child: const Text("Elimina")),
+                      ],
+                    );
+                  },
+                );
+              }
+              // if (direction == DismissDirection.startToEnd) {
+              //   print("ordine_righe_lista[index].codice_scheda.id ${ordine_righe_lista[index].codice_scheda.id}");
+              //   articolo_disponibilita_mostra(
+              //     context,
+              //     ordine_righe_lista[index].codice_scheda.id,
+              //   );
+              //   return false;
+              // }
             },
             onDismissed: (DismissDirection direction) {
-              if (direction == DismissDirection.startToEnd) {
-                print("Add to favorite");
-              } else {
+              if (direction == DismissDirection.endToStart) {
                 print('Remove item');
-              }
 
-              setState(() {});
+                // ordine_riga_elimina(
+                //   id: ordine_righe_lista[index].id,
+                //   index: index,
+                // );
+              }
+              // if (direction == DismissDirection.startToEnd) {
+              //   articolo_disponibilita_mostra(
+              //     context,
+              //     ordine_righe_lista[index].codice_scheda.id,
+              //   );
+              // }
             },
             child: InkWell(
               onTap: () {
@@ -437,79 +533,91 @@ class _OrdineListaState extends State<OrdineLista> {
                     context, ordine_righe_lista[index].codice_scheda.id);
               },
               child: Container(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      // codice
-                      alignment: Alignment(0.0, 1.0),
-                      width: 60,
-                      // color: Colors.orange,
-                      decoration: MyBoxDecoration().MyBox(),
-                      child: Text(
-                        ordine_righe_lista[index].codice,
-                        // style: TextStyle(fontSize: 14.0),
-                      ),
-                    ),
-                    Expanded(
-                      // descrizione
-                      flex: 1,
-                      child: Container(
-                        padding: EdgeInsets.all(2),
-                        alignment: Alignment(-1.0, 0.0),
-                        decoration: MyBoxDecoration().MyBox(),
-                        child: Text(
-                          ordine_righe_lista[index].descrizione,
-                          maxLines: 1,
-                          style: TextStyle(
-                            // fontSize: 12,
-                            overflow: TextOverflow.ellipsis,
+                height: 50,
+                child: Column(
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          // codice
+                          padding: EdgeInsets.all(2),
+                          alignment: Alignment.center,
+                          width: 70,
+                          // color: Colors.orange,
+                          decoration: MyBoxDecoration().MyBox(),
+                          child: Text(
+                            ordine_righe_lista[index].codice,
+                            // style: TextStyle(fontSize: 14.0),
                           ),
                         ),
-                      ),
+                        Expanded(
+                          // descrizione
+                          child: Container(
+                            padding: EdgeInsets.all(2),
+                            alignment: Alignment.centerLeft,
+                            decoration: MyBoxDecoration().MyBox(),
+                            child: Text(
+                              ordine_righe_lista[index].descrizione,
+                              style: TextStyle(
+                                // fontSize: 14,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    Container(
-                      // unità di misura
-                      alignment: Alignment(0.0, 0.0),
-                      width: 25,
-                      decoration: MyBoxDecoration().MyBox(),
-                      child: Text(
-                        ordine_righe_lista[index].um,
-                        // style: TextStyle(fontSize: 18.0),
-                      ),
-                    ),
-                    Container(
-                      // quantità
-                      padding: EdgeInsets.all(2),
-                      alignment: Alignment(1.0, 0.0),
-                      width: 45,
-                      decoration: MyBoxDecoration().MyBox(),
-                      child: Text(
-                        ordine_righe_lista[index].quantita.toQuantita(),
-                        // style: TextStyle(fontSize: 18.0),
-                      ),
-                    ),
-                    Container(
-                      // prezzo
-                      padding: EdgeInsets.all(2),
-                      alignment: Alignment(1.0, 0.0),
-                      width: 75,
-                      decoration: MyBoxDecoration().MyBox(),
-                      child: Text(
-                        ordine_righe_lista[index].prezzo_ordine.toImporti(),
-                        // style: TextStyle(fontSize: 18.0),
-                      ),
-                    ),
-                    Container(
-                      // totale
-                      padding: EdgeInsets.all(2),
-                      alignment: Alignment(1.0, 0.0),
-                      width: 80,
-                      decoration: MyBoxDecoration().MyBox(),
-                      child: Text(
-                        ordine_righe_lista[index].prezzo_riga_totale.toImporti(),
-                        // style: TextStyle(fontSize: 18.0),
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                          // unità di misura
+                          padding: EdgeInsets.all(2),
+                          alignment: Alignment.centerRight,
+                          width: 30,
+                          decoration: MyBoxDecoration().MyBox(),
+                          child: Text(
+                            ordine_righe_lista[index].um,
+                            // style: TextStyle(fontSize: 18.0),
+                          ),
+                        ),
+                        Container(
+                          // quantità
+                          padding: EdgeInsets.all(2),
+                          alignment: Alignment.centerRight,
+                          width: 50,
+                          decoration: MyBoxDecoration().MyBox(),
+                          child: Text(
+                            ordine_righe_lista[index].quantita.toQuantita(),
+                            // style: TextStyle(fontSize: 18.0),
+                          ),
+                        ),
+                        Container(
+                          // prezzo
+                          padding: EdgeInsets.all(2),
+                          alignment: Alignment.centerRight,
+                          width: 75,
+                          decoration: MyBoxDecoration().MyBox(),
+                          child: Text(
+                            ordine_righe_lista[index].prezzo_ordine.toImporti(),
+                            // style: TextStyle(fontSize: 18.0),
+                          ),
+                        ),
+                        Container(
+                          // totale
+                          padding: EdgeInsets.all(2),
+                          alignment: Alignment.centerRight,
+                          width: 80,
+                          decoration: MyBoxDecoration().MyBox(),
+                          child: Text(
+                            ordine_righe_lista[index]
+                                .prezzo_riga_totale
+                                .toImporti(),
+                            // style: TextStyle(fontSize: 18.0),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

@@ -77,10 +77,6 @@ class _OrdineArticoloAggiungiPageState
     super.didChangeDependencies();
   }
 
-  void _inizializza() async {
-    await _cliente_ordine_seleziona();
-  }
-
   Future<void> _cliente_ordine_seleziona() async {
     print("_cliente_ordine_seleziona inizio");
 
@@ -102,14 +98,9 @@ class _OrdineArticoloAggiungiPageState
       OrdineModel ordine_scheda = await OrdineModel.ordine_cliente_seleziona(
         cliente_id: GetIt.instance<SessioneModel>().clienti_id_selezionato,
       );
-      print("ordine_scheda.id ${ordine_scheda.id}");
 
-      if (ordine_scheda.id != 0) {
-        GetIt.instance<SessioneModel>().ordine_id_imposta(
-          id: ordine_scheda.id,
-        );
-      }
       print("ordine_scheda.id ${ordine_scheda.id}");
+      print("GetIt.instance<SessioneModel>().ordine_id_corrente ${GetIt.instance<SessioneModel>().ordine_id_corrente}");
     }
 
     print("_cliente_ordine_seleziona fine");
