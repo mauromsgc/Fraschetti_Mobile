@@ -57,11 +57,42 @@ class _OrdineArticoloAggiungiPageState
   String errore_generico = "";
   String quantita_errore = "";
 
+  final _quantita_focus_node = FocusNode();
+  final _sconto_focus_node = FocusNode();
+  final _prezzo_focus_node = FocusNode();
+
   @override
   void initState() {
     super.initState();
 
+    _quantita_focus_node.addListener(() {
+      if (!_quantita_focus_node.hasFocus) {
+        _quantita_verifica(context);
+      }
+    });
+
+    _sconto_focus_node.addListener(() {
+      if (!_sconto_focus_node.hasFocus) {
+        _sconto_calcola(context);
+      }
+    });
+
+    _prezzo_focus_node.addListener(() {
+      if (!_prezzo_focus_node.hasFocus) {
+        _prezzo_controlla(context);
+      }
+    });
+
     print("_OrdineArticoloAggiungiPageState initState");
+  }
+
+  @override
+  void dispose() {
+    _quantita_focus_node.dispose();
+    _sconto_focus_node.dispose();
+    _prezzo_focus_node.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -100,7 +131,8 @@ class _OrdineArticoloAggiungiPageState
       );
 
       print("ordine_scheda.id ${ordine_scheda.id}");
-      print("GetIt.instance<SessioneModel>().ordine_id_corrente ${GetIt.instance<SessioneModel>().ordine_id_corrente}");
+      print(
+          "GetIt.instance<SessioneModel>().ordine_id_corrente ${GetIt.instance<SessioneModel>().ordine_id_corrente}");
     }
 
     print("_cliente_ordine_seleziona fine");
@@ -147,15 +179,22 @@ class _OrdineArticoloAggiungiPageState
       pezzi_con.text = ordine_riga_scheda.codice_scheda.pezzi.toQuantita();
       prezzo_base_con.text =
           ordine_riga_scheda.codice_scheda.prezzo.toImporti();
-      quantita_con.text = ordine_riga_scheda.quantita.toQuantita();
       quantita_presente_con.text = (ordine_riga_scheda.id != 0)
           ? ordine_riga_scheda.quantita.toQuantita()
           : "";
       sconto_con.text = "0";
-      prezzo_con.text = ordine_riga_scheda.codice_scheda.prezzo.toImporti();
       prezzo_presente_con.text = (ordine_riga_scheda.id != 0)
           ? ordine_riga_scheda.prezzo.toImporti()
           : "";
+
+      // quando modificano una riga si mostrano quantità e prezzo iniziale
+      ordine_riga_scheda.quantita = ordine_riga_scheda.codice_scheda.pezzi;
+      ordine_riga_scheda.prezzo = ordine_riga_scheda.codice_scheda.prezzo;
+
+      quantita_con.text = ordine_riga_scheda.codice_scheda.pezzi.toQuantita();
+      prezzo_con.text = ordine_riga_scheda.codice_scheda.prezzo.toImporti();
+
+
     });
     print("_ordine_riga_carica setState fine");
 
@@ -200,22 +239,40 @@ class _OrdineArticoloAggiungiPageState
   }
 
   void _quantita_verifica(BuildContext context) {
-    print("1");
-    if (quantita_con.text.toDouble() <= 0) {
-      print("2");
-      setState(() => errore_generico = "La quantità deve essere maggiore di 0");
-    } else {
-      print("3");
-      if (ordine_riga_scheda.codice_scheda.um == "XC") {
-        print("4");
-        quantita_con.text = quantita_con.text.toDoubleSql().toStringAsFixed(0);
+    String _errore_testo = "";
+    double _quantita = 0;
+
+
+    _quantita = quantita_con.text.toDoubleSql();
+    print("_quantita ${_quantita}");
+    print("ordine_riga_scheda.quantita ${ordine_riga_scheda.quantita}");
+    if (ordine_riga_scheda.quantita != _quantita) {
+      print("_quantita ${_quantita}");
+      // _quantita = _quantita.toInt() as double;
+      // print("_quantita ${_quantita}");
+
+      print("1");
+      if (_quantita <= 0) {
+        print("2");
+        _errore_testo = "La quantità deve essere maggiore di 0";
+        _quantita_focus_node.requestFocus();
+      } else {
+        print("3");
+        if (ordine_riga_scheda.codice_scheda.um == "XC") {
+          print("4");
+          _quantita = _quantita.toStringAsFixed(0).toDoubleSql();
+        }
+        if (ordine_riga_scheda.codice_scheda.apribile != 1) {
+          print("5");
+          _quantita = (_quantita * ordine_riga_scheda.codice_scheda.pezzi);
+        }
       }
-      if (ordine_riga_scheda.codice_scheda.apribile != 0) {
-        print("5");
-        quantita_con.text = (quantita_con.text.toDoubleSql() *
-                ordine_riga_scheda.codice_scheda.pezzi)
-            .toQuantita();
-      }
+
+      setState(() {
+        quantita_con.text = _quantita.toQuantita();
+        errore_generico = _errore_testo;
+      });
+      ordine_riga_scheda.quantita = _quantita;
     }
 
     // If (vrQuantita<=0)
@@ -230,6 +287,60 @@ class _OrdineArticoloAggiungiPageState
     // vrQuantita:=vrQuantita*vrApribile
     // End if
     // End if
+  }
+
+  void _sconto_calcola(BuildContext context) {
+    double _sconto = 0;
+    double _prezzo = 0;
+
+    _sconto =
+        sconto_con.text.toDoubleSql();
+    print("_sconto ${_sconto}");
+    if ((_sconto != 0) & (_sconto != null)) {
+      print("ordine_riga_scheda.prezzo_ordine ${ordine_riga_scheda.prezzo_ordine}");
+      _prezzo = (ordine_riga_scheda.prezzo_ordine * (100 - _sconto) /100  );
+      print("_prezzo ${_prezzo}");
+
+      setState(() {
+        sconto_con.text = _sconto.toQuantita();
+        prezzo_con.text = _prezzo.toImporti();
+      });
+      ordine_riga_scheda.prezzo = _prezzo;
+    }
+
+    // vrPrezzo:=Round(vrPrezzoBase*(100-vrSconto)/100;2)
+  }
+
+  void _prezzo_controlla(BuildContext context) {
+    int? prezzo_intero = 0;
+    double _sconto = 0;
+    double _prezzo = 0;
+
+    print("_prezzo ${_prezzo}");
+    print(
+        "double.tryParse _prezzo ${prezzo_con.text.replaceAll(".", "").replaceAll(",", "")}");
+
+    prezzo_intero =
+        int.tryParse(prezzo_con.text.replaceAll(".", "").replaceAll(",", ""));
+    print("prezzo_intero ${prezzo_intero}");
+
+    if (prezzo_intero == null) {
+      prezzo_intero = 0;
+    }
+    _prezzo = prezzo_intero / 100;
+    print("_prezzo ${_prezzo}");
+    _sconto = (100-(100 * (_prezzo  / ordine_riga_scheda.prezzo_ordine)));
+    print("_sconto ${_sconto}");
+
+    setState(() {
+      sconto_con.text = _sconto.toQuantita();
+      prezzo_con.text = _prezzo.toImporti();
+    });
+    ordine_riga_scheda.prezzo = _prezzo;
+
+    // vrPrezzo:=vrPrezzo/100
+    // vrSconto:=100-Round(100*vrPrezzo/vrPrezzoBase;2)
+
   }
 
   @override
@@ -460,15 +571,15 @@ class _OrdineArticoloAggiungiPageState
                         padding: EdgeInsets.all(5),
                         child: TextFormField(
                           controller: quantita_con,
+                          onTap: () {
+                            quantita_con.selection = TextSelection(
+                                baseOffset: 0,
+                                extentOffset: quantita_con.text.length);
+                          },
+                          focusNode: _quantita_focus_node,
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.next,
                           textAlign: TextAlign.right,
-                          onEditingComplete: () {
-                            // _quantita_verifica(context);
-                          },
-                          validator: (valore) {
-                            print("validatore ${valore}");
-                          },
                           decoration: InputDecoration(
                             contentPadding:
                                 EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
@@ -518,6 +629,12 @@ class _OrdineArticoloAggiungiPageState
                         padding: EdgeInsets.all(5),
                         child: TextFormField(
                           controller: sconto_con,
+                          onTap: () {
+                            sconto_con.selection = TextSelection(
+                                baseOffset: 0,
+                                extentOffset: sconto_con.text.length);
+                          },
+                          focusNode: _sconto_focus_node,
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.next,
                           textAlign: TextAlign.right,
@@ -539,6 +656,12 @@ class _OrdineArticoloAggiungiPageState
                         padding: EdgeInsets.all(5),
                         child: TextFormField(
                           controller: prezzo_con,
+                          onTap: () {
+                            prezzo_con.selection = TextSelection(
+                                baseOffset: 0,
+                                extentOffset: prezzo_con.text.length);
+                          },
+                          focusNode: _prezzo_focus_node,
                           onEditingComplete: () {
                             _form_salva(context);
                           },

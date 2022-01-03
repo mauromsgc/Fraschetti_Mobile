@@ -95,7 +95,8 @@ extension StringExtension on String {
 
 extension NumberParsing_double on double {
   String toImporti() {
-    return NumberFormat.currency(locale: 'eu', symbol: '').format(this);
+    // return NumberFormat.currency(locale: 'eu', symbol: "").format(this);
+    return NumberFormat("#.00", "it").format(this);
   }
 
   String toQuantita() {
