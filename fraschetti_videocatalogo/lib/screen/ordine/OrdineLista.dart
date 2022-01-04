@@ -3,11 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/components/OrdineTopMenu.dart';
-import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
-import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
-import 'package:fraschetti_videocatalogo/models/codiceModel.dart';
-import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/ordineModel.dart';
 import 'package:fraschetti_videocatalogo/models/ordineRigaModel.dart';
 import 'package:fraschetti_videocatalogo/screen/disponibilita/DisponibilitaWidget.dart';
@@ -62,25 +58,6 @@ class _OrdineListaState extends State<OrdineLista> {
       ),
     );
 
-    // bool cliente_selezionato = await GetIt.instance<SessioneModel>()
-    //     .cliente_seleziona(clienti_id: clienti_id);
-    //
-    // if (cliente_selezionato == true) {
-    //   // seleziona il cliente e va in ordine
-    //   GetIt.instance<SessioneModel>().ordine_top_menu_indice = 1;
-    //
-    //   switch (argomenti.pagina_chiamante_route) {
-    //     case CatalogoPage.routeName:
-    //       Navigator.pop(context);
-    //       break;
-    //     case OrdineCodiceCercaPage.routeName:
-    //       Navigator.pop(context);
-    //       break;
-    //
-    //     default:
-    //       Navigator.popAndPushNamed(context, OrdineLista.routeName);
-    //   }
-    // }
   }
 
   void articolo_disponibilita_mostra(
@@ -169,6 +146,7 @@ class _OrdineListaState extends State<OrdineLista> {
       builder: (BuildContext context) => AlertDialog(
         title: const Text("Seleziona un'azione"),
         content: Container(
+          width: 200,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -176,8 +154,7 @@ class _OrdineListaState extends State<OrdineLista> {
             children: [
               Container(
                 height: 40,
-                // width: double.maxFinite,
-                width: 300,
+                width: double.maxFinite,
                 padding: EdgeInsets.all(5),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(elevation: 2),
@@ -190,8 +167,7 @@ class _OrdineListaState extends State<OrdineLista> {
               ),
               Container(
                 height: 40,
-                // width: double.maxFinite,
-                width: 300,
+                width: double.maxFinite,
                 padding: EdgeInsets.all(5),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(elevation: 2),
@@ -222,10 +198,6 @@ class _OrdineListaState extends State<OrdineLista> {
                       },
                     );
                   },
-                  // onPressed: () {
-                  //   Navigator.of(context).pop();
-                  //   ordine_elimina();
-                  // },
                   child: Text('Ordine elimina'),
                 ),
               ),
@@ -470,52 +442,33 @@ class _OrdineListaState extends State<OrdineLista> {
               ),
             ),
             confirmDismiss: (DismissDirection direction) async {
-              print("${direction}");
-              if (direction == DismissDirection.endToStart) {
-                return await showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text("Attenzione"),
-                      content: const Text("Eliminare la riga corrente?"),
-                      actions: <Widget>[
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(false);
-                          },
-                          child: const Text("Annulla"),
-                        ),
-                        ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop(true);
-                              ordine_riga_elimina(
-                                id: ordine_righe_lista[index].id,
-                                index: index,
-                              );
-                            },
-                            child: const Text("Elimina")),
-                      ],
-                    );
-                  },
-                );
-              }
-              // if (direction == DismissDirection.startToEnd) {
-              //   print("ordine_righe_lista[index].codice_scheda.id ${ordine_righe_lista[index].codice_scheda.id}");
-              //   articolo_disponibilita_mostra(
-              //     context,
-              //     ordine_righe_lista[index].codice_scheda.id,
-              //   );
-              //   return false;
-              // }
+              return await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text("Attenzione"),
+                    content: const Text("Eliminare la riga corrente?"),
+                    actions: <Widget>[
+                      ElevatedButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: const Text("Annulla"),
+                      ),
+                      ElevatedButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          child: const Text("Elimina")),
+                    ],
+                  );
+                },
+              );
             },
             onDismissed: (DismissDirection direction) {
               if (direction == DismissDirection.endToStart) {
                 print('Remove item');
 
-                // ordine_riga_elimina(
-                //   id: ordine_righe_lista[index].id,
-                //   index: index,
-                // );
+                ordine_riga_elimina(
+                  id: ordine_righe_lista[index].id,
+                  index: index,
+                );
               }
               // if (direction == DismissDirection.startToEnd) {
               //   articolo_disponibilita_mostra(

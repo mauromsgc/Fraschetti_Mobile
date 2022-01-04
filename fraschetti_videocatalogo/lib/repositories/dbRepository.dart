@@ -1,15 +1,9 @@
 import 'package:fraschetti_videocatalogo/helper/DBHelper.dart';
-import 'package:fraschetti_videocatalogo/main.dart';
-import 'package:fraschetti_videocatalogo/models/assortimentoModel.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
-import 'package:fraschetti_videocatalogo/models/clienteModel.dart';
-import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
-import 'package:fraschetti_videocatalogo/models/famigliaModel.dart';
 import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
 import 'package:fraschetti_videocatalogo/models/promozioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/utenteCorrenteModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
-import 'package:fraschetti_videocatalogo/utils/Utility.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
@@ -317,6 +311,31 @@ immagine TEXT,
 immagine_preview TEXT
 )""");
 
+        await db.execute("DROP TABLE IF EXISTS resi_causali");
+        await db.execute("""
+CREATE TABLE resi_causali ( 
+id integer NOT NULL PRIMARY KEY AUTOINCREMENT, 
+codice integer, 
+descrizione text(50,0), 
+sospeso INTEGER
+)""");
+
+        // 1-errore digitazione codice
+        // 2-merce arrivata difettosa
+        // 3-quantità eccedente quella ordinata
+        // 4-non conforme alla richiesta del cliente
+
+        await db.execute(
+            "insert into resi_causali ( codice, descrizione, sospeso) values ( 1, '1-errore digitazione codice', 0);");
+        await db.execute(
+            "insert into resi_causali ( codice, descrizione, sospeso) values ( 2, '2-merce arrivata difettosa', 0);");
+        await db.execute(
+            "insert into resi_causali ( codice, descrizione, sospeso) values ( 3, '3-quantità eccedente quella ordinata', 0);");
+        await db.execute(
+            "insert into resi_causali ( codice, descrizione, sospeso) values ( 4, '4-non conforme alla richiesta del cliente', 0);");
+
+
+
         await db.execute("DROP TABLE IF EXISTS resi");
         await db.execute("""
 CREATE TABLE resi ( 
@@ -457,6 +476,8 @@ descrizione CHAR(30,0)
             "CREATE INDEX promozioni_nome_indice ON promozioni (nome ASC)");
         await db.execute(
             "CREATE INDEX promozioni_codici_promozioni_id_indice ON promozioni_codici (promozioni_id ASC)");
+        await db.execute(
+            "CREATE INDEX resi_causali_codice_indice ON resi_causali (codice ASC)");
         await db.execute(
             "CREATE INDEX resi_clienti_id_indice ON resi (clienti_id ASC)");
         await db.execute(

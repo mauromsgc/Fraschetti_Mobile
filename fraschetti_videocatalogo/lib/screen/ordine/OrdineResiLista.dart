@@ -3,14 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/components/OrdineTopMenu.dart';
-import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
-import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
-import 'package:fraschetti_videocatalogo/repositories/comunicazioniRepository.dart';
+import 'package:fraschetti_videocatalogo/models/resoModel.dart';
+import 'package:fraschetti_videocatalogo/models/resoRigaModel.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/ClientiLista.dart';
-import 'package:fraschetti_videocatalogo/screen/ordine/OrdineArticoloAggiungiPage.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/ResoArticoloAggiungiPage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
+import 'package:fraschetti_videocatalogo/utils/Utility.dart';
 import 'package:get_it/get_it.dart';
 
 class OrdineResiLista extends StatefulWidget {
@@ -23,54 +22,86 @@ class OrdineResiLista extends StatefulWidget {
 }
 
 class _OrdineResiListaState extends State<OrdineResiLista> {
-  List<ComunicazioneModel> reso_righe_lista = ComunicazioniRepository().all_2();
+  ResoModel reso_scheda = ResoModel();
 
-  void listaClick(BuildContext context) {
-    Navigator.pushNamed(context, ResoArticoloAggiungiPage.routeName);
+  int lista_elementi_numero = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    GetIt.instance<SessioneModel>().ordine_top_menu_indice = 3;
+    _reso_cliente_carica();
+  }
+
+  @override
+  void didChangeDependencies() {
+    print("didChangeDependencies ResoLista");
+  }
+
+  Future<void> _reso_cliente_carica() async {
+    reso_scheda = await ResoModel.reso_cliente_carica(
+      cliente_id: GetIt.instance<SessioneModel>().clienti_id_selezionato,
+    );
+    lista_elementi_numero = reso_scheda.righe.length;
+
+    setState(() {});
+  }
+
+  Future<void> listaClick(BuildContext context, {int id = 0}) async {
+    Navigator.pushNamed(
+      context,
+      ResoArticoloAggiungiPage.routeName,
+      arguments: ResoArticoloAggiungiPageArgs(
+        id: id,
+      ),
+    );
   }
 
   void _reso_aggiungi(BuildContext context) {
     Navigator.pushNamed(context, ResoArticoloAggiungiPage.routeName);
   }
 
-  void articolo_disponibilita_mostra(BuildContext context) {
-
+  Future<void> reso_chiudi() async {
+    GetIt.instance<SessioneModel>().cliente_deseleziona();
+    Navigator.popAndPushNamed(context, ClienteLista.routeName);
   }
 
-  void lista_elemento_elimina(BuildContext context) {
-    showDialog<String>(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: const Text('Elimina riga ordine'),
-        content: const Text('Eliminare la riga ordine?'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Elimna'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Annulla'),
-          ),
-        ],
-      ),
-    );
+  Future<void> reso_riga_elimina({int id = 0, int index = 0}) async {
+    int record_elaborati = await ResoRigaModel.record_elimina(id: id);
+    print("record_elaborati ${record_elaborati}");
+
+    if (record_elaborati > 0) {
+      setState(() {
+        reso_scheda.righe.removeAt(index);
+      });
+    } else {
+      // setState(() {
+      //   errore_generico = "Errore durante il salvataggio, annulla o riprova";
+      // });
+    }
+  }
+
+  Future<void> reso_elimina() async {
+    int reso_id = GetIt.instance<SessioneModel>().reso_id_corrente;
+    print("eliminare reso_id ${reso_id}");
+
+    try {
+      int record_elaborati = await ResoModel.record_elimina(
+          id: GetIt.instance<SessioneModel>().reso_id_corrente);
+      print("record_elaborati ${record_elaborati}");
+
+      GetIt.instance<SessioneModel>().cliente_deseleziona();
+      Navigator.popAndPushNamed(context, ClienteLista.routeName);
+    } catch (exception) {
+      print('errore cancelllazione reso: $exception');
+    }
   }
 
   void numeroOnSubmit(BuildContext context) {
     return;
   }
 
-  Future<void> reso_chiudi() async {
-    // chiude la dialog
-    Navigator.of(context).pop();
-    await GetIt.instance<SessioneModel>().cliente_deseleziona();
-    Navigator.popAndPushNamed(context, ClienteLista.routeName);
-
-  }
-
-  void resi_azioni_mostra(BuildContext context){
-
+  void resi_azioni_mostra(BuildContext context) {
     showDialog<String>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -89,6 +120,7 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(elevation: 2),
                   onPressed: () {
+                    Navigator.of(context).pop();
                     reso_chiudi();
                   },
                   child: Text('Reso chiudi'),
@@ -100,13 +132,36 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
                 padding: EdgeInsets.all(5),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(elevation: 2),
-                  onPressed: () {
+                  onPressed: () async {
                     Navigator.of(context).pop();
+
+                    return await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text("Attenzione"),
+                          content: const Text("Eliminare il reso corrente?"),
+                          actions: <Widget>[
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(false);
+                              },
+                              child: const Text("Annulla"),
+                            ),
+                            ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  reso_elimina();
+                                },
+                                child: const Text("Elimina")),
+                          ],
+                        );
+                      },
+                    );
                   },
                   child: Text('Reso elimina'),
                 ),
               ),
-
             ],
           ),
         ),
@@ -118,9 +173,7 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
         ],
       ),
     );
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +185,18 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
           //   onPressed: () {},
           //   icon: Icon(Icons.menu),
           // ),
-          title: Text(widget.pagina_titolo),
+          title: Column(
+            children: [
+              Text(widget.pagina_titolo),
+              // if(lista_elementi_numero >0)
+              Text(
+                "${lista_elementi_numero} elementi",
+                style: TextStyle(
+                  fontSize: 10,
+                ),
+              ),
+            ],
+          ),
           centerTitle: true,
           actions: [
             IconButton(
@@ -141,7 +205,8 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
               },
               icon: Icon(Icons.more_vert),
             )
-          ],        ),
+          ],
+        ),
         bottomNavigationBar: BottomBarWidget(),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
@@ -160,13 +225,13 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
               children: <Widget>[
                 OrdineTopMenu(),
                 Divider(),
-                OrdineIntestazioneWidget(),
+                ResoIntestazioneWidget(),
                 Divider(
                   height: 5,
                   thickness: 2,
                   // color: Theme.of(context).primaryColor,
                 ),
-                ListaWidget(reso_righe_lista),
+                ListaWidget(reso_scheda.righe),
               ],
             ),
           ),
@@ -175,7 +240,7 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
     );
   }
 
-  Widget OrdineIntestazioneWidget() {
+  Widget ResoIntestazioneWidget() {
     return Padding(
       padding: EdgeInsets.all(3),
       child: Container(
@@ -191,7 +256,8 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
               // padding: EdgeInsets.all(3),
               child: TextFormField(
                 enabled: false,
-                initialValue: GetIt.instance<SessioneModel>().cliente_Nominativo_selezionato,
+                initialValue: GetIt.instance<SessioneModel>()
+                    .cliente_Nominativo_selezionato,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.grey.shade200,
@@ -215,7 +281,8 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
                     child: TextFormField(
                       // readOnly: true,
                       enabled: false,
-                      initialValue: GetIt.instance<SessioneModel>().cliente_Localita_selezionato,
+                      initialValue: GetIt.instance<SessioneModel>()
+                          .cliente_Localita_selezionato,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey.shade200,
@@ -237,7 +304,8 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(elevation: 2),
                       onPressed: () => numeroOnSubmit(context),
-                      child: Text("Reso numero ${GetIt.instance<SessioneModel>().reso_id_corrente}"),
+                      child:
+                          Text("Reso numero ${reso_scheda.numero.toString()}"),
                     ),
                   ),
                 ),
@@ -250,7 +318,7 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
   }
 
 // riga lista
-  Widget ListaWidget(List<ComunicazioneModel> reso_righe_lista) {
+  Widget ListaWidget(List<ResoRigaModel> reso_righe_lista) {
     return Expanded(
       child: ListView.separated(
         separatorBuilder: (context, index) => Divider(
@@ -262,13 +330,13 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
         // itemCount: 10,
         itemBuilder: (context, index) {
           return Dismissible(
-            key: Key("${index}"),
+            key: UniqueKey(),
             background: Container(
-              child: Padding(
-                padding: const EdgeInsets.all(15),
-                // child: Icon(Icons.favorite, color: Colors.white),
-              ),
-            ),
+                // child: Padding(
+                //   padding: const EdgeInsets.all(15),
+                //   child: Icon(Icons.favorite, color: Colors.white),
+                // ),
+                ),
             secondaryBackground: Container(
               color: Colors.red,
               child: Padding(
@@ -303,124 +371,112 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
               );
             },
             onDismissed: (DismissDirection direction) {
-              if (direction == DismissDirection.startToEnd) {
-                print("Add to favorite");
-              } else {
-                print('Remove item');
-              }
+              print('Remove item');
 
-              setState(() {
-                reso_righe_lista.removeAt(index);
-                  lista_elemento_elimina(context);
-              });
+              reso_riga_elimina(
+                id: reso_righe_lista[index].id,
+                index: index,
+              );
             },
             child: InkWell(
               onTap: () {
-                listaClick(context);
-              },
-              onLongPress: () {
-                articolo_disponibilita_mostra(context);
+                listaClick(context, id: reso_righe_lista[index].id);
               },
               child: Container(
+                // height: 50,
                 child: Column(
                   children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.all(2),
-                      alignment: Alignment(-1.0, 0.0),
-                      decoration: MyBoxDecoration().MyBox(),
-                      child: Text(
-                        "X - reso causale rso causale",
-                        maxLines: 2,
-                        style: TextStyle(
-                          // fontSize: 12,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          // codice
-                          alignment: Alignment(0.0, 1.0),
-                          width: 60,
-                          // color: Colors.orange,
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text(
-                            "000000",
-                            // style: TextStyle(fontSize: 14.0),
-                          ),
-                        ),
+                      children: [
                         Expanded(
-                          // descrizione
-                          flex: 1,
                           child: Container(
                             padding: EdgeInsets.all(2),
-                            alignment: Alignment(-1.0, 0.0),
+                            alignment: Alignment.centerLeft,
                             decoration: MyBoxDecoration().MyBox(),
-                            child: Column(
-                              children: [
-                                Text(
-                                  "Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione Articolo descrizione",
-                                  maxLines: 1,
-                                  style: TextStyle(
-                                    // fontSize: 12,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                Text(
-                                  "Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione Codice descrizione ",
-                                  maxLines: 2,
-                                  style: TextStyle(
-                                    // fontSize: 12,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
+                            child: Text(
+                              reso_righe_lista[index].causale_reso_descrizione,
+                              style: TextStyle(
+                                // fontSize: 12,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ),
                         ),
                         Container(
                           // unità di misura
-                          alignment: Alignment(0.0, 0.0),
-                          width: 25,
+                          padding: EdgeInsets.all(2),
+                          alignment: Alignment.centerRight,
+                          width: 30,
                           decoration: MyBoxDecoration().MyBox(),
                           child: Text(
-                            "XC",
+                            reso_righe_lista[index].um,
                             // style: TextStyle(fontSize: 18.0),
                           ),
                         ),
                         Container(
                           // quantità
                           padding: EdgeInsets.all(2),
-                          alignment: Alignment(1.0, 0.0),
-                          width: 45,
+                          alignment: Alignment.centerRight,
+                          width: 50,
                           decoration: MyBoxDecoration().MyBox(),
                           child: Text(
-                            "1500",
+                            reso_righe_lista[index].quantita.toQuantita(),
                             // style: TextStyle(fontSize: 18.0),
                           ),
                         ),
                         Container(
-                          // prezzo
+                          // fattura numero
                           padding: EdgeInsets.all(2),
-                          alignment: Alignment(1.0, 0.0),
+                          alignment: Alignment.centerRight,
                           width: 80,
                           decoration: MyBoxDecoration().MyBox(),
                           child: Text(
-                            "00000000",
+                            reso_righe_lista[index].fattura_numero,
                             // style: TextStyle(fontSize: 18.0),
                           ),
                         ),
                         Container(
-                          // totale
+                          // fattura data
                           padding: EdgeInsets.all(2),
-                          alignment: Alignment(1.0, 0.0),
-                          width: 70,
+                          alignment: Alignment.centerRight,
+                          width: 80,
                           decoration: MyBoxDecoration().MyBox(),
                           child: Text(
-                            "00/00/21",
+                            reso_righe_lista[index].fattura_data,
                             // style: TextStyle(fontSize: 18.0),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          // codice
+                          padding: EdgeInsets.all(2),
+                          alignment: Alignment.centerLeft,
+                          width: 70,
+                          // color: Colors.orange,
+                          decoration: MyBoxDecoration().MyBox(),
+                          child: Text(
+                            reso_righe_lista[index].codice,
+                            // style: TextStyle(fontSize: 14.0),
+                          ),
+                        ),
+                        Expanded(
+                          // descrizione
+                          child: Container(
+                            padding: EdgeInsets.all(2),
+                            alignment: Alignment.centerLeft,
+                            decoration: MyBoxDecoration().MyBox(),
+                            child: Text(
+                              reso_righe_lista[index].descrizione,
+                              style: TextStyle(
+                                // fontSize: 12,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
                           ),
                         ),
                       ],

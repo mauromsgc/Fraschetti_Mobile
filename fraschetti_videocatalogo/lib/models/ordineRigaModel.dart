@@ -1,8 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/codiceModel.dart';
-import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
-import 'package:fraschetti_videocatalogo/models/utenteCorrenteModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sqflite/sqflite.dart';
