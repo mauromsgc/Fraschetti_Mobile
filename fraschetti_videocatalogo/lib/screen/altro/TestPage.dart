@@ -183,13 +183,13 @@ class _TestPageState extends State<TestPage> {
                   width: 60,
                   height: 50,
                   decoration: MyBoxDecoration().MyBox(),
-                    child: Image.asset("assets/immagini/splash_screen.png"),
+                    child: Image.asset("assets/immagini/logo_512_512.png"),
                 ),
                 Container(
                   width: 60,
                   height: 50,
                   decoration: MyBoxDecoration().MyBox(),
-                  child: Image.asset("assets/immagini/splash_screen.png"),
+                  child: Image.asset("assets/immagini/logo_512_512.png"),
                 ),
               ],
             ),
@@ -249,7 +249,7 @@ class _TestPageState extends State<TestPage> {
                         border: MyBorder().MyBorderOrange(),
                         image: DecorationImage(
                           image:
-                          AssetImage("assets/immagini/splash_screen.png"),
+                          AssetImage("assets/immagini/logo_512_512.png"),
                           fit: BoxFit.contain,
                         ),
                       ),

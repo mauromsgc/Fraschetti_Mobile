@@ -320,7 +320,7 @@ class _TrasmissionePageState extends State<TrasmissionePage> {
                   height: 500,
                   // width: 400,
                   decoration: MyBoxDecoration().MyBox(),
-                  child: Image.asset("assets/immagini/splash_screen.png"),
+                  child: Image.asset("assets/immagini/logo_512_512.png"),
                 ),
               ),
               SizedBox(width: 5),

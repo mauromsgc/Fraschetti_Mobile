@@ -34,7 +34,6 @@ class OrdineArticoloAggiungiPage extends StatefulWidget {
 
 class _OrdineArticoloAggiungiPageState
     extends State<OrdineArticoloAggiungiPage> {
-  late FocusNode myFocusNode;
 
   OrdineArticoloAggiungiPageArgs argomenti = OrdineArticoloAggiungiPageArgs();
   OrdineRigaModel ordine_riga_scheda = OrdineRigaModel();
@@ -770,7 +769,7 @@ class _OrdineArticoloAggiungiPageState
         Base64Decoder().convert(immagine_base64),
       );
     } else {
-      return Image.asset("assets/immagini/splash_screen.png");
+      return Image.asset("assets/immagini/logo_512_512.png");
     }
   }
 }

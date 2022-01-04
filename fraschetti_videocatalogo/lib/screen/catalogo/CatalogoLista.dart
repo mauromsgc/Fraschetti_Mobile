@@ -604,7 +604,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                               width: 60,
                               height: 25,
                               color: Colors.green.shade800,
-                              // child: Image.asset("assets/immagini/splash_screen.png"),
+                              // child: Image.asset("assets/immagini/logo_512_512.png"),
                               child: Center(
                                 child: Text(
                                   "Nuovo",
@@ -630,7 +630,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                                 width: 60,
                                 height: 25,
                                 color: Colors.blue.shade800,
-                                // child: Image.asset("assets/immagini/splash_screen.png"),
+                                // child: Image.asset("assets/immagini/logo_512_512.png"),
                                 child: Center(
                                   child: Text(
                                     "Offerta",
@@ -661,7 +661,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
         Base64Decoder().convert(immagine_base64),
       );
     } else {
-      return Image.asset("assets/immagini/splash_screen.png");
+      return Image.asset("assets/immagini/logo_512_512.png");
     }
   }
 }

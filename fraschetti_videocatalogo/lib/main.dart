@@ -1,10 +1,8 @@
 
 import 'package:flutter/material.dart';
-import 'package:fraschetti_videocatalogo/helper/DBHelper.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
 import 'package:fraschetti_videocatalogo/models/utenteCorrenteModel.dart';
-import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -56,7 +54,6 @@ void main() async{
 }
 
 class MyApp extends StatelessWidget {
-
 
   @override
   void dispose() {

@@ -1,3 +1,4 @@
+import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/codiceModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:get_it/get_it.dart';
@@ -15,7 +16,6 @@ class ResoRigaModel {
   String fattura_data = "";
   String fattura_numero = "";
   String note = "";
-  late CodiceModel codice_scheda = CodiceModel();
 
   ResoRigaModel({
     this.id = 0,
@@ -59,7 +59,6 @@ class ResoRigaModel {
       "um": um,
       "quantita": quantita,
       "causale_reso": causale_reso,
-      "causale_reso_descrizione": causale_reso_descrizione,
       "fattura_data": fattura_data,
       "fattura_numero": fattura_numero,
       "note": note,
@@ -216,12 +215,7 @@ class ResoRigaModel {
       // rows.forEach((row) async {
       ResoRigaModel oggetto = ResoRigaModel.fromMap(row);
 
-      oggetto.codice_scheda =
-      await CodiceModel.codici_cerca_singolo(codice: oggetto.codice);
-
       print("resi_righe_cerca oggetto ${oggetto.toMap_record()}");
-      print(
-          "resi_righe_cerca oggetto.codice_scheda ${oggetto.codice_scheda.toMap()}");
       resi_righe_lista.add(oggetto);
     });
 
@@ -265,43 +259,22 @@ class ResoRigaModel {
     return reso_riga_scheda;
   }
 
-  // cercare un codice e restituire descrizione e um
 
-  // static Future<ResoRigaModel> nuovo_da_codice({
-  //   int codice_id = 0,
-  //   String codice = "",
-  // }) async {
-  //   print("nuovo_da_codice inizio");
-  //   // in caso di nuovo record
-  //   // crea un nuovo oggetto con i dati di
-  //   // agente, cliente, numero ordine e codice articolo
-  //   // poi carica i dati del codice
-  //   // e compila i campi codice, descrizione, um, quantita, causale_reso
-  //   // dalla proprietà del codice
-  //
-  //   ResoRigaModel reso_riga_scheda = ResoRigaModel();
-  //
-  //   reso_riga_scheda.codice_scheda = await CodiceModel.codici_cerca_singolo(
-  //     codice_id: codice_id,
-  //     codice: codice,
-  //   );
-  //
-  //   // compilo i dati della riga ordine
-  //   reso_riga_scheda.resi_id =
-  //       GetIt.instance<SessioneModel>().reso_id_corrente;
-  //   reso_riga_scheda.codice = reso_riga_scheda.codice_scheda.numero;
-  //   reso_riga_scheda.descrizione =
-  //       reso_riga_scheda.codice_scheda.catalogo_nome.trim();
-  //   if (reso_riga_scheda.codice_scheda.descrizione != "") {
-  //     reso_riga_scheda.descrizione +=
-  //         " " + reso_riga_scheda.codice_scheda.descrizione.trim();
-  //   }
-  //   reso_riga_scheda.um = reso_riga_scheda.codice_scheda.um;
-  //   reso_riga_scheda.quantita = reso_riga_scheda.codice_scheda.pezzi;
-  //   reso_riga_scheda.causale_reso = reso_riga_scheda.codice_scheda.causale_reso;
-  //   reso_riga_scheda.fattura_data = reso_riga_scheda.codice_scheda.causale_reso;
-  //   print("nuovo_da_codice fine");
-  //
-  //   return reso_riga_scheda;
-  // }
+  static Future<ResoRigaModel> nuovo_reso_riga() async {
+    print("nuova_riga_reso inizio");
+    // crea un nuovo oggetto con i dati di
+    // agente, cliente, numero reso il codice articolo viene aggiunto dopo nella scheda
+
+    ResoRigaModel reso_riga_scheda = ResoRigaModel();
+
+    // compilo i dati della riga reso
+    // solo reso_id e quantità di default il resto lo inizializza ResoRigaModel()
+    reso_riga_scheda.resi_id =
+        GetIt.instance<SessioneModel>().reso_id_corrente;
+    reso_riga_scheda.quantita = 1;
+
+    print("nuova_riga_reso fine");
+
+    return reso_riga_scheda;
+  }
 }

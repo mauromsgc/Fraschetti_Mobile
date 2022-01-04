@@ -232,7 +232,7 @@ class _ComunicazionePageState extends State<ComunicazionePage> {
 
 
     } else {
-      return Image.asset("assets/immagini/splash_screen.png");
+      return Image.asset("assets/immagini/logo_512_512.png");
     }
   }
 }
