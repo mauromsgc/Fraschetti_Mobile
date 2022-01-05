@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/ordineModel.dart';
@@ -117,13 +118,18 @@ class _OrdineArticoloAggiungiPageState
     // e lo imoposta
 
     if (GetIt.instance<SessioneModel>().clienti_id_selezionato == 0) {
-      Navigator.pushNamed(
+      SchedulerBinding.instance?.addPostFrameCallback((_) {
+
+        Navigator.pushNamed(
         context,
         ClienteLista.routeName,
         arguments: ClientiListaPageArgs(
           pagina_chiamante_route: OrdineArticoloAggiungiPage.routeName,
         ),
       );
+
+      });
+
     } else {
       OrdineModel ordine_scheda = await OrdineModel.ordine_cliente_seleziona(
         cliente_id: GetIt.instance<SessioneModel>().clienti_id_selezionato,
@@ -193,6 +199,9 @@ class _OrdineArticoloAggiungiPageState
       quantita_con.text = ordine_riga_scheda.codice_scheda.pezzi.toQuantita();
       prezzo_con.text = ordine_riga_scheda.codice_scheda.prezzo.toImporti();
 
+      if(ordine_riga_scheda.codice_scheda.sospeso == 1){
+        errore_generico = "Codice SOSPESO non ordinabile";
+      }
 
     });
     print("_ordine_riga_carica setState fine");
@@ -208,9 +217,13 @@ class _OrdineArticoloAggiungiPageState
 
     final valid = validationBlock((when) {
       when(
+          (ordine_riga_scheda.codice_scheda.sospeso == 1),
+              () => setState(
+                  () => errore_generico = "Codice SOSPESO non ordinabile\n"));
+      when(
           (quantita_con.text.toDouble() <= 0),
           () => setState(
-              () => errore_generico = "La quantità deve essere maggiore di 0"));
+              () => errore_generico = "La quantità deve essere maggiore di 0\n"));
     });
 
     if (valid) {

@@ -1,5 +1,6 @@
 
 import 'package:fraschetti_videocatalogo/models/codiceModel.dart';
+import 'package:fraschetti_videocatalogo/models/utenteCorrenteModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sqflite/sqflite.dart';
@@ -96,6 +97,10 @@ class CatalogoModel {
     List<String> sql_join = [];
     List<String> sql_where = [];
     List<String> sql_ordinamenti = [];
+
+    if (GetIt.instance<UtenteCorrenteModel>().sospesi_mostra == 0) {
+      sql_where.add(" catalogo.sospeso = 0 ");
+    }
 
     if (descrizione != "") {
       String sql_descrizione = "";
@@ -211,6 +216,10 @@ class CatalogoModel {
     List<String> sql_join = [];
     List<String> sql_where = [];
     List<String> sql_ordinamenti = [];
+
+    if (GetIt.instance<UtenteCorrenteModel>().sospesi_mostra == 0) {
+      sql_where.add(" catalogo.sospeso = 0 ");
+    }
 
     if (id != 0) {
       sql_where.add(" catalogo.id = ${id} ");

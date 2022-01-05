@@ -128,6 +128,7 @@ class OrdineModel {
     int numero = 0,
     int sospeso = -1,
     int email_cliente_non_inviare = -1,
+    String ordinamento = "",
   }) async {
     print("ordini_cerca inizio");
     // uso questa ricerca sia per la lista delle gighe oridine
@@ -171,6 +172,9 @@ class OrdineModel {
           " ordini.email_cliente_non_inviare = ${email_cliente_non_inviare} ");
     }
 
+    if(ordinamento != "") {
+      sql_ordinamenti.add(ordinamento);
+    }
     sql_ordinamenti.add(" ordini.id ASC ");
 
     sql_join.forEach((element) {
@@ -259,33 +263,27 @@ class OrdineModel {
     // o se presente il numero quello con il numero indicato
     // se non trovo niente restituisco l'oggetto vuoto
     // imposto le variabili di sessione con ordine_id = 0
-    int ordine_id = 0;
-    int ordine_numero = 0;
+
     OrdineModel ordine_scheda = OrdineModel();
 
     // aggiungere la ricerca anche non numero per numero > 0
     Database db = GetIt.instance<DbRepository>().database;
-    String sql_eseguire = """SELECT ordini.id, ordini.numero
-FROM ordini
-WHERE clienti_id = ${cliente_id}
-ORDER BY ordini.numero DESC""";
+    String sql_eseguire = "SELECT ordini.id, ordini.numero ";
+sql_eseguire += "FROM ordini ";
+sql_eseguire += "WHERE clienti_id = ${cliente_id} ";
+sql_eseguire += "ORDER BY ordini.numero DESC;";
 
     final List rows = await db.rawQuery(sql_eseguire);
     if (rows.length > 0) {
-      ordine_numero = rows[0]["numero"];
-      ordine_id = rows[0]["id"];
-      ordine_scheda = await OrdineModel.ordini_cerca_singolo(id: ordine_id);
       // lo riassegno in caso non ho trovato nessun ordine
-      ordine_id = ordine_scheda.id;
-      ordine_numero = ordine_scheda.numero;
+      ordine_scheda = await OrdineModel.ordini_cerca_singolo(id: rows[0]["id"]);
     }
 
     // reimposto l'id dell'ordine nelle variabili disessione
     GetIt.instance<SessioneModel>().ordine_id_corrente = ordine_scheda.id;
 
-    print("ordine_id ${ordine_id}");
-    print("ordine_numero ${ordine_numero}");
     print("ordine_scheda.id ${ordine_scheda.id}");
+    print("ordine_scheda.numero ${ordine_scheda.numero}");
 
     print("ordine_cliente_carica fine");
 
@@ -301,6 +299,7 @@ ORDER BY ordini.numero DESC""";
     // se ordine_cliente_carica() restituisce un ordine valido (id>0) uso quello
     // altrimenti se non ne trovo nessuno ne creo uno
     // con numero uguale a 1 ne numero = 0 altrimenti co il numero indicato
+    print("numero ordine assegnare ${numero}");
     int ordine_id = 0;
 
     OrdineModel ordine_scheda = await OrdineModel.ordine_cliente_carica(
@@ -328,7 +327,7 @@ ORDER BY ordini.numero DESC""";
       GetIt.instance<SessioneModel>().ordine_id_corrente = ordine_scheda.id;
 
     }
-    print("ordine_numero ${ordine_scheda.numero}");
+    print("ordine_scheda.numero ${ordine_scheda.numero}");
     print("ordine_scheda.id ${ordine_scheda.id}");
 
     print("ordine_cliente_seleziona fine");

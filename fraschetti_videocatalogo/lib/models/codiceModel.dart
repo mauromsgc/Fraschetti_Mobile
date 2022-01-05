@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:fraschetti_videocatalogo/models/utenteCorrenteModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sqflite/sqflite.dart';
@@ -132,6 +133,7 @@ class CodiceModel {
     String descrizione = "",
     String codice = "",
     String codice_ean = "",
+    bool sospesi_inclusi = false,
   }) async {
     print("codici_cerca inizio");
     List<CodiceModel> codici_lista = [];
@@ -168,6 +170,10 @@ class CodiceModel {
     List<String> sql_join = [];
     List<String> sql_where = [];
     List<String> sql_ordinamenti = [];
+
+    if ((GetIt.instance<UtenteCorrenteModel>().sospesi_mostra == 0) && (sospesi_inclusi == false)) {
+      sql_where.add(" codici.sospeso = 0 ");
+    }
 
     if (id != 0) {
       sql_where.add(" codici.id = ${id} ");
@@ -230,6 +236,7 @@ class CodiceModel {
     String descrizione = "",
     String codice = "",
     String codice_ean = "",
+    bool sospesi_inclusi = false,
   }) async {
     print("codici_cerca_singolo inizio");
     // cerca un record esistente
@@ -243,6 +250,7 @@ class CodiceModel {
       descrizione: descrizione,
       codice: codice,
       codice_ean: codice_ean,
+        sospesi_inclusi: sospesi_inclusi,
     );
 
     if (codici_lista.length > 0) {

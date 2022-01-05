@@ -136,8 +136,73 @@ class _OrdineListaState extends State<OrdineLista> {
   }
 
 
-  void numeroOnSubmit(BuildContext context) {
-    return;
+  void _ordine_numero_seleziona({int numero = 0}) async {
+    print("numero reso selezionare ${numero}");
+
+    ordine_scheda = await OrdineModel.ordine_cliente_seleziona(
+      cliente_id: GetIt.instance<SessioneModel>().clienti_id_selezionato,
+      numero: numero,
+    );
+    lista_elementi_numero = ordine_scheda.righe.length;
+
+    setState(() {});
+  }
+
+  void _ordine_numero_seleziona_scegli() async {
+    List<OrdineModel> resi_lista = await OrdineModel.ordini_cerca(
+      clienti_id: GetIt.instance<SessioneModel>().clienti_id_selezionato,
+      ordinamento: "numero ASC",
+    );
+
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        content: Container(
+          width: 200,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (var _reso in resi_lista)
+                Container(
+                  height: 40,
+                  width: double.maxFinite,
+                  padding: EdgeInsets.all(5),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(elevation: 2),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      _ordine_numero_seleziona(numero: _reso.numero);
+                    },
+                    child: Text("Reso ${_reso.numero}"),
+                  ),
+                ),
+              Container(
+                height: 40,
+                width: double.maxFinite,
+                padding: EdgeInsets.all(5),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(elevation: 2),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _ordine_numero_seleziona(
+                        numero: resi_lista[resi_lista.length - 1].numero + 1);
+                  },
+                  child: Text("Nuovo reso"),
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Chiudi'),
+          ),
+        ],
+      ),
+    );
   }
 
   void ordine_azioni_mostra() {
@@ -328,6 +393,20 @@ class _OrdineListaState extends State<OrdineLista> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (GetIt.instance<SessioneModel>().clienti_id_selezionato == 0)
+              Container(
+                decoration: MyBoxDecoration().MyBox(),
+                height: 40,
+                alignment: Alignment.center,
+                child: Text(
+                  "Selezionare un cliente",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
+                ),
+              ),
             SizedBox(
               height: 10,
             ),
@@ -377,13 +456,14 @@ class _OrdineListaState extends State<OrdineLista> {
                 SizedBox(
                   width: 5,
                 ),
-                Expanded(
+                if (GetIt.instance<SessioneModel>().clienti_id_selezionato != 0)
+                  Expanded(
                   flex: 2,
                   child: Container(
                     // padding: EdgeInsets.all(5),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(elevation: 2),
-                      onPressed: () => numeroOnSubmit(context),
+                      onPressed: () => _ordine_numero_seleziona_scegli(),
                       child: Text(
                           "Ordine numero ${ordine_scheda.numero.toString()}"),
                     ),

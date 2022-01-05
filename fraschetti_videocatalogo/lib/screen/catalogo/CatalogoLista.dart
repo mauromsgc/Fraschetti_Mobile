@@ -597,6 +597,26 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                                 overflow: TextOverflow.ellipsis),
                           ),
                         ),
+                        if (articoli_lista[index]['sospeso'] == 1)
+                          Positioned(
+                            top: 0,
+                            right: ((articoli_lista[index]['nuovo'] == 1) || (articoli_lista[index]['promozioni_id'] > 0)) ? 70 : 10,
+                            child: Container(
+                              // width: 60,
+                              height: 50,
+                              // color: Colors.white,
+                              child: Center(
+                                child: Text(
+                                  "SOSPESO",
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         if (articoli_lista[index]['nuovo'] == 1)
                           Positioned(
                             top: 0,
@@ -608,7 +628,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                               // child: Image.asset("assets/immagini/logo_512_512.png"),
                               child: Center(
                                 child: Text(
-                                  "Nuovo",
+                                  "New",
                                   style: TextStyle(
                                     color: Colors.yellow,
                                     fontWeight: FontWeight.bold,

@@ -6,7 +6,6 @@ import 'package:get_it/get_it.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ResoModel {
-
   int id = 0;
   int clienti_id = 0;
   int agenti_id = 0;
@@ -19,7 +18,6 @@ class ResoModel {
     this.agenti_id = 0,
     this.numero = 0,
   });
-
 
   factory ResoModel.fromMap(Map<String, dynamic> map) {
     ResoModel oggetto = ResoModel();
@@ -85,7 +83,7 @@ class ResoModel {
   static Future<int> record_elimina({int id = 0}) async {
     Database db = GetIt.instance<DbRepository>().database;
 
-    // elimina le righe dell'rese
+    // elimina le righe del reso
     int record_eliminati_righe = await db.delete(
       'resi_righe',
       where: 'resi_id = ?',
@@ -108,6 +106,7 @@ class ResoModel {
     int agenti_id = 0,
     int clienti_id = 0,
     int numero = 0,
+    String ordinamento = "",
   }) async {
     print("resi_cerca inizio");
     // uso questa ricerca sia per la lista delle gighe oridine
@@ -140,6 +139,9 @@ class ResoModel {
       sql_where.add(" resi.numero = ${numero} ");
     }
 
+    if(ordinamento != "") {
+      sql_ordinamenti.add(ordinamento);
+    }
     sql_ordinamenti.add(" resi.id ASC ");
 
     sql_join.forEach((element) {
@@ -170,8 +172,7 @@ class ResoModel {
       print("resi_cerca fromMap fine");
 
       print("resi_cerca oggetto.righe inizio");
-      oggetto.righe =
-      await ResoRigaModel.resi_righe_cerca(resi_id: oggetto.id);
+      oggetto.righe = await ResoRigaModel.resi_righe_cerca(resi_id: oggetto.id);
       print("resi_cerca oggetto.righe fine");
 
       print("resi_cerca oggetto ${oggetto.toMap_record()}");
@@ -214,6 +215,7 @@ class ResoModel {
     return reso_scheda;
   }
 
+
   static Future<ResoModel> reso_cliente_carica({
     int cliente_id = 0,
     int numero = 0,
@@ -224,33 +226,30 @@ class ResoModel {
     // o se presente il numero quello con il numero indicato
     // se non trovo niente restituisco l'oggetto vuoto
     // imposto le variabili di sessione con reso_id = 0
-    int reso_id = 0;
-    int reso_numero = 0;
+
     ResoModel reso_scheda = ResoModel();
 
     // aggiungere la ricerca anche non numero per numero > 0
     Database db = GetIt.instance<DbRepository>().database;
-    String sql_eseguire = """SELECT resi.id, resi.numero
-FROM resi
-WHERE clienti_id = ${cliente_id}
-ORDER BY resi.numero DESC""";
+    String sql_eseguire = "SELECT resi.id, resi.numero ";
+    sql_eseguire += "FROM resi ";
+    sql_eseguire += "WHERE clienti_id = ${cliente_id} ";
+    if (numero != 0) {
+      sql_eseguire += "AND  numero = ${numero} ";
+    }
+    sql_eseguire += "ORDER BY resi.numero DESC;";
 
     final List rows = await db.rawQuery(sql_eseguire);
     if (rows.length > 0) {
-      reso_numero = rows[0]["numero"];
-      reso_id = rows[0]["id"];
-      reso_scheda = await ResoModel.resi_cerca_singolo(id: reso_id);
-      // lo riassegno in caso non ho trovato nessun rese
-      reso_id = reso_scheda.id;
-      reso_numero = reso_scheda.numero;
+      // lo riassegno in caso non ho trovato nessun reso
+      reso_scheda = await ResoModel.resi_cerca_singolo(id: rows[0]["id"]);
     }
 
-    // reimposto l'id dell'rese nelle variabili disessione
+    // reimposto l'id dell'reso nelle variabili disessione
     GetIt.instance<SessioneModel>().reso_id_corrente = reso_scheda.id;
 
-    print("reso_id ${reso_id}");
-    print("reso_numero ${reso_numero}");
     print("reso_scheda.id ${reso_scheda.id}");
+    print("reso_scheda.numero ${reso_scheda.numero}");
 
     print("reso_cliente_carica fine");
 
@@ -263,9 +262,10 @@ ORDER BY resi.numero DESC""";
   }) async {
     print("reso_cliente_seleziona inizio");
     // prima cerco eventuali resi cliente con reso_cliente_carica()
-    // se reso_cliente_carica() restituisce un rese valido (id>0) uso quello
+    // se reso_cliente_carica() restituisce un reso valido (id>0) uso quello
     // altrimenti se non ne trovo nessuno ne creo uno
     // con numero uguale a 1 ne numero = 0 altrimenti co il numero indicato
+    print("numero reso assegnare ${numero}");
     int reso_id = 0;
 
     ResoModel reso_scheda = await ResoModel.reso_cliente_carica(
@@ -274,10 +274,10 @@ ORDER BY resi.numero DESC""";
     );
 
     if (reso_scheda.id == 0) {
-      if(numero == 0){
+      if (numero == 0) {
         numero = 1;
       }
-      // devo creare un nuovo rese e salvarlo
+      // devo creare un nuovo reso e salvarlo
       reso_scheda = ResoModel();
 
       reso_scheda.agenti_id = GetIt.instance<UtenteCorrenteModel>().agenti_id;
@@ -288,17 +288,15 @@ ORDER BY resi.numero DESC""";
       // ricarico il record per le altre variabili
       reso_scheda = await ResoModel.resi_cerca_singolo(id: reso_id);
       reso_id = reso_scheda.id;
-      // reimposto l'id dell'rese nelle variabili disessione
+      // reimposto l'id dell'reso nelle variabili disessione
       // in caso reso_scheda.id == 0 sarà stato impostatato da ResoModel.reso_cliente_carica
       GetIt.instance<SessioneModel>().reso_id_corrente = reso_scheda.id;
-
     }
-    print("reso_numero ${reso_scheda.numero}");
+    print("reso_scheda.numero ${reso_scheda.numero}");
     print("reso_scheda.id ${reso_scheda.id}");
 
     print("reso_cliente_seleziona fine");
 
     return reso_scheda;
   }
-  
 }

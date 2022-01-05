@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
@@ -6,6 +7,7 @@ import 'package:fraschetti_videocatalogo/models/codiceModel.dart';
 import 'package:fraschetti_videocatalogo/models/resoModel.dart';
 import 'package:fraschetti_videocatalogo/models/resoRigaModel.dart';
 import 'package:fraschetti_videocatalogo/models/reso_causele_model.dart';
+import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoLista.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/ClientiLista.dart';
 import 'package:fraschetti_videocatalogo/utils/Utility.dart';
 import 'package:fraschetti_videocatalogo/utils/ValidationBlock.dart';
@@ -114,13 +116,18 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
     // e lo imoposta
 
     if (GetIt.instance<SessioneModel>().clienti_id_selezionato == 0) {
-      Navigator.pushNamed(
-        context,
-        ClienteLista.routeName,
-        arguments: ClientiListaPageArgs(
-          pagina_chiamante_route: ResoArticoloAggiungiPage.routeName,
-        ),
-      );
+      SchedulerBinding.instance?.addPostFrameCallback((_) {
+
+        Navigator.pushNamed(
+          context,
+          ClienteLista.routeName,
+          arguments: ClientiListaPageArgs(
+            pagina_chiamante_route: ResoArticoloAggiungiPage.routeName,
+          ),
+        );
+
+      });
+
     } else {
       ResoModel reso_scheda = await ResoModel.reso_cliente_seleziona(
         cliente_id: GetIt.instance<SessioneModel>().clienti_id_selezionato,
@@ -157,7 +164,9 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
     print("reso_riga_scheda ${reso_riga_scheda.toMap_record().toString()}");
     print("_reso_riga_carica setState inizio");
     setState(() {
-      _causale_default = (reso_riga_scheda.causale_reso != 0) ? reso_riga_scheda.causale_reso : 1;
+      _causale_default = (reso_riga_scheda.causale_reso != 0)
+          ? reso_riga_scheda.causale_reso
+          : 1;
       fattura_numero_con.text = reso_riga_scheda.fattura_numero;
       fattura_data_con.text = reso_riga_scheda.fattura_data;
       codice_con.text = reso_riga_scheda.codice;
@@ -183,20 +192,20 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
           () => setState(() => causale_errore = "Selezionare una causale"));
       when(
           (fattura_numero_con.text == ""),
-              () => setState(
-                  () => errore_generico += "Inserire il numero della fattura\n"));
+          () => setState(
+              () => errore_generico += "Inserire il numero della fattura\n"));
       when(
           (fattura_data_con.text == ""),
-              () => setState(
-                  () => errore_generico += "Inserire la data della fattura\n"));
+          () => setState(
+              () => errore_generico += "Inserire la data della fattura\n"));
       when(
           (codice_con.text.length != 6),
-              () => setState(
-                  () => errore_generico += "Inserire correttamente il codice articolo (000000)\n"));
+          () => setState(() => errore_generico +=
+              "Inserire correttamente il codice articolo (000000)\n"));
       when(
           (quantita_con.text.toDouble() <= 0),
-          () => setState(
-              () => errore_generico += "La quantità deve essere maggiore di 0\n"));
+          () => setState(() =>
+              errore_generico += "La quantità deve essere maggiore di 0\n"));
     });
 
     if (valid) {
@@ -276,6 +285,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
 
     scheda_codice = await CodiceModel.codici_cerca_singolo(
       codice: codice,
+      sospesi_inclusi: true,
     );
 
     if (scheda_codice.id != 0) {
@@ -288,9 +298,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
             scheda_codice.descrizione.trim();
       });
       _quantita_focus_node.requestFocus();
-
     } else {
-
       bool _continua_comunque = false;
 
       await showDialog(
@@ -300,7 +308,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
             title: Text("Codice non trovato"),
             content: Text("""
 Nessun articolo presente con il codice "${codice}",
-Procedere counque con il reso?"""),
+Procedere comunque con il reso?"""),
             actions: <Widget>[
               ElevatedButton(
                 onPressed: () {
@@ -321,10 +329,12 @@ Procedere counque con il reso?"""),
         },
       );
 
-      if(_continua_comunque == true){
+      if (_continua_comunque == true) {
+        um_con.text = "";
         quantita_con.text = "1";
+        descrizione_con.text = "";
         _quantita_focus_node.requestFocus();
-      }else{
+      } else {
         setState(() {
           codice_con.text = "";
           um_con.text = "";
@@ -333,12 +343,7 @@ Procedere counque con il reso?"""),
         });
         _codice_focus_node.requestFocus();
       }
-
     }
-
-
-
-
   }
 
   @override
@@ -408,7 +413,7 @@ Procedere counque con il reso?"""),
                                 extentOffset: fattura_numero_con.text.length);
                           },
                           keyboardType: TextInputType.number,
-                          textInputAction: TextInputAction.continueAction,
+                          textInputAction: TextInputAction.next,
                           decoration: InputDecoration(
                             contentPadding:
                                 EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
@@ -433,7 +438,7 @@ Procedere counque con il reso?"""),
                                 extentOffset: fattura_data_con.text.length);
                           },
                           keyboardType: TextInputType.number,
-                          textInputAction: TextInputAction.continueAction,
+                          textInputAction: TextInputAction.next,
                           inputFormatters: [
                             FilteringTextInputFormatter(RegExp(r"^\d{0,6}"),
                                 allow: true)
@@ -470,7 +475,7 @@ Procedere counque con il reso?"""),
                                 extentOffset: codice_con.text.length);
                           },
                           keyboardType: TextInputType.number,
-                          textInputAction: TextInputAction.continueAction,
+                          textInputAction: TextInputAction.next,
                           inputFormatters: [
                             FilteringTextInputFormatter(RegExp(r"^\d{0,6}"),
                                 allow: true)
@@ -482,7 +487,7 @@ Procedere counque con il reso?"""),
                             labelText: "Codice",
                           ),
                           onChanged: (value) {
-                            if(value.length == 6) {
+                            if (value.length == 6) {
                               _codice_cerca(context, codice: value);
                             }
                           },

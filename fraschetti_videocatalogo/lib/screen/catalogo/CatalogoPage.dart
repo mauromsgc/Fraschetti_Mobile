@@ -116,7 +116,6 @@ class _CatalogoPageState extends State<CatalogoPage> {
 
   void articolo_disponibilita_mostra(
       BuildContext context, CodiceModel codice_scheda) {
-
     showDialog(
       context: context,
       builder: DisponibilitaDialogWidget(
@@ -136,7 +135,8 @@ class _CatalogoPageState extends State<CatalogoPage> {
 
   void scheda_tecnica_sicurezza_mostra({int scheda_id = 0}) async {
     bool url_aperto = false;
-    String url_aprire = GetIt.instance<UtenteCorrenteModel>().url_schede_tecniche_sicurezza();
+    String url_aprire =
+        GetIt.instance<UtenteCorrenteModel>().url_schede_tecniche_sicurezza();
     url_aprire += "_SchedaTecSic_" + scheda_id.toString();
     print("url_aprire: ${url_aprire}");
     if (url_aprire != "") {
@@ -271,7 +271,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
                                 // child: Image.asset("assets/immagini/logo_512_512.png"),
                                 child: Center(
                                   child: Text(
-                                    "Nuovo",
+                                    "New",
                                     style: TextStyle(
                                       color: Colors.yellow,
                                       fontWeight: FontWeight.bold,
@@ -337,147 +337,60 @@ class _CatalogoPageState extends State<CatalogoPage> {
             ],
           ),
           SizedBox(height: 5),
-
-          // Row(
-          //   crossAxisAlignment: CrossAxisAlignment.start,
-          //   children: [
-          //     Flexible(
-          //       child: ConstrainedBox(
-          //         constraints: BoxConstraints(
-          //           // maxWidth: MediaQuery.of(context).size.width * 0.25,
-          //           // minWidth: MediaQuery.of(context).size.width * 0.25,
-          //           // maxWidth: 150,
-          //         ),
-          //         child: Container(
-          //           // width: MediaQuery.of(context).size.width * 0.25,
-          //           // color : Colors.blue,
-          //           decoration: MyBoxDecoration().MyBox(),
-          //           child: Text('${MediaQuery.of(context).size.width.toString()} Your Text here ${(MediaQuery.of(context).size.width * 0.25).toString()}'),
-          //         ),
-          //       ),
-          //     ),
-          //     Flexible(
-          //       child: ConstrainedBox(
-          //         constraints: BoxConstraints(
-          //             maxWidth: 500,
-          //           maxHeight: 375,
-          //           // minWidth: MediaQuery.of(context).size.width * 0.75,
-          //           // minHeight: 100,
-          //         ),
-          //         child: Container(
-          //           // width: MediaQuery.of(context).size.width * 0.75,
-          //           // color : Colors.blue,
-          //           decoration: BoxDecoration(
-          //             border: MyBorder().MyBorderOrange(),
-          //           ),
-          //           child: Text('Your Text here ${(MediaQuery.of(context).size.width * 0.75).toString()}'),
-          //         ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
-
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(width: 5),
               Expanded(
-                child: Container(
-                  // height: MediaQuery.of(context).size.height,
-                  padding: EdgeInsets.only(left: 5),
-                  child: Column(
-                    // mainAxisSize: MainAxisSize.max,
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // new LayoutBuilder(
-                      //     builder: (BuildContext context, BoxConstraints constraints) {
-                      //       return Container(
-                      //         height: 200,
-                      //         decoration: MyBoxDecoration().MyBox(),
-                      //         child: Text(
-                      //           catalogo_scheda.descrizione,
-                      //           textAlign: TextAlign.justify,
-                      //           // style: TextStyle(fontSize: 12.0),
-                      //         ),
-                      //       );
-                      //
-                      //       // if(constraints.maxWidth > 200.0) {
-                      //       //   return new Text("BIG ${constraints.maxHeight}");
-                      //       // } else {
-                      //       //   return new Text("SMALL ${constraints.maxHeight}");
-                      //       // }
-                      //     }
-                      // ),
-
-                      Container(
-                        padding: EdgeInsets.all(5),
-                        decoration: MyBoxDecoration().MyBox(),
-                        child: SizedBox(
-                          height: 300,
-                          child: SingleChildScrollView(
-                            child: Text(
-                              catalogo_scheda.descrizione,
-                              textAlign: TextAlign.justify,
-                              // style: TextStyle(fontSize: 12.0),
-                            ),
+                flex: 1,
+                child: Column(
+                  children: [
+                    Container(
+                      width: double.maxFinite,
+                      // padding: EdgeInsets.all(5),
+                      decoration: MyBoxDecoration().MyBox(),
+                      child: SizedBox(
+                        height: 300,
+                        child: SingleChildScrollView(
+                          child: Text(
+                            catalogo_scheda.descrizione,
+                            textAlign: TextAlign.justify,
+                            // style: TextStyle(fontSize: 12.0),
                           ),
                         ),
                       ),
+                    ),
+                    if (catalogo_scheda.scheda_tecnica_id != 0)
                       Container(
-                        decoration: MyBoxDecoration().MyBox(),
-                        child: Column(
-                          children: [
-                            if (catalogo_scheda.scheda_tecnica_id != 0)
-                              Container(
-                                // height: 50,
-                                width: 170,
-                                padding: EdgeInsets.all(5),
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(elevation: 2),
-                                  onPressed: () {
-                                    scheda_tecnica_sicurezza_mostra(scheda_id: catalogo_scheda.scheda_tecnica_id);
-                                  },
-                                  child: Text('Scheda tecnica'),
-                                ),
-                              ),
-                            if (catalogo_scheda.scheda_sicurezza_id != 0)
-                              Container(
-                                // height: 50,
-                                width: 170,
-                                padding: EdgeInsets.all(5),
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(elevation: 2),
-                                  onPressed: () {
-                                    scheda_tecnica_sicurezza_mostra(scheda_id: catalogo_scheda.scheda_sicurezza_id);
-                                  },
-                                  child: Text('Scheda sicurezza'),
-                                ),
-                              ),
-                          ],
+                        // height: 50,
+                        width: 170,
+                        padding: EdgeInsets.all(5),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(elevation: 2),
+                          onPressed: () {
+                            scheda_tecnica_sicurezza_mostra(
+                                scheda_id: catalogo_scheda.scheda_tecnica_id);
+                          },
+                          child: Text('Scheda tecnica'),
                         ),
                       ),
-                    ],
-                  ),
+                    if (catalogo_scheda.scheda_sicurezza_id != 0)
+                      Container(
+                        // height: 50,
+                        width: 170,
+                        padding: EdgeInsets.all(5),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(elevation: 2),
+                          onPressed: () {
+                            scheda_tecnica_sicurezza_mostra(
+                                scheda_id: catalogo_scheda.scheda_sicurezza_id);
+                          },
+                          child: Text('Scheda sicurezza'),
+                        ),
+                      ),
+                  ],
                 ),
               ),
-
-              // Expanded(
-              //   flex: 1,
-              //   child: Container(
-              //     padding: EdgeInsets.all(5),
-              //     decoration: MyBoxDecoration().MyBox(),
-              //     child: SizedBox(
-              //       height: 300,
-              //       child: SingleChildScrollView(
-              //         child: Text(
-              //           catalogo_scheda.descrizione,
-              //           textAlign: TextAlign.justify,
-              //           // style: TextStyle(fontSize: 12.0),
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-              // ),
-
               SizedBox(width: 5),
               Expanded(
                 flex: 2,
@@ -729,18 +642,37 @@ class _CatalogoPageState extends State<CatalogoPage> {
                       ),
                       Expanded(
                         // descrizione
-                        child: Container(
-                          padding: EdgeInsets.all(2),
-                          alignment: Alignment.centerLeft,
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text(
-                            codice_scheda[index].descrizione,
-                            style: TextStyle(
-                              // fontSize: 14.0,
-                              overflow: TextOverflow.ellipsis,
+                        child: Stack(children: [
+                          Container(
+                            padding: EdgeInsets.all(2),
+                            alignment: Alignment.centerLeft,
+                            decoration: MyBoxDecoration().MyBox(),
+                            child: Text(
+                              codice_scheda[index].descrizione,
+                              style: TextStyle(
+                                // fontSize: 14.0,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ),
-                        ),
+                          if (codice_scheda[index].sospeso == 1)
+                            Positioned(
+                              top: 0,
+                              right: 10,
+                              child: Container(
+                                child: Center(
+                                  child: Text(
+                                    "SOSPESO",
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      // fontSize: 25,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ]),
                       ),
                     ],
                   ),

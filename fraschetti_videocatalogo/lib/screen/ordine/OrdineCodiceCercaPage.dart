@@ -332,18 +332,38 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
                               ),
                               Expanded(
                                 // descrizione
-                                child: Container(
-                                  padding: EdgeInsets.all(2),
-                                  alignment: Alignment.centerLeft,
-                                  decoration: MyBoxDecoration().MyBox(),
-                                  child: Text(
-                                    codici_lista[index].catalogo_nome,
-                                    style: TextStyle(
-                                      // fontSize: 14.0,
-                                      overflow: TextOverflow.ellipsis,
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                    padding: EdgeInsets.all(2),
+                                    alignment: Alignment.centerLeft,
+                                    decoration: MyBoxDecoration().MyBox(),
+                                    child: Text(
+                                      codici_lista[index].catalogo_nome,
+                                      style: TextStyle(
+                                        // fontSize: 14.0,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
                                   ),
-                                ),
+                                    if (codici_lista[index].sospeso == 1)
+                                      Positioned(
+                                        top: 0,
+                                        right: 10,
+                                        child: Container(
+                                          child: Center(
+                                            child: Text(
+                                              "SOSPESO",
+                                              style: TextStyle(
+                                                color: Colors.red,
+                                                // fontSize: 25,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                ],),
                               ),
                             ],
                           ),
