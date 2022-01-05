@@ -49,6 +49,7 @@ class _OrdineResiListaState extends State<OrdineResiLista> {
 
   Future<void> listaClick(BuildContext context, {int id = 0}) async {
     Navigator.pushNamed(
+    // Navigator.popAndPushNamed(
       context,
       ResoArticoloAggiungiPage.routeName,
       arguments: ResoArticoloAggiungiPageArgs(

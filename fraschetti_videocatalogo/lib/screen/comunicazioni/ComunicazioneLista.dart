@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
 import 'package:fraschetti_videocatalogo/screen/comunicazioni/ComunicazionePage.dart';
@@ -184,6 +185,7 @@ class _ComunicazioneListaPageState extends State<ComunicazioneListaPage> {
                 },
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter(RegExp(r"^\d+"), allow: true)],
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),

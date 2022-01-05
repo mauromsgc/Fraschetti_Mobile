@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
+import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
+import 'package:fraschetti_videocatalogo/models/codiceModel.dart';
 import 'package:fraschetti_videocatalogo/models/resoModel.dart';
 import 'package:fraschetti_videocatalogo/models/resoRigaModel.dart';
 import 'package:fraschetti_videocatalogo/models/reso_causele_model.dart';
@@ -31,7 +34,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
 
   ResoArticoloAggiungiPageArgs argomenti = ResoArticoloAggiungiPageArgs();
   ResoRigaModel reso_riga_scheda = ResoRigaModel();
-  String _causale_default = "";
+  int _causale_default = 0;
 
   final TextEditingController fattura_numero_con = TextEditingController();
   final TextEditingController fattura_data_con = TextEditingController();
@@ -47,6 +50,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
 
   final _causale_focus_node = FocusNode();
   final _codice_focus_node = FocusNode();
+  final _quantita_focus_node = FocusNode();
 
   String _reso_causale_selezionata = "Causale 1";
 
@@ -56,7 +60,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
 
     _reso_causale_lista_carica();
     setState(() {
-      _causale_default = "0";
+      _causale_default = 1;
     });
 
     _causale_focus_node.addListener(() {
@@ -78,6 +82,7 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
   void dispose() {
     _causale_focus_node.dispose();
     _codice_focus_node.dispose();
+    _quantita_focus_node.dispose();
 
     super.dispose();
   }
@@ -97,7 +102,6 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
 
   Future<void> _reso_causale_lista_carica() async {
     _reso_causale_lista = await ResoCausaleModel.reso_causali_lista();
-    setState(() {});
   }
 
   Future<void> _cliente_reso_seleziona() async {
@@ -137,7 +141,8 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
     // creo una nuova se non presente
     // modifico la riga esistente se già presente il codice
 
-    if (argomenti.id != "") {
+    print("argomenti.id ${argomenti.id}");
+    if (argomenti.id != 0) {
       reso_riga_scheda = await ResoRigaModel.resi_righe_cerca_singolo(
         id: argomenti.id,
         resi_id: GetIt.instance<SessioneModel>().reso_id_corrente,
@@ -146,12 +151,13 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
 
     if ((reso_riga_scheda.id == 0) | (reso_riga_scheda.id == null)) {
       reso_riga_scheda = await ResoRigaModel.nuovo_reso_riga();
+      reso_riga_scheda.causale_reso = 1;
     }
 
     print("reso_riga_scheda ${reso_riga_scheda.toMap_record().toString()}");
     print("_reso_riga_carica setState inizio");
     setState(() {
-      _causale_default = reso_riga_scheda.causale_reso.toString();
+      _causale_default = (reso_riga_scheda.causale_reso != 0) ? reso_riga_scheda.causale_reso : 1;
       fattura_numero_con.text = reso_riga_scheda.fattura_numero;
       fattura_data_con.text = reso_riga_scheda.fattura_data;
       codice_con.text = reso_riga_scheda.codice;
@@ -173,12 +179,24 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
     });
 
     final valid = validationBlock((when) {
-      when((_causale_default == "0"),
+      when((_causale_default == 0),
           () => setState(() => causale_errore = "Selezionare una causale"));
+      when(
+          (fattura_numero_con.text == ""),
+              () => setState(
+                  () => errore_generico += "Inserire il numero della fattura\n"));
+      when(
+          (fattura_data_con.text == ""),
+              () => setState(
+                  () => errore_generico += "Inserire la data della fattura\n"));
+      when(
+          (codice_con.text.length != 6),
+              () => setState(
+                  () => errore_generico += "Inserire correttamente il codice articolo (000000)\n"));
       when(
           (quantita_con.text.toDouble() <= 0),
           () => setState(
-              () => errore_generico = "La quantità deve essere maggiore di 0"));
+              () => errore_generico += "La quantità deve essere maggiore di 0\n"));
     });
 
     if (valid) {
@@ -253,24 +271,74 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
     // }
   }
 
-  void _codice_cerca(BuildContext context) {
-    // double _sconto = 0;
-    // double _prezzo = 0;
-    //
-    // _sconto =
-    //     sconto_con.text.toDoubleSql();
-    // print("_sconto ${_sconto}");
-    // if ((_sconto != 0) & (_sconto != null)) {
-    //   print("reso_riga_scheda.prezzo_ordine ${reso_riga_scheda.prezzo_ordine}");
-    //   _prezzo = (reso_riga_scheda.prezzo_ordine * (100 - _sconto) /100  );
-    //   print("_prezzo ${_prezzo}");
-    //
-    //   setState(() {
-    //     sconto_con.text = _sconto.toQuantita();
-    //     prezzo_con.text = _prezzo.toImporti();
-    //   });
-    //   reso_riga_scheda.prezzo = _prezzo;
-    // }
+  void _codice_cerca(BuildContext context, {String codice = ""}) async {
+    CodiceModel scheda_codice = CodiceModel();
+
+    scheda_codice = await CodiceModel.codici_cerca_singolo(
+      codice: codice,
+    );
+
+    if (scheda_codice.id != 0) {
+      setState(() {
+        codice_con.text = scheda_codice.numero;
+        um_con.text = scheda_codice.um;
+        quantita_con.text = scheda_codice.pezzi.toQuantita();
+        descrizione_con.text = scheda_codice.catalogo_nome.trim() +
+            " " +
+            scheda_codice.descrizione.trim();
+      });
+      _quantita_focus_node.requestFocus();
+
+    } else {
+
+      bool _continua_comunque = false;
+
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Codice non trovato"),
+            content: Text("""
+Nessun articolo presente con il codice "${codice}",
+Procedere counque con il reso?"""),
+            actions: <Widget>[
+              ElevatedButton(
+                onPressed: () {
+                  _continua_comunque = false;
+                  Navigator.of(context).pop(false);
+                },
+                child: Text("Chiudi"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _continua_comunque = true;
+                  Navigator.of(context).pop(true);
+                },
+                child: Text("Procedi comunque"),
+              ),
+            ],
+          );
+        },
+      );
+
+      if(_continua_comunque == true){
+        quantita_con.text = "1";
+        _quantita_focus_node.requestFocus();
+      }else{
+        setState(() {
+          codice_con.text = "";
+          um_con.text = "";
+          quantita_con.text = "";
+          descrizione_con.text = "";
+        });
+        _codice_focus_node.requestFocus();
+      }
+
+    }
+
+
+
+
   }
 
   @override
@@ -298,20 +366,18 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                     padding: EdgeInsets.all(5),
                     child: DropdownButtonFormField(
                       hint: Text('Seleziona la causale'),
-                      // Not necessary for Option 1
-                      // value: _causale_default,
-                      // value: reso_riga_scheda.codice.toString(),
-                      onChanged: (newValue) {
+                      focusNode: _causale_focus_node,
+                      value: _causale_default,
+                      // value: 1,
+                      onChanged: (int? newValue) {
                         setState(() {
-                          print("newValue ${newValue.toString()}");
-                          _causale_default = newValue.toString();
-                          _causale_seleziona(context,
-                              codice: newValue.toString().toInt());
+                          _causale_default = newValue!;
+                          _causale_seleziona(context, codice: newValue);
                         });
                       },
                       items: _reso_causale_lista.map((elemento) {
                         return DropdownMenuItem(
-                          value: elemento.codice.toString(),
+                          value: elemento.codice,
                           child: new Text(elemento.descrizione),
                           // onTap: () {
                           //   _causale_seleziona(context, codice: elemento.codice);
@@ -336,6 +402,11 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                         padding: EdgeInsets.all(5),
                         child: TextFormField(
                           controller: fattura_numero_con,
+                          onTap: () {
+                            fattura_numero_con.selection = TextSelection(
+                                baseOffset: 0,
+                                extentOffset: fattura_numero_con.text.length);
+                          },
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.continueAction,
                           decoration: InputDecoration(
@@ -356,8 +427,17 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                         padding: EdgeInsets.all(5),
                         child: TextFormField(
                           controller: fattura_data_con,
+                          onTap: () {
+                            fattura_data_con.selection = TextSelection(
+                                baseOffset: 0,
+                                extentOffset: fattura_data_con.text.length);
+                          },
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.continueAction,
+                          inputFormatters: [
+                            FilteringTextInputFormatter(RegExp(r"^\d{0,6}"),
+                                allow: true)
+                          ],
                           decoration: InputDecoration(
                             contentPadding:
                                 EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
@@ -382,15 +462,30 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                         width: 120,
                         padding: EdgeInsets.all(5),
                         child: TextFormField(
+                          focusNode: _codice_focus_node,
                           controller: codice_con,
+                          onTap: () {
+                            codice_con.selection = TextSelection(
+                                baseOffset: 0,
+                                extentOffset: codice_con.text.length);
+                          },
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.continueAction,
+                          inputFormatters: [
+                            FilteringTextInputFormatter(RegExp(r"^\d{0,6}"),
+                                allow: true)
+                          ],
                           decoration: InputDecoration(
                             contentPadding:
                                 EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(),
                             labelText: "Codice",
                           ),
+                          onChanged: (value) {
+                            if(value.length == 6) {
+                              _codice_cerca(context, codice: value);
+                            }
+                          },
                         ),
                       ),
                       SizedBox(
@@ -422,9 +517,21 @@ class _ResoArticoloAggiungiPageState extends State<ResoArticoloAggiungiPage> {
                         width: 120,
                         padding: EdgeInsets.all(5),
                         child: TextFormField(
+                          focusNode: _quantita_focus_node,
                           controller: quantita_con,
+                          onTap: () {
+                            quantita_con.selection = TextSelection(
+                                baseOffset: 0,
+                                extentOffset: quantita_con.text.length);
+                          },
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.next,
+                          inputFormatters: [
+                            FilteringTextInputFormatter(
+                                RegExp(r"^\d*\,?\d{0,2}"),
+                                allow: true)
+                          ],
+                          textAlign: TextAlign.right,
                           decoration: InputDecoration(
                             contentPadding:
                                 EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),

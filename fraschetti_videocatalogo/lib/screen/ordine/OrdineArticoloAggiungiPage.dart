@@ -578,6 +578,7 @@ class _OrdineArticoloAggiungiPageState
                           focusNode: _quantita_focus_node,
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.next,
+                          inputFormatters: [FilteringTextInputFormatter(RegExp(r"^\d*\,?\d{0,2}"), allow: true)],
                           textAlign: TextAlign.right,
                           decoration: InputDecoration(
                             contentPadding:
@@ -633,10 +634,12 @@ class _OrdineArticoloAggiungiPageState
                                 baseOffset: 0,
                                 extentOffset: sconto_con.text.length);
                           },
+
                           focusNode: _sconto_focus_node,
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.next,
                           textAlign: TextAlign.right,
+                          inputFormatters: [FilteringTextInputFormatter(RegExp(r"^\d*\,?\d{0,2}"), allow: true)],
                           decoration: InputDecoration(
                             contentPadding:
                                 EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
@@ -667,6 +670,8 @@ class _OrdineArticoloAggiungiPageState
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.done,
                           textAlign: TextAlign.right,
+                          // inputFormatters: [FilteringTextInputFormatter(RegExp(r"^\d*\,?\d{0,2}"), allow: true)],
+                          inputFormatters: [FilteringTextInputFormatter(RegExp(r"^\d*"), allow: true)],
                           decoration: InputDecoration(
                             contentPadding:
                                 EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),

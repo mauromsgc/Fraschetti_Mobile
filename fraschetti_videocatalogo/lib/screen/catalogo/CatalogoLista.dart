@@ -415,6 +415,7 @@ class _CatalogoListaPageState extends State<CatalogoListaPage> {
                 },
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter(RegExp(r"^\d{0,6}"), allow: true)],
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),

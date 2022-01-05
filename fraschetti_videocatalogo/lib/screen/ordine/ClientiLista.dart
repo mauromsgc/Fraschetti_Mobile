@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/components/OrdineTopMenu.dart';
 import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
@@ -227,6 +228,7 @@ class _ClienteListaState extends State<ClienteLista> {
                 },
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter(RegExp(r"^\d+"), allow: true)],
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),

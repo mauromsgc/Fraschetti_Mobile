@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/components/OrdineTopMenu.dart';
 import 'package:fraschetti_videocatalogo/main.dart';
@@ -189,6 +190,7 @@ class _OrdineCodiceCercaPageState extends State<OrdineCodiceCercaPage> {
                 },
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter(RegExp(r"^\d{0,6}"), allow: true)],
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   border: OutlineInputBorder(),

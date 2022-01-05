@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.fraschetti_videocatalogo">
+    package="it.msgc.fraschetti_videocatalogo">
    <application
-        android:label="fraschetti_videocatalogo"
+        android:label="Fraschetti Videocatalogo"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -32,6 +32,9 @@
             android:value="2" />
     </application>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
     <queries>
         <!-- If your app opens https URLs -->
         <intent>
