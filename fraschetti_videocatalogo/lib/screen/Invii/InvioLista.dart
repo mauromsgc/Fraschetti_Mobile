@@ -7,25 +7,25 @@ import 'package:fraschetti_videocatalogo/models/SessioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/comunicazioneModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/comunicazioniRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/comunicazioni/ComunicazionePage.dart';
-import 'package:fraschetti_videocatalogo/screen/trasmissioni/TrasmissionePage.dart';
+import 'package:fraschetti_videocatalogo/screen/Invii/InvioPage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 
 
-class TrasmissioneLista extends StatefulWidget {
-  TrasmissioneLista({Key? key}) : super(key: key);
-  static const String routeName = "trasmissione_lista";
-  final String pagina_titolo = "Trasmissioni";
+class InvioLista extends StatefulWidget {
+  InvioLista({Key? key}) : super(key: key);
+  static const String routeName = "invio_lista";
+  final String pagina_titolo = "Trasmissioni inviate";
 
   @override
-  _TrasmissioneListaState createState() => _TrasmissioneListaState();
+  _InvioListaState createState() => _InvioListaState();
 }
 
-class _TrasmissioneListaState extends State<TrasmissioneLista> {
+class _InvioListaState extends State<InvioLista> {
   List<ComunicazioneModel> trasmissioni_lista =
   ComunicazioniRepository().all_2();
 
   void listaClick(BuildContext context) {
-    Navigator.pushNamed(context, TrasmissionePage.routeName);
+    Navigator.pushNamed(context, InvioPage.routeName);
   }
 
   @override

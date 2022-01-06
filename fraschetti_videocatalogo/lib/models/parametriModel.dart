@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fraschetti_videocatalogo/helper/DBHelper.dart';
 import 'package:fraschetti_videocatalogo/main.dart';
 import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
+import 'package:fraschetti_videocatalogo/screen/trasmissioni/TrasmissioniProgressPage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -317,8 +320,12 @@ class ParametriModel {
 
 
 
-  Future<bool> aggiornamenti_controlla() async {
+  Future<bool> aggiornamenti_controlla({StreamController<ProgressData>? progress_stream_con}) async {
     // cotrolla se ci sono aggiornamenti da scaricare
+
+    progress_stream_con?.add(ProgressData(titolo: "Verifica aggiornamenti",
+        messaggio: "Preparazione richiesta",
+        progress: -1));
 
     print("dbRepositoty aggiornamenti_controlla inizio");
 
@@ -339,27 +346,28 @@ class ParametriModel {
     // aggiungo tutti i campi dei parametri da verificare
     data_invio["aggiornamento_id_ultimo_immagini"] = this.agg_immagini_id;
     data_invio["aggiornamento_id_ultimo_dati"] = this.agg_dati_id;
-    data_invio["aggiornamento_id_ultimo_script"] = this.agg_sql_id; // non utilizzato
-    data_invio["aggiornamento_id_ultimo_comunicazioni"] = this.agg_comunicazioni_id;
+    data_invio["aggiornamento_id_ultimo_script"] =
+        this.agg_sql_id; // non utilizzato
+    data_invio["aggiornamento_id_ultimo_comunicazioni"] =
+        this.agg_comunicazioni_id;
 
 
+    progress_stream_con?.add(ProgressData(messaggio: "Invio richiesta"));
     try {
-      risposta = await GetIt.instance<HttpRepository>()
+      risposta = await GetIt
+          .instance<HttpRepository>()
           .http!
           .aggiornamenti_controlla(data_invio: data_invio);
-    } on DatabaseException catch (e) {
-      if (e.isNoSuchTableError()) {
-        print("Errore inizializzazione parametri");
-      }
+    } catch (exception) {
+      progress_stream_con?.add(ProgressData(
+          messaggio: "ERRORE RISPOSTA", errore: exception.toString()));
+      print("Errore di connessione");
+    } finally {
+      progress_stream_con?.add(ProgressData(messaggio: "Ricevura risposta"));
     }
-    print("dbRepository aggiornamenti_controlla: " + risposta.toString());
-    // $o_output.esito_codice:=0
-    // $o_output.esito_descrizione:=""
-    // $o_output.errori:=New collection
-    // $o_output.aggiornamenti_presenti:=boolean
-    // $o_output.videocatalogo_uid:=""
 
     if (risposta["aggiornamenti_presenti"] == true) {
+      print("dbRepository aggiornamenti_controlla: " + risposta.toString());
       esito = true;
     } else {
       print(risposta["errori"].toString());
@@ -367,10 +375,10 @@ class ParametriModel {
     }
 
     print("dbRepositoty aggiornamenti_controlla fine");
+    progress_stream_con?.add(ProgressData(messaggio: "Richiesta terminata"));
 
     return esito;
   }
-
 
 
 }

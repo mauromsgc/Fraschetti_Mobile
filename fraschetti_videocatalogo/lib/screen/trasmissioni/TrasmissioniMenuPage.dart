@@ -7,7 +7,8 @@ import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
 import 'package:fraschetti_videocatalogo/models/utenteCorrenteModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/dbRepository.dart';
 import 'package:fraschetti_videocatalogo/screen/auth/ParametriConnesionePage.dart';
-import 'package:fraschetti_videocatalogo/screen/trasmissioni/TrasmissioneLista.dart';
+import 'package:fraschetti_videocatalogo/screen/Invii/InvioLista.dart';
+import 'package:fraschetti_videocatalogo/screen/trasmissioni/TrasmissioniProgressPage.dart';
 import 'package:fraschetti_videocatalogo/utils/Utility.dart';
 import 'package:get_it/get_it.dart';
 
@@ -21,9 +22,6 @@ class TrasmissioniMenuLista extends StatefulWidget {
 }
 
 class _TrasmissioniMenuListaState extends State<TrasmissioniMenuLista> {
-  void listaClick(BuildContext context, int index) {
-    // selezione al cliente e va in ordine
-  }
 
   void connessione_test_ui(BuildContext context) async {
     connessione_test_alert(context);
@@ -323,13 +321,12 @@ Vuoi scaricarli?"""),
                         style: ElevatedButton.styleFrom(elevation: 2),
                         onPressed: () {
                           Navigator.popAndPushNamed(
-                              context, TrasmissioneLista.routeName);
+                              context, InvioLista.routeName);
                         },
-                        child: Text('Trasmissioni esito'),
+                        child: Text('Trasmissioni inviate'),
                       ),
                     ),
                     Container(
-                      // lo fa già il server
                       height: 50,
                       width: double.maxFinite,
                       padding: EdgeInsets.all(5),
@@ -342,17 +339,16 @@ Vuoi scaricarli?"""),
                       ),
                     ),
                     Container(
-                      // lo fa già il server
                       height: 50,
                       width: double.maxFinite,
-                      // padding: EdgeInsets.all(5),
-                      // child: ElevatedButton(
-                      //   style: ElevatedButton.styleFrom(elevation: 2),
-                      //   onPressed: () {
-                      //     Navigator.of(context).pop();
-                      //   },
-                      //   child: Text('Invia email senza prezzi'),
-                      // ),
+                      padding: EdgeInsets.all(5),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(elevation: 2),
+                        onPressed: () {
+                          Navigator.pushNamed(context, TrasmissioniProgressPage.routeName);
+                        },
+                        child: Text('Trasmissioni progress'),
+                      ),
                     ),
                   ],
                 ),

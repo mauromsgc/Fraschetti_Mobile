@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:fraschetti_videocatalogo/helper/DBHelper.dart';
 import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
 import 'package:fraschetti_videocatalogo/models/promozioneModel.dart';
 import 'package:fraschetti_videocatalogo/models/utenteCorrenteModel.dart';
 import 'package:fraschetti_videocatalogo/repositories/httpRepository.dart';
+import 'package:fraschetti_videocatalogo/screen/trasmissioni/TrasmissioniProgressPage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
@@ -575,7 +578,7 @@ descrizione CHAR(30,0)
     return esito;
   }
 
-  Future<bool> sql_aggiorna() async {
+  Future<bool> sql_aggiorna({StreamController<ProgressData>? progress_stream_con}) async {
     print("dbRepositoty sql_aggiorna inizio");
 
     bool esito = true;
@@ -733,7 +736,7 @@ descrizione CHAR(30,0)
   }
 
 
-  Future<bool> dati_aggiorna() async {
+  Future<bool> dati_aggiorna({StreamController<ProgressData>? progress_stream_con}) async {
     print("dbRepositoty dati_aggiorna inizio");
 
     bool esito = true;
@@ -832,7 +835,7 @@ descrizione CHAR(30,0)
     return esito;
   }
 
-  Future<bool> comunicazioni_aggiorna() async {
+  Future<bool> comunicazioni_aggiorna({StreamController<ProgressData>? progress_stream_con}) async {
     print("dbRepositoty comunicazioni_aggiorna inizio");
 
     bool esito = true;
@@ -981,7 +984,7 @@ descrizione CHAR(30,0)
     return esito;
   }
 
-  Future<bool> immagini_aggiorna() async {
+  Future<bool> immagini_aggiorna({StreamController<ProgressData>? progress_stream_con}) async {
     print("dbRepositoty immagini_aggiorna inizio");
 
     bool esito = true;
@@ -1129,7 +1132,7 @@ descrizione CHAR(30,0)
     return esito;
   }
 
-  Future<bool> immagini_mancanti_aggiorna() async {
+  Future<bool> immagini_mancanti_aggiorna({StreamController<ProgressData>? progress_stream_con}) async {
     print("dbRepositoty immagini_mancanti_aggiorna inizio");
 
     bool esito = true;

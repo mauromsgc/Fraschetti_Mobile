@@ -251,19 +251,6 @@ class _AltroMenuListaState extends State<AltroMenuLista> {
                     ),
                     Container(
                       // lo fa già il server
-                      height: 50,
-                      width: double.maxFinite,
-                      padding: EdgeInsets.all(5),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(elevation: 2),
-                        onPressed: () {
-                          // Navigator.of(context).pop();
-                        },
-                        child: Text('Disinstallare videocatalogo'),
-                      ),
-                    ),
-                    Container(
-                      // lo fa già il server
                       height: 100,
                       width: double.maxFinite,
                       padding: EdgeInsets.all(5),

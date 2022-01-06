@@ -275,11 +275,12 @@ class HttpClient {
     final _oggetto_invio = json.encode(_body_data);
     var response = await http.post(url, body: _oggetto_invio);
 
-    final data_risposta = json.decode(response.body);
-    // print(data_risposta);
-
-    print("httpRepositoty aggiornamenti_controlla fine");
+    var data_risposta;
     if (response.statusCode == 200) {
+      data_risposta = json.decode(response.body);
+      // print(data_risposta);
+
+      print("httpRepositoty aggiornamenti_controlla fine");
       return data_risposta["data"];
     }
 

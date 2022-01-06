@@ -4,16 +4,16 @@ import 'package:fraschetti_videocatalogo/models/catalogoModel.dart';
 import 'package:fraschetti_videocatalogo/screen/catalogo/CatalogoPage.dart';
 import 'package:fraschetti_videocatalogo/screen/utils/UtilsDev.dart';
 
-class TrasmissionePage extends StatefulWidget {
-  TrasmissionePage({Key? key}) : super(key: key);
-  static const String routeName = 'trasmissione_page';
+class InvioPage extends StatefulWidget {
+  InvioPage({Key? key}) : super(key: key);
+  static const String routeName = 'invio_page';
   final String pagina_titolo = "Trasmissione";
 
   @override
-  _TrasmissionePageState createState() => _TrasmissionePageState();
+  _InvioPageState createState() => _InvioPageState();
 }
 
-class _TrasmissionePageState extends State<TrasmissionePage> {
+class _InvioPageState extends State<InvioPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(

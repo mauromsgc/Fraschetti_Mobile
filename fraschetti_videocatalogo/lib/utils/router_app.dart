@@ -19,9 +19,10 @@ import 'package:fraschetti_videocatalogo/screen/ordine/OrdineResiLista.dart';
 import 'package:fraschetti_videocatalogo/screen/ordine/ResoArticoloAggiungiPage.dart';
 import 'package:fraschetti_videocatalogo/screen/promozioni/PromozioneLista.dart';
 import 'package:fraschetti_videocatalogo/screen/promozioni/PromozionePage.dart';
-import 'package:fraschetti_videocatalogo/screen/trasmissioni/TrasmissioneLista.dart';
-import 'package:fraschetti_videocatalogo/screen/trasmissioni/TrasmissionePage.dart';
+import 'package:fraschetti_videocatalogo/screen/Invii/InvioLista.dart';
+import 'package:fraschetti_videocatalogo/screen/Invii/InvioPage.dart';
 import 'package:fraschetti_videocatalogo/screen/trasmissioni/TrasmissioniMenuPage.dart';
+import 'package:fraschetti_videocatalogo/screen/trasmissioni/TrasmissioniProgressPage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -88,15 +89,19 @@ class RouterApp {
             settings: settings,
             builder: (context) => ResoArticoloAggiungiPage());
 
+      case TrasmissioniProgressPage.routeName:
+        return MaterialPageRoute(
+            settings: settings, builder: (context) => TrasmissioniProgressPage());
       case TrasmissioniMenuLista.routeName:
         return MaterialPageRoute(
             settings: settings, builder: (context) => TrasmissioniMenuLista());
-      case TrasmissioneLista.routeName:
+
+      case InvioLista.routeName:
         return MaterialPageRoute(
-            settings: settings, builder: (context) => TrasmissioneLista());
-      case TrasmissionePage.routeName:
+            settings: settings, builder: (context) => InvioLista());
+      case InvioPage.routeName:
         return MaterialPageRoute(
-            settings: settings, builder: (context) => TrasmissionePage());
+            settings: settings, builder: (context) => InvioPage());
 
       case AltroMenuLista.routeName:
         return MaterialPageRoute(
