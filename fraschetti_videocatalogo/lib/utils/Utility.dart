@@ -22,10 +22,14 @@ Future<String> get_mac_address() async {
 
 Future<bool> connessione_test(BuildContext context) async {
   bool connessione_test = false;
-  final response =
-      await GetIt.instance<HttpRepository>().http!.connessione_test();
+  Map<String, dynamic> risposta = {};
 
-  if (response["data"] == "OK") {
+  risposta = await GetIt.instance<HttpRepository>().http!.connessione_test();
+
+  print("risposta ${risposta}");
+  print("risposta ${risposta["conessione"]}");
+
+  if (risposta["conessione"] == "OK") {
     connessione_test = true;
   }
 

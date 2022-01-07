@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fraschetti_videocatalogo/components/BottomBarWidget.dart';
 import 'package:fraschetti_videocatalogo/helper/DBHelper.dart';
 import 'package:fraschetti_videocatalogo/models/parametriModel.dart';
@@ -45,15 +46,12 @@ class ProgressData {
 
     return map;
   }
-
 }
 
 class _TrasmissioniProgressPageState extends State<TrasmissioniProgressPage> {
-  // final StreamController<ProgressData> _progress_stream_con = StreamController<ProgressData>();
-
-  late StreamController<ProgressData> _progress_stream_con;
-  late StreamSubscription<ProgressData> streamSubscription;
-  late Stream<ProgressData> _progress_stream;
+  final StreamController<ProgressData> _progress_stream_con = StreamController<ProgressData>.broadcast(sync: true);
+  // late Stream<ProgressData> _progress_stream;
+  // late StreamSubscription<ProgressData> streamSubscription;
 
   String _test_titolo = "";
   int _test_progress = 0;
@@ -64,48 +62,47 @@ class _TrasmissioniProgressPageState extends State<TrasmissioniProgressPage> {
   void initState() {
     super.initState();
 
-    _progress_stream_con = StreamController<ProgressData>.broadcast();
-
-    streamSubscription = _progress_stream_con.stream.listen((valore) {
-      print('streamSubscription listen valore: ${valore.toMap()}');
-      _progress_aggiorna(progress_data: valore);
-    });
-
-
     // _progress_stream = _progress_stream_con.stream;
+
+    // _progress_stream_con = StreamController<ProgressData>.broadcast(sync: true);
+
+    // streamSubscription = _progress_stream_con.stream.listen((valore) {
+    //   print('streamSubscription listen valore: ${valore.toMap()}');
+    //   print('streamSubscription listen valore hashCode: ${valore.hashCode.toString()}');
+    //   // _progress_aggiorna(progress_data: valore);
     //
-    // _progress_stream.listen((valore) {
-    //   print('_progress_stream.listen valore: ${valore.progress}');
-    //   // _test_progress = valore.
-    //   _progress_aggiorna(progress_data: valore);
-    //   // setState(() {
-    //   //   _test_progress = valore.progress;
-    //   // });
     // });
-
-
-    // streamSubscription = _progress_stream.listen((valore) {
-    //     print('streamSubscription listen valore: ${valore.progress}');
-    //   });
-
-    // StreamSubscription<ProgressData> streamSubscription = _progress_stream.listen((ProgressData valore) {
-    //   print('streamSubscription listen valore: ${valore.progress}');
-    // });
-
   }
 
   @override
   void dispose() {
-    streamSubscription.cancel();
+    // streamSubscription.cancel();
     _progress_stream_con.close();
     super.dispose();
   }
 
+  // @override
+  // void didUpdateWidget(oldWidget) {
+  //   print("oldWidget ${oldWidget}");
+  //   // if(message != widget.message) {
+  //   //   setState((){
+  //   //     message = widget.message;
+  //   //   });
+  //   // }
+  //   // setState((){
+  //   //
+  //   // });
+  //   super.didUpdateWidget(oldWidget);
+  // }
+
   void _annulla() {}
 
   void _test_0({StreamController<ProgressData>? progress_stream_con}) async {
-     progress_stream_con!.add(ProgressData(titolo: "titolo test 0", progress: 10000, messaggio: "messaggio test 0"));
-
+    progress_stream_con!.add(ProgressData(
+        titolo: "titolo test 0",
+        progress: 10000,
+        messaggio: "messaggio test 0"));
+    var t1;
   }
 
   void _test_1() async {
@@ -116,10 +113,8 @@ class _TrasmissioniProgressPageState extends State<TrasmissioniProgressPage> {
     // // _progress_stream_con.add(ProgressData(progress: 5));
     // _progress_stream_con.add(ProgressData(titolo: "", progress: 0, messaggio: ""));
 
-
     // await aggiornamenti_controlla();
     aggiornamenti_controlla(progress_stream_con: _progress_stream_con);
-
   }
 
   void _test_2() async {
@@ -128,35 +123,36 @@ class _TrasmissioniProgressPageState extends State<TrasmissioniProgressPage> {
     // });
 
     _test_0(progress_stream_con: _progress_stream_con);
-    _progress_stream_con.sink.add(ProgressData(titolo: "Titolo", progress: 1));
+    _progress_stream_con.add(ProgressData(titolo: "Titolo", progress: 1));
 
-    _progress_stream_con.add(ProgressData(titolo: "Titolo", progress: 100, messaggio: "messaggio"));
-
+    _progress_stream_con.add(
+        ProgressData(titolo: "Titolo", progress: 100, messaggio: "messaggio"));
   }
 
-  void _progress_aggiorna({ProgressData? progress_data}){
-    if(progress_data != null){
-
+  void _progress_aggiorna({ProgressData? progress_data}) {
+    print('_progress_aggiorna progress_data: ${progress_data!.toMap()}');
+    print('_progress_aggiorna progress_data hashCode: ${progress_data.hashCode.toString()}');
+    if (progress_data != null) {
       setState(() {
-        if(progress_data.titolo != null){
+        if (progress_data.titolo != null) {
           _test_titolo = progress_data.titolo;
         }
-        if(progress_data.progress != null){
-        _test_progress = progress_data.progress;
+        if (progress_data.progress != null) {
+          _test_progress = progress_data.progress;
         }
-        if(progress_data.messaggio != null){
+        if (progress_data.messaggio != null) {
           _test_messaggio = progress_data.messaggio;
         }
-        if(progress_data.errore != null){
+        if (progress_data.errore != null) {
           _test_errore = progress_data.errore;
         }
       });
-
     }
+
   }
 
-
-  void aggiorna_da_server({StreamController<ProgressData>? progress_stream_con}) async {
+  void aggiorna_da_server(
+      {StreamController<ProgressData>? progress_stream_con}) async {
     // dopo aggioranamento scrip e dati
     // verificare se il videocatalogo è ancora  attivvo o no
     // dopo aggiornamento dati verificare se
@@ -165,7 +161,8 @@ class _TrasmissioniProgressPageState extends State<TrasmissioniProgressPage> {
     bool aggiornamenti_disponibili = false;
 
     try {
-      aggiornamenti_disponibili = await aggiornamenti_controlla(progress_stream_con: progress_stream_con);
+      aggiornamenti_disponibili = await aggiornamenti_controlla(
+          progress_stream_con: progress_stream_con);
 
       if (aggiornamenti_disponibili == true) {
         // software_aggiorna(progress_stream_con: progress_stream_con);
@@ -203,11 +200,12 @@ class _TrasmissioniProgressPageState extends State<TrasmissioniProgressPage> {
     }
   }
 
-  Future<bool> aggiornamenti_controlla({StreamController<ProgressData>? progress_stream_con}) async {
+  Future<bool> aggiornamenti_controlla(
+      {StreamController<ProgressData>? progress_stream_con}) async {
     bool aggiornamenti_disponibili = false;
 
-    aggiornamenti_disponibili =
-        await GetIt.instance<ParametriModel>().aggiornamenti_controlla(progress_stream_con: progress_stream_con);
+    aggiornamenti_disponibili = await GetIt.instance<ParametriModel>()
+        .aggiornamenti_controlla(progress_stream_con: progress_stream_con);
     if (aggiornamenti_disponibili == true) {
       print("Aggiornamenti presenti");
     } else {
@@ -217,8 +215,10 @@ class _TrasmissioniProgressPageState extends State<TrasmissioniProgressPage> {
     return aggiornamenti_disponibili;
   }
 
-  Future<void> sql_aggiorna({StreamController<ProgressData>? progress_stream_con}) async {
-    final valid = await GetIt.instance<DbRepository>().sql_aggiorna(progress_stream_con: progress_stream_con);
+  Future<void> sql_aggiorna(
+      {StreamController<ProgressData>? progress_stream_con}) async {
+    final valid = await GetIt.instance<DbRepository>()
+        .sql_aggiorna(progress_stream_con: progress_stream_con);
     if (valid) {
       print("Aggiornamento completato");
     } else {
@@ -226,8 +226,10 @@ class _TrasmissioniProgressPageState extends State<TrasmissioniProgressPage> {
     }
   }
 
-  Future<void> dati_aggiorna({StreamController<ProgressData>? progress_stream_con}) async {
-    final valid = await GetIt.instance<DbRepository>().dati_aggiorna(progress_stream_con: progress_stream_con);
+  Future<void> dati_aggiorna(
+      {StreamController<ProgressData>? progress_stream_con}) async {
+    final valid = await GetIt.instance<DbRepository>()
+        .dati_aggiorna(progress_stream_con: progress_stream_con);
     if (valid) {
       print("Aggiornamento completato");
     } else {
@@ -235,8 +237,10 @@ class _TrasmissioniProgressPageState extends State<TrasmissioniProgressPage> {
     }
   }
 
-  Future<void> comunicazioni_aggiorna({StreamController<ProgressData>? progress_stream_con}) async {
-    final valid = await GetIt.instance<DbRepository>().comunicazioni_aggiorna(progress_stream_con: progress_stream_con);
+  Future<void> comunicazioni_aggiorna(
+      {StreamController<ProgressData>? progress_stream_con}) async {
+    final valid = await GetIt.instance<DbRepository>()
+        .comunicazioni_aggiorna(progress_stream_con: progress_stream_con);
     if (valid) {
       print("Aggiornamento completato");
     } else {
@@ -244,8 +248,10 @@ class _TrasmissioniProgressPageState extends State<TrasmissioniProgressPage> {
     }
   }
 
-  Future<void> immagini_aggiorna({StreamController<ProgressData>? progress_stream_con}) async {
-    final valid = await GetIt.instance<DbRepository>().immagini_aggiorna(progress_stream_con: progress_stream_con);
+  Future<void> immagini_aggiorna(
+      {StreamController<ProgressData>? progress_stream_con}) async {
+    final valid = await GetIt.instance<DbRepository>()
+        .immagini_aggiorna(progress_stream_con: progress_stream_con);
     if (valid) {
       print("Aggiornamento completato");
     } else {
@@ -253,9 +259,10 @@ class _TrasmissioniProgressPageState extends State<TrasmissioniProgressPage> {
     }
   }
 
-  Future<void> immagini_aggiorna_mancanti({StreamController<ProgressData>? progress_stream_con}) async {
-    final valid =
-        await GetIt.instance<DbRepository>().immagini_mancanti_aggiorna(progress_stream_con: progress_stream_con);
+  Future<void> immagini_aggiorna_mancanti(
+      {StreamController<ProgressData>? progress_stream_con}) async {
+    final valid = await GetIt.instance<DbRepository>()
+        .immagini_mancanti_aggiorna(progress_stream_con: progress_stream_con);
     if (valid) {
       print("Aggiornamento completato");
     } else {
@@ -286,8 +293,11 @@ class _TrasmissioniProgressPageState extends State<TrasmissioniProgressPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      key: UniqueKey(),
       child: Scaffold(
+        key: UniqueKey(),
         appBar: AppBar(
+          key: UniqueKey(),
           automaticallyImplyLeading: false,
           // leading: IconButton(
           //   onPressed: () {},
@@ -298,147 +308,201 @@ class _TrasmissioniProgressPageState extends State<TrasmissioniProgressPage> {
           // bottom: OrdineTopMenu(context),
         ),
         // bottomNavigationBar: BottomBarWidget(),
-        body: Container(
-          child: SingleChildScrollView(
-            child: Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.only(
-                top: 5,
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    // width: double.maxFinite,
+        // body:
+        body: StreamBuilder<ProgressData>(
+            key: UniqueKey(),
+            // stream: _progress_stream,
+            stream: _progress_stream_con.stream,
+            builder: (context, state) {
+              print("state ${state.data.toString()}");
+
+              return Container(
+                key: UniqueKey(),
+                child: SingleChildScrollView(
+                  key: UniqueKey(),
+                  child: Container(
+                    key: UniqueKey(),
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.only(
+                      top: 5,
+                    ),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      key: UniqueKey(),
                       children: [
-                        Container(
-                          height: 50,
-                          // width: double.maxFinite,
-                          decoration: MyBoxDecoration().MyBox(),
-                        ),
-                        // StreamBuilder<ProgressData>(
-                        //   stream: _progress_stream_con.stream,
-                        //   initialData: ProgressData(titolo: "", messaggio: "", progress: 0),
-                        //   // builder: (BuildContext context, AsyncSnapshot<ProgressData> snapshot) {
-                        //     builder: (BuildContext context, AsyncSnapshot<ProgressData> snapshot) {
-                        //     return
-                        //     Text("Ciao ${snapshot.data!.progress}");
-                        //
-                        //   }
-                        // ),
+                        if (!state.hasData)
+                    Center(
+                      key: UniqueKey(),
+                    child: Column(
+                      key: UniqueKey(),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(),
+                      Text('Waiting for some pets...')
+                    ],
+                  ),
+                ),
+
 
                         Container(
+                          key: UniqueKey(),
                           // width: double.maxFinite,
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text("${_test_titolo}"),
-                        ),
-                        Container(
-                          // width: double.maxFinite,
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text("${_test_progress}"),
-                        ),
-                        Container(
-                          // width: double.maxFinite,
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text("${_test_messaggio}"),
-                        ),
-                        Container(
-                          // width: double.maxFinite,
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text("${_test_errore}"),
-                        ),
+                          child: Column(
+                            key: UniqueKey(),
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                key: UniqueKey(),
+                                height: 50,
+                                // width: double.maxFinite,
+                                decoration: MyBoxDecoration().MyBox(),
+                              ),
+                              // StreamBuilder<ProgressData>(
+                              //   stream: _progress_stream_con.stream,
+                              //   initialData: ProgressData(titolo: "", messaggio: "", progress: 0),
+                              //   // builder: (BuildContext context, AsyncSnapshot<ProgressData> snapshot) {
+                              //     builder: (BuildContext context, AsyncSnapshot<ProgressData> snapshot) {
+                              //     return
+                              //     Text("Ciao ${snapshot.data!.progress}");
+                              //
+                              //   }
+                              // ),
 
-                        Container(
-                          // width: double.maxFinite,
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text("Progress continuo"),
-                        ),
+                              Container(
+                                key: UniqueKey(),
+                                // width: double.maxFinite,
+                                decoration: MyBoxDecoration().MyBox(),
+                                child: Text("${state.data?.titolo} ",key: UniqueKey(),),
+                              ),
+                              Container(
+                                // width: double.maxFinite,
+                                decoration: MyBoxDecoration().MyBox(),
+                                child: Text("${state.data?.progress} "),
+                              ),
+                              Container(
+                                // width: double.maxFinite,
+                                decoration: MyBoxDecoration().MyBox(),
+                                child: Text("${state.data?.messaggio} "),
+                              ),
+                              Container(
+                                // width: double.maxFinite,
+                                decoration: MyBoxDecoration().MyBox(),
+                                child: Text("${state.data?.errore} "),
+                              ),
 
-                        Container(
-                          // width: double.maxFinite,
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text("Progress continuo"),
+                              // Container(
+                              //   // width: double.maxFinite,
+                              //   decoration: MyBoxDecoration().MyBox(),
+                              //   child: Text("${_test_titolo} "),
+                              // ),
+                              // Container(
+                              //   // width: double.maxFinite,
+                              //   decoration: MyBoxDecoration().MyBox(),
+                              //   child: Text("${_test_progress}"),
+                              // ),
+                              // Container(
+                              //   // width: double.maxFinite,
+                              //   decoration: MyBoxDecoration().MyBox(),
+                              //   child: Text("${_test_messaggio}"),
+                              // ),
+                              // Container(
+                              //   // width: double.maxFinite,
+                              //   decoration: MyBoxDecoration().MyBox(),
+                              //   child: Text("${_test_errore}"),
+                              // ),
+
+                              Container(
+                                // width: double.maxFinite,
+                                decoration: MyBoxDecoration().MyBox(),
+                                child: Text("Progress continuo"),
+                              ),
+
+                              Container(
+                                // width: double.maxFinite,
+                                decoration: MyBoxDecoration().MyBox(),
+                                child: Text("Progress continuo"),
+                              ),
+                              Container(
+                                // width: double.maxFinite,
+                                decoration: MyBoxDecoration().MyBox(),
+                                child: Text("Progress "),
+                              ),
+                            ],
+                          ),
                         ),
                         Container(
-                          // width: double.maxFinite,
-                          decoration: MyBoxDecoration().MyBox(),
-                          child: Text("Progress "),
+                          width: 300,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: 50,
+                                width: double.maxFinite,
+                              ),
+                              Container(
+                                // lo fa già il server
+                                height: 50,
+                                width: double.maxFinite,
+                                padding: EdgeInsets.all(5),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(elevation: 2),
+                                  onPressed: () {
+                                    _test_1();
+                                  },
+                                  child: Text('Test 1'),
+                                ),
+                              ),
+                              Container(
+                                // lo fa già il server
+                                height: 50,
+                                width: double.maxFinite,
+                                padding: EdgeInsets.all(5),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(elevation: 2),
+                                  onPressed: () {
+                                    _test_2();
+                                  },
+                                  child: Text('Test 2'),
+                                ),
+                              ),
+                              Container(
+                                // lo fa già il server
+                                height: 50,
+                                width: double.maxFinite,
+                                padding: EdgeInsets.all(5),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(elevation: 2),
+                                  onPressed: () {
+                                    _annulla();
+                                  },
+                                  child: Text('Annulla'),
+                                ),
+                              ),
+                              Container(
+                                // lo fa già il server
+                                height: 50,
+                                width: double.maxFinite,
+                                padding: EdgeInsets.all(5),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(elevation: 2),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Indietro'),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  Container(
-                    width: 300,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: 50,
-                          width: double.maxFinite,
-                        ),
-                        Container(
-                          // lo fa già il server
-                          height: 50,
-                          width: double.maxFinite,
-                          padding: EdgeInsets.all(5),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(elevation: 2),
-                            onPressed: () {
-                              _test_1();
-                            },
-                            child: Text('Test 1'),
-                          ),
-                        ),
-                        Container(
-                          // lo fa già il server
-                          height: 50,
-                          width: double.maxFinite,
-                          padding: EdgeInsets.all(5),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(elevation: 2),
-                            onPressed: () {
-                              _test_2();
-                            },
-                            child: Text('Test 2'),
-                          ),
-                        ),
-                        Container(
-                          // lo fa già il server
-                          height: 50,
-                          width: double.maxFinite,
-                          padding: EdgeInsets.all(5),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(elevation: 2),
-                            onPressed: () {
-                              _annulla();
-                            },
-                            child: Text('Annulla'),
-                          ),
-                        ),
-                        Container(
-                          // lo fa già il server
-                          height: 50,
-                          width: double.maxFinite,
-                          padding: EdgeInsets.all(5),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(elevation: 2),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('Indietro'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
+                ),
+              );
+            }),
+
       ),
     );
   }

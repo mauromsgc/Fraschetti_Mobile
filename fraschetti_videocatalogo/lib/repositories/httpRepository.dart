@@ -60,46 +60,56 @@ class HttpClient {
       {String p_host_server = ""}) async {
     // effettua un test di trasmissione
 
-    Map<String, dynamic> data = {};
+    String host_server = GetIt.instance<ParametriModel>().host_server;
+    if (p_host_server != "") {
+      host_server = p_host_server;
+    }
+
+    final String _api = "/4daction/Post_mv1_ConnessioneTest";
+    var url = Uri.parse(host_server + _api);
+
+    var data_risposta;
     try {
-      String host_server = GetIt.instance<ParametriModel>().host_server;
-      if (p_host_server != "") {
-        host_server = p_host_server;
-      }
-
-      final String _api = "/4daction/Post_mv1_ConnessioneTest";
-      var url = Uri.parse(host_server + _api);
-
-      Map<String, dynamic> data_invio = {};
+        Map<String, dynamic> data_invio = {};
       data_invio["data"] = "Post.Test";
       data_invio["parametri"] =
           GetIt.instance<ParametriModel>().toMap().toString();
-
-      // var response = await http.post(url, body: data_invio);
 
       // trasformando in json mi arrivano i dati nel body
       final _oggetto_invio = json.encode(data_invio);
       var response = await http.post(url, body: _oggetto_invio);
 
-      print("response.body: ${response.body}");
-      print("response.statusCode: ${response.statusCode}");
+      try {
+        data_risposta = json.decode(response.body);
 
-      if (response.statusCode == 200) {
-        data = json.decode(response.body);
-        print("data = json.decode(response.body): ${data}");
+      } catch (e){
+        // leggo i dati come un base64 che contine un testo zippato
+        try {
+          final decoded_data = GZipCodec().decode(base64.decode(response.body));
+          final string_data = utf8.decode(decoded_data, allowMalformed: true);
+          data_risposta = json.decode(string_data);
+        } catch (e){
+          data_risposta = {};
+        }
 
-        return data;
+      } finally{
+
       }
+
+      // print(data_risposta);
+      if (response.statusCode == 200) {
+        return data_risposta["data"];
+      }
+
     } catch (exception) {
       // print("Errore test di connessione: ${exception}");
       print("Errore test di connessione");
-      // data = json.decode("{'data': 'KO'}");
-      data["data"] = "KO";
+      data_risposta["data"] = "{conessione: KO}";
+      return data_risposta["data"];
     } finally {
-      return data;
     }
 
-    throw RequestError(data["error"]);
+    throw RequestError(data_risposta["error"]);
   }
 
   void mac_address_leggi() {
@@ -127,20 +137,43 @@ class HttpClient {
     final String _api = "/4daction/Post_mv1_Registrazione";
     var url = Uri.parse(host_server + _api);
 
+    var data_risposta;
+    try {
     Map _body_data = {};
     _body_data["data"] = data_invio;
-
-    // var response = await http.post(url, body: data_invio);
 
     final _oggetto_invio = json.encode(_body_data);
     var response = await http.post(url, body: _oggetto_invio);
 
-    final data_risposta = json.decode(response.body);
+    try {
+      data_risposta = json.decode(response.body);
+
+    } catch (e){
+      // leggo i dati come un base64 che contine un testo zippato
+      try {
+        final decoded_data = GZipCodec().decode(base64.decode(response.body));
+        final string_data = utf8.decode(decoded_data, allowMalformed: true);
+        data_risposta = json.decode(string_data);
+      } catch (e){
+        data_risposta = {};
+      }
+
+    } finally{
+
+    }
+
     // print(data_risposta);
 
     print("httpRepositoty utente_registra fine");
     if (response.statusCode == 200) {
       return data_risposta["data"];
+    }
+
+    } catch (exception) {
+      print("Errore di connessione");
+      data_risposta["data"] = "{}";
+      return data_risposta["data"];
+    } finally {
     }
 
     throw RequestError(data_risposta["error"]);
@@ -155,20 +188,43 @@ class HttpClient {
     final String _api = "/4daction/Post_mv1_Sql";
     var url = Uri.parse(host_server + _api);
 
-    Map _body_data = {};
+    var data_risposta;
+    try {
+      Map _body_data = {};
     _body_data["data"] = data_invio;
-
-    // var response = await http.post(url, body: data_invio);
 
     final _oggetto_invio = json.encode(_body_data);
     var response = await http.post(url, body: _oggetto_invio);
 
-    final data_risposta = json.decode(response.body);
-    // print(data_risposta);
+      try {
+        data_risposta = json.decode(response.body);
+
+      } catch (e){
+        // leggo i dati come un base64 che contine un testo zippato
+        try {
+          final decoded_data = GZipCodec().decode(base64.decode(response.body));
+          final string_data = utf8.decode(decoded_data, allowMalformed: true);
+          data_risposta = json.decode(string_data);
+        } catch (e){
+          data_risposta = {};
+        }
+
+      } finally{
+
+      }
+
+      // print(data_risposta);
 
     print("httpRepositoty sql_aggiorna fine");
     if (response.statusCode == 200) {
       return data_risposta["data"];
+    }
+
+    } catch (exception) {
+      print("Errore di connessione");
+      data_risposta["data"] = "{}";
+      return data_risposta["data"];
+    } finally {
     }
 
     throw RequestError(data_risposta["error"]);
@@ -183,20 +239,43 @@ class HttpClient {
     final String _api = "/4daction/Post_mv1_AggiornaDati";
     var url = Uri.parse(host_server + _api);
 
-    Map _body_data = {};
+    var data_risposta;
+    try {
+      Map _body_data = {};
     _body_data["data"] = data_invio;
-
-    // var response = await http.post(url, body: data_invio);
 
     final _oggetto_invio = json.encode(_body_data);
     var response = await http.post(url, body: _oggetto_invio);
 
-    final data_risposta = json.decode(response.body);
-    // print(data_risposta);
+      try {
+        data_risposta = json.decode(response.body);
+
+      } catch (e){
+        // leggo i dati come un base64 che contine un testo zippato
+        try {
+          final decoded_data = GZipCodec().decode(base64.decode(response.body));
+          final string_data = utf8.decode(decoded_data, allowMalformed: true);
+          data_risposta = json.decode(string_data);
+        } catch (e){
+          data_risposta = {};
+        }
+
+      } finally{
+
+      }
+
+      // print(data_risposta);
 
     print("httpRepositoty dati_aggiorna fine");
     if (response.statusCode == 200) {
       return data_risposta["data"];
+    }
+
+    } catch (exception) {
+      print("Errore di connessione");
+      data_risposta["data"] = "{}";
+      return data_risposta["data"];
+    } finally {
     }
 
     throw RequestError(data_risposta["error"]);
@@ -211,20 +290,43 @@ class HttpClient {
     final String _api = "/4daction/Post_mv1_AggiornaComunicazioni";
     var url = Uri.parse(host_server + _api);
 
-    Map _body_data = {};
+    var data_risposta;
+    try {
+      Map _body_data = {};
     _body_data["data"] = data_invio;
-
-    // var response = await http.post(url, body: data_invio);
 
     final _oggetto_invio = json.encode(_body_data);
     var response = await http.post(url, body: _oggetto_invio);
 
-    final data_risposta = json.decode(response.body);
-    // print(data_risposta);
+      try {
+        data_risposta = json.decode(response.body);
+
+      } catch (e){
+        // leggo i dati come un base64 che contine un testo zippato
+        try {
+          final decoded_data = GZipCodec().decode(base64.decode(response.body));
+          final string_data = utf8.decode(decoded_data, allowMalformed: true);
+          data_risposta = json.decode(string_data);
+        } catch (e){
+          data_risposta = {};
+        }
+
+      } finally{
+
+      }
+
+      // print(data_risposta);
 
     print("httpRepositoty comunicazioni_aggiorna fine");
     if (response.statusCode == 200) {
       return data_risposta["data"];
+    }
+
+    } catch (exception) {
+      print("Errore di connessione");
+      data_risposta["data"] = "{}";
+      return data_risposta["data"];
+    } finally {
     }
 
     throw RequestError(data_risposta["error"]);
@@ -239,20 +341,41 @@ class HttpClient {
     final String _api = "/4daction/Post_mv1_AggiornaImmagini";
     var url = Uri.parse(host_server + _api);
 
-    Map _body_data = {};
+    var data_risposta;
+    try {
+      Map _body_data = {};
     _body_data["data"] = data_invio;
-
-    // var response = await http.post(url, body: data_invio);
 
     final _oggetto_invio = json.encode(_body_data);
     var response = await http.post(url, body: _oggetto_invio);
 
-    final data_risposta = json.decode(response.body);
+    try {
+      data_risposta = json.decode(response.body);
+    } catch (e) {
+      // leggo i dati come un base64 che contine un testo zippato
+      try {
+        final decoded_data = GZipCodec().decode(base64.decode(response.body));
+        final string_data = utf8.decode(decoded_data, allowMalformed: true);
+        data_risposta = json.decode(string_data);
+      } catch (e) {
+        data_risposta = {};
+      }
+    } finally {
+
+    }
+
     // print(data_risposta);
 
     print("httpRepositoty immagini_aggiorna fine");
     if (response.statusCode == 200) {
       return data_risposta["data"];
+    }
+
+    } catch (exception) {
+      print("Errore di connessione");
+      data_risposta["data"] = "{}";
+      return data_risposta["data"];
+    } finally {
     }
 
     throw RequestError(data_risposta["error"]);
@@ -267,21 +390,39 @@ class HttpClient {
     final String _api = "/4daction/Post_mv1_AggiornamentiControlla";
     var url = Uri.parse(host_server + _api);
 
-    Map _body_data = {};
+    var data_risposta;
+    try {
+      Map _body_data = {};
     _body_data["data"] = data_invio;
-
-    // var response = await http.post(url, body: data_invio);
 
     final _oggetto_invio = json.encode(_body_data);
     var response = await http.post(url, body: _oggetto_invio);
 
-    var data_risposta;
-    if (response.statusCode == 200) {
-      data_risposta = json.decode(response.body);
+      try {
+        data_risposta = json.decode(response.body);
+      } catch (e) {
+        // leggo i dati come un base64 che contine un testo zippato
+        try {
+          final decoded_data = GZipCodec().decode(base64.decode(response.body));
+          final string_data = utf8.decode(decoded_data, allowMalformed: true);
+          data_risposta = json.decode(string_data);
+        } catch (e) {
+          data_risposta = {};
+        }
+      } finally {}
+
       // print(data_risposta);
 
-      print("httpRepositoty aggiornamenti_controlla fine");
+      print("httpRepositoty immagini_aggiorna fine");
+      if (response.statusCode == 200) {
+        return data_risposta["data"];
+      }
+
+    } catch (exception) {
+      print("Errore di connessione");
+      data_risposta["data"] = "{}";
       return data_risposta["data"];
+    } finally {
     }
 
     throw RequestError(data_risposta["error"]);

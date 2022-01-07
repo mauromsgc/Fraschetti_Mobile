@@ -530,12 +530,15 @@ descrizione CHAR(30,0)
         risposta = await GetIt.instance<HttpRepository>()
             .http!
             .utente_registra(data_invio: data_invio);
-      } on DatabaseException catch (e) {
-        if (e.isNoSuchTableError()) {
-          esito = false;
-          print("Errore inizializzazione parametri");
-        }
+      } catch (exception) {
+        esito = false;
+        // progress_stream_con?.add(ProgressData(
+        //     messaggio: "ERRORE RISPOSTA", errore: exception.toString()));
+        print("Errore di connessione");
+      } finally {
+        // progress_stream_con?.add(ProgressData(messaggio: "Ricevuta risposta"));
       }
+
       // print("dbRepository utente_registra: " + risposta.toString());
     }
     // $o_output.esito_codice:=0
@@ -604,12 +607,15 @@ descrizione CHAR(30,0)
         risposta = await GetIt.instance<HttpRepository>()
             .http!
             .sql_aggiorna(data_invio: data_invio);
-      } on DatabaseException catch (e) {
-        if (e.isNoSuchTableError()) {
-          esito = false;
-          print("Errore inizializzazione parametri");
-        }
+      } catch (exception) {
+        esito = false;
+        progress_stream_con?.add(ProgressData(
+            messaggio: "ERRORE RISPOSTA", errore: exception.toString()));
+        print("Errore di connessione");
+      } finally {
+        progress_stream_con?.add(ProgressData(messaggio: "Ricevuta risposta"));
       }
+
       print("dbRepository sql_aggiorna: " + risposta.toString());
     }
     //$o_output.esito_codice:=0
@@ -658,7 +664,7 @@ descrizione CHAR(30,0)
   }
 
   Future<bool> sql_aggiorna_scarica(
-      {int sql_id_aggiornare = 0}) async {
+      {int sql_id_aggiornare = 0, StreamController<ProgressData>? progress_stream_con}) async {
     print("dbRepositoty sql_aggiorna_scarica inizio");
 
     bool esito = true;
@@ -683,12 +689,15 @@ descrizione CHAR(30,0)
         risposta = await GetIt.instance<HttpRepository>()
             .http!
             .sql_aggiorna(data_invio: data_invio);
-      } on DatabaseException catch (e) {
-        if (e.isNoSuchTableError()) {
-          esito = false;
-          print("Errore inizializzazione parametri");
-        }
+      } catch (exception) {
+        esito = false;
+        progress_stream_con?.add(ProgressData(
+            messaggio: "ERRORE RISPOSTA", errore: exception.toString()));
+        print("Errore di connessione");
+      } finally {
+        progress_stream_con?.add(ProgressData(messaggio: "Ricevuta risposta"));
       }
+
       // print("dbRepository comunicazioni_aggiorna_scarica: " +
       //     risposta.toString());
     }
@@ -762,12 +771,15 @@ descrizione CHAR(30,0)
         risposta = await GetIt.instance<HttpRepository>()
             .http!
             .dati_aggiorna(data_invio: data_invio);
-      } on DatabaseException catch (e) {
-        if (e.isNoSuchTableError()) {
-          esito = false;
-          print("Errore inizializzazione parametri");
-        }
+      } catch (exception) {
+        esito = false;
+        progress_stream_con?.add(ProgressData(
+            messaggio: "ERRORE RISPOSTA", errore: exception.toString()));
+        print("Errore di connessione");
+      } finally {
+        progress_stream_con?.add(ProgressData(messaggio: "Ricevuta risposta"));
       }
+
       // print("dbRepository dati_aggiorna: " + risposta.toString());
       print("dbRepository dati_aggiorna fine ");
     }
@@ -861,12 +873,15 @@ descrizione CHAR(30,0)
         risposta = await GetIt.instance<HttpRepository>()
             .http!
             .comunicazioni_aggiorna(data_invio: data_invio);
-      } on DatabaseException catch (e) {
-        if (e.isNoSuchTableError()) {
-          esito = false;
-          print("Errore inizializzazione parametri");
-        }
+      } catch (exception) {
+        esito = false;
+        progress_stream_con?.add(ProgressData(
+            messaggio: "ERRORE RISPOSTA", errore: exception.toString()));
+        print("Errore di connessione");
+      } finally {
+        progress_stream_con?.add(ProgressData(messaggio: "Ricevuta risposta"));
       }
+
       print("dbRepository comunicazioni_aggiorna: " + risposta.toString());
     }
     //$o_output.esito_codice:=0
@@ -908,7 +923,7 @@ descrizione CHAR(30,0)
   }
 
   Future<bool> comunicazioni_aggiorna_scarica(
-      {int comunicazione_id_aggiornare = 0}) async {
+      {int comunicazione_id_aggiornare = 0, StreamController<ProgressData>? progress_stream_con}) async {
     print("dbRepositoty comunicazioni_aggiorna_scarica inizio");
 
     bool esito = true;
@@ -933,12 +948,15 @@ descrizione CHAR(30,0)
         risposta = await GetIt.instance<HttpRepository>()
             .http!
             .comunicazioni_aggiorna(data_invio: data_invio);
-      } on DatabaseException catch (e) {
-        if (e.isNoSuchTableError()) {
-          esito = false;
-          print("Errore inizializzazione parametri");
-        }
+      } catch (exception) {
+        esito = false;
+        progress_stream_con?.add(ProgressData(
+            messaggio: "ERRORE RISPOSTA", errore: exception.toString()));
+        print("Errore di connessione");
+      } finally {
+        progress_stream_con?.add(ProgressData(messaggio: "Ricevuta risposta"));
       }
+
       // print("dbRepository comunicazioni_aggiorna_scarica: " +
       //     risposta.toString());
     }
@@ -1010,12 +1028,15 @@ descrizione CHAR(30,0)
         risposta = await GetIt.instance<HttpRepository>()
             .http!
             .immagini_aggiorna(data_invio: data_invio);
-      } on DatabaseException catch (e) {
-        if (e.isNoSuchTableError()) {
-          esito = false;
-          print("Errore inizializzazione parametri");
-        }
+      } catch (exception) {
+        esito = false;
+        progress_stream_con?.add(ProgressData(
+            messaggio: "ERRORE RISPOSTA", errore: exception.toString()));
+        print("Errore di connessione");
+      } finally {
+        progress_stream_con?.add(ProgressData(messaggio: "Ricevuta risposta"));
       }
+
       print("dbRepository immagini_aggiorna: " + risposta.toString());
     }
     //$o_output.esito_codice:=0
@@ -1056,7 +1077,7 @@ descrizione CHAR(30,0)
   }
 
   Future<bool> immagini_aggiorna_scarica(
-      {int immagine_id_aggiornare = 0}) async {
+      {int immagine_id_aggiornare = 0, StreamController<ProgressData>? progress_stream_con}) async {
     print("dbRepositoty immagini_aggiorna_scarica inizio");
 
     bool esito = true;
@@ -1081,12 +1102,15 @@ descrizione CHAR(30,0)
         risposta = await GetIt.instance<HttpRepository>()
             .http!
             .immagini_aggiorna(data_invio: data_invio);
-      } on DatabaseException catch (e) {
-        if (e.isNoSuchTableError()) {
-          esito = false;
-          print("Errore inizializzazione parametri");
-        }
+      } catch (exception) {
+        esito = false;
+        progress_stream_con?.add(ProgressData(
+            messaggio: "ERRORE RISPOSTA", errore: exception.toString()));
+        print("Errore di connessione");
+      } finally {
+        progress_stream_con?.add(ProgressData(messaggio: "Ricevuta risposta"));
       }
+
       // print("dbRepository immagini_aggiorna_scarica: " + risposta.toString());
     }
 
@@ -1193,7 +1217,7 @@ descrizione CHAR(30,0)
   Future<bool> immagini_mancanti_aggiorna_scarica({
     int immagine_id_mancante = 0,
     String immagine_tipo_mancante = "",
-  }) async {
+    StreamController<ProgressData>? progress_stream_con}) async {
     print("dbRepositoty immagini_mancanti_aggiorna_scarica inizio");
 
     bool esito = true;
@@ -1219,12 +1243,15 @@ descrizione CHAR(30,0)
         risposta = await GetIt.instance<HttpRepository>()
             .http!
             .immagini_aggiorna(data_invio: data_invio);
-      } on DatabaseException catch (e) {
-        if (e.isNoSuchTableError()) {
-          esito = false;
-          print("Errore immagini_mancanti_aggiorna_scarica parametri");
-        }
+      } catch (exception) {
+        esito = false;
+        progress_stream_con?.add(ProgressData(
+            messaggio: "ERRORE RISPOSTA", errore: exception.toString()));
+        print("Errore di connessione");
+      } finally {
+        progress_stream_con?.add(ProgressData(messaggio: "Ricevuta risposta"));
       }
+
       // print("dbRepository immagini_aggiorna_scarica: " + risposta.toString());
     }
 

@@ -175,7 +175,7 @@ class _OrdineArticoloAggiungiPageState
       codice_descrizione_con.text =
           ordine_riga_scheda.codice_scheda.descrizione;
       apribile_con.text =
-          (ordine_riga_scheda.codice_scheda.apribile == 1) ? "*" : "";
+          (ordine_riga_scheda.codice_scheda.apribile == 1) ? "*" : " ";
       unita_misura_con.text = ordine_riga_scheda.um;
       quantita_master_con.text =
           (ordine_riga_scheda.codice_scheda.quantita_massima != 0)
@@ -481,7 +481,7 @@ class _OrdineArticoloAggiungiPageState
                     children: [
                       Container(
                         // apribile
-                        width: 60,
+                        width: 45,
                         padding: EdgeInsets.all(5),
                         child: TextFormField(
                           controller: apribile_con,
@@ -493,13 +493,13 @@ class _OrdineArticoloAggiungiPageState
                             contentPadding:
                                 EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(),
-                            labelText: "Apribile",
+                            labelText: "Ap.",
                           ),
                         ),
                       ),
                       Container(
                         // unità di misura
-                        width: 70,
+                        width: 55,
                         padding: EdgeInsets.all(5),
                         child: TextFormField(
                           controller: unita_misura_con,
@@ -518,7 +518,7 @@ class _OrdineArticoloAggiungiPageState
                       if (quantita_master_con.text != "")
                         Container(
                           // confezione
-                          width: 90,
+                          width: 70,
                           padding: EdgeInsets.all(5),
                           child: TextFormField(
                             controller: quantita_master_con,
@@ -537,7 +537,7 @@ class _OrdineArticoloAggiungiPageState
                         ),
                       Container(
                         // confezione
-                        width: 90,
+                        width: 60,
                         padding: EdgeInsets.all(5),
                         child: TextFormField(
                           controller: pezzi_con,
@@ -550,13 +550,13 @@ class _OrdineArticoloAggiungiPageState
                             contentPadding:
                                 EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                             border: OutlineInputBorder(),
-                            labelText: "Confezione",
+                            labelText: "Pezzi",
                           ),
                         ),
                       ),
                       Container(
                         // prezzo base
-                        width: 120,
+                        width: 110,
                         padding: EdgeInsets.all(5),
                         child: TextFormField(
                           controller: prezzo_base_con,
